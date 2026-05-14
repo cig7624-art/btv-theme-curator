@@ -1,0 +1,39 @@
+name: Update Issues
+
+on:
+  schedule:
+    # 매일 오전 8시 KST 실행
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-issues:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install packages
+        run: |
+          pip install -r requirements.txt
+
+      - name: Collect external issues
+        run: |
+          python collect_issues.py
+
+      - name: Commit updated issue feed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add issue_feed.csv
+          git commit -m "Update issue feed" || echo "No changes to commit"
+          git push
