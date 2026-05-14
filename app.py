@@ -17,7 +17,7 @@ st.markdown("""
     max-width:1700px;
     padding-top:1.2rem;
 }
-h1,h2,h3,p,label,div,span,li {
+h1,h2,h3,p,label,div,span,li,b {
     color:#f8fafc !important;
 }
 .card {
@@ -31,8 +31,8 @@ h1,h2,h3,p,label,div,span,li {
     background:#111827;
     border:1px solid #334155;
     border-radius:18px;
-    padding:18px 20px;
-    margin-bottom:18px;
+    padding:20px 22px;
+    margin-bottom:20px;
 }
 .rank {
     color:#38bdf8 !important;
@@ -42,15 +42,18 @@ h1,h2,h3,p,label,div,span,li {
 .theme-name {
     font-size:25px;
     font-weight:900;
+    margin-bottom:6px;
 }
 .copy {
     color:#f97316 !important;
     font-weight:900;
     font-size:16px;
+    margin-bottom:6px;
 }
 .small {
     color:#94a3b8 !important;
     font-size:13px;
+    line-height:1.5;
 }
 .tag {
     display:inline-block;
@@ -65,6 +68,26 @@ h1,h2,h3,p,label,div,span,li {
 .score {
     color:#22c55e !important;
     font-weight:900;
+}
+.section-label {
+    margin-top:16px;
+    margin-bottom:8px;
+    font-weight:900;
+    font-size:16px;
+}
+.issue-item {
+    background:#0f172a;
+    border:1px solid #1f2937;
+    border-radius:12px;
+    padding:10px 12px;
+    margin-bottom:8px;
+}
+.stButton button {
+    background:#2563eb;
+    color:white;
+    border-radius:12px;
+    border:0;
+    font-weight:800;
 }
 [data-baseweb="select"] * {
     color:#111827 !important;
@@ -92,7 +115,6 @@ def load_data():
 def split_keywords(text):
     if pd.isna(text):
         return []
-
     return [
         t.strip()
         for t in str(text).replace("/", ",").split(",")
@@ -100,9 +122,7 @@ def split_keywords(text):
     ]
 
 def keyword_score(a_keywords, b_keywords):
-    a_set = set(a_keywords)
-    b_set = set(b_keywords)
-    return len(a_set.intersection(b_set))
+    return len(set(a_keywords).intersection(set(b_keywords)))
 
 def find_matched_issues(theme, issues):
     theme_keywords = split_keywords(theme["trigger_keywords"])
@@ -158,7 +178,6 @@ def build_theme_recommendations(issues, themes, contents, top_n=5):
 
         issue_score = sum(i["score"] for i in matched_issues)
         content_score = sum(c["score"] for c in matched_contents[:8])
-
         total_score = issue_score * 3 + content_score
 
         recs.append({
@@ -179,28 +198,22 @@ except Exception as e:
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown(f"""
-    <div class="card">
-        <div class="small">지난주 외부 이슈</div>
-        <div class="rank">{len(issues)}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="card"><div class="small">지난주 외부 이슈</div><div class="rank">{len(issues)}</div></div>',
+        unsafe_allow_html=True
+    )
 
 with col2:
-    st.markdown(f"""
-    <div class="card">
-        <div class="small">테마 후보 풀</div>
-        <div class="rank">{len(themes)}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="card"><div class="small">테마 후보 풀</div><div class="rank">{len(themes)}</div></div>',
+        unsafe_allow_html=True
+    )
 
 with col3:
-    st.markdown(f"""
-    <div class="card">
-        <div class="small">콘텐츠 DB</div>
-        <div class="rank">{len(contents)}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="card"><div class="small">콘텐츠 DB</div><div class="rank">{len(contents)}</div></div>',
+        unsafe_allow_html=True
+    )
 
 st.markdown("---")
 
@@ -210,13 +223,16 @@ with left:
     st.subheader("지난주 수집 이슈")
 
     for _, issue in issues.iterrows():
-        st.markdown(f"""
-        <div class="card">
-            <b>{issue['issue_title']}</b><br>
-            <span class="small">{issue['source']} · {issue['related_content']}</span><br>
-            <span class="small">{issue['description']}</span>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            f'''
+            <div class="card">
+                <b>{issue["issue_title"]}</b><br>
+                <span class="small">{issue["source"]} · {issue["related_content"]}</span><br>
+                <span class="small">{issue["description"]}</span>
+            </div>
+            ''',
+            unsafe_allow_html=True
+        )
 
 with right:
     st.subheader("이번주 추천 테마 TOP5")
@@ -242,39 +258,32 @@ with right:
                 matched_issues = rec["issues"]
                 matched_contents = rec["contents"]
 
-                issue_html = ""
+                issue_blocks = ""
                 for issue in matched_issues:
-                    issue_html += f"""
-                    <li>
-                        <b>{issue['source']}</b> · {issue['issue_title']}<br>
-                        <span class="small">{issue['description']}</span>
-                    </li>
-                    """
+                    issue_blocks += (
+                        '<div class="issue-item">'
+                        f'<b>{issue["source"]}</b> · {issue["issue_title"]}<br>'
+                        f'<span class="small">{issue["description"]}</span>'
+                        '</div>'
+                    )
 
-                content_html = ""
+                content_tags = ""
                 for c in matched_contents:
-                    content_html += f"""
-                    <span class="tag">
-                        {c['title']} · {c['type']} · {c['year']}
-                    </span>
-                    """
+                    content_tags += (
+                        f'<span class="tag">{c["title"]} · {c["type"]} · {c["year"]}</span>'
+                    )
 
-                st.markdown(f"""
-                <div class="theme-card">
-                    <div class="rank">#{idx}</div>
-                    <div class="theme-name">{theme['theme_name']}</div>
-                    <div class="copy">노출 카피: {theme['copy']}</div>
-                    <div class="small">
-                        추천 점수: <span class="score">{rec['score']}</span>
-                    </div>
+                html = (
+                    '<div class="theme-card">'
+                    f'<div class="rank">#{idx}</div>'
+                    f'<div class="theme-name">{theme["theme_name"]}</div>'
+                    f'<div class="copy">노출 카피: {theme["copy"]}</div>'
+                    f'<div class="small">추천 점수: <span class="score">{rec["score"]}</span></div>'
+                    '<div class="section-label">선정 근거</div>'
+                    f'{issue_blocks}'
+                    '<div class="section-label">추천 콘텐츠 후보</div>'
+                    f'{content_tags}'
+                    '</div>'
+                )
 
-                    <br>
-                    <b>선정 근거</b>
-                    <ul>
-                        {issue_html}
-                    </ul>
-
-                    <b>추천 콘텐츠 후보</b><br>
-                    {content_html}
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(html, unsafe_allow_html=True)
