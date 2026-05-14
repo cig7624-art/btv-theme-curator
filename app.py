@@ -120,7 +120,6 @@ def go_page(page):
 if "page" not in st.session_state:
     st.session_state["page"] = "home"
 
-@st.cache_data
 def load_data():
     issues = pd.read_csv(ISSUE_PATH, sep="|").fillna("")
 
