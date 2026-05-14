@@ -14,10 +14,10 @@ st.markdown("""
     background:#090d1a;
 }
 .block-container {
-    max-width:1700px;
+    max-width:1800px;
     padding-top:1.2rem;
 }
-h1,h2,h3,p,label,div,span,li,b {
+h1,h2,h3,p,label,div,span,li,b,a {
     color:#f8fafc !important;
 }
 .card {
@@ -40,14 +40,14 @@ h1,h2,h3,p,label,div,span,li,b {
     font-weight:900;
 }
 .theme-name {
-    font-size:24px;
+    font-size:23px;
     font-weight:900;
     margin-bottom:6px;
 }
 .copy {
     color:#f97316 !important;
     font-weight:900;
-    font-size:16px;
+    font-size:15px;
     margin-bottom:6px;
 }
 .small {
@@ -81,6 +81,17 @@ h1,h2,h3,p,label,div,span,li,b {
     margin-bottom:8px;
     font-weight:900;
     font-size:15px;
+}
+.source-link {
+    display:inline-block;
+    margin-top:8px;
+    color:#38bdf8 !important;
+    font-size:13px;
+    font-weight:800;
+    text-decoration:none;
+}
+.source-link:hover {
+    text-decoration:underline;
 }
 .stButton button {
     background:#2563eb;
@@ -122,6 +133,9 @@ def load_data():
 
     contents = pd.read_csv(CONTENT_DB_PATH, sep="|").fillna("")
 
+    if "source_url" not in issues.columns:
+        issues["source_url"] = ""
+
     return issues, themes, contents
 
 def split_keywords(text):
@@ -137,6 +151,12 @@ def split_keywords(text):
 def keyword_score(a_keywords, b_keywords):
     return len(set(a_keywords).intersection(set(b_keywords)))
 
+def safe_url(url):
+    url = str(url).strip()
+    if url.startswith("http://") or url.startswith("https://"):
+        return url
+    return ""
+
 def find_matched_issues(theme, issues):
     theme_keywords = split_keywords(theme["trigger_keywords"])
     matched = []
@@ -151,6 +171,7 @@ def find_matched_issues(theme, issues):
                 "issue_title": issue["issue_title"],
                 "related_content": issue["related_content"],
                 "description": issue["description"],
+                "source_url": issue.get("source_url", ""),
                 "score": score
             })
 
@@ -233,16 +254,26 @@ def render_metric(title, number, subtitle=None):
     )
 
 def render_issue_card(issue):
+    url = safe_url(issue.get("source_url", ""))
+    link_html = ""
+
+    if url:
+        link_html = f'<a class="source-link" href="{url}" target="_blank">근거 링크 보기 ↗</a>'
+
+    related = str(issue.get("related_content", "")).strip()
+    related_html = f" · {related}" if related else ""
+
     st.markdown(
         f'''
         <div class="card">
             <b>{issue["issue_title"]}</b><br>
             <span class="small">
-                {issue["source"]} · {issue["related_content"]}
+                {issue["source"]}{related_html}
             </span><br>
             <span class="small">
                 {issue["description"]}
-            </span>
+            </span><br>
+            {link_html}
         </div>
         ''',
         unsafe_allow_html=True
@@ -274,10 +305,16 @@ def render_theme_card(idx, rec):
 
     issue_blocks = ""
     for issue in matched_issues:
+        url = safe_url(issue.get("source_url", ""))
+        link_html = ""
+        if url:
+            link_html = f'<a class="source-link" href="{url}" target="_blank">근거 링크 보기 ↗</a>'
+
         issue_blocks += (
             '<div class="issue-item">'
             f'<b>{issue["source"]}</b> · {issue["issue_title"]}<br>'
-            f'<span class="small">{issue["description"]}</span>'
+            f'<span class="small">{issue["description"]}</span><br>'
+            f'{link_html}'
             '</div>'
         )
 
@@ -401,7 +438,7 @@ else:
 
     st.markdown("---")
 
-    left, right = st.columns([1.05, 2])
+    left, right = st.columns([1, 1])
 
     with left:
         st.subheader("지난주 수집 이슈")
