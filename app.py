@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
+from datetime import datetime, timedelta
 
 st.set_page_config(
     page_title="B tv+ AI Theme Curator",
@@ -124,6 +125,26 @@ def load_data():
         issues["source_url"] = ""
 
     return issues, themes, contents
+
+def filter_recent_issues(issues, days=7):
+    issues = issues.copy()
+
+    issues["date"] = pd.to_datetime(
+        issues["date"],
+        errors="coerce"
+    )
+
+    today = pd.Timestamp.today().normalize()
+    start_date = today - pd.Timedelta(days=days - 1)
+
+    recent = issues[
+        (issues["date"] >= start_date)
+        & (issues["date"] <= today)
+    ].copy()
+
+    recent["date"] = recent["date"].dt.strftime("%Y-%m-%d")
+
+    return recent, start_date.strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")
 
 def split_keywords(text):
     if pd.isna(text):
@@ -309,14 +330,18 @@ def render_theme_card(idx, rec):
     st.markdown(html, unsafe_allow_html=True)
 
 try:
-    issues, themes, contents = load_data()
+    all_issues, themes, contents = load_data()
+    issues, issue_start_date, issue_end_date = filter_recent_issues(
+        all_issues,
+        days=7
+    )
 except Exception as e:
     st.error(f"CSV 로드 실패: {e}")
     st.stop()
 
 if st.session_state["page"] == "issue_db":
-    st.markdown("<h1>🗂 지난주 수집 이슈 전체 보기</h1>", unsafe_allow_html=True)
-    st.caption("추천 테마의 근거가 되는 외부 콘텐츠 이슈와 출처 링크를 확인합니다.")
+    st.markdown("<h1>🗂 직전 7일 수집 이슈 전체 보기</h1>", unsafe_allow_html=True)
+    st.caption(f"{issue_start_date} ~ {issue_end_date} 기준 외부 콘텐츠 이슈와 출처 링크를 확인합니다.")
 
     if st.button("← 추천 화면으로 돌아가기"):
         go_page("home")
@@ -430,15 +455,15 @@ elif st.session_state["page"] == "theme_db":
 
 else:
     st.markdown("<h1>🧠 B tv+ AI Theme Curator</h1>", unsafe_allow_html=True)
-    st.caption("지난주 외부 콘텐츠 이슈를 기반으로 이번주 노출할 테마와 콘텐츠 후보를 추천합니다.")
+    st.caption("오늘 기준 직전 7일 외부 콘텐츠 이슈를 기반으로 이번주 노출할 테마와 콘텐츠 후보를 추천합니다.")
 
     col1, col2 = st.columns(2)
 
     with col1:
         render_metric(
-            "지난주 외부 이슈",
+            "직전 7일 외부 이슈",
             len(issues),
-            "이번주 테마 추천의 근거 데이터"
+            f"{issue_start_date} ~ {issue_end_date} 기준"
         )
 
         if st.button("🗂 이슈 전체 보기", use_container_width=True):
@@ -461,10 +486,13 @@ else:
     left, right = st.columns([1, 1])
 
     with left:
-        st.subheader("지난주 수집 이슈")
+        st.subheader("직전 7일 수집 이슈")
 
-        for _, issue in issues.iterrows():
-            render_issue_card(issue)
+        if issues.empty:
+            st.warning("직전 7일 기준 수집된 이슈가 없습니다. issue_feed.csv의 date 값을 확인하세요.")
+        else:
+            for _, issue in issues.iterrows():
+                render_issue_card(issue)
 
     with right:
         st.subheader("이번주 추천 테마")
@@ -499,7 +527,7 @@ else:
             )
 
         if "recs" not in st.session_state:
-            st.info("버튼을 누르면 지난주 이슈와 가장 밀접한 테마와 콘텐츠 후보가 생성됩니다.")
+            st.info("버튼을 누르면 직전 7일 이슈와 가장 밀접한 테마와 콘텐츠 후보가 생성됩니다.")
         else:
             recs = st.session_state["recs"]
 
