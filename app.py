@@ -17,7 +17,7 @@ st.markdown("""
     max-width:1700px;
     padding-top:1.2rem;
 }
-h1,h2,h3,p,label,div,span {
+h1,h2,h3,p,label,div,span,li {
     color:#f8fafc !important;
 }
 .card {
@@ -84,24 +84,25 @@ CONTENT_PATH = Path("content_db.csv")
 
 @st.cache_data
 def load_data():
-    issues = pd.read_csv(ISSUE_PATH)
-    themes = pd.read_csv(THEME_PATH)
-    contents = pd.read_csv(CONTENT_PATH)
+    issues = pd.read_csv(ISSUE_PATH, sep="|").fillna("")
+    themes = pd.read_csv(THEME_PATH, sep="|").fillna("")
+    contents = pd.read_csv(CONTENT_PATH, sep="|").fillna("")
     return issues, themes, contents
 
 def split_keywords(text):
     if pd.isna(text):
         return []
+
     return [
         t.strip()
         for t in str(text).replace("/", ",").split(",")
         if t.strip()
     ]
 
-def keyword_score(issue_keywords, theme_keywords):
-    issue_set = set(issue_keywords)
-    theme_set = set(theme_keywords)
-    return len(issue_set.intersection(theme_set))
+def keyword_score(a_keywords, b_keywords):
+    a_set = set(a_keywords)
+    b_set = set(b_keywords)
+    return len(a_set.intersection(b_set))
 
 def find_matched_issues(theme, issues):
     theme_keywords = split_keywords(theme["trigger_keywords"])
@@ -120,19 +121,18 @@ def find_matched_issues(theme, issues):
                 "score": score
             })
 
-    matched = sorted(matched, key=lambda x: x["score"], reverse=True)
-    return matched[:3]
+    return sorted(matched, key=lambda x: x["score"], reverse=True)[:3]
 
 def find_contents(theme, contents, limit=12):
     theme_keywords = split_keywords(theme["trigger_keywords"])
     results = []
 
     for _, content in contents.iterrows():
-        content_keywords = split_keywords(content.get("tags", ""))
+        tag_keywords = split_keywords(content.get("tags", ""))
         genre_keywords = split_keywords(content.get("genre", ""))
 
         score = 0
-        score += keyword_score(content_keywords, theme_keywords) * 2
+        score += keyword_score(tag_keywords, theme_keywords) * 2
         score += keyword_score(genre_keywords, theme_keywords)
 
         if score > 0:
@@ -144,8 +144,7 @@ def find_contents(theme, contents, limit=12):
                 "score": score
             })
 
-    results = sorted(results, key=lambda x: x["score"], reverse=True)
-    return results[:limit]
+    return sorted(results, key=lambda x: x["score"], reverse=True)[:limit]
 
 def build_theme_recommendations(issues, themes, contents, top_n=5):
     recs = []
@@ -157,8 +156,8 @@ def build_theme_recommendations(issues, themes, contents, top_n=5):
         if not matched_issues or not matched_contents:
             continue
 
-        issue_score = sum([i["score"] for i in matched_issues])
-        content_score = sum([c["score"] for c in matched_contents[:8]])
+        issue_score = sum(i["score"] for i in matched_issues)
+        content_score = sum(c["score"] for c in matched_contents[:8])
 
         total_score = issue_score * 3 + content_score
 
@@ -169,8 +168,7 @@ def build_theme_recommendations(issues, themes, contents, top_n=5):
             "score": total_score
         })
 
-    recs = sorted(recs, key=lambda x: x["score"], reverse=True)
-    return recs[:top_n]
+    return sorted(recs, key=lambda x: x["score"], reverse=True)[:top_n]
 
 try:
     issues, themes, contents = load_data()
@@ -178,9 +176,9 @@ except Exception as e:
     st.error(f"CSV 로드 실패: {e}")
     st.stop()
 
-colA, colB, colC = st.columns(3)
+col1, col2, col3 = st.columns(3)
 
-with colA:
+with col1:
     st.markdown(f"""
     <div class="card">
         <div class="small">지난주 외부 이슈</div>
@@ -188,7 +186,7 @@ with colA:
     </div>
     """, unsafe_allow_html=True)
 
-with colB:
+with col2:
     st.markdown(f"""
     <div class="card">
         <div class="small">테마 후보 풀</div>
@@ -196,7 +194,7 @@ with colB:
     </div>
     """, unsafe_allow_html=True)
 
-with colC:
+with col3:
     st.markdown(f"""
     <div class="card">
         <div class="small">콘텐츠 DB</div>
@@ -206,7 +204,7 @@ with colC:
 
 st.markdown("---")
 
-left, right = st.columns([1.1, 2])
+left, right = st.columns([1.05, 2])
 
 with left:
     st.subheader("지난주 수집 이슈")
@@ -241,27 +239,23 @@ with right:
         else:
             for idx, rec in enumerate(recs, start=1):
                 theme = rec["theme"]
-                issues_matched = rec["issues"]
-                contents_matched = rec["contents"]
+                matched_issues = rec["issues"]
+                matched_contents = rec["contents"]
 
                 issue_html = ""
-                for issue in issues_matched:
-                    related = issue["related_content"]
-                    if pd.isna(related):
-                        related = ""
+                for issue in matched_issues:
                     issue_html += f"""
                     <li>
-                        <b>{issue['source']}</b> · {issue['issue_title']}
-                        <br>
+                        <b>{issue['source']}</b> · {issue['issue_title']}<br>
                         <span class="small">{issue['description']}</span>
                     </li>
                     """
 
                 content_html = ""
-                for c in contents_matched:
+                for c in matched_contents:
                     content_html += f"""
                     <span class="tag">
-                        {c['title']} · {c['type']}
+                        {c['title']} · {c['type']} · {c['year']}
                     </span>
                     """
 
@@ -270,7 +264,9 @@ with right:
                     <div class="rank">#{idx}</div>
                     <div class="theme-name">{theme['theme_name']}</div>
                     <div class="copy">노출 카피: {theme['copy']}</div>
-                    <div class="small">추천 점수: <span class="score">{rec['score']}</span></div>
+                    <div class="small">
+                        추천 점수: <span class="score">{rec['score']}</span>
+                    </div>
 
                     <br>
                     <b>선정 근거</b>
