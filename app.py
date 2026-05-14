@@ -10,16 +10,10 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-.stApp {
-    background:#090d1a;
-}
-.block-container {
-    max-width:1800px;
-    padding-top:1.2rem;
-}
-h1,h2,h3,p,label,div,span,li,b,a {
-    color:#f8fafc !important;
-}
+.stApp { background:#090d1a; }
+.block-container { max-width:1800px; padding-top:1.2rem; }
+h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
+
 .card {
     background:#0f172a;
     border:1px solid #1e293b;
@@ -90,9 +84,7 @@ h1,h2,h3,p,label,div,span,li,b,a {
     font-weight:800;
     text-decoration:none;
 }
-.source-link:hover {
-    text-decoration:underline;
-}
+.source-link:hover { text-decoration:underline; }
 .stButton button {
     background:#2563eb;
     color:white;
@@ -100,12 +92,8 @@ h1,h2,h3,p,label,div,span,li,b,a {
     border:0;
     font-weight:800;
 }
-[data-baseweb="select"] * {
-    color:#111827 !important;
-}
-input, textarea {
-    color:#111827 !important;
-}
+[data-baseweb="select"] * { color:#111827 !important; }
+input, textarea { color:#111827 !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -166,6 +154,7 @@ def find_matched_issues(theme, issues):
 
         if score > 0:
             matched.append({
+                "date": issue.get("date", ""),
                 "source": issue["source"],
                 "issue_title": issue["issue_title"],
                 "related_content": issue["related_content"],
@@ -242,55 +231,40 @@ def build_theme_recommendations(issues, themes, contents, top_n=20, content_limi
 def render_metric(title, number, subtitle=None):
     sub_html = f'<div class="small">{subtitle}</div>' if subtitle else ""
     st.markdown(
-        f'''
-        <div class="card">
-            <div class="small">{title}</div>
-            <div class="rank">{number}</div>
-            {sub_html}
-        </div>
-        ''',
+        f'<div class="card"><div class="small">{title}</div><div class="rank">{number}</div>{sub_html}</div>',
         unsafe_allow_html=True
     )
 
+def render_source_link(url):
+    url = safe_url(url)
+    if not url:
+        return ""
+    return f'<a class="source-link" href="{url}" target="_blank">근거 링크 보기 ↗</a>'
+
 def render_issue_card(issue):
-    url = safe_url(issue.get("source_url", ""))
-    link_html = ""
-
-    if url:
-        link_html = f'<a class="source-link" href="{url}" target="_blank">근거 링크 보기 ↗</a>'
-
+    url_html = render_source_link(issue.get("source_url", ""))
     related = str(issue.get("related_content", "")).strip()
     related_html = f" · {related}" if related else ""
 
-    st.markdown(
-        f'''
-        <div class="card">
-            <b>{issue["issue_title"]}</b><br>
-            <span class="small">
-                {issue["source"]}{related_html}
-            </span><br>
-            <span class="small">
-                {issue["description"]}
-            </span><br>
-            {link_html}
-        </div>
-        ''',
-        unsafe_allow_html=True
+    html = (
+        '<div class="card">'
+        f'<b>{issue["issue_title"]}</b><br>'
+        f'<span class="small">{issue["source"]}{related_html}</span><br>'
+        f'<span class="small">{issue["description"]}</span><br>'
+        f'{url_html}'
+        '</div>'
     )
+    st.markdown(html, unsafe_allow_html=True)
 
 def render_content_tags(matched_contents):
     if not matched_contents:
         return '<span class="small">매칭 콘텐츠 없음</span>'
 
     content_tags = ""
-
     for c in matched_contents:
         content_tags += (
-            f'<span class="tag">'
-            f'{c["title"]} · {c["type"]} · {c["year"]}'
-            f'</span>'
+            f'<span class="tag">{c["title"]} · {c["type"]} · {c["year"]}</span>'
         )
-
     return content_tags
 
 def render_theme_card(idx, rec):
@@ -304,11 +278,7 @@ def render_theme_card(idx, rec):
 
     issue_blocks = ""
     for issue in matched_issues:
-        url = safe_url(issue.get("source_url", ""))
-        link_html = ""
-        if url:
-            link_html = f'<a class="source-link" href="{url}" target="_blank">근거 링크 보기 ↗</a>'
-
+        link_html = render_source_link(issue.get("source_url", ""))
         issue_blocks += (
             '<div class="issue-item">'
             f'<b>{issue["source"]}</b> · {issue["issue_title"]}<br>'
@@ -344,7 +314,57 @@ except Exception as e:
     st.error(f"CSV 로드 실패: {e}")
     st.stop()
 
-if st.session_state["page"] == "theme_db":
+if st.session_state["page"] == "issue_db":
+    st.markdown("<h1>🗂 지난주 수집 이슈 전체 보기</h1>", unsafe_allow_html=True)
+    st.caption("추천 테마의 근거가 되는 외부 콘텐츠 이슈와 출처 링크를 확인합니다.")
+
+    if st.button("← 추천 화면으로 돌아가기"):
+        go_page("home")
+        st.rerun()
+
+    st.markdown("---")
+
+    search = st.text_input(
+        "이슈명/콘텐츠/키워드/출처 검색",
+        placeholder="예: 미키17, 살목지, 쇼츠, 키노라이츠, 요리"
+    )
+
+    filtered = issues.copy()
+
+    if search:
+        s = search.strip()
+        filtered = filtered[
+            filtered["issue_title"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["related_content"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["keywords"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["source"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["description"].astype(str).str.contains(s, case=False, na=False)
+        ]
+
+    st.markdown(f"### 전체 {len(issues)}개 중 {len(filtered)}개 표시")
+
+    for _, issue in filtered.iterrows():
+        keyword_tags = ""
+        for kw in split_keywords(issue["keywords"])[:16]:
+            keyword_tags += f'<span class="tag">{kw}</span>'
+
+        url_html = render_source_link(issue.get("source_url", ""))
+
+        html = (
+            '<div class="theme-card">'
+            f'<div class="small">{issue["date"]} · {issue["source"]}</div>'
+            f'<div class="theme-name">{issue["issue_title"]}</div>'
+            f'<div class="copy">관련 콘텐츠: {issue["related_content"]}</div>'
+            f'<div class="small">{issue["description"]}</div>'
+            '<div class="section-label">이슈 키워드</div>'
+            f'{keyword_tags}<br>'
+            f'{url_html}'
+            '</div>'
+        )
+
+        st.markdown(html, unsafe_allow_html=True)
+
+elif st.session_state["page"] == "theme_db":
     st.markdown("<h1>📚 테마 DB 전체 보기</h1>", unsafe_allow_html=True)
     st.caption("전체 테마 풀을 확인하고, 각 테마에 자동 매칭되는 콘텐츠 후보를 미리 볼 수 있습니다.")
 
@@ -393,23 +413,20 @@ if st.session_state["page"] == "theme_db":
 
         content_tags = render_content_tags(matched_contents)
 
-        st.markdown(
-            f'''
-            <div class="theme-card">
-                <div class="small">{row["theme_id"]}</div>
-                <div class="theme-name">{row["theme_name"]}</div>
-                <div class="copy">노출명/카피: {row["copy"]}</div>
-                <div class="small">장르: {row["genre"]} · 무드: {row["mood"]}</div>
-
-                <div class="section-label">테마 키워드</div>
-                <div>{keyword_tags}</div>
-
-                <div class="section-label">추천 콘텐츠 후보</div>
-                <div>{content_tags}</div>
-            </div>
-            ''',
-            unsafe_allow_html=True
+        html = (
+            '<div class="theme-card">'
+            f'<div class="small">{row["theme_id"]}</div>'
+            f'<div class="theme-name">{row["theme_name"]}</div>'
+            f'<div class="copy">노출명/카피: {row["copy"]}</div>'
+            f'<div class="small">장르: {row["genre"]} · 무드: {row["mood"]}</div>'
+            '<div class="section-label">테마 키워드</div>'
+            f'{keyword_tags}'
+            '<div class="section-label">추천 콘텐츠 후보</div>'
+            f'{content_tags}'
+            '</div>'
         )
+
+        st.markdown(html, unsafe_allow_html=True)
 
 else:
     st.markdown("<h1>🧠 B tv+ AI Theme Curator</h1>", unsafe_allow_html=True)
@@ -423,6 +440,10 @@ else:
             len(issues),
             "이번주 테마 추천의 근거 데이터"
         )
+
+        if st.button("🗂 이슈 전체 보기", use_container_width=True):
+            go_page("issue_db")
+            st.rerun()
 
     with col2:
         render_metric(
