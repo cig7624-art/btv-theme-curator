@@ -22,6 +22,13 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     padding:16px 18px;
     margin-bottom:14px;
 }
+.logic-card {
+    background:#111827;
+    border:1px solid #334155;
+    border-radius:18px;
+    padding:18px 20px;
+    margin-bottom:18px;
+}
 .theme-card {
     background:#111827;
     border:1px solid #334155;
@@ -64,19 +71,6 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     color:#22c55e !important;
     font-weight:900;
 }
-.issue-item {
-    background:#0f172a;
-    border:1px solid #1f2937;
-    border-radius:12px;
-    padding:10px 12px;
-    margin-bottom:8px;
-}
-.section-label {
-    margin-top:14px;
-    margin-bottom:8px;
-    font-weight:900;
-    font-size:15px;
-}
 .source-link {
     display:inline-block;
     margin-top:8px;
@@ -86,6 +80,20 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     text-decoration:none;
 }
 .source-link:hover { text-decoration:underline; }
+.section-label {
+    margin-top:14px;
+    margin-bottom:8px;
+    font-weight:900;
+    font-size:15px;
+}
+.one-line-reason {
+    background:#0f172a;
+    border-left:4px solid #38bdf8;
+    padding:10px 12px;
+    border-radius:8px;
+    margin-top:10px;
+    margin-bottom:10px;
+}
 .stButton button {
     background:#2563eb;
     color:white;
@@ -102,6 +110,16 @@ ISSUE_PATH = Path("issue_feed.csv")
 THEME_DB_PATH = Path("theme_db.csv")
 OLD_THEME_PATH = Path("theme_pool.csv")
 CONTENT_DB_PATH = Path("content_db.csv")
+
+SOURCE_WEIGHTS = {
+    "유튜브": 40,
+    "SNS/인스타": 30,
+    "극장": 20,
+    "키노라이츠": 20,
+    "OTT/랭킹": 15,
+    "왓챠피디아": 10,
+    "뉴스/공식자료": 10,
+}
 
 def go_page(page):
     st.session_state["page"] = page
@@ -146,6 +164,23 @@ def filter_recent_issues(issues, days=7):
 
     return recent, start_date.strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")
 
+def classify_source(source):
+    s = str(source)
+
+    if "유튜브" in s or "YouTube" in s:
+        return "유튜브"
+    if "SNS" in s or "인스타" in s or "Instagram" in s:
+        return "SNS/인스타"
+    if "극장" in s or "KOFIC" in s or "박스오피스" in s:
+        return "극장"
+    if "키노라이츠" in s:
+        return "키노라이츠"
+    if "OTT" in s or "넷플릭스" in s or "티빙" in s or "웨이브" in s:
+        return "OTT/랭킹"
+    if "왓챠" in s:
+        return "왓챠피디아"
+    return "뉴스/공식자료"
+
 def split_keywords(text):
     if pd.isna(text):
         return []
@@ -165,6 +200,27 @@ def safe_url(url):
         return url
     return ""
 
+def score_issue(issue):
+    source_group = classify_source(issue.get("source", ""))
+    base = SOURCE_WEIGHTS.get(source_group, 5)
+
+    keywords = split_keywords(issue.get("keywords", ""))
+    keyword_bonus = min(len(keywords), 12)
+
+    related_bonus = 8 if str(issue.get("related_content", "")).strip() else 0
+    link_bonus = 8 if safe_url(issue.get("source_url", "")) else 0
+
+    desc = str(issue.get("description", ""))
+    detail_bonus = min(len(desc) // 35, 8)
+
+    return base + keyword_bonus + related_bonus + link_bonus + detail_bonus
+
+def prepare_issues(issues):
+    issues = issues.copy()
+    issues["source_group"] = issues["source"].apply(classify_source)
+    issues["issue_score"] = issues.apply(score_issue, axis=1)
+    return issues.sort_values("issue_score", ascending=False)
+
 def find_matched_issues(theme, issues):
     theme_keywords = split_keywords(theme["trigger_keywords"])
     matched = []
@@ -177,14 +233,20 @@ def find_matched_issues(theme, issues):
             matched.append({
                 "date": issue.get("date", ""),
                 "source": issue["source"],
+                "source_group": issue.get("source_group", classify_source(issue["source"])),
                 "issue_title": issue["issue_title"],
                 "related_content": issue["related_content"],
                 "description": issue["description"],
                 "source_url": issue.get("source_url", ""),
-                "score": score
+                "score": score,
+                "issue_score": issue.get("issue_score", 0)
             })
 
-    return sorted(matched, key=lambda x: x["score"], reverse=True)
+    return sorted(
+        matched,
+        key=lambda x: (x["score"], x["issue_score"]),
+        reverse=True
+    )
 
 def find_matched_contents(theme, contents, limit=12):
     theme_keywords = split_keywords(theme["trigger_keywords"])
@@ -213,6 +275,19 @@ def find_matched_contents(theme, contents, limit=12):
 
     return sorted(matched, key=lambda x: x["score"], reverse=True)[:limit]
 
+def build_reason_summary(theme, matched_issues):
+    if not matched_issues:
+        return "최근 이슈와 테마 키워드의 직접 매칭 근거가 부족합니다."
+
+    top = matched_issues[0]
+    related = str(top.get("related_content", "")).strip()
+    source = top.get("source_group", top.get("source", "외부 이슈"))
+
+    if related:
+        return f"{source}에서 '{related}' 관련 이슈가 감지되어, '{theme['theme_name']}' 테마와 연결성이 높습니다."
+
+    return f"{source} 이슈의 핵심 키워드가 '{theme['theme_name']}' 테마 키워드와 강하게 매칭됩니다."
+
 def build_theme_recommendations(issues, themes, contents, top_n=20, content_limit=12):
     recs = []
 
@@ -224,7 +299,8 @@ def build_theme_recommendations(issues, themes, contents, top_n=20, content_limi
             continue
 
         issue_score = sum(i["score"] for i in matched_issues[:5])
-        source_diversity = len(set(i["source"] for i in matched_issues))
+        issue_quality_score = sum(i.get("issue_score", 0) for i in matched_issues[:3])
+        source_diversity = len(set(i["source_group"] for i in matched_issues))
         related_content_bonus = sum(
             1 for i in matched_issues
             if str(i["related_content"]).strip()
@@ -233,6 +309,7 @@ def build_theme_recommendations(issues, themes, contents, top_n=20, content_limi
 
         total_score = (
             issue_score * 10
+            + issue_quality_score
             + source_diversity * 3
             + related_content_bonus * 2
             + content_score
@@ -244,7 +321,8 @@ def build_theme_recommendations(issues, themes, contents, top_n=20, content_limi
             "contents": matched_contents,
             "score": total_score,
             "matched_count": len(matched_issues),
-            "source_diversity": source_diversity
+            "source_diversity": source_diversity,
+            "reason_summary": build_reason_summary(theme, matched_issues)
         })
 
     return sorted(recs, key=lambda x: x["score"], reverse=True)[:top_n]
@@ -266,12 +344,16 @@ def render_issue_card(issue):
     url_html = render_source_link(issue.get("source_url", ""))
     related = str(issue.get("related_content", "")).strip()
     related_html = f" · {related}" if related else ""
+    source_group = issue.get("source_group", classify_source(issue.get("source", "")))
+    issue_score = issue.get("issue_score", "")
 
     html = (
         '<div class="card">'
+        f'<span class="tag">{source_group}</span><br>'
         f'<b>{issue["issue_title"]}</b><br>'
         f'<span class="small">{issue["source"]}{related_html}</span><br>'
         f'<span class="small">{issue["description"]}</span><br>'
+        f'<span class="small">이슈 점수: <span class="score">{issue_score}</span></span><br>'
         f'{url_html}'
         '</div>'
     )
@@ -290,23 +372,11 @@ def render_content_tags(matched_contents):
 
 def render_theme_card(idx, rec):
     theme = rec["theme"]
-    matched_issues = rec["issues"]
     matched_contents = rec["contents"]
 
     keyword_tags = ""
     for kw in split_keywords(theme["trigger_keywords"])[:12]:
         keyword_tags += f'<span class="tag">{kw}</span>'
-
-    issue_blocks = ""
-    for issue in matched_issues:
-        link_html = render_source_link(issue.get("source_url", ""))
-        issue_blocks += (
-            '<div class="issue-item">'
-            f'<b>{issue["source"]}</b> · {issue["issue_title"]}<br>'
-            f'<span class="small">{issue["description"]}</span><br>'
-            f'{link_html}'
-            '</div>'
-        )
 
     content_tags = render_content_tags(matched_contents)
 
@@ -318,10 +388,10 @@ def render_theme_card(idx, rec):
         f'<div class="small">추천 점수: <span class="score">{rec["score"]}</span> · '
         f'매칭 이슈 {rec["matched_count"]}개 · 출처 {rec["source_diversity"]}종 · '
         f'콘텐츠 후보 {len(matched_contents)}개</div>'
+        '<div class="section-label">선정 근거 요약</div>'
+        f'<div class="one-line-reason">{rec["reason_summary"]}</div>'
         '<div class="section-label">매칭 키워드</div>'
         f'{keyword_tags}'
-        '<div class="section-label">선정 근거</div>'
-        f'{issue_blocks}'
         '<div class="section-label">추천 콘텐츠 후보</div>'
         f'{content_tags}'
         '</div>'
@@ -329,18 +399,49 @@ def render_theme_card(idx, rec):
 
     st.markdown(html, unsafe_allow_html=True)
 
+def render_collection_logic():
+    st.markdown(
+        f'''
+        <div class="logic-card">
+            <div class="theme-name">이슈 수집·선정 로직</div>
+            <div class="small">
+                최근 이슈는 오늘 기준 최근 7일 이내의 외부 콘텐츠 신호 중,
+                실제 시청 전환 가능성이 높은 이슈를 우선 노출합니다.
+                단순 뉴스량보다 <b>유튜브/쇼츠 확산, SNS 반응, 극장 흥행, 키노라이츠 랭킹, OTT 화제성</b>을 더 중요하게 봅니다.
+            </div>
+
+            <div class="section-label">경로별 가중치</div>
+            <span class="tag">유튜브 40</span>
+            <span class="tag">SNS/인스타 30</span>
+            <span class="tag">극장 20</span>
+            <span class="tag">키노라이츠 20</span>
+            <span class="tag">OTT/랭킹 15</span>
+            <span class="tag">왓챠피디아 10</span>
+            <span class="tag">뉴스/공식자료 10</span>
+
+            <div class="section-label">이슈 점수 산정 기준</div>
+            <div class="small">
+                이슈 점수 = 경로별 가중치 + 키워드 구체성 + 관련 콘텐츠명 존재 여부 + 근거 링크 존재 여부 + 설명 상세도.
+                메인 화면에는 이 중 점수가 높은 핵심 이슈만 우선 노출합니다.
+            </div>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
 try:
     all_issues, themes, contents = load_data()
-    issues, issue_start_date, issue_end_date = filter_recent_issues(
+    recent_issues, issue_start_date, issue_end_date = filter_recent_issues(
         all_issues,
         days=7
     )
+    issues = prepare_issues(recent_issues)
 except Exception as e:
     st.error(f"CSV 로드 실패: {e}")
     st.stop()
 
 if st.session_state["page"] == "issue_db":
-    st.markdown("<h1>🗂 직전 7일 수집 이슈 전체 보기</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>🗂 최근 이슈 전체 보기</h1>", unsafe_allow_html=True)
     st.caption(f"{issue_start_date} ~ {issue_end_date} 기준 외부 콘텐츠 이슈와 출처 링크를 확인합니다.")
 
     if st.button("← 추천 화면으로 돌아가기"):
@@ -349,12 +450,28 @@ if st.session_state["page"] == "issue_db":
 
     st.markdown("---")
 
-    search = st.text_input(
-        "이슈명/콘텐츠/키워드/출처 검색",
-        placeholder="예: 미키17, 살목지, 쇼츠, 키노라이츠, 요리"
-    )
+    render_collection_logic()
+
+    source_options = ["전체"] + list(SOURCE_WEIGHTS.keys())
+
+    c1, c2 = st.columns([1, 2])
+
+    with c1:
+        selected_source = st.selectbox(
+            "경로별 보기",
+            source_options
+        )
+
+    with c2:
+        search = st.text_input(
+            "이슈명/콘텐츠/키워드/출처 검색",
+            placeholder="예: 미키17, 살목지, 쇼츠, 키노라이츠, 요리"
+        )
 
     filtered = issues.copy()
+
+    if selected_source != "전체":
+        filtered = filtered[filtered["source_group"] == selected_source]
 
     if search:
         s = search.strip()
@@ -377,10 +494,12 @@ if st.session_state["page"] == "issue_db":
 
         html = (
             '<div class="theme-card">'
+            f'<span class="tag">{issue["source_group"]}</span>'
             f'<div class="small">{issue["date"]} · {issue["source"]}</div>'
             f'<div class="theme-name">{issue["issue_title"]}</div>'
             f'<div class="copy">관련 콘텐츠: {issue["related_content"]}</div>'
             f'<div class="small">{issue["description"]}</div>'
+            f'<div class="small">이슈 점수: <span class="score">{issue["issue_score"]}</span></div>'
             '<div class="section-label">이슈 키워드</div>'
             f'{keyword_tags}<br>'
             f'{url_html}'
@@ -455,13 +574,13 @@ elif st.session_state["page"] == "theme_db":
 
 else:
     st.markdown("<h1>🧠 B tv+ AI Theme Curator</h1>", unsafe_allow_html=True)
-    st.caption("오늘 기준 직전 7일 외부 콘텐츠 이슈를 기반으로 이번주 노출할 테마와 콘텐츠 후보를 추천합니다.")
+    st.caption("최근 외부 콘텐츠 이슈를 기반으로 이번주 노출할 테마와 콘텐츠 후보를 추천합니다.")
 
     col1, col2 = st.columns(2)
 
     with col1:
         render_metric(
-            "직전 7일 외부 이슈",
+            "최근 이슈",
             len(issues),
             f"{issue_start_date} ~ {issue_end_date} 기준"
         )
@@ -486,12 +605,14 @@ else:
     left, right = st.columns([1, 1])
 
     with left:
-        st.subheader("직전 7일 수집 이슈")
+        st.subheader("최근 핵심 이슈")
 
         if issues.empty:
-            st.warning("직전 7일 기준 수집된 이슈가 없습니다. issue_feed.csv의 date 값을 확인하세요.")
+            st.warning("최근 기준 수집된 이슈가 없습니다. issue_feed.csv의 date 값을 확인하세요.")
         else:
-            for _, issue in issues.iterrows():
+            main_issues = issues.head(8)
+
+            for _, issue in main_issues.iterrows():
                 render_issue_card(issue)
 
     with right:
@@ -527,7 +648,7 @@ else:
             )
 
         if "recs" not in st.session_state:
-            st.info("버튼을 누르면 직전 7일 이슈와 가장 밀접한 테마와 콘텐츠 후보가 생성됩니다.")
+            st.info("버튼을 누르면 최근 이슈와 가장 밀접한 테마와 콘텐츠 후보가 생성됩니다.")
         else:
             recs = st.session_state["recs"]
 
