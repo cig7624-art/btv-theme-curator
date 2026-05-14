@@ -31,8 +31,8 @@ h1,h2,h3,p,label,div,span,li,b {
     background:#111827;
     border:1px solid #334155;
     border-radius:18px;
-    padding:20px 22px;
-    margin-bottom:20px;
+    padding:18px 20px;
+    margin-bottom:16px;
 }
 .rank {
     color:#38bdf8 !important;
@@ -40,7 +40,7 @@ h1,h2,h3,p,label,div,span,li,b {
     font-weight:900;
 }
 .theme-name {
-    font-size:25px;
+    font-size:24px;
     font-weight:900;
     margin-bottom:6px;
 }
@@ -69,18 +69,18 @@ h1,h2,h3,p,label,div,span,li,b {
     color:#22c55e !important;
     font-weight:900;
 }
-.section-label {
-    margin-top:16px;
-    margin-bottom:8px;
-    font-weight:900;
-    font-size:16px;
-}
 .issue-item {
     background:#0f172a;
     border:1px solid #1f2937;
     border-radius:12px;
     padding:10px 12px;
     margin-bottom:8px;
+}
+.section-label {
+    margin-top:14px;
+    margin-bottom:8px;
+    font-weight:900;
+    font-size:15px;
 }
 .stButton button {
     background:#2563eb;
@@ -98,26 +98,39 @@ input, textarea {
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1>🧠 B tv+ AI Theme Curator</h1>", unsafe_allow_html=True)
-st.caption("지난주 외부 콘텐츠 이슈를 기반으로 이번주 노출할 B tv+ 테마를 추천합니다.")
-
 ISSUE_PATH = Path("issue_feed.csv")
-THEME_PATH = Path("theme_pool.csv")
-CONTENT_PATH = Path("content_db.csv")
+THEME_DB_PATH = Path("theme_db.csv")
+OLD_THEME_PATH = Path("theme_pool.csv")
+CONTENT_DB_PATH = Path("content_db.csv")
+
+def go_page(page):
+    st.session_state["page"] = page
+
+if "page" not in st.session_state:
+    st.session_state["page"] = "home"
 
 @st.cache_data
 def load_data():
     issues = pd.read_csv(ISSUE_PATH, sep="|").fillna("")
-    themes = pd.read_csv(THEME_PATH, sep="|").fillna("")
-    contents = pd.read_csv(CONTENT_PATH, sep="|").fillna("")
+
+    if THEME_DB_PATH.exists():
+        themes = pd.read_csv(THEME_DB_PATH, sep="|").fillna("")
+    elif OLD_THEME_PATH.exists():
+        themes = pd.read_csv(OLD_THEME_PATH, sep="|").fillna("")
+    else:
+        raise FileNotFoundError("theme_db.csv 또는 theme_pool.csv 파일이 없습니다.")
+
+    contents = pd.read_csv(CONTENT_DB_PATH, sep="|").fillna("")
+
     return issues, themes, contents
 
 def split_keywords(text):
     if pd.isna(text):
         return []
+
     return [
         t.strip()
-        for t in str(text).replace("/", ",").split(",")
+        for t in str(text).replace("/", ",").replace(" ", ",").split(",")
         if t.strip()
     ]
 
@@ -141,53 +154,127 @@ def find_matched_issues(theme, issues):
                 "score": score
             })
 
-    return sorted(matched, key=lambda x: x["score"], reverse=True)[:3]
+    return sorted(matched, key=lambda x: x["score"], reverse=True)
 
-def find_contents(theme, contents, limit=12):
+def find_matched_contents(theme, contents, limit=12):
     theme_keywords = split_keywords(theme["trigger_keywords"])
-    results = []
+    matched = []
 
     for _, content in contents.iterrows():
         tag_keywords = split_keywords(content.get("tags", ""))
         genre_keywords = split_keywords(content.get("genre", ""))
+        title_keywords = split_keywords(content.get("title", ""))
 
         score = 0
-        score += keyword_score(tag_keywords, theme_keywords) * 2
-        score += keyword_score(genre_keywords, theme_keywords)
+        score += keyword_score(tag_keywords, theme_keywords) * 3
+        score += keyword_score(genre_keywords, theme_keywords) * 2
+        score += keyword_score(title_keywords, theme_keywords)
 
         if score > 0:
-            results.append({
+            matched.append({
+                "content_id": content.get("content_id", ""),
                 "title": content["title"],
                 "type": content["type"],
                 "genre": content["genre"],
                 "year": content["year"],
+                "tags": content.get("tags", ""),
                 "score": score
             })
 
-    return sorted(results, key=lambda x: x["score"], reverse=True)[:limit]
+    return sorted(matched, key=lambda x: x["score"], reverse=True)[:limit]
 
-def build_theme_recommendations(issues, themes, contents, top_n=5):
+def build_theme_recommendations(issues, themes, contents, top_n=20, content_limit=12):
     recs = []
 
     for _, theme in themes.iterrows():
         matched_issues = find_matched_issues(theme, issues)
-        matched_contents = find_contents(theme, contents)
+        matched_contents = find_matched_contents(theme, contents, limit=content_limit)
 
-        if not matched_issues or not matched_contents:
+        if not matched_issues:
             continue
 
-        issue_score = sum(i["score"] for i in matched_issues)
-        content_score = sum(c["score"] for c in matched_contents[:8])
-        total_score = issue_score * 3 + content_score
+        issue_score = sum(i["score"] for i in matched_issues[:5])
+        source_diversity = len(set(i["source"] for i in matched_issues))
+        related_content_bonus = sum(1 for i in matched_issues if str(i["related_content"]).strip())
+        content_score = sum(c["score"] for c in matched_contents[:content_limit])
+
+        total_score = issue_score * 10 + source_diversity * 3 + related_content_bonus * 2 + content_score
 
         recs.append({
             "theme": theme,
-            "issues": matched_issues,
+            "issues": matched_issues[:5],
             "contents": matched_contents,
-            "score": total_score
+            "score": total_score,
+            "matched_count": len(matched_issues),
+            "source_diversity": source_diversity
         })
 
     return sorted(recs, key=lambda x: x["score"], reverse=True)[:top_n]
+
+def render_metric(title, number, subtitle=None):
+    sub_html = f'<div class="small">{subtitle}</div>' if subtitle else ""
+    st.markdown(
+        f'<div class="card"><div class="small">{title}</div><div class="rank">{number}</div>{sub_html}</div>',
+        unsafe_allow_html=True
+    )
+
+def render_issue_card(issue):
+    st.markdown(
+        f'''
+        <div class="card">
+            <b>{issue["issue_title"]}</b><br>
+            <span class="small">{issue["source"]} · {issue["related_content"]}</span><br>
+            <span class="small">{issue["description"]}</span>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
+def render_theme_card(idx, rec):
+    theme = rec["theme"]
+    matched_issues = rec["issues"]
+    matched_contents = rec["contents"]
+
+    keyword_tags = ""
+    for kw in split_keywords(theme["trigger_keywords"])[:12]:
+        keyword_tags += f'<span class="tag">{kw}</span>'
+
+    issue_blocks = ""
+    for issue in matched_issues:
+        issue_blocks += (
+            '<div class="issue-item">'
+            f'<b>{issue["source"]}</b> · {issue["issue_title"]}<br>'
+            f'<span class="small">{issue["description"]}</span>'
+            '</div>'
+        )
+
+    content_tags = ""
+    if matched_contents:
+        for c in matched_contents:
+            content_tags += (
+                f'<span class="tag">{c["title"]} · {c["type"]} · {c["year"]}</span>'
+            )
+    else:
+        content_tags = '<span class="small">매칭 콘텐츠 없음</span>'
+
+    html = (
+        '<div class="theme-card">'
+        f'<div class="rank">#{idx}</div>'
+        f'<div class="theme-name">{theme["theme_name"]}</div>'
+        f'<div class="copy">노출명/카피: {theme["copy"]}</div>'
+        f'<div class="small">추천 점수: <span class="score">{rec["score"]}</span> · '
+        f'매칭 이슈 {rec["matched_count"]}개 · 출처 {rec["source_diversity"]}종 · '
+        f'콘텐츠 후보 {len(matched_contents)}개</div>'
+        '<div class="section-label">매칭 키워드</div>'
+        f'{keyword_tags}'
+        '<div class="section-label">선정 근거</div>'
+        f'{issue_blocks}'
+        '<div class="section-label">추천 콘텐츠 후보</div>'
+        f'{content_tags}'
+        '</div>'
+    )
+
+    st.markdown(html, unsafe_allow_html=True)
 
 try:
     issues, themes, contents = load_data()
@@ -195,95 +282,156 @@ except Exception as e:
     st.error(f"CSV 로드 실패: {e}")
     st.stop()
 
-col1, col2, col3 = st.columns(3)
+if st.session_state["page"] == "theme_db":
+    st.markdown("<h1>📚 테마 DB 전체 보기</h1>", unsafe_allow_html=True)
+    st.caption("현재 등록된 전체 테마 풀입니다. 향후 3,000개까지 확장할 수 있습니다.")
 
-with col1:
-    st.markdown(
-        f'<div class="card"><div class="small">지난주 외부 이슈</div><div class="rank">{len(issues)}</div></div>',
-        unsafe_allow_html=True
-    )
+    if st.button("← 추천 화면으로 돌아가기"):
+        go_page("home")
+        st.rerun()
 
-with col2:
-    st.markdown(
-        f'<div class="card"><div class="small">테마 후보 풀</div><div class="rank">{len(themes)}</div></div>',
-        unsafe_allow_html=True
-    )
+    st.markdown("---")
 
-with col3:
-    st.markdown(
-        f'<div class="card"><div class="small">콘텐츠 DB</div><div class="rank">{len(contents)}</div></div>',
-        unsafe_allow_html=True
-    )
+    search = st.text_input("테마명/키워드 검색", placeholder="예: 스릴러, 비오는날, 로맨스, 쇼츠")
 
-st.markdown("---")
+    filtered = themes.copy()
 
-left, right = st.columns([1.05, 2])
+    if search:
+        s = search.strip()
+        filtered = filtered[
+            filtered["theme_name"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["trigger_keywords"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["genre"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["mood"].astype(str).str.contains(s, case=False, na=False)
+        ]
 
-with left:
-    st.subheader("지난주 수집 이슈")
+    st.markdown(f"### 전체 {len(themes)}개 중 {len(filtered)}개 표시")
 
-    for _, issue in issues.iterrows():
+    for _, row in filtered.iterrows():
+        tags = ""
+        for kw in split_keywords(row["trigger_keywords"])[:12]:
+            tags += f'<span class="tag">{kw}</span>'
+
         st.markdown(
             f'''
-            <div class="card">
-                <b>{issue["issue_title"]}</b><br>
-                <span class="small">{issue["source"]} · {issue["related_content"]}</span><br>
-                <span class="small">{issue["description"]}</span>
+            <div class="theme-card">
+                <div class="small">{row["theme_id"]}</div>
+                <div class="theme-name">{row["theme_name"]}</div>
+                <div class="copy">노출명/카피: {row["copy"]}</div>
+                <div class="small">장르: {row["genre"]} · 무드: {row["mood"]}</div>
+                <div style="margin-top:8px;">{tags}</div>
             </div>
             ''',
             unsafe_allow_html=True
         )
 
-with right:
-    st.subheader("이번주 추천 테마 TOP5")
+elif st.session_state["page"] == "content_db":
+    st.markdown("<h1>🎬 콘텐츠 DB 전체 보기</h1>", unsafe_allow_html=True)
+    st.caption("테마에 매칭될 개별 콘텐츠 후보 풀입니다.")
 
-    if st.button("🔄 이번주 테마 추천 생성", use_container_width=True):
-        st.session_state["recs"] = build_theme_recommendations(
-            issues,
-            themes,
-            contents,
-            top_n=5
+    if st.button("← 추천 화면으로 돌아가기"):
+        go_page("home")
+        st.rerun()
+
+    st.markdown("---")
+
+    search = st.text_input("콘텐츠명/장르/태그 검색", placeholder="예: SF, 스릴러, 로맨스, 봉준호")
+
+    filtered = contents.copy()
+
+    if search:
+        s = search.strip()
+        filtered = filtered[
+            filtered["title"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["genre"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["tags"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["actors"].astype(str).str.contains(s, case=False, na=False)
+            | filtered["director"].astype(str).str.contains(s, case=False, na=False)
+        ]
+
+    st.markdown(f"### 전체 {len(contents)}개 중 {len(filtered)}개 표시")
+
+    for _, row in filtered.iterrows():
+        tags = ""
+        for kw in split_keywords(row["tags"])[:12]:
+            tags += f'<span class="tag">{kw}</span>'
+
+        st.markdown(
+            f'''
+            <div class="theme-card">
+                <div class="small">{row["content_id"]}</div>
+                <div class="theme-name">{row["title"]}</div>
+                <div class="small">{row["type"]} · {row["genre"]} · {row["year"]}</div>
+                <div class="small">출연: {row["actors"]} · 감독/제작: {row["director"]}</div>
+                <div style="margin-top:8px;">{tags}</div>
+            </div>
+            ''',
+            unsafe_allow_html=True
         )
 
-    if "recs" not in st.session_state:
-        st.info("버튼을 누르면 지난주 이슈 기반 추천 테마가 생성됩니다.")
-    else:
-        recs = st.session_state["recs"]
+else:
+    st.markdown("<h1>🧠 B tv+ AI Theme Curator</h1>", unsafe_allow_html=True)
+    st.caption("지난주 외부 콘텐츠 이슈를 기반으로 이번주 노출할 테마와 콘텐츠 후보를 추천합니다.")
 
-        if not recs:
-            st.warning("추천 결과가 없습니다. issue/theme/content 키워드를 확인하세요.")
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        render_metric("지난주 외부 이슈", len(issues))
+
+    with col2:
+        render_metric("테마 DB", len(themes), "전체 테마 풀")
+
+        if st.button("📚 테마 DB 전체 보기", use_container_width=True):
+            go_page("theme_db")
+            st.rerun()
+
+    with col3:
+        render_metric("콘텐츠 DB", len(contents), "개별 콘텐츠 후보")
+
+        if st.button("🎬 콘텐츠 DB 전체 보기", use_container_width=True):
+            go_page("content_db")
+            st.rerun()
+
+    with col4:
+        render_metric("추천 후보", "TOP20", "이슈 기반 추천 테마")
+
+    st.markdown("---")
+
+    left, right = st.columns([1.05, 2])
+
+    with left:
+        st.subheader("지난주 수집 이슈")
+
+        for _, issue in issues.iterrows():
+            render_issue_card(issue)
+
+    with right:
+        st.subheader("이번주 추천 테마 TOP20")
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+            top_n = st.slider("추천 테마 개수", min_value=5, max_value=30, value=20, step=5)
+
+        with c2:
+            content_limit = st.slider("테마별 콘텐츠 후보 수", min_value=5, max_value=20, value=12, step=1)
+
+        if st.button("🔄 이번주 테마 추천 생성", use_container_width=True):
+            st.session_state["recs"] = build_theme_recommendations(
+                issues,
+                themes,
+                contents,
+                top_n=top_n,
+                content_limit=content_limit
+            )
+
+        if "recs" not in st.session_state:
+            st.info("버튼을 누르면 지난주 이슈와 가장 밀접한 테마와 콘텐츠 후보가 생성됩니다.")
         else:
-            for idx, rec in enumerate(recs, start=1):
-                theme = rec["theme"]
-                matched_issues = rec["issues"]
-                matched_contents = rec["contents"]
+            recs = st.session_state["recs"]
 
-                issue_blocks = ""
-                for issue in matched_issues:
-                    issue_blocks += (
-                        '<div class="issue-item">'
-                        f'<b>{issue["source"]}</b> · {issue["issue_title"]}<br>'
-                        f'<span class="small">{issue["description"]}</span>'
-                        '</div>'
-                    )
-
-                content_tags = ""
-                for c in matched_contents:
-                    content_tags += (
-                        f'<span class="tag">{c["title"]} · {c["type"]} · {c["year"]}</span>'
-                    )
-
-                html = (
-                    '<div class="theme-card">'
-                    f'<div class="rank">#{idx}</div>'
-                    f'<div class="theme-name">{theme["theme_name"]}</div>'
-                    f'<div class="copy">노출 카피: {theme["copy"]}</div>'
-                    f'<div class="small">추천 점수: <span class="score">{rec["score"]}</span></div>'
-                    '<div class="section-label">선정 근거</div>'
-                    f'{issue_blocks}'
-                    '<div class="section-label">추천 콘텐츠 후보</div>'
-                    f'{content_tags}'
-                    '</div>'
-                )
-
-                st.markdown(html, unsafe_allow_html=True)
+            if not recs:
+                st.warning("추천 결과가 없습니다. issue/theme/content 키워드를 확인하세요.")
+            else:
+                for idx, rec in enumerate(recs, start=1):
+                    render_theme_card(idx, rec)
