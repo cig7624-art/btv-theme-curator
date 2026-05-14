@@ -22,6 +22,7 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     padding:16px 18px;
     margin-bottom:14px;
 }
+
 .logic-card {
     background:#111827;
     border:1px solid #334155;
@@ -29,6 +30,7 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     padding:18px 20px;
     margin-bottom:18px;
 }
+
 .theme-card {
     background:#111827;
     border:1px solid #334155;
@@ -36,27 +38,38 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     padding:18px 20px;
     margin-bottom:16px;
 }
+
 .rank {
     color:#38bdf8 !important;
     font-size:26px;
     font-weight:900;
 }
+
 .theme-name {
     font-size:23px;
     font-weight:900;
     margin-bottom:6px;
 }
+
 .copy {
     color:#f97316 !important;
     font-weight:900;
     font-size:15px;
     margin-bottom:6px;
 }
+
 .small {
     color:#94a3b8 !important;
     font-size:13px;
     line-height:1.5;
 }
+
+.logic-desc {
+    color:#cbd5e1 !important;
+    font-size:13px;
+    line-height:1.6;
+}
+
 .tag {
     display:inline-block;
     background:#1e293b;
@@ -67,10 +80,39 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     margin-top:6px;
     font-size:12px;
 }
+
 .score {
     color:#22c55e !important;
     font-weight:900;
 }
+
+.issue-item {
+    background:#0f172a;
+    border:1px solid #1f2937;
+    border-radius:12px;
+    padding:10px 12px;
+    margin-bottom:8px;
+}
+
+.section-label {
+    margin-top:14px;
+    margin-bottom:8px;
+    font-weight:900;
+    font-size:15px;
+}
+
+.one-line-reason {
+    background:#0f172a;
+    border-left:4px solid #38bdf8;
+    padding:10px 12px;
+    border-radius:8px;
+    margin-top:10px;
+    margin-bottom:10px;
+    color:#cbd5e1 !important;
+    font-size:13px;
+    line-height:1.5;
+}
+
 .source-link {
     display:inline-block;
     margin-top:8px;
@@ -79,21 +121,9 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     font-weight:800;
     text-decoration:none;
 }
+
 .source-link:hover { text-decoration:underline; }
-.section-label {
-    margin-top:14px;
-    margin-bottom:8px;
-    font-weight:900;
-    font-size:15px;
-}
-.one-line-reason {
-    background:#0f172a;
-    border-left:4px solid #38bdf8;
-    padding:10px 12px;
-    border-radius:8px;
-    margin-top:10px;
-    margin-bottom:10px;
-}
+
 .stButton button {
     background:#2563eb;
     color:white;
@@ -101,7 +131,15 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     border:0;
     font-weight:800;
 }
+
+/* select input */
 [data-baseweb="select"] * { color:#111827 !important; }
+
+/* dropdown menu */
+[data-baseweb="popover"] * { color:#111827 !important; }
+[data-baseweb="menu"] * { color:#111827 !important; }
+[data-baseweb="option"] * { color:#111827 !important; }
+
 input, textarea { color:#111827 !important; }
 </style>
 """, unsafe_allow_html=True)
@@ -179,6 +217,7 @@ def classify_source(source):
         return "OTT/랭킹"
     if "왓챠" in s:
         return "왓챠피디아"
+
     return "뉴스/공식자료"
 
 def split_keywords(text):
@@ -330,7 +369,13 @@ def build_theme_recommendations(issues, themes, contents, top_n=20, content_limi
 def render_metric(title, number, subtitle=None):
     sub_html = f'<div class="small">{subtitle}</div>' if subtitle else ""
     st.markdown(
-        f'<div class="card"><div class="small">{title}</div><div class="rank">{number}</div>{sub_html}</div>',
+        f'''
+        <div class="card">
+            <div class="small">{title}</div>
+            <div class="rank">{number}</div>
+            {sub_html}
+        </div>
+        ''',
         unsafe_allow_html=True
     )
 
@@ -400,34 +445,35 @@ def render_theme_card(idx, rec):
     st.markdown(html, unsafe_allow_html=True)
 
 def render_collection_logic():
-    st.markdown(
-        f'''
-        <div class="logic-card">
-            <div class="theme-name">이슈 수집·선정 로직</div>
-            <div class="small">
-                최근 이슈는 오늘 기준 최근 7일 이내의 외부 콘텐츠 신호 중,
-                실제 시청 전환 가능성이 높은 이슈를 우선 노출합니다.
-                단순 뉴스량보다 <b>유튜브/쇼츠 확산, SNS 반응, 극장 흥행, 키노라이츠 랭킹, OTT 화제성</b>을 더 중요하게 봅니다.
-            </div>
+    html = (
+        '<div class="logic-card">'
+        '<div class="theme-name">이슈 수집·선정 로직</div>'
+        '<div class="logic-desc">'
+        '최근 이슈는 오늘 기준 최근 7일 이내의 외부 콘텐츠 신호 중, '
+        '실제 시청 전환 가능성이 높은 이슈를 우선 노출합니다. '
+        '단순 뉴스량보다 <b>유튜브/쇼츠 확산, SNS 반응, 극장 흥행, '
+        '키노라이츠 랭킹, OTT 화제성</b>을 더 중요하게 봅니다.'
+        '</div>'
 
-            <div class="section-label">경로별 가중치</div>
-            <span class="tag">유튜브 40</span>
-            <span class="tag">SNS/인스타 30</span>
-            <span class="tag">극장 20</span>
-            <span class="tag">키노라이츠 20</span>
-            <span class="tag">OTT/랭킹 15</span>
-            <span class="tag">왓챠피디아 10</span>
-            <span class="tag">뉴스/공식자료 10</span>
+        '<div class="section-label">경로별 가중치</div>'
+        '<span class="tag">유튜브 40</span>'
+        '<span class="tag">SNS/인스타 30</span>'
+        '<span class="tag">극장 20</span>'
+        '<span class="tag">키노라이츠 20</span>'
+        '<span class="tag">OTT/랭킹 15</span>'
+        '<span class="tag">왓챠피디아 10</span>'
+        '<span class="tag">뉴스/공식자료 10</span>'
 
-            <div class="section-label">이슈 점수 산정 기준</div>
-            <div class="small">
-                이슈 점수 = 경로별 가중치 + 키워드 구체성 + 관련 콘텐츠명 존재 여부 + 근거 링크 존재 여부 + 설명 상세도.
-                메인 화면에는 이 중 점수가 높은 핵심 이슈만 우선 노출합니다.
-            </div>
-        </div>
-        ''',
-        unsafe_allow_html=True
+        '<div class="section-label">이슈 점수 산정 기준</div>'
+        '<div class="logic-desc">'
+        '이슈 점수 = 경로별 가중치 + 키워드 구체성 + 관련 콘텐츠명 존재 여부 '
+        '+ 근거 링크 존재 여부 + 설명 상세도. '
+        '메인 화면에는 이 중 점수가 높은 핵심 이슈만 우선 노출합니다.'
+        '</div>'
+        '</div>'
     )
+
+    st.markdown(html, unsafe_allow_html=True)
 
 try:
     all_issues, themes, contents = load_data()
