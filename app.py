@@ -260,8 +260,42 @@ def semantic_theme_search(themes, query):
     if not query or TfidfVectorizer is None or cosine_similarity is None:
         return themes.iloc[0:0].copy()
 
+    query_text = str(query).lower()
+
+    weak_words = [
+        "좋은", "보기", "보면", "볼", "때", "영화", "드라마", "추천",
+        "싶은", "생각나는", "같은", "하는", "있는", "없는"
+    ]
+
+    must_groups = []
+
+    if any(w in query_text for w in ["공포", "호러", "무서", "귀신", "오컬트", "괴담"]):
+        must_groups.append(["공포", "호러", "무서", "귀신", "오컬트", "괴담", "스릴러"])
+
+    if any(w in query_text for w in ["로맨스", "사랑", "연애", "첫사랑", "설렘"]):
+        must_groups.append(["로맨스", "사랑", "연애", "첫사랑", "설렘", "멜로", "청춘"])
+
+    if any(w in query_text for w in ["여행", "떠나", "휴가", "바다"]):
+        must_groups.append(["여행", "로드무비", "휴가", "바다", "해외", "풍경"])
+
+    if any(w in query_text for w in ["힐링", "위로", "잔잔", "따뜻"]):
+        must_groups.append(["힐링", "위로", "잔잔", "따뜻", "감성"])
+
     df = themes.copy()
-    corpus = df.apply(build_theme_search_text, axis=1).fillna("").tolist()
+    df["search_text"] = df.apply(build_theme_search_text, axis=1).fillna("").str.lower()
+
+    # 핵심 장르/무드가 있으면 반드시 포함된 테마만 남김
+    for group in must_groups:
+        df = df[df["search_text"].apply(lambda x: any(g in x for g in group))].copy()
+
+    if df.empty:
+        return themes.iloc[0:0].copy()
+
+    cleaned_query = query_text
+    for w in weak_words:
+        cleaned_query = cleaned_query.replace(w, " ")
+
+    corpus = df["search_text"].tolist()
 
     vectorizer = TfidfVectorizer(
         analyzer="char_wb",
@@ -270,26 +304,37 @@ def semantic_theme_search(themes, query):
     )
 
     theme_matrix = vectorizer.fit_transform(corpus)
-    query_vector = vectorizer.transform([query])
+    query_vector = vectorizer.transform([cleaned_query])
 
     scores = cosine_similarity(query_vector, theme_matrix).flatten()
 
     df["semantic_score"] = scores
+
+    # 핵심어 보너스
+    def intent_bonus(text):
+        bonus = 0
+        if "공포" in query_text or "호러" in query_text or "무서" in query_text:
+            if any(x in text for x in ["공포", "호러", "오컬트", "괴담", "귀신", "스릴러"]):
+                bonus += 0.25
+            if any(x in text for x in ["자녀", "가족", "키즈", "아이"]):
+                bonus -= 0.5
+
+        if "여름" in query_text:
+            if any(x in text for x in ["여름", "무더위", "한여름", "휴가", "바캉스"]):
+                bonus += 0.12
+
+        if "첫사랑" in query_text:
+            if any(x in text for x in ["첫사랑", "청춘", "설렘", "로맨스"]):
+                bonus += 0.25
+
+        return bonus
+
+    df["semantic_score"] = df["semantic_score"] + df["search_text"].apply(intent_bonus)
+
     df = df[df["semantic_score"] > 0].copy()
     df = df.sort_values("semantic_score", ascending=False)
 
-    return df
-
-
-def keyword_score(a_keywords, b_keywords):
-    return len(set(a_keywords).intersection(set(b_keywords)))
-
-
-def safe_url(url):
-    url = str(url).strip()
-    if url.startswith("http://") or url.startswith("https://"):
-        return url
-    return ""
+    return df.drop(columns=["search_text"])
 
 
 def score_issue(issue):
