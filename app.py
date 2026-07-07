@@ -150,12 +150,11 @@ OLD_THEME_PATH = Path("theme_pool.csv")
 CONTENT_DB_PATH = Path("content_db.csv")
 
 SOURCE_WEIGHTS = {
-    "유튜브": 40,
-    "SNS/인스타": 30,
-    "극장": 20,
-    "키노라이츠": 20,
-    "OTT/랭킹": 15,
-    "왓챠피디아": 10,
+    "유튜브": 35,
+    "SNS/숏폼": 28,
+    "극장/박스오피스": 22,
+    "OTT/랭킹": 18,
+    "네이버 이슈": 15,
     "뉴스/공식자료": 10,
 }
 
@@ -207,16 +206,14 @@ def classify_source(source):
 
     if "유튜브" in s or "YouTube" in s:
         return "유튜브"
-    if "SNS" in s or "인스타" in s or "Instagram" in s:
-        return "SNS/인스타"
-    if "극장" in s or "KOFIC" in s or "박스오피스" in s:
-        return "극장"
-    if "키노라이츠" in s:
-        return "키노라이츠"
-    if "OTT" in s or "넷플릭스" in s or "티빙" in s or "웨이브" in s:
+    if "SNS" in s or "인스타" in s or "Instagram" in s or "쇼츠" in s or "숏폼" in s:
+        return "SNS/숏폼"
+    if "극장" in s or "KOFIC" in s or "박스오피스" in s or "CGV" in s or "롯데시네마" in s or "메가박스" in s:
+        return "극장/박스오피스"
+    if "OTT" in s or "넷플릭스" in s or "티빙" in s or "웨이브" in s or "디즈니" in s or "쿠팡플레이" in s:
         return "OTT/랭킹"
-    if "왓챠" in s:
-        return "왓챠피디아"
+    if "네이버" in s:
+        return "네이버 이슈"
 
     return "뉴스/공식자료"
 
