@@ -395,7 +395,7 @@ def find_matched_issues(theme, issues):
 
 
 def find_matched_contents(theme, contents, limit=12):
-    theme_keywords = split_keywords(theme["trigger_keywords"])
+    theme_keywords = split_keywords(theme.get("trigger_keywords", ""))
     matched = []
 
     for _, content in contents.iterrows():
@@ -411,16 +411,15 @@ def find_matched_contents(theme, contents, limit=12):
         if score > 0:
             matched.append({
                 "content_id": content.get("content_id", ""),
-                "title": content["title"],
-                "type": content["type"],
-                "genre": content["genre"],
-                "year": content["year"],
+                "title": content.get("title", ""),
+                "type": content.get("type", ""),
+                "genre": content.get("genre", ""),
+                "year": content.get("year", ""),
                 "tags": content.get("tags", ""),
                 "score": score
             })
 
     return sorted(matched, key=lambda x: x["score"], reverse=True)[:limit]
-
 
 def build_reason_summary(theme, matched_issues):
     if not matched_issues:
