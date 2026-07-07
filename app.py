@@ -3,6 +3,14 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime, timedelta
 
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+except Exception:
+    TfidfVectorizer = None
+    cosine_similarity = None
+
+
 st.set_page_config(
     page_title="B tv+ AI Theme Curator",
     page_icon="🧠",
@@ -144,10 +152,12 @@ input, textarea { color:#111827 !important; }
 </style>
 """, unsafe_allow_html=True)
 
+
 ISSUE_PATH = Path("issue_feed.csv")
 THEME_DB_PATH = Path("theme_db.csv")
 OLD_THEME_PATH = Path("theme_pool.csv")
 CONTENT_DB_PATH = Path("content_db.csv")
+
 
 SOURCE_WEIGHTS = {
     "유튜브": 35,
@@ -158,11 +168,14 @@ SOURCE_WEIGHTS = {
     "뉴스/공식자료": 10,
 }
 
+
 def go_page(page):
     st.session_state["page"] = page
 
+
 if "page" not in st.session_state:
     st.session_state["page"] = "home"
+
 
 def load_data():
     issues = pd.read_csv(ISSUE_PATH, sep="|").fillna("")
@@ -180,6 +193,7 @@ def load_data():
         issues["source_url"] = ""
 
     return issues, themes, contents
+
 
 def filter_recent_issues(issues, days=7):
     issues = issues.copy()
@@ -201,6 +215,7 @@ def filter_recent_issues(issues, days=7):
 
     return recent, start_date.strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")
 
+
 def classify_source(source):
     s = str(source)
 
@@ -217,6 +232,7 @@ def classify_source(source):
 
     return "뉴스/공식자료"
 
+
 def split_keywords(text):
     if pd.isna(text):
         return []
@@ -227,14 +243,54 @@ def split_keywords(text):
         if t.strip()
     ]
 
+
+def build_theme_search_text(row):
+    return " ".join([
+        str(row.get("theme_name", "")),
+        str(row.get("theme_name", "")),
+        str(row.get("copy", "")),
+        str(row.get("trigger_keywords", "")),
+        str(row.get("trigger_keywords", "")),
+        str(row.get("genre", "")),
+        str(row.get("mood", "")),
+    ])
+
+
+def semantic_theme_search(themes, query):
+    if not query or TfidfVectorizer is None or cosine_similarity is None:
+        return themes.iloc[0:0].copy()
+
+    df = themes.copy()
+    corpus = df.apply(build_theme_search_text, axis=1).fillna("").tolist()
+
+    vectorizer = TfidfVectorizer(
+        analyzer="char_wb",
+        ngram_range=(2, 4),
+        min_df=1
+    )
+
+    theme_matrix = vectorizer.fit_transform(corpus)
+    query_vector = vectorizer.transform([query])
+
+    scores = cosine_similarity(query_vector, theme_matrix).flatten()
+
+    df["semantic_score"] = scores
+    df = df[df["semantic_score"] > 0].copy()
+    df = df.sort_values("semantic_score", ascending=False)
+
+    return df
+
+
 def keyword_score(a_keywords, b_keywords):
     return len(set(a_keywords).intersection(set(b_keywords)))
+
 
 def safe_url(url):
     url = str(url).strip()
     if url.startswith("http://") or url.startswith("https://"):
         return url
     return ""
+
 
 def score_issue(issue):
     source_group = classify_source(issue.get("source", ""))
@@ -251,11 +307,13 @@ def score_issue(issue):
 
     return base + keyword_bonus + related_bonus + link_bonus + detail_bonus
 
+
 def prepare_issues(issues):
     issues = issues.copy()
     issues["source_group"] = issues["source"].apply(classify_source)
     issues["issue_score"] = issues.apply(score_issue, axis=1)
     return issues.sort_values("issue_score", ascending=False)
+
 
 def find_matched_issues(theme, issues):
     theme_keywords = split_keywords(theme["trigger_keywords"])
@@ -284,6 +342,7 @@ def find_matched_issues(theme, issues):
         reverse=True
     )
 
+
 def find_matched_contents(theme, contents, limit=12):
     theme_keywords = split_keywords(theme["trigger_keywords"])
     matched = []
@@ -311,6 +370,7 @@ def find_matched_contents(theme, contents, limit=12):
 
     return sorted(matched, key=lambda x: x["score"], reverse=True)[:limit]
 
+
 def build_reason_summary(theme, matched_issues):
     if not matched_issues:
         return "최근 이슈와 테마 키워드의 직접 매칭 근거가 부족합니다."
@@ -323,6 +383,7 @@ def build_reason_summary(theme, matched_issues):
         return f"{source}에서 '{related}' 관련 이슈가 감지되어, '{theme['theme_name']}' 테마와 연결성이 높습니다."
 
     return f"{source} 이슈의 핵심 키워드가 '{theme['theme_name']}' 테마 키워드와 강하게 매칭됩니다."
+
 
 def build_theme_recommendations(issues, themes, contents, top_n=20, content_limit=12):
     recs = []
@@ -363,6 +424,7 @@ def build_theme_recommendations(issues, themes, contents, top_n=20, content_limi
 
     return sorted(recs, key=lambda x: x["score"], reverse=True)[:top_n]
 
+
 def render_metric(title, number, subtitle=None):
     sub_html = f'<div class="small">{subtitle}</div>' if subtitle else ""
     st.markdown(
@@ -376,11 +438,13 @@ def render_metric(title, number, subtitle=None):
         unsafe_allow_html=True
     )
 
+
 def render_source_link(url):
     url = safe_url(url)
     if not url:
         return ""
     return f'<a class="source-link" href="{url}" target="_blank">근거 링크 보기 ↗</a>'
+
 
 def render_issue_card(issue):
     url_html = render_source_link(issue.get("source_url", ""))
@@ -401,6 +465,7 @@ def render_issue_card(issue):
     )
     st.markdown(html, unsafe_allow_html=True)
 
+
 def render_content_tags(matched_contents):
     if not matched_contents:
         return '<span class="small">매칭 콘텐츠 없음</span>'
@@ -411,6 +476,7 @@ def render_content_tags(matched_contents):
             f'<span class="tag">{c["title"]} · {c["type"]} · {c["year"]}</span>'
         )
     return content_tags
+
 
 def render_theme_card(idx, rec):
     theme = rec["theme"]
@@ -440,6 +506,7 @@ def render_theme_card(idx, rec):
     )
 
     st.markdown(html, unsafe_allow_html=True)
+
 
 def render_collection_logic():
     html = (
@@ -471,6 +538,7 @@ def render_collection_logic():
 
     st.markdown(html, unsafe_allow_html=True)
 
+
 try:
     all_issues, themes, contents = load_data()
     recent_issues, issue_start_date, issue_end_date = filter_recent_issues(
@@ -481,6 +549,7 @@ try:
 except Exception as e:
     st.error(f"CSV 로드 실패: {e}")
     st.stop()
+
 
 if st.session_state["page"] == "issue_db":
     st.markdown("<h1>🗂 최근 이슈 전체 보기</h1>", unsafe_allow_html=True)
@@ -507,7 +576,7 @@ if st.session_state["page"] == "issue_db":
     with c2:
         search = st.text_input(
             "이슈명/콘텐츠/키워드/출처 검색",
-            placeholder="예: 미키17, 살목지, 쇼츠, 키노라이츠, 요리"
+            placeholder="예: 미키17, 살목지, 쇼츠, 요리"
         )
 
     filtered = issues.copy()
@@ -550,6 +619,7 @@ if st.session_state["page"] == "issue_db":
 
         st.markdown(html, unsafe_allow_html=True)
 
+
 elif st.session_state["page"] == "theme_db":
     st.markdown("<h1>📚 테마 DB 전체 보기</h1>", unsafe_allow_html=True)
     st.caption("전체 테마 풀을 확인하고, 각 테마에 자동 매칭되는 콘텐츠 후보를 미리 볼 수 있습니다.")
@@ -561,8 +631,13 @@ elif st.session_state["page"] == "theme_db":
     st.markdown("---")
 
     search = st.text_input(
-        "테마명/키워드 검색",
-        placeholder="예: 스릴러, 비오는날, 로맨스, 쇼츠"
+        "AI 자연어 테마 검색",
+        placeholder="예: 여름에 보면 좋은 공포영화, 첫사랑이 생각나는 영화, 여행 떠나고 싶을 때"
+    )
+
+    st.caption(
+        "사용자가 자연어로 입력한 상황/무드/장르를 벡터화해, "
+        "기존 테마 DB에서 의미가 가까운 테마와 콘텐츠 후보를 탐색합니다."
     )
 
     content_limit_preview = st.slider(
@@ -576,13 +651,17 @@ elif st.session_state["page"] == "theme_db":
     filtered = themes.copy()
 
     if search:
-        s = search.strip()
-        filtered = filtered[
-            filtered["theme_name"].astype(str).str.contains(s, case=False, na=False)
-            | filtered["trigger_keywords"].astype(str).str.contains(s, case=False, na=False)
-            | filtered["genre"].astype(str).str.contains(s, case=False, na=False)
-            | filtered["mood"].astype(str).str.contains(s, case=False, na=False)
-        ]
+        filtered = semantic_theme_search(themes, search)
+
+        if filtered.empty:
+            s = search.strip()
+            filtered = themes[
+                themes["theme_name"].astype(str).str.contains(s, case=False, na=False)
+                | themes["trigger_keywords"].astype(str).str.contains(s, case=False, na=False)
+                | themes["genre"].astype(str).str.contains(s, case=False, na=False)
+                | themes["mood"].astype(str).str.contains(s, case=False, na=False)
+                | themes["copy"].astype(str).str.contains(s, case=False, na=False)
+            ].copy()
 
     st.markdown(f"### 전체 {len(themes)}개 중 {len(filtered)}개 표시")
 
@@ -599,12 +678,20 @@ elif st.session_state["page"] == "theme_db":
 
         content_tags = render_content_tags(matched_contents)
 
+        score_html = ""
+        if "semantic_score" in row:
+            try:
+                score_html = f'<div class="small">자연어 유사도: <span class="score">{float(row["semantic_score"]):.3f}</span></div>'
+            except Exception:
+                score_html = ""
+
         html = (
             '<div class="theme-card">'
             f'<div class="small">{row["theme_id"]}</div>'
             f'<div class="theme-name">{row["theme_name"]}</div>'
             f'<div class="copy">노출명/카피: {row["copy"]}</div>'
             f'<div class="small">장르: {row["genre"]} · 무드: {row["mood"]}</div>'
+            f'{score_html}'
             '<div class="section-label">테마 키워드</div>'
             f'{keyword_tags}'
             '<div class="section-label">추천 콘텐츠 후보</div>'
@@ -613,6 +700,7 @@ elif st.session_state["page"] == "theme_db":
         )
 
         st.markdown(html, unsafe_allow_html=True)
+
 
 else:
     st.markdown("<h1>🧠 B tv+ AI Theme Curator</h1>", unsafe_allow_html=True)
