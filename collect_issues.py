@@ -82,14 +82,6 @@ NEWS_QUERIES = [
     "site:n.news.naver.com OTT 신작",
     "site:n.news.naver.com 넷플릭스 티빙 웨이브 디즈니플러스",
 
-    # 키노라이츠/왓챠피디아
-    "키노라이츠 랭킹",
-    "키노라이츠 트렌드 랭킹",
-    "키노라이츠 공개예정작",
-    "키노라이츠 OTT 순위",
-    "왓챠피디아 영화 드라마",
-    "왓챠피디아 평점 화제",
-
     # 극장/박스오피스
     "박스오피스 영화 흥행",
     "박스오피스 순위",
@@ -274,12 +266,6 @@ def guess_news_source(query):
 
     if "site:entertain.naver.com" in query or "site:n.news.naver.com" in query or "네이버" in query:
         return "네이버 이슈"
-
-    if "키노라이츠" in query:
-        return "키노라이츠/OTT"
-
-    if "왓챠피디아" in query:
-        return "왓챠피디아"
 
     if (
         "박스오피스" in query
