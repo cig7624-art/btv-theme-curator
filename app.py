@@ -243,6 +243,8 @@ def split_keywords(text):
         if t.strip()
     ]
 
+def keyword_score(a_keywords, b_keywords):
+    return len(set(a_keywords).intersection(set(b_keywords)))
 
 def build_theme_search_text(row):
     return " ".join([
