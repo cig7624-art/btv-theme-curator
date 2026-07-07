@@ -1,15 +1,6 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
-from datetime import datetime, timedelta
-
-try:
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import cosine_similarity
-except Exception:
-    TfidfVectorizer = None
-    cosine_similarity = None
-
 
 st.set_page_config(
     page_title="B tv+ AI Theme Curator",
@@ -23,23 +14,7 @@ st.markdown("""
 .block-container { max-width:1800px; padding-top:1.2rem; }
 h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
 
-.card {
-    background:#0f172a;
-    border:1px solid #1e293b;
-    border-radius:16px;
-    padding:16px 18px;
-    margin-bottom:14px;
-}
-
-.logic-card {
-    background:#111827;
-    border:1px solid #334155;
-    border-radius:18px;
-    padding:18px 20px;
-    margin-bottom:18px;
-}
-
-.theme-card {
+.card,.theme-card,.logic-card {
     background:#111827;
     border:1px solid #334155;
     border-radius:18px;
@@ -66,16 +41,10 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     margin-bottom:6px;
 }
 
-.small {
-    color:#94a3b8 !important;
-    font-size:13px;
-    line-height:1.5;
-}
-
-.logic-desc {
+.small,.logic-desc {
     color:#cbd5e1 !important;
     font-size:13px;
-    line-height:1.6;
+    line-height:1.5;
 }
 
 .tag {
@@ -92,14 +61,6 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
 .score {
     color:#22c55e !important;
     font-weight:900;
-}
-
-.issue-item {
-    background:#0f172a;
-    border:1px solid #1f2937;
-    border-radius:12px;
-    padding:10px 12px;
-    margin-bottom:8px;
 }
 
 .section-label {
@@ -140,14 +101,10 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     font-weight:800;
 }
 
-/* select input */
 [data-baseweb="select"] * { color:#111827 !important; }
-
-/* dropdown menu */
 [data-baseweb="popover"] * { color:#111827 !important; }
 [data-baseweb="menu"] * { color:#111827 !important; }
 [data-baseweb="option"] * { color:#111827 !important; }
-
 input, textarea { color:#111827 !important; }
 </style>
 """, unsafe_allow_html=True)
@@ -158,7 +115,6 @@ THEME_DB_PATH = Path("theme_db.csv")
 OLD_THEME_PATH = Path("theme_pool.csv")
 CONTENT_DB_PATH = Path("content_db.csv")
 
-
 SOURCE_WEIGHTS = {
     "유튜브": 35,
     "SNS/숏폼": 28,
@@ -166,6 +122,69 @@ SOURCE_WEIGHTS = {
     "OTT/랭킹": 18,
     "네이버 이슈": 15,
     "뉴스/공식자료": 10,
+}
+
+STOPWORDS = [
+    "좋은", "보기", "보면", "볼", "때", "추천", "싶은", "생각나는",
+    "같은", "하는", "있는", "없는", "영화", "드라마", "콘텐츠", "작품",
+    "뭐", "무엇", "좀", "보고싶", "볼만한"
+]
+
+INTENT_MAP = {
+    "공포": {
+        "triggers": ["공포", "호러", "무서", "귀신", "오컬트", "괴담", "섬뜩", "소름"],
+        "keywords": ["공포", "호러", "오컬트", "괴담", "귀신", "스릴러", "긴장감", "무서운"],
+        "must": True,
+        "negative": ["자녀", "키즈", "아이", "가족", "힐링", "따뜻한"]
+    },
+    "스릴러": {
+        "triggers": ["스릴", "반전", "추리", "미스터리", "범죄", "수사"],
+        "keywords": ["스릴러", "반전", "추리", "미스터리", "범죄", "수사", "긴장감"],
+        "must": True,
+        "negative": ["키즈", "아이"]
+    },
+    "로맨스": {
+        "triggers": ["첫사랑", "사랑", "연애", "설렘", "로맨스", "로코"],
+        "keywords": ["첫사랑", "사랑", "연애", "설렘", "로맨스", "로코", "멜로", "청춘"],
+        "must": True,
+        "negative": ["공포", "호러", "오컬트"]
+    },
+    "여행": {
+        "triggers": ["여행", "떠나", "휴가", "바다", "해외", "풍경"],
+        "keywords": ["여행", "떠나고싶은", "로드무비", "휴가", "바다", "해외", "풍경", "힐링"],
+        "must": False,
+        "negative": []
+    },
+    "비": {
+        "triggers": ["비", "비올", "비오는", "장마", "빗소리"],
+        "keywords": ["비", "비오는날", "비올때", "장마", "우중", "빗소리", "감성"],
+        "must": False,
+        "negative": []
+    },
+    "여름": {
+        "triggers": ["여름", "무더위", "더위", "한여름", "바캉스"],
+        "keywords": ["여름", "무더위", "더위", "휴가", "바캉스", "한여름", "해변", "바다"],
+        "must": False,
+        "negative": []
+    },
+    "힐링": {
+        "triggers": ["힐링", "위로", "잔잔", "따뜻", "쉬고", "휴식"],
+        "keywords": ["힐링", "위로", "잔잔한", "따뜻한", "감성", "휴식", "가족"],
+        "must": True,
+        "negative": ["공포", "호러", "오컬트"]
+    },
+    "코미디": {
+        "triggers": ["웃", "코미디", "유쾌", "개그", "머리비우"],
+        "keywords": ["코미디", "웃긴", "유쾌한", "예능", "개그"],
+        "must": True,
+        "negative": ["공포", "호러"]
+    },
+    "가족": {
+        "triggers": ["가족", "자녀", "아이", "부모", "키즈"],
+        "keywords": ["가족", "자녀", "아이", "부모", "키즈", "따뜻한", "감동"],
+        "must": True,
+        "negative": ["공포", "호러", "오컬트", "잔인"]
+    },
 }
 
 
@@ -197,11 +216,7 @@ def load_data():
 
 def filter_recent_issues(issues, days=7):
     issues = issues.copy()
-
-    issues["date"] = pd.to_datetime(
-        issues["date"],
-        errors="coerce"
-    )
+    issues["date"] = pd.to_datetime(issues["date"], errors="coerce")
 
     today = pd.Timestamp.today().normalize()
     start_date = today - pd.Timedelta(days=days - 1)
@@ -243,107 +258,124 @@ def split_keywords(text):
         if t.strip()
     ]
 
+
 def keyword_score(a_keywords, b_keywords):
     return len(set(a_keywords).intersection(set(b_keywords)))
 
-def build_theme_search_text(row):
-    return " ".join([
-        str(row.get("theme_name", "")),
-        str(row.get("theme_name", "")),
-        str(row.get("copy", "")),
-        str(row.get("trigger_keywords", "")),
-        str(row.get("trigger_keywords", "")),
-        str(row.get("genre", "")),
-        str(row.get("mood", "")),
-    ])
-
-
-def semantic_theme_search(themes, query):
-    if not query or TfidfVectorizer is None or cosine_similarity is None:
-        return themes.iloc[0:0].copy()
-
-    query_text = str(query).lower()
-
-    weak_words = [
-        "좋은", "보기", "보면", "볼", "때", "영화", "드라마", "추천",
-        "싶은", "생각나는", "같은", "하는", "있는", "없는"
-    ]
-
-    must_groups = []
-
-    if any(w in query_text for w in ["공포", "호러", "무서", "귀신", "오컬트", "괴담"]):
-        must_groups.append(["공포", "호러", "무서", "귀신", "오컬트", "괴담", "스릴러"])
-
-    if any(w in query_text for w in ["로맨스", "사랑", "연애", "첫사랑", "설렘"]):
-        must_groups.append(["로맨스", "사랑", "연애", "첫사랑", "설렘", "멜로", "청춘"])
-
-    if any(w in query_text for w in ["여행", "떠나", "휴가", "바다"]):
-        must_groups.append(["여행", "로드무비", "휴가", "바다", "해외", "풍경"])
-
-    if any(w in query_text for w in ["힐링", "위로", "잔잔", "따뜻"]):
-        must_groups.append(["힐링", "위로", "잔잔", "따뜻", "감성"])
-
-    
-    df = themes.copy()
-    df["search_text"] = df.apply(build_theme_search_text, axis=1).fillna("").str.lower()
-
-    # 핵심 장르/무드가 있으면 반드시 포함된 테마만 남김
-    for group in must_groups:
-        df = df[df["search_text"].apply(lambda x: any(g in x for g in group))].copy()
-
-    if df.empty:
-        return themes.iloc[0:0].copy()
-
-    cleaned_query = query_text
-    for w in weak_words:
-        cleaned_query = cleaned_query.replace(w, " ")
-
-    corpus = df["search_text"].tolist()
-
-    vectorizer = TfidfVectorizer(
-        analyzer="char_wb",
-        ngram_range=(2, 4),
-        min_df=1
-    )
-
-    theme_matrix = vectorizer.fit_transform(corpus)
-    query_vector = vectorizer.transform([cleaned_query])
-
-    scores = cosine_similarity(query_vector, theme_matrix).flatten()
-
-    df["semantic_score"] = scores
-
-    # 핵심어 보너스
-    def intent_bonus(text):
-        bonus = 0
-        if "공포" in query_text or "호러" in query_text or "무서" in query_text:
-            if any(x in text for x in ["공포", "호러", "오컬트", "괴담", "귀신", "스릴러"]):
-                bonus += 0.25
-            if any(x in text for x in ["자녀", "가족", "키즈", "아이"]):
-                bonus -= 0.5
-
-        if "여름" in query_text:
-            if any(x in text for x in ["여름", "무더위", "한여름", "휴가", "바캉스"]):
-                bonus += 0.12
-
-        if "첫사랑" in query_text:
-            if any(x in text for x in ["첫사랑", "청춘", "설렘", "로맨스"]):
-                bonus += 0.25
-
-        return bonus
-
-    df["semantic_score"] = df["semantic_score"] + df["search_text"].apply(intent_bonus)
-
-    df = df[df["semantic_score"] > 0].copy()
-    df = df.sort_values("semantic_score", ascending=False)
-
-    return df.drop(columns=["search_text"])
 
 def safe_url(url):
     url = str(url).strip()
     if url.startswith("http://") or url.startswith("https://"):
         return url
     return ""
+
+
+def build_theme_search_text(row):
+    return " ".join([
+        str(row.get("theme_name", "")),
+        str(row.get("copy", "")),
+        str(row.get("trigger_keywords", "")),
+        str(row.get("genre", "")),
+        str(row.get("mood", "")),
+    ]).lower()
+
+
+def extract_query_intents(query):
+    text = str(query).lower()
+    intents = []
+
+    for intent, info in INTENT_MAP.items():
+        if any(trigger in text for trigger in info["triggers"]):
+            intents.append(intent)
+
+    return intents
+
+
+def expand_query_keywords(query):
+    text = str(query).lower()
+
+    tokens = split_keywords(query)
+    expanded = set(tokens)
+
+    for sw in STOPWORDS:
+        text = text.replace(sw, " ")
+
+    for intent in extract_query_intents(query):
+        expanded.update(INTENT_MAP[intent]["keywords"])
+
+    for token in text.replace(" ", ",").split(","):
+        token = token.strip()
+        if len(token) >= 2 and token not in STOPWORDS:
+            expanded.add(token)
+
+    return list(expanded)
+
+
+def natural_theme_search(themes, query):
+    if not query:
+        return themes.copy()
+
+    query_keywords = expand_query_keywords(query)
+    intents = extract_query_intents(query)
+
+    df = themes.copy()
+    scored_rows = []
+
+    for _, row in df.iterrows():
+        search_text = build_theme_search_text(row)
+
+        # must intent 필터: 공포/로맨스/힐링 등 핵심 의도는 반드시 포함되어야 함
+        blocked = False
+        for intent in intents:
+            info = INTENT_MAP[intent]
+            if info.get("must"):
+                if not any(kw in search_text for kw in info["keywords"]):
+                    blocked = True
+                    break
+
+        if blocked:
+            continue
+
+        score = 0
+        matched = []
+
+        for kw in query_keywords:
+            if not kw:
+                continue
+
+            if kw in search_text:
+                score += 3
+                matched.append(kw)
+
+        # intent bonus / negative
+        for intent in intents:
+            info = INTENT_MAP[intent]
+
+            if any(kw in search_text for kw in info["keywords"]):
+                score += 8
+
+            if any(neg in search_text for neg in info.get("negative", [])):
+                score -= 15
+
+        # 제목/카피에 직접 맞으면 가산
+        title_copy = f"{row.get('theme_name','')} {row.get('copy','')}".lower()
+        for kw in query_keywords:
+            if kw in title_copy:
+                score += 3
+
+        if score > 0:
+            item = row.copy()
+            item["natural_score"] = score
+            item["matched_keywords"] = ",".join(sorted(set(matched))[:12])
+            scored_rows.append(item)
+
+    if not scored_rows:
+        return themes.iloc[0:0].copy()
+
+    result = pd.DataFrame(scored_rows)
+    result = result.sort_values("natural_score", ascending=False)
+    return result
+
 
 def score_issue(issue):
     source_group = classify_source(issue.get("source", ""))
@@ -369,21 +401,21 @@ def prepare_issues(issues):
 
 
 def find_matched_issues(theme, issues):
-    theme_keywords = split_keywords(theme["trigger_keywords"])
+    theme_keywords = split_keywords(theme.get("trigger_keywords", ""))
     matched = []
 
     for _, issue in issues.iterrows():
-        issue_keywords = split_keywords(issue["keywords"])
+        issue_keywords = split_keywords(issue.get("keywords", ""))
         score = keyword_score(issue_keywords, theme_keywords)
 
         if score > 0:
             matched.append({
                 "date": issue.get("date", ""),
-                "source": issue["source"],
-                "source_group": issue.get("source_group", classify_source(issue["source"])),
-                "issue_title": issue["issue_title"],
-                "related_content": issue["related_content"],
-                "description": issue["description"],
+                "source": issue.get("source", ""),
+                "source_group": issue.get("source_group", classify_source(issue.get("source", ""))),
+                "issue_title": issue.get("issue_title", ""),
+                "related_content": issue.get("related_content", ""),
+                "description": issue.get("description", ""),
                 "source_url": issue.get("source_url", ""),
                 "score": score,
                 "issue_score": issue.get("issue_score", 0)
@@ -422,6 +454,7 @@ def find_matched_contents(theme, contents, limit=12):
             })
 
     return sorted(matched, key=lambda x: x["score"], reverse=True)[:limit]
+
 
 def build_reason_summary(theme, matched_issues):
     if not matched_issues:
@@ -688,8 +721,8 @@ elif st.session_state["page"] == "theme_db":
     )
 
     st.caption(
-        "사용자가 자연어로 입력한 상황/무드/장르를 벡터화해, "
-        "기존 테마 DB에서 의미가 가까운 테마와 콘텐츠 후보를 탐색합니다."
+        "사용자가 자연어로 입력한 상황/무드/장르를 키워드로 해석해, "
+        "기존 테마 DB에서 가장 가까운 테마와 콘텐츠 후보를 탐색합니다."
     )
 
     content_limit_preview = st.slider(
@@ -703,7 +736,7 @@ elif st.session_state["page"] == "theme_db":
     filtered = themes.copy()
 
     if search:
-        filtered = semantic_theme_search(themes, search)
+        filtered = natural_theme_search(themes, search)
 
         if filtered.empty:
             s = search.strip()
@@ -731,11 +764,15 @@ elif st.session_state["page"] == "theme_db":
         content_tags = render_content_tags(matched_contents)
 
         score_html = ""
-        if "semantic_score" in row:
+        if "natural_score" in row:
             try:
-                score_html = f'<div class="small">자연어 유사도: <span class="score">{float(row["semantic_score"]):.3f}</span></div>'
+                score_html = f'<div class="small">자연어 매칭 점수: <span class="score">{int(row["natural_score"])}</span></div>'
             except Exception:
                 score_html = ""
+
+        matched_html = ""
+        if "matched_keywords" in row and str(row["matched_keywords"]).strip():
+            matched_html = f'<div class="small">해석된 키워드: {row["matched_keywords"]}</div>'
 
         html = (
             '<div class="theme-card">'
@@ -744,6 +781,7 @@ elif st.session_state["page"] == "theme_db":
             f'<div class="copy">노출명/카피: {row["copy"]}</div>'
             f'<div class="small">장르: {row["genre"]} · 무드: {row["mood"]}</div>'
             f'{score_html}'
+            f'{matched_html}'
             '<div class="section-label">테마 키워드</div>'
             f'{keyword_tags}'
             '<div class="section-label">추천 콘텐츠 후보</div>'
