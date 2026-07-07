@@ -52,37 +52,102 @@ STATS_COLUMNS = [
 ]
 
 NEWS_QUERIES = [
+    # 기본 뉴스/공식자료
     "한국 드라마 화제",
     "예능 화제",
     "OTT 신작 공개",
+    "드라마 시청률 상승",
+    "예능 새 멤버 합류",
+    "콘텐츠 라인업 공개",
+    "배우 인터뷰 화제",
+    "웹툰 원작 드라마",
+    "일본 애니메이션 극장판",
+    "중국 드라마 화제",
+
+    # OTT/랭킹
     "넷플릭스 한국 드라마",
     "티빙 신작 예능",
     "웨이브 오리지널",
     "디즈니플러스 한국 콘텐츠",
-    "박스오피스 영화 흥행",
+    "쿠팡플레이 오리지널",
+    "OTT 랭킹 화제작",
+    "OTT 공개 예정작",
+    "OTT 신작 라인업",
+
+    # 네이버 이슈
+    "site:entertain.naver.com 드라마 화제",
+    "site:entertain.naver.com 예능 화제",
+    "site:entertain.naver.com 영화 화제",
+    "site:entertain.naver.com 배우 인터뷰",
+    "site:n.news.naver.com OTT 신작",
+    "site:n.news.naver.com 넷플릭스 티빙 웨이브 디즈니플러스",
+
+    # 키노라이츠/왓챠피디아
+    "키노라이츠 랭킹",
     "키노라이츠 트렌드 랭킹",
+    "키노라이츠 공개예정작",
+    "키노라이츠 OTT 순위",
     "왓챠피디아 영화 드라마",
-    "드라마 시청률 상승",
-    "예능 새 멤버 합류",
-    "콘텐츠 라인업 공개",
+    "왓챠피디아 평점 화제",
+
+    # 극장/박스오피스
+    "박스오피스 영화 흥행",
+    "박스오피스 순위",
+    "영화진흥위원회 박스오피스",
+    "CGV 예매율",
+    "롯데시네마 예매율",
+    "메가박스 예매율",
+    "개봉 영화 흥행",
+
+    # SNS/숏폼성 이슈
+    "SNS 화제 드라마",
+    "쇼츠 화제 예능",
+    "릴스 화제 영화",
+    "유튜브 쇼츠 드라마 명장면",
 ]
 
 YOUTUBE_QUERIES = [
+    # 리뷰/해석
     "한국 영화 결말 해석",
     "반전 영화 요약",
+    "드라마 리뷰",
+    "영화 리뷰",
+    "드라마 몰아보기",
+    "영화 리뷰 급상승",
+
+    # 쇼츠/클립
     "드라마 명장면 쇼츠",
     "예능 클립 화제",
+    "예능 쇼츠",
+    "예능 하이라이트",
+    "아이돌 예능 클립",
+    "배우 인터뷰",
+
+    # OTT 공식/예고편
+    "넷플릭스 코리아 공식 예고편",
     "넷플릭스 한국 드라마 리뷰",
+    "티빙 공식 예고편",
     "티빙 예능 클립",
+    "웨이브 공식 예고편",
     "웨이브 드라마 리뷰",
+    "디즈니플러스 코리아 예고편",
+    "쿠팡플레이 예고편",
+
+    # 방송사/채널 클립
+    "SBS 드라마 공식 클립",
+    "MBC 예능 공식 클립",
+    "KBS 드라마 공식 클립",
+    "tvN 드라마 공식 클립",
+    "JTBC 드라마 공식 클립",
+    "ENA 드라마 공식 클립",
+
+    # 기존 강한 쿼리
     "런닝맨 쇼츠",
     "나혼자산다 쇼츠",
     "놀면 뭐하니 쇼츠",
     "출발 비디오 여행 영화 소개",
     "접속 무비월드 영화 소개",
-    "드라마 리뷰",
-    "영화 리뷰",
-    "예능 쇼츠",
+    "영화 예고편 한국",
 ]
 
 KEYWORD_LEXICON = [
@@ -204,6 +269,42 @@ def save_csv(df, path, columns):
         quoting=csv.QUOTE_MINIMAL,
     )
 
+def guess_news_source(query):
+    query = normalize_text(query)
+
+    if "site:entertain.naver.com" in query or "site:n.news.naver.com" in query or "네이버" in query:
+        return "네이버 이슈"
+
+    if "키노라이츠" in query:
+        return "키노라이츠/OTT"
+
+    if "왓챠피디아" in query:
+        return "왓챠피디아"
+
+    if (
+        "박스오피스" in query
+        or "영화진흥위원회" in query
+        or "CGV" in query
+        or "롯데시네마" in query
+        or "메가박스" in query
+        or "개봉 영화" in query
+    ):
+        return "극장/박스오피스"
+
+    if "SNS" in query or "쇼츠" in query or "릴스" in query:
+        return "SNS/숏폼"
+
+    if (
+        "OTT" in query
+        or "넷플릭스" in query
+        or "티빙" in query
+        or "웨이브" in query
+        or "디즈니" in query
+        or "쿠팡플레이" in query
+    ):
+        return "OTT/랭킹"
+
+    return "뉴스/공식자료"
 
 def collect_google_news():
     rows = []
@@ -238,7 +339,7 @@ def collect_google_news():
 
             rows.append({
                 "date": published_date.strftime("%Y-%m-%d"),
-                "source": "뉴스/공식자료",
+                "source": guess_news_source(query),
                 "issue_title": title[:120],
                 "related_content": related,
                 "keywords": keywords,
