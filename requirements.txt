@@ -3,3 +3,4 @@ pandas
 feedparser
 requests
 yt-dlp
+scikit-learn
