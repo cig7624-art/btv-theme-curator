@@ -281,6 +281,7 @@ def semantic_theme_search(themes, query):
     if any(w in query_text for w in ["힐링", "위로", "잔잔", "따뜻"]):
         must_groups.append(["힐링", "위로", "잔잔", "따뜻", "감성"])
 
+    
     df = themes.copy()
     df["search_text"] = df.apply(build_theme_search_text, axis=1).fillna("").str.lower()
 
@@ -336,6 +337,11 @@ def semantic_theme_search(themes, query):
 
     return df.drop(columns=["search_text"])
 
+def safe_url(url):
+    url = str(url).strip()
+    if url.startswith("http://") or url.startswith("https://"):
+        return url
+    return ""
 
 def score_issue(issue):
     source_group = classify_source(issue.get("source", ""))
