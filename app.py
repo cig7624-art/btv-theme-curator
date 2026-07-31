@@ -347,6 +347,18 @@ button:disabled *, div[data-testid="stFormSubmitButton"] button:disabled * {
 }
 .content-refresh-link:hover { background:#1d4ed8; color:#ffffff !important; }
 
+/* 테마별 카드 경계를 분명하게 표시 */
+div[class*="st-key-theme_card_"][data-testid="stVerticalBlockBorderWrapper"],
+div[class*="st-key-theme_card_"] > div[data-testid="stVerticalBlockBorderWrapper"],
+div[class*="st-key-theme_card_"] [data-testid="stVerticalBlockBorderWrapper"] {
+    background:#0f172a !important;
+    border:1px solid #3b4a63 !important;
+    border-left:3px solid #2563eb !important;
+    border-radius:16px !important;
+    box-shadow:0 8px 24px rgba(0,0,0,.16) !important;
+}
+div[class*="st-key-theme_card_"] { margin-bottom:14px; }
+
 @media (max-width:900px) {
     .issue-card { flex-direction:column; }
     .issue-media { width:100%; flex-basis:190px; }
@@ -574,8 +586,7 @@ def go_page(page):
 
 
 if "page" not in st.session_state:
-    # 카드의 HTML 새로고침 링크로 새 세션이 열려도 테마 DB 화면을 유지합니다.
-    st.session_state["page"] = "theme_db" if st.query_params.get("refresh_theme") else "home"
+    st.session_state["page"] = "home"
 
 
 def clear_theme_ai_search_state():
@@ -1464,37 +1475,50 @@ def _content_links_html(contents, visible=16):
     return '<div class="content-chip-wrap">' + "".join(links) + '</div>' + more
 
 
-def render_theme_db_card(row, contents, active_intent=False):
-    """테마 정보와 콘텐츠 후보를 좌우로 배치합니다."""
+_fragment = getattr(st, "fragment", lambda func: func)
+
+
+@_fragment
+def render_theme_db_card(
+    row,
+    contents,
+    active_intent=False,
+    *,
+    api_key="",
+    model="",
+    github_config=None,
+):
+    """테마 정보와 콘텐츠 후보를 좌우로 표시하고, 카드 안에서만 콘텐츠를 새로고침합니다."""
+    row_data = row.to_dict() if hasattr(row, "to_dict") else dict(row)
+    current_contents = list(contents or [])
     keyword_tags = "".join(
         f'<span class="tag">{html.escape(str(kw))}</span>'
-        for kw in split_keywords(row.get("trigger_keywords", ""))[:12]
+        for kw in split_keywords(row_data.get("trigger_keywords", ""))[:12]
     )
-    label = source_status_label(row.get("source_status", "LEGACY_UNVERIFIED"))
-    source_issue = str(row.get("source_issue", "")).strip()
+    label = source_status_label(row_data.get("source_status", "LEGACY_UNVERIFIED"))
+    source_issue = str(row_data.get("source_issue", "")).strip()
     source_issue_html = f'<div class="small">생성 근거: {html.escape(source_issue)}</div>' if source_issue else ""
-    created = str(row.get("created_date", "")).strip()
+    created = str(row_data.get("created_date", "")).strip()
     created_html = f' · 생성일 {html.escape(created)}' if created else ""
-    matched_terms = split_keywords(row.get("ai_matched_terms", ""))[:8]
+    matched_terms = split_keywords(row_data.get("ai_matched_terms", ""))[:8]
     matched_html = ""
     if active_intent and matched_terms:
         matched_html = '<div class="small" style="margin-top:8px">AI 매칭 · ' + html.escape(" · ".join(matched_terms)) + '</div>'
 
-    theme_id = str(row.get("theme_id", ""))
-    last_date = _latest_content_date(contents)
-    content_meta = f'{len(contents)}편' + (f' · {last_date} 갱신' if last_date else "")
-    refresh_href = f'?refresh_theme={html.escape(theme_id, quote=True)}'
+    theme_id = str(row_data.get("theme_id", "")).strip()
+    safe_theme_id = re.sub(r"[^0-9A-Za-z_-]+", "_", theme_id or "theme")
+    refresh_meta = {}
 
-    with st.container(border=True):
+    with st.container(border=True, key=f"theme_card_{safe_theme_id}"):
         main_col, content_col = st.columns([0.44, 0.56], gap="large")
 
         with main_col:
             st.markdown(
                 '<div class="theme-db-main">'
                 f'<div class="small">{html.escape(theme_id)} · [{html.escape(label)}]{created_html}</div>'
-                f'<div class="theme-name">{html.escape(str(row.get("theme_name", "")))}</div>'
-                f'<div class="copy">노출명/카피: {html.escape(str(row.get("copy", "")))}</div>'
-                f'<div class="small">장르: {html.escape(str(row.get("genre", "")))} · 무드: {html.escape(str(row.get("mood", "")))}</div>'
+                f'<div class="theme-name">{html.escape(str(row_data.get("theme_name", "")))}</div>'
+                f'<div class="copy">노출명/카피: {html.escape(str(row_data.get("copy", "")))}</div>'
+                f'<div class="small">장르: {html.escape(str(row_data.get("genre", "")))} · 무드: {html.escape(str(row_data.get("mood", "")))}</div>'
                 f'{source_issue_html}{matched_html}'
                 '<div class="section-label">테마 키워드</div>'
                 f'{keyword_tags}'
@@ -1503,19 +1527,62 @@ def render_theme_db_card(row, contents, active_intent=False):
             )
 
         with content_col:
+            head_left, head_right = st.columns([5, 1.15], gap="small")
+            with head_right:
+                refresh_clicked = st.button(
+                    "↻ 새로고침",
+                    key=f"refresh_content_{safe_theme_id}",
+                    use_container_width=True,
+                )
+
+            if refresh_clicked:
+                if not api_key:
+                    st.error("OPENAI_API_KEY가 연결되지 않았습니다.")
+                else:
+                    try:
+                        with st.spinner("이 테마의 콘텐츠 후보만 다시 찾는 중입니다..."):
+                            target_rows = pd.DataFrame([row_data])
+                            recommendations = theme_rows_to_recommendations(target_rows)
+                            stored_frame, _, refresh_meta = build_and_store_content_candidates(
+                                recommendations,
+                                scope_run_id="THEME_DB",
+                                api_key=api_key,
+                                model=model,
+                                github_config=github_config or {},
+                                per_theme=16,
+                                persist=True,
+                                mirror_theme_db=False,
+                            )
+                            current_contents = content_map_for_scope(stored_frame, "THEME_DB").get(theme_id, [])
+                    except ThemeGenerationError as exc:
+                        st.error(str(exc))
+                    except Exception as exc:
+                        st.error(f"콘텐츠 새로고침 실패: {exc}")
+
+            last_date = _latest_content_date(current_contents)
+            content_meta = f'{len(current_contents)}편' + (f' · {last_date} 갱신' if last_date else "")
+            with head_left:
+                st.markdown(
+                    '<div class="theme-db-content-title">추천 콘텐츠 후보</div>'
+                    f'<div class="theme-db-content-meta">{html.escape(content_meta)}</div>',
+                    unsafe_allow_html=True,
+                )
+
             st.markdown(
-                '<div class="theme-db-content-head">'
-                '<div>'
-                '<div class="theme-db-content-title">추천 콘텐츠 후보</div>'
-                f'<div class="theme-db-content-meta">{html.escape(content_meta)}</div>'
-                '</div>'
-                f'<a class="content-refresh-link" href="{refresh_href}" target="_self">↻ 새로고침</a>'
-                '</div>'
                 '<div class="theme-db-contents" style="border-left:0;padding-left:0;justify-content:flex-start">'
-                f'{_content_links_html(contents, visible=16)}'
+                f'{_content_links_html(current_contents, visible=16)}'
                 '</div>',
                 unsafe_allow_html=True,
             )
+
+            if refresh_meta:
+                if refresh_meta.get("github_status") == "error":
+                    st.warning(f"화면은 갱신됐지만 영구 저장에 실패했습니다: {refresh_meta.get('github_error', '')}")
+                else:
+                    st.caption(
+                        f"새로고침 완료 · 키노라이츠 직접 확인 {refresh_meta.get('verified_count', 0)}편 · "
+                        f"제목 검색 링크 {refresh_meta.get('search_link_only_count', 0)}편"
+                    )
 
 
 def build_and_store_content_candidates(
@@ -2094,19 +2161,20 @@ elif st.session_state["page"] == "theme_db":
         st.progress(min(1.0, coverage["connected_themes"] / coverage["total_themes"]))
 
     db_batch_size = min(20, max(1, int(coverage["missing_themes"] or 20)))
-    build_col, stale_col = st.columns(2)
-    with build_col:
+    build_missing_clicked = False
+    refresh_stale_clicked = False
+    if coverage["missing_themes"] > 0:
         build_missing_clicked = st.button(
-            f"🎬 다음 {db_batch_size}개 테마 콘텐츠 연결",
+            f"🎬 다음 미연결 테마 {db_batch_size}개 콘텐츠 연결",
             use_container_width=True,
-            disabled=coverage["missing_themes"] == 0,
         )
-    with stale_col:
+        st.caption("최초 구축 중에는 이 버튼만 사용합니다. 모든 테마 연결이 끝나면 정기 업데이트 버튼으로 바뀝니다.")
+    else:
         refresh_stale_clicked = st.button(
-            "🆕 오래된 테마 20개 신작 보강",
+            "↻ 30일 이상 지난 테마 20개 콘텐츠 업데이트",
             use_container_width=True,
-            disabled=coverage["connected_themes"] == 0,
         )
+        st.caption("전체 테마 연결이 완료된 뒤, 갱신일이 30일 이상 지난 테마 20개의 콘텐츠 후보를 다시 찾습니다.")
 
     def run_theme_content_update(target_rows, action_label):
         if not openai_api_key:
@@ -2135,22 +2203,12 @@ elif st.session_state["page"] == "theme_db":
         except Exception as exc:
             st.error(f"테마 DB 콘텐츠 연결 실패: {exc}")
 
-    refresh_request_theme_id = str(st.query_params.get("refresh_theme", "") or "").strip()
-    if refresh_request_theme_id:
-        st.query_params.clear()
-        target_rows = themes[themes["theme_id"].astype(str) == refresh_request_theme_id].head(1)
-        theme_name = (
-            str(target_rows.iloc[0].get("theme_name", refresh_request_theme_id))
-            if not target_rows.empty else refresh_request_theme_id
-        )
-        run_theme_content_update(target_rows, f"'{theme_name}' 테마")
-
     if build_missing_clicked:
         target_rows = missing_theme_rows(themes, content_frame, limit=db_batch_size)
         run_theme_content_update(target_rows, f"미연결 테마 {len(target_rows)}개")
     elif refresh_stale_clicked:
         target_rows = stale_theme_rows(themes, content_frame, limit=20, stale_days=30)
-        run_theme_content_update(target_rows, f"오래된·미연결 테마 {len(target_rows)}개")
+        run_theme_content_update(target_rows, f"30일 이상 지난 테마 {len(target_rows)}개")
 
     db_build_meta = st.session_state.get("theme_db_content_meta", {})
     if db_build_meta:
@@ -2237,6 +2295,9 @@ elif st.session_state["page"] == "theme_db":
             row,
             db_content_map.get(theme_id, []),
             active_intent=bool(active_intent),
+            api_key=openai_api_key,
+            model=openai_model,
+            github_config=github_config,
         )
 
 
