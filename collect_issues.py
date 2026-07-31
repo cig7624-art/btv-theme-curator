@@ -1,12 +1,15 @@
-"""외부 콘텐츠 이슈 수집기.
+"""B tv+ 외부 콘텐츠 이슈 통합 수집기.
 
 수집 경로
-- Google News RSS: 뉴스/공식자료, OTT, 극장, 온라인 화제 기사
-- YouTube Data API v3: 최근 영상 검색 + 조회/좋아요/댓글 통계
+- YouTube 반응: 한국 인기 영상, 주요 공식 채널 신규 업로드, 12개 외부 반응 검색어
+- 극장·박스오피스: KOBIS 일별 박스오피스
+- OTT 랭킹·신작: Netflix 공식 한국 Top 10과 OTT 공식 신작 관련 자료
+- 온라인 화제성: 네이버 데이터랩 검색 관심도 변화
+- 뉴스·공식자료: 이슈의 발생 원인과 맥락을 설명하는 최근 기사·공식 발표
 
-YouTube API 키는 환경변수 ``YOUTUBE_API_KEY`` 로 받는다. 키가 없으면 기존
-저장소와의 호환을 위해 yt-dlp를 보조 수단으로 사용하지만, GitHub Actions에서는
-API 키 사용을 권장한다.
+필수 환경변수는 YOUTUBE_API_KEY이며, KOBIS_API_KEY와 NAVER_CLIENT_ID /
+NAVER_CLIENT_SECRET은 해당 경로를 사용할 때 추가합니다. 키가 없으면 해당 경로만
+건너뛰고 나머지 수집은 계속 진행합니다.
 """
 
 from __future__ import annotations
@@ -16,6 +19,7 @@ import html
 import os
 import re
 import time
+from io import BytesIO
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import quote
@@ -36,10 +40,15 @@ YOUTUBE_STATS_PATH = Path("youtube_video_stats.csv")
 
 YOUTUBE_SEARCH_ENDPOINT = "https://www.googleapis.com/youtube/v3/search"
 YOUTUBE_VIDEOS_ENDPOINT = "https://www.googleapis.com/youtube/v3/videos"
+YOUTUBE_CHANNELS_ENDPOINT = "https://www.googleapis.com/youtube/v3/channels"
+YOUTUBE_PLAYLIST_ITEMS_ENDPOINT = "https://www.googleapis.com/youtube/v3/playlistItems"
+KOBIS_DAILY_ENDPOINT = "https://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json"
+NAVER_DATALAB_ENDPOINT = "https://openapi.naver.com/v1/datalab/search"
+NETFLIX_COUNTRY_DATA_URL = "https://www.netflix.com/tudum/top10/data/all-weeks-countries.xlsx"
 
 DAYS = int(os.getenv("ISSUE_LOOKBACK_DAYS", "7"))
 MAX_VIDEO_TRACK_DAYS = int(os.getenv("YOUTUBE_TRACK_DAYS", "30"))
-MAX_TRACKING_VIDEOS = int(os.getenv("YOUTUBE_MAX_TRACKING_VIDEOS", "250"))
+MAX_TRACKING_VIDEOS = int(os.getenv("YOUTUBE_MAX_TRACKING_VIDEOS", "500"))
 YOUTUBE_MAX_RESULTS_PER_QUERY = max(
     1, min(int(os.getenv("YOUTUBE_MAX_RESULTS_PER_QUERY", "8")), 50)
 )
@@ -53,6 +62,7 @@ ISSUE_COLUMNS = [
     "keywords",
     "description",
     "source_url",
+    "image_url",
 ]
 
 WATCHLIST_COLUMNS = [
@@ -78,95 +88,61 @@ STATS_COLUMNS = [
     "comment_count",
 ]
 
-NEWS_QUERIES = [
-    # 기본 뉴스/공식자료
-    "한국 드라마 화제",
-    "예능 화제",
-    "OTT 신작 공개",
-    "드라마 시청률 상승",
-    "예능 새 멤버 합류",
-    "콘텐츠 라인업 공개",
-    "배우 인터뷰 화제",
-    "웹툰 원작 드라마",
-    "일본 애니메이션 극장판",
-    "중국 드라마 화제",
+NEWS_QUERY_GROUPS = [
+    # 일반 콘텐츠 뉴스·공식자료
+    ("뉴스·공식자료", "한국 드라마 신작 공개"),
+    ("뉴스·공식자료", "한국 예능 신작 공개"),
+    ("뉴스·공식자료", "한국 영화 신작 공개"),
+    ("뉴스·공식자료", "드라마 캐스팅 확정"),
+    ("뉴스·공식자료", "예능 새 멤버 합류"),
+    ("뉴스·공식자료", "콘텐츠 수상 화제"),
+    ("뉴스·공식자료", "드라마 시청률 상승"),
+    ("뉴스·공식자료", "웹툰 원작 드라마 제작"),
+    ("뉴스·공식자료", "배우 감독 인터뷰 신작"),
 
-    # OTT/랭킹
-    "넷플릭스 한국 드라마",
-    "티빙 신작 예능",
-    "웨이브 오리지널",
-    "디즈니플러스 한국 콘텐츠",
-    "쿠팡플레이 오리지널",
-    "OTT 랭킹 화제작",
-    "OTT 공개 예정작",
-    "OTT 신작 라인업",
-
-    # 네이버 이슈
-    "site:entertain.naver.com 드라마 화제",
-    "site:entertain.naver.com 예능 화제",
-    "site:entertain.naver.com 영화 화제",
-    "site:entertain.naver.com 배우 인터뷰",
-    "site:n.news.naver.com OTT 신작",
-    "site:n.news.naver.com 넷플릭스 티빙 웨이브 디즈니플러스",
-
-    # 극장/박스오피스
-    "박스오피스 영화 흥행",
-    "박스오피스 순위",
-    "영화진흥위원회 박스오피스",
-    "CGV 예매율",
-    "롯데시네마 예매율",
-    "메가박스 예매율",
-    "개봉 영화 흥행",
-
-    # SNS·숏폼 자체 데이터가 아니라 관련 보도를 수집하는 쿼리
-    "SNS 화제 드라마",
-    "쇼츠 화제 예능",
-    "릴스 화제 영화",
-    "유튜브 쇼츠 드라마 명장면",
+    # OTT 신작·공개 예정 관련 자료. 실제 순위는 Netflix 공식 데이터에서 별도 수집합니다.
+    ("OTT 공식 신작", "넷플릭스 한국 신작 공개 예정"),
+    ("OTT 공식 신작", "티빙 오리지널 신작 공개"),
+    ("OTT 공식 신작", "웨이브 오리지널 신작 공개"),
+    ("OTT 공식 신작", "디즈니플러스 코리아 신작 공개"),
+    ("OTT 공식 신작", "쿠팡플레이 오리지널 신작 공개"),
 ]
 
 YOUTUBE_QUERIES = [
-    # 리뷰/해석
-    "한국 영화 결말 해석",
-    "반전 영화 요약",
-    "드라마 리뷰",
-    "영화 리뷰",
+    "한국 드라마 리뷰",
+    "한국 영화 리뷰",
+    "한국 예능 리뷰",
+    "드라마 결말 해석",
+    "영화 결말 해석",
     "드라마 몰아보기",
-    "영화 리뷰 급상승",
-
-    # 쇼츠/클립
+    "영화 요약",
     "드라마 명장면 쇼츠",
-    "예능 클립 화제",
-    "예능 쇼츠",
-    "예능 하이라이트",
-    "아이돌 예능 클립",
-    "배우 인터뷰",
+    "예능 명장면 쇼츠",
+    "영화 명장면 쇼츠",
+    "OTT 신작 반응",
+    "배우 신작 인터뷰",
+]
 
-    # OTT 공식/예고편
-    "넷플릭스 코리아 공식 예고편",
-    "넷플릭스 한국 드라마 리뷰",
-    "티빙 공식 예고편",
-    "티빙 예능 클립",
-    "웨이브 공식 예고편",
-    "웨이브 드라마 리뷰",
-    "디즈니플러스 코리아 예고편",
-    "쿠팡플레이 예고편",
+# handle이 바뀌거나 조회에 실패하면 채널명 검색으로 보완합니다.
+OFFICIAL_YOUTUBE_CHANNELS = [
+    {"name": "Netflix Korea", "handle": "@NetflixKorea"},
+    {"name": "TVING", "handle": "@TVING_official"},
+    {"name": "wavve", "handle": "@wavve"},
+    {"name": "Disney Plus Korea", "handle": "@DisneyPlusKR"},
+    {"name": "Coupang Play", "handle": "@CoupangPlay"},
+    {"name": "SBS Drama", "handle": "@SBSdrama"},
+    {"name": "MBC Drama", "handle": "@MBCdrama"},
+    {"name": "KBS Drama", "handle": "@KBSdrama"},
+    {"name": "tvN D ENT", "handle": "@tvNDENT"},
+    {"name": "JTBC Drama", "handle": "@JTBCLove"},
+    {"name": "ENA", "handle": "@ENA"},
+]
 
-    # 방송사/채널 클립
-    "SBS 드라마 공식 클립",
-    "MBC 예능 공식 클립",
-    "KBS 드라마 공식 클립",
-    "tvN 드라마 공식 클립",
-    "JTBC 드라마 공식 클립",
-    "ENA 드라마 공식 클립",
-
-    # 강한 고정 쿼리
-    "런닝맨 쇼츠",
-    "나혼자산다 쇼츠",
-    "놀면 뭐하니 쇼츠",
-    "출발 비디오 여행 영화 소개",
-    "접속 무비월드 영화 소개",
-    "영화 예고편 한국",
+CONTENT_VIDEO_CATEGORY_IDS = {"1", "23", "24", "43"}
+CONTENT_RELEVANCE_TERMS = [
+    "드라마", "영화", "예능", "시리즈", "넷플릭스", "티빙", "웨이브", "디즈니",
+    "쿠팡플레이", "예고편", "티저", "하이라이트", "명장면", "리뷰", "인터뷰",
+    "배우", "감독", "애니", "웹툰", "ott",
 ]
 
 KEYWORD_LEXICON = [
@@ -222,6 +198,35 @@ def clean_html_text(text):
     value = re.sub(r"<style[^>]*>.*?</style>", " ", value, flags=re.I | re.S)
     value = re.sub(r"<[^>]+>", " ", value)
     return normalize_text(value)
+
+
+def extract_entry_image(entry):
+    """RSS 항목에 포함된 대표 이미지 URL을 가능한 범위에서 추출합니다."""
+    candidates = []
+
+    for attr in ["media_content", "media_thumbnail"]:
+        for item in entry.get(attr, []) or []:
+            if isinstance(item, dict):
+                candidates.append(item.get("url", ""))
+
+    for item in entry.get("enclosures", []) or []:
+        if isinstance(item, dict) and str(item.get("type", "")).startswith("image/"):
+            candidates.append(item.get("href", "") or item.get("url", ""))
+
+    for item in entry.get("links", []) or []:
+        if isinstance(item, dict) and str(item.get("type", "")).startswith("image/"):
+            candidates.append(item.get("href", ""))
+
+    summary_html = str(entry.get("summary", "") or entry.get("description", ""))
+    match = re.search(r'<img[^>]+src=["\']([^"\']+)', summary_html, flags=re.I)
+    if match:
+        candidates.append(html.unescape(match.group(1)))
+
+    for value in candidates:
+        url = normalize_text(value)
+        if url.startswith("https://") or url.startswith("http://"):
+            return url
+    return ""
 
 
 def parse_int(value):
@@ -351,44 +356,18 @@ def save_csv(df, path, columns):
     )
 
 
-def guess_news_source(query):
-    query = normalize_text(query)
-
-    if "site:entertain.naver.com" in query or "site:n.news.naver.com" in query or "네이버" in query:
-        return "네이버 이슈"
-
-    if any(keyword in query for keyword in [
-        "박스오피스", "영화진흥위원회", "CGV", "롯데시네마", "메가박스", "개봉 영화"
-    ]):
-        return "극장/박스오피스"
-
-    # 직접 SNS 데이터를 수집한 것이 아니므로 명칭을 분리한다.
-    if any(keyword in query for keyword in ["SNS", "쇼츠", "릴스"]):
-        return "온라인 화제 기사"
-
-    if any(keyword in query for keyword in [
-        "OTT", "넷플릭스", "티빙", "웨이브", "디즈니", "쿠팡플레이"
-    ]):
-        return "OTT/랭킹"
-
-    return "뉴스/공식자료"
-
-
 def collect_google_news():
     rows = []
     today = today_kst_date()
-    start = today - timedelta(days=DAYS - 1)
+    start_date = today - timedelta(days=DAYS - 1)
 
-    for query in NEWS_QUERIES:
-        url = (
-            "https://news.google.com/rss/search?"
-            f"q={quote(query)}&hl=ko&gl=KR&ceid=KR:ko"
-        )
+    for source, query in NEWS_QUERY_GROUPS:
+        url = "https://news.google.com/rss/search?" + f"q={quote(query)}&hl=ko&gl=KR&ceid=KR:ko"
         feed = feedparser.parse(url)
 
         for entry in feed.entries[:12]:
             published_date = parse_entry_date(entry)
-            if not (start <= published_date <= today):
+            if not (start_date <= published_date <= today):
                 continue
 
             title = normalize_text(entry.get("title", ""))
@@ -397,11 +376,9 @@ def collect_google_news():
             if not title or not link:
                 continue
 
-            source = guess_news_source(query)
             related = guess_related_content(title)
             keywords = extract_keywords(f"{query} {title} {summary}")
-            desc = summary[:220] if summary else f"최근 {source}에서 '{title}' 관련 이슈가 확인됨."
-
+            desc = summary[:220] if summary else f"최근 {source}에서 '{title}' 관련 자료가 확인됨."
             rows.append({
                 "date": published_date.strftime("%Y-%m-%d"),
                 "source": source,
@@ -410,6 +387,7 @@ def collect_google_news():
                 "keywords": keywords,
                 "description": desc,
                 "source_url": link,
+                "image_url": extract_entry_image(entry),
             })
 
     return rows
@@ -503,15 +481,88 @@ def fetch_youtube_video_resources(video_ids, parts="snippet,statistics,contentDe
     return resources
 
 
+def is_content_relevant_resource(resource):
+    snippet = resource.get("snippet", {}) or {}
+    category_id = str(snippet.get("categoryId", ""))
+    text = " ".join([
+        normalize_text(snippet.get("title", "")),
+        normalize_text(snippet.get("description", "")),
+        normalize_text(snippet.get("channelTitle", "")),
+        " ".join(snippet.get("tags", [])[:15]),
+    ]).lower()
+    return category_id in CONTENT_VIDEO_CATEGORY_IDS or any(term.lower() in text for term in CONTENT_RELEVANCE_TERMS)
+
+
+def resolve_official_channel(channel):
+    key = api_key()
+    if not key:
+        return None
+
+    handle = normalize_text(channel.get("handle", ""))
+    if handle:
+        try:
+            payload = youtube_get(
+                YOUTUBE_CHANNELS_ENDPOINT,
+                {"part": "snippet,contentDetails", "forHandle": handle, "key": key},
+            )
+            if payload.get("items"):
+                return payload["items"][0]
+        except Exception as exc:
+            print(f"공식 채널 handle 조회 실패: {channel['name']} / {exc}")
+
+    try:
+        search = youtube_get(
+            YOUTUBE_SEARCH_ENDPOINT,
+            {
+                "part": "snippet",
+                "q": channel["name"],
+                "type": "channel",
+                "maxResults": 3,
+                "regionCode": "KR",
+                "relevanceLanguage": "ko",
+                "key": key,
+            },
+        )
+        ids = [normalize_text(item.get("id", {}).get("channelId", "")) for item in search.get("items", [])]
+        ids = [value for value in ids if value]
+        if not ids:
+            return None
+        details = youtube_get(
+            YOUTUBE_CHANNELS_ENDPOINT,
+            {"part": "snippet,contentDetails", "id": ",".join(ids), "key": key},
+        )
+        expected = channel["name"].lower().replace(" ", "")
+        items = details.get("items", [])
+        items.sort(
+            key=lambda item: expected in normalize_text(item.get("snippet", {}).get("title", "")).lower().replace(" ", ""),
+            reverse=True,
+        )
+        return items[0] if items else None
+    except Exception as exc:
+        print(f"공식 채널 검색 실패: {channel['name']} / {exc}")
+        return None
+
+
 def discover_youtube_videos_api():
     key = api_key()
     if not key:
         return pd.DataFrame(columns=WATCHLIST_COLUMNS)
 
     today = today_kst_date().strftime("%Y-%m-%d")
-    discovered = {}
     published_after = rfc3339_days_ago(DAYS)
+    candidates = {}
 
+    def add_candidate(video_id, origin, snippet=None):
+        video_id = normalize_text(video_id)
+        if not video_id:
+            return
+        current = candidates.setdefault(video_id, {"origins": [], "seed_snippet": snippet or {}})
+        if origin not in current["origins"]:
+            current["origins"].append(origin)
+        if snippet and not current.get("seed_snippet"):
+            current["seed_snippet"] = snippet
+
+    # 1) 외부 반응 탐색용 12개 검색어
     for query in YOUTUBE_QUERIES:
         try:
             payload = youtube_get(
@@ -520,7 +571,7 @@ def discover_youtube_videos_api():
                     "part": "snippet",
                     "q": query,
                     "type": "video",
-                    "order": "date",
+                    "order": "relevance",
                     "publishedAfter": published_after,
                     "maxResults": YOUTUBE_MAX_RESULTS_PER_QUERY,
                     "regionCode": "KR",
@@ -529,75 +580,108 @@ def discover_youtube_videos_api():
                     "key": key,
                 },
             )
+            for item in payload.get("items", []):
+                add_candidate(item.get("id", {}).get("videoId", ""), f"검색:{query}", item.get("snippet", {}))
         except Exception as exc:
-            print(f"유튜브 API 검색 실패: {query} / {exc}")
+            print(f"유튜브 검색 실패: {query} / {exc}")
+
+    # 2) 검색어 없이 한국 인기 영상
+    try:
+        popular = youtube_get(
+            YOUTUBE_VIDEOS_ENDPOINT,
+            {
+                "part": "snippet,statistics,contentDetails,status",
+                "chart": "mostPopular",
+                "regionCode": "KR",
+                "maxResults": 50,
+                "key": key,
+            },
+        )
+        for item in popular.get("items", []):
+            if is_content_relevant_resource(item):
+                add_candidate(item.get("id", ""), "한국 인기 영상", item.get("snippet", {}))
+    except Exception as exc:
+        print(f"한국 인기 영상 수집 실패: {exc}")
+
+    # 3) 주요 OTT·방송사 공식 채널 신규 업로드
+    cutoff = today_kst_date() - timedelta(days=DAYS - 1)
+    for channel in OFFICIAL_YOUTUBE_CHANNELS:
+        resource = resolve_official_channel(channel)
+        if not resource:
             continue
+        uploads = resource.get("contentDetails", {}).get("relatedPlaylists", {}).get("uploads", "")
+        if not uploads:
+            continue
+        try:
+            playlist = youtube_get(
+                YOUTUBE_PLAYLIST_ITEMS_ENDPOINT,
+                {
+                    "part": "snippet,contentDetails",
+                    "playlistId": uploads,
+                    "maxResults": 15,
+                    "key": key,
+                },
+            )
+            for item in playlist.get("items", []):
+                snippet = item.get("snippet", {}) or {}
+                published = normalize_text(snippet.get("publishedAt", ""))[:10]
+                try:
+                    if datetime.strptime(published, "%Y-%m-%d").date() < cutoff:
+                        continue
+                except Exception:
+                    pass
+                video_id = item.get("contentDetails", {}).get("videoId", "") or snippet.get("resourceId", {}).get("videoId", "")
+                add_candidate(video_id, f"공식채널:{channel['name']}", snippet)
+        except Exception as exc:
+            print(f"공식 채널 업로드 수집 실패: {channel['name']} / {exc}")
 
-        for item in payload.get("items", []):
-            video_id = normalize_text(item.get("id", {}).get("videoId", ""))
-            snippet = item.get("snippet", {}) or {}
-            title = normalize_text(snippet.get("title", ""))
-            if not video_id or not title:
-                continue
-
-            current = discovered.get(video_id, {
-                "video_id": video_id,
-                "title": title,
-                "channel": normalize_text(snippet.get("channelTitle", "")),
-                "url": f"https://www.youtube.com/watch?v={video_id}",
-                "first_seen_date": today,
-                "upload_date": normalize_text(snippet.get("publishedAt", ""))[:10],
-                "related_content": guess_related_content(title),
-                "keywords": "",
-                "query": "",
-                "description": normalize_text(snippet.get("description", ""))[:500],
-                "duration_seconds": 0,
-                "video_type": "",
-                "queries": [],
-            })
-            if query not in current["queries"]:
-                current["queries"].append(query)
-            discovered[video_id] = current
-
-    if not discovered:
+    if not candidates:
         return pd.DataFrame(columns=WATCHLIST_COLUMNS)
 
-    resources = fetch_youtube_video_resources(list(discovered))
-    resource_map = {item.get("id", ""): item for item in resources}
+    resources = fetch_youtube_video_resources(list(candidates))
     rows = []
-
-    for video_id, row in discovered.items():
-        resource = resource_map.get(video_id, {})
+    for resource in resources:
+        video_id = normalize_text(resource.get("id", ""))
+        if video_id not in candidates:
+            continue
         status = resource.get("status", {}) or {}
         snippet = resource.get("snippet", {}) or {}
-        content_details = resource.get("contentDetails", {}) or {}
-
-        # 삭제·비공개·라이브 스트림은 후보에서 제외한다.
-        if status and status.get("privacyStatus") != "public":
-            continue
-        if status and status.get("embeddable") is False:
+        details = resource.get("contentDetails", {}) or {}
+        if status.get("privacyStatus") not in {None, "public"} or status.get("embeddable") is False:
             continue
         if snippet.get("liveBroadcastContent") in {"live", "upcoming"}:
             continue
 
-        duration_seconds = parse_iso8601_duration(content_details.get("duration", ""))
-        queries = row.pop("queries", [])
-        query_text = " / ".join(queries[:4])
+        origins = candidates[video_id]["origins"]
+        # 인기 영상은 콘텐츠 관련성 필터를 통과한 것만 유지합니다.
+        if origins == ["한국 인기 영상"] and not is_content_relevant_resource(resource):
+            continue
+
+        title = normalize_text(snippet.get("title", ""))
+        channel_title = normalize_text(snippet.get("channelTitle", ""))
+        description = normalize_text(snippet.get("description", ""))[:500]
+        duration_seconds = parse_iso8601_duration(details.get("duration", ""))
+        origin_text = " / ".join(origins[:6])
         metadata_text = " ".join([
-            query_text,
-            row["title"],
-            row["channel"],
-            row["description"],
+            origin_text, title, channel_title, description,
             " ".join(snippet.get("tags", [])[:10]),
         ])
-        row["query"] = query_text
-        row["keywords"] = extract_keywords(metadata_text)
-        row["duration_seconds"] = duration_seconds
-        row["video_type"] = video_type_from_duration(duration_seconds, metadata_text)
-        rows.append(row)
+        rows.append({
+            "video_id": video_id,
+            "title": title[:180],
+            "channel": channel_title,
+            "url": f"https://www.youtube.com/watch?v={video_id}",
+            "first_seen_date": today,
+            "upload_date": normalize_text(snippet.get("publishedAt", ""))[:10],
+            "related_content": guess_related_content(title),
+            "keywords": extract_keywords(metadata_text),
+            "query": origin_text,
+            "description": description,
+            "duration_seconds": duration_seconds,
+            "video_type": video_type_from_duration(duration_seconds, metadata_text),
+        })
 
-    return pd.DataFrame(rows, columns=WATCHLIST_COLUMNS).fillna("")
-
+    return pd.DataFrame(rows, columns=WATCHLIST_COLUMNS).fillna("").drop_duplicates("video_id")
 
 def extract_upload_date(info):
     upload_date = info.get("upload_date", "")
@@ -792,118 +876,329 @@ def update_youtube_stats(watchlist):
 
 
 def make_youtube_issues(watchlist, stats):
+    """최근 화제 영상 후보를 조회 규모·댓글·공개 후 속도로 선별합니다.
+
+    일일 급등 계산은 핵심 선정 기준에서 제외하고, 한국 인기 영상·공식 채널·12개
+    검색어로 발견된 후보 중 최근 반응이 큰 영상을 선택합니다.
+    """
     if watchlist.empty or stats.empty:
         return []
 
     today = today_kst_date()
     today_str = today.strftime("%Y-%m-%d")
     stats = stats.copy()
-    stats["date_dt"] = pd.to_datetime(stats["date"], errors="coerce")
     for column in ["view_count", "like_count", "comment_count"]:
         stats[column] = pd.to_numeric(stats[column], errors="coerce").fillna(0).astype(int)
-
-    today_stats = stats[stats["date"].astype(str) == today_str].copy()
-    if today_stats.empty:
+    current = stats[stats["date"].astype(str) == today_str].copy()
+    if current.empty:
         return []
 
-    rows = []
     watchlist_map = watchlist.set_index("video_id").to_dict("index")
-
-    for _, cur in today_stats.iterrows():
-        video_id = str(cur["video_id"])
-        if video_id not in watchlist_map:
+    rows = []
+    for _, metric in current.iterrows():
+        video_id = str(metric["video_id"])
+        meta = watchlist_map.get(video_id)
+        if not meta:
             continue
 
-        meta = watchlist_map[video_id]
-        prev = stats[
-            (stats["video_id"].astype(str) == video_id)
-            & (stats["date"].astype(str) != today_str)
-        ].sort_values("date_dt").tail(1)
+        upload_text = normalize_text(meta.get("upload_date", ""))
+        try:
+            upload_date = datetime.strptime(upload_text, "%Y-%m-%d").date()
+        except Exception:
+            upload_date = today
+        age_days = max((today - upload_date).days + 1, 1)
+        origin = normalize_text(meta.get("query", ""))
+        is_popular = "한국 인기 영상" in origin
+        if age_days > DAYS and not is_popular:
+            continue
 
-        view_count = parse_int(cur["view_count"])
-        comment_count = parse_int(cur["comment_count"])
-        delta_views = 0
-        delta_comments = 0
-        growth_ratio = 0.0
-        reason = ""
+        view_count = parse_int(metric.get("view_count"))
+        like_count = parse_int(metric.get("like_count"))
+        comment_count = parse_int(metric.get("comment_count"))
+        views_per_day = view_count / age_days
+        official = "공식채널:" in origin
 
-        if not prev.empty:
-            prev_row = prev.iloc[0]
-            prev_views = parse_int(prev_row["view_count"])
-            prev_comments = parse_int(prev_row["comment_count"])
-            delta_views = max(view_count - prev_views, 0)
-            delta_comments = max(comment_count - prev_comments, 0)
-            if prev_views > 0:
-                growth_ratio = delta_views / prev_views
-
-            if delta_views >= DAILY_VIEW_DELTA_THRESHOLD:
-                reason = f"전일 대비 조회수 {delta_views:,}회 증가"
-            elif growth_ratio >= GROWTH_RATE_THRESHOLD and delta_views >= GROWTH_MIN_DELTA:
-                reason = f"전일 대비 조회 증가율 {growth_ratio * 100:.0f}%, 증가량 {delta_views:,}회"
-            elif delta_comments >= DAILY_COMMENT_DELTA_THRESHOLD:
-                reason = f"전일 대비 댓글 {delta_comments:,}개 증가"
-        else:
-            upload_date_text = normalize_text(meta.get("upload_date", ""))
-            try:
-                upload_dt = datetime.strptime(upload_date_text, "%Y-%m-%d").date()
-            except Exception:
-                upload_dt = today
-
-            age_days = max((today - upload_dt).days + 1, 1)
-            views_per_day = view_count / age_days
-            # 최초 관측에서는 최근 업로드만 이슈 후보로 인정한다. 오래된 영상의
-            # 누적 조회수를 오늘의 급상승으로 오인하지 않기 위함이다.
-            if age_days <= INITIAL_ISSUE_MAX_AGE_DAYS:
-                if view_count >= NEW_VIDEO_HIGH_VIEW_THRESHOLD and views_per_day >= 10000:
-                    reason = f"공개 {age_days}일 만에 조회수 {view_count:,}회 기록"
-                elif views_per_day >= NEW_VIDEO_VIEWS_PER_DAY_THRESHOLD:
-                    reason = f"공개 후 일평균 조회수 약 {views_per_day:,.0f}회로 빠르게 확산"
-                elif comment_count >= NEW_VIDEO_COMMENT_THRESHOLD:
-                    reason = f"공개 {age_days}일 만에 댓글 {comment_count:,}개로 높은 반응 확인"
-
-        if not reason:
+        # 공식 신규 영상은 절대 조회수가 다소 낮아도 후보로 남기고,
+        # 일반 검색 영상은 반응 기준을 더 엄격하게 적용합니다.
+        qualifies = (
+            is_popular
+            or view_count >= 100000
+            or views_per_day >= 20000
+            or comment_count >= 200
+            or (official and (view_count >= 30000 or comment_count >= 50))
+        )
+        if not qualifies:
             continue
 
         title = normalize_text(meta.get("title", ""))
         related = normalize_text(meta.get("related_content", ""))
-        # 작품명이나 프로그램명을 신뢰할 수 없는 일반 리뷰 문장은 큐레이션
-        # 트리거로 쓰지 않는다. 통계 이력에는 남기되 issue_feed에서는 제외한다.
         if not is_reliable_related_content(related):
             continue
-        keywords = normalize_text(meta.get("keywords", ""))
-        url = normalize_text(meta.get("url", ""))
-        channel = normalize_text(meta.get("channel", ""))
-        video_type = normalize_text(meta.get("video_type", "")) or "일반 영상"
-        source = "유튜브/숏폼 후보" if video_type == "쇼츠/숏폼 후보" else "유튜브"
 
+        video_type = normalize_text(meta.get("video_type", "")) or "일반 영상"
+        channel = normalize_text(meta.get("channel", ""))
+        url = normalize_text(meta.get("url", ""))
+        keywords = normalize_text(meta.get("keywords", ""))
         desc = (
-            f"'{title}' 영상이 {reason}. 채널: {channel}. "
-            f"현재 조회수 {view_count:,}회, 댓글 {comment_count:,}개. 영상 유형: {video_type}."
+            f"'{title}' 영상이 공개 {age_days}일 기준 조회수 {view_count:,}회, "
+            f"좋아요 {like_count:,}개, 댓글 {comment_count:,}개를 기록. "
+            f"일평균 조회수 약 {views_per_day:,.0f}회. 채널: {channel}. "
+            f"수집 경로: {origin}. 영상 유형: {video_type}."
         )
+        signal = views_per_day + comment_count * 250 + (30000 if is_popular else 0) + (15000 if official else 0)
         rows.append({
             "date": today_str,
-            "source": source,
-            "issue_title": f"{related or title} 관련 유튜브 반응 상승",
-            "related_content": related or title[:40],
+            "source": "YouTube 반응",
+            "issue_title": f"{related} 관련 YouTube 화제 영상",
+            "related_content": related,
             "keywords": keywords,
-            "description": desc[:300],
+            "description": desc[:420],
             "source_url": url,
-            "sort_delta": delta_views,
-            "sort_views": view_count,
+            "image_url": f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
+            "_signal": signal,
         })
 
-    rows.sort(key=lambda row: (row["sort_delta"], row["sort_views"]), reverse=True)
+    rows.sort(key=lambda row: row["_signal"], reverse=True)
     cleaned = []
-    seen = set()
+    seen_content = set()
     for row in rows:
-        key = row["source_url"] or row["issue_title"]
-        if key in seen:
+        key = normalize_text(row["related_content"]).lower()
+        if key in seen_content:
             continue
-        seen.add(key)
-        row.pop("sort_delta", None)
-        row.pop("sort_views", None)
+        seen_content.add(key)
+        row.pop("_signal", None)
         cleaned.append(row)
     return cleaned[:15]
+
+
+def collect_kobis_boxoffice():
+    key = normalize_text(os.getenv("KOBIS_API_KEY", ""))
+    if not key:
+        print("KOBIS_API_KEY 없음: 극장·박스오피스 수집을 건너뜁니다.")
+        return []
+
+    target = today_kst_date() - timedelta(days=1)
+    try:
+        response = requests.get(
+            KOBIS_DAILY_ENDPOINT,
+            params={"key": key, "targetDt": target.strftime("%Y%m%d")},
+            timeout=REQUEST_TIMEOUT_SECONDS,
+        )
+        response.raise_for_status()
+        payload = response.json().get("boxOfficeResult", {})
+        items = payload.get("dailyBoxOfficeList", [])
+    except Exception as exc:
+        print(f"KOBIS 수집 실패: {exc}")
+        return []
+
+    rows = []
+    for item in items:
+        rank = parse_int(item.get("rank"))
+        rank_inten = parse_int(item.get("rankInten"))
+        new_entry = normalize_text(item.get("rankOldAndNew", "")) == "NEW"
+        # Top 5는 기본 수집하고, 그 밖에는 신규 진입·2계단 이상 상승작만 수집합니다.
+        if rank > 5 and not new_entry and rank_inten < 2:
+            continue
+        movie = normalize_text(item.get("movieNm", ""))
+        if not movie:
+            continue
+        daily_audience = parse_int(item.get("audiCnt"))
+        cumulative = parse_int(item.get("audiAcc"))
+        sales_share = normalize_text(item.get("salesShare", ""))
+        if new_entry:
+            headline = f"{movie} 박스오피스 신규 진입 {rank}위"
+        elif rank == 1:
+            headline = f"{movie} 일일 박스오피스 1위"
+        elif rank_inten >= 2:
+            headline = f"{movie} 박스오피스 {rank_inten}계단 상승해 {rank}위"
+        else:
+            headline = f"{movie} 일일 박스오피스 {rank}위"
+        rows.append({
+            "date": today_kst_date().strftime("%Y-%m-%d"),
+            "source": "KOBIS 박스오피스",
+            "issue_title": headline,
+            "related_content": movie,
+            "keywords": extract_keywords(f"영화 박스오피스 흥행 {movie}"),
+            "description": (
+                f"{target.strftime('%Y-%m-%d')} KOBIS 일별 박스오피스 {rank}위. "
+                f"일일 관객 {daily_audience:,}명, 누적 관객 {cumulative:,}명, "
+                f"매출 점유율 {sales_share}%. "
+                + ("신규 진입." if new_entry else f"전일 대비 순위 변화 {rank_inten:+d}.")
+            ),
+            "source_url": "https://www.kobis.or.kr/kobis/business/stat/boxs/findDailyBoxOfficeList.do",
+            "image_url": "",
+        })
+    return rows
+
+
+def normalize_netflix_columns(df):
+    return {str(column).strip().lower().replace(" ", "_"): column for column in df.columns}
+
+
+def collect_netflix_top10():
+    try:
+        response = requests.get(NETFLIX_COUNTRY_DATA_URL, timeout=45)
+        response.raise_for_status()
+        df = pd.read_excel(BytesIO(response.content), engine="openpyxl")
+    except Exception as exc:
+        print(f"Netflix Top 10 수집 실패: {exc}")
+        return []
+
+    columns = normalize_netflix_columns(df)
+    def col(*names):
+        for name in names:
+            if name in columns:
+                return columns[name]
+        return None
+
+    country_col = col("country_name", "country")
+    iso_col = col("country_iso2", "country_code")
+    week_col = col("week")
+    rank_col = col("weekly_rank", "rank")
+    title_col = col("show_title", "title")
+    season_col = col("season_title", "season")
+    category_col = col("category")
+    weeks_col = col("cumulative_weeks_in_top_10", "cumulative_weeks")
+    if not all([week_col, rank_col, title_col]) or not (country_col or iso_col):
+        print(f"Netflix Top 10 컬럼 확인 실패: {list(df.columns)}")
+        return []
+
+    mask = pd.Series(False, index=df.index)
+    if country_col:
+        mask |= df[country_col].astype(str).str.lower().isin(["south korea", "korea, republic of", "대한민국"])
+    if iso_col:
+        mask |= df[iso_col].astype(str).str.upper().eq("KR")
+    korea = df[mask].copy()
+    if korea.empty:
+        print("Netflix Top 10에서 한국 데이터를 찾지 못했습니다.")
+        return []
+    korea["_week"] = pd.to_datetime(korea[week_col], errors="coerce")
+    latest_week = korea["_week"].max()
+    korea = korea[korea["_week"] == latest_week]
+    korea["_rank"] = pd.to_numeric(korea[rank_col], errors="coerce").fillna(99).astype(int)
+    korea = korea[korea["_rank"] <= 10].sort_values("_rank")
+
+    rows = []
+    for _, item in korea.iterrows():
+        title = normalize_text(item.get(title_col, ""))
+        season = normalize_text(item.get(season_col, "")) if season_col else ""
+        related = title
+        display = season if season and season.lower() != "nan" else title
+        rank = int(item["_rank"])
+        category = normalize_text(item.get(category_col, "")) if category_col else ""
+        weeks = parse_int(item.get(weeks_col, 0)) if weeks_col else 0
+        rows.append({
+            "date": today_kst_date().strftime("%Y-%m-%d"),
+            "source": "Netflix Top 10",
+            "issue_title": f"{display} 넷플릭스 한국 Top 10 {rank}위",
+            "related_content": related,
+            "keywords": extract_keywords(f"OTT 넷플릭스 랭킹 신작 {title} {season} {category}"),
+            "description": (
+                f"Netflix 공식 국가별 주간 Top 10에서 한국 {rank}위. "
+                f"카테고리: {category or '미분류'}. 누적 Top 10 진입 {weeks}주. "
+                f"집계 주간: {latest_week.strftime('%Y-%m-%d') if pd.notna(latest_week) else ''}."
+            ),
+            "source_url": "https://www.netflix.com/tudum/top10",
+            "image_url": "",
+        })
+    return rows
+
+
+def reliable_candidate_titles(rows, limit=25):
+    scored = {}
+    for row in rows:
+        title = normalize_text(row.get("related_content", ""))
+        if not is_reliable_related_content(title):
+            continue
+        key = title.lower()
+        scored.setdefault(key, {"title": title, "count": 0, "image_url": "", "sources": set()})
+        scored[key]["count"] += 1
+        scored[key]["sources"].add(normalize_text(row.get("source", "")))
+        if not scored[key]["image_url"]:
+            scored[key]["image_url"] = normalize_text(row.get("image_url", ""))
+    ordered = sorted(scored.values(), key=lambda item: (len(item["sources"]), item["count"]), reverse=True)
+    return ordered[:limit]
+
+
+def collect_naver_trends(candidate_rows):
+    client_id = normalize_text(os.getenv("NAVER_CLIENT_ID", ""))
+    client_secret = normalize_text(os.getenv("NAVER_CLIENT_SECRET", ""))
+    if not client_id or not client_secret:
+        print("NAVER_CLIENT_ID/SECRET 없음: 온라인 화제성 수집을 건너뜁니다.")
+        return []
+
+    candidates = reliable_candidate_titles(candidate_rows)
+    if not candidates:
+        return []
+    today = today_kst_date()
+    start = today - timedelta(days=13)
+    headers = {
+        "X-Naver-Client-Id": client_id,
+        "X-Naver-Client-Secret": client_secret,
+        "Content-Type": "application/json",
+    }
+    rows = []
+    for batch in chunked(candidates, 5):
+        body = {
+            "startDate": start.strftime("%Y-%m-%d"),
+            "endDate": today.strftime("%Y-%m-%d"),
+            "timeUnit": "date",
+            "keywordGroups": [
+                {"groupName": item["title"][:20], "keywords": [item["title"]]}
+                for item in batch
+            ],
+        }
+        try:
+            response = requests.post(NAVER_DATALAB_ENDPOINT, headers=headers, json=body, timeout=REQUEST_TIMEOUT_SECONDS)
+            response.raise_for_status()
+            results = response.json().get("results", [])
+        except Exception as exc:
+            print(f"네이버 데이터랩 수집 실패: {exc}")
+            continue
+
+        meta_map = {item["title"][:20]: item for item in batch}
+        for result in results:
+            group_name = normalize_text(result.get("title", ""))
+            meta = meta_map.get(group_name)
+            if not meta:
+                continue
+            data = result.get("data", [])
+            ratios = [float(item.get("ratio", 0) or 0) for item in data]
+            if len(ratios) < 8:
+                continue
+            previous = ratios[:-7]
+            current = ratios[-7:]
+            prev_avg = sum(previous) / len(previous) if previous else 0
+            cur_avg = sum(current) / len(current) if current else 0
+            if prev_avg > 0:
+                increase = (cur_avg - prev_avg) / prev_avg * 100
+            elif cur_avg > 0:
+                increase = 100.0
+            else:
+                increase = 0.0
+            # 검색 관심이 실제로 상승한 후보만 화제성 신호로 등록합니다.
+            if increase < 20 or cur_avg < 5:
+                continue
+            title = meta["title"]
+            rows.append({
+                "date": today.strftime("%Y-%m-%d"),
+                "source": "네이버 데이터랩 검색 관심도",
+                "issue_title": f"{title} 온라인 검색 관심도 상승",
+                "related_content": title,
+                "keywords": extract_keywords(f"온라인 화제 검색 관심도 상승 {title}"),
+                "description": (
+                    f"네이버 데이터랩 기준 최근 7일 평균 검색 관심도가 직전 기간 대비 "
+                    f"{increase:.1f}% 상승. 최근 관심도 평균 {cur_avg:.1f}, 직전 평균 {prev_avg:.1f}. "
+                    f"다른 수집 경로 확인 {len(meta['sources'])}종, 관련 피드 {meta['count']}개."
+                ),
+                "source_url": "https://datalab.naver.com/keyword/trendSearch.naver",
+                "image_url": meta.get("image_url", ""),
+                "_increase": increase,
+            })
+    rows.sort(key=lambda row: row.get("_increase", 0), reverse=True)
+    for row in rows:
+        row.pop("_increase", None)
+    return rows[:10]
 
 
 def load_existing_issues():
@@ -930,7 +1225,7 @@ def cleanup_legacy_youtube_issues(df):
     def should_drop(row):
         source = str(row.get("source", ""))
         description = str(row.get("description", ""))
-        if not source.startswith("유튜브"):
+        if "유튜브" not in source and "YouTube" not in source:
             return False
         match = re.search(r"최근\s+(\d+)일\s+내\s+조회수", description)
         return bool(match and int(match.group(1)) > INITIAL_ISSUE_MAX_AGE_DAYS)
@@ -941,14 +1236,24 @@ def cleanup_legacy_youtube_issues(df):
 
 def save_issue_feed(new_rows):
     existing = cleanup_legacy_youtube_issues(normalize_legacy_issue_sources(load_existing_issues()))
-    if not new_rows:
-        save_csv(existing, ISSUE_PATH, ISSUE_COLUMNS)
-        return 0, len(existing)
+    today_str = today_kst_date().strftime("%Y-%m-%d")
+
+    # 같은 날 워크플로를 다시 실행하면 오늘 수집분을 새 결과로 교체합니다.
+    if not existing.empty:
+        existing = existing[existing["date"].astype(str) != today_str].copy()
 
     new_df = pd.DataFrame(new_rows, columns=ISSUE_COLUMNS).fillna("")
     merged = pd.concat([existing, new_df], ignore_index=True)
+    if merged.empty:
+        save_csv(merged, ISSUE_PATH, ISSUE_COLUMNS)
+        return 0, 0
+
     merged["dedup_key"] = merged.apply(
-        lambda row: str(row["source_url"]).strip() or str(row["issue_title"]).strip(),
+        lambda row: "|".join([
+            str(row.get("date", "")).strip(),
+            str(row.get("source", "")).strip(),
+            str(row.get("source_url", "")).strip() or str(row.get("issue_title", "")).strip(),
+        ]),
         axis=1,
     )
     merged = merged.drop_duplicates(subset=["dedup_key"], keep="last").drop(columns=["dedup_key"])
@@ -961,25 +1266,33 @@ def save_issue_feed(new_rows):
 
 
 def main():
-    print("외부 이슈 수집 시작")
+    print("외부 이슈 통합 수집 시작")
 
     news_rows = collect_google_news()
-    print(f"뉴스/RSS 후보: {len(news_rows)}개")
+    print(f"뉴스·공식자료/OTT 신작 후보: {len(news_rows)}개")
 
     new_videos = discover_youtube_videos()
-    print(f"유튜브 신규 후보: {len(new_videos)}개")
-
+    print(f"YouTube 신규 후보: {len(new_videos)}개")
     watchlist = update_youtube_watchlist(new_videos)
-    print(f"유튜브 watchlist 전체: {len(watchlist)}개")
-
+    print(f"YouTube watchlist 전체: {len(watchlist)}개")
     stats = update_youtube_stats(watchlist)
-    print(f"유튜브 stats 전체: {len(stats)}개")
+    print(f"YouTube stats 전체: {len(stats)}개")
+    youtube_rows = make_youtube_issues(watchlist, stats)
+    print(f"YouTube 화제 영상: {len(youtube_rows)}개")
 
-    youtube_issue_rows = make_youtube_issues(watchlist, stats)
-    print(f"유튜브 반응 상승 이슈: {len(youtube_issue_rows)}개")
+    kobis_rows = collect_kobis_boxoffice()
+    print(f"KOBIS 박스오피스: {len(kobis_rows)}개")
 
-    new_count, total_count = save_issue_feed(news_rows + youtube_issue_rows)
-    print(f"issue_feed 신규 반영: {new_count}개")
+    netflix_rows = collect_netflix_top10()
+    print(f"Netflix 한국 Top 10: {len(netflix_rows)}개")
+
+    base_rows = news_rows + youtube_rows + kobis_rows + netflix_rows
+    naver_rows = collect_naver_trends(base_rows)
+    print(f"네이버 데이터랩 화제성: {len(naver_rows)}개")
+
+    all_rows = base_rows + naver_rows
+    new_count, total_count = save_issue_feed(all_rows)
+    print(f"issue_feed 오늘 반영: {new_count}개")
     print(f"issue_feed 전체 누적: {total_count}개")
 
 

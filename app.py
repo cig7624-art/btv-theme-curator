@@ -1,6 +1,11 @@
-import streamlit as st
-import pandas as pd
+import html
+import math
+import re
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
+
+import pandas as pd
+import streamlit as st
 
 st.set_page_config(
     page_title="B tv+ AI Theme Curator",
@@ -22,90 +27,64 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     margin-bottom:16px;
 }
 
-.rank {
-    color:#38bdf8 !important;
-    font-size:26px;
-    font-weight:900;
+.issue-card { display:flex; gap:18px; align-items:stretch; min-height:210px; }
+.issue-card-body { flex:1 1 auto; min-width:0; }
+.issue-media {
+    flex:0 0 320px; width:320px; min-height:176px; border-radius:14px;
+    overflow:hidden; background:#0b1220; border:1px solid #263449; align-self:stretch;
 }
-
-.theme-name {
-    font-size:23px;
-    font-weight:900;
-    margin-bottom:6px;
+.issue-media img { width:100%; height:100%; min-height:176px; object-fit:cover; display:block; }
+.issue-placeholder {
+    width:100%; height:100%; min-height:176px; padding:20px; box-sizing:border-box;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    background:linear-gradient(145deg,#172033,#0b1220 60%,#1e293b);
 }
+.issue-placeholder strong { font-size:22px; line-height:1.25; }
+.issue-placeholder span { color:#94a3b8 !important; font-size:12px; margin-bottom:8px; }
+.issue-meta-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:8px 0; }
 
-.copy {
-    color:#f97316 !important;
-    font-weight:900;
-    font-size:15px;
-    margin-bottom:6px;
+.rank { color:#38bdf8 !important; font-size:26px; font-weight:900; }
+.theme-name { font-size:23px; font-weight:900; margin-bottom:6px; }
+.copy { color:#f97316 !important; font-weight:900; font-size:15px; margin-bottom:6px; }
+.small,.logic-desc { color:#cbd5e1 !important; font-size:13px; line-height:1.5; }
+.tag,.weight-chip {
+    display:inline-block; background:#1e293b; border:1px solid #475569; border-radius:999px;
+    padding:5px 10px; margin-right:6px; margin-top:6px; font-size:12px;
 }
-
-.small,.logic-desc {
-    color:#cbd5e1 !important;
-    font-size:13px;
-    line-height:1.5;
+.weight-chip { position:relative; cursor:help; font-weight:800; }
+.weight-chip:hover::after {
+    content:attr(data-tooltip); position:absolute; z-index:9999; left:0; top:calc(100% + 9px);
+    width:330px; white-space:normal; padding:11px 12px; border-radius:10px;
+    background:#020617; border:1px solid #475569; box-shadow:0 12px 34px rgba(0,0,0,.45);
+    color:#f8fafc !important; font-size:12px; font-weight:500; line-height:1.5;
 }
-
-.tag {
-    display:inline-block;
-    background:#1e293b;
-    border:1px solid #475569;
-    border-radius:999px;
-    padding:5px 10px;
-    margin-right:6px;
-    margin-top:6px;
-    font-size:12px;
-}
-
-.score {
-    color:#22c55e !important;
-    font-weight:900;
-}
-
-.section-label {
-    margin-top:14px;
-    margin-bottom:8px;
-    font-weight:900;
-    font-size:15px;
-}
-
+.score { color:#22c55e !important; font-weight:900; }
+.section-label { margin-top:14px; margin-bottom:8px; font-weight:900; font-size:15px; }
 .one-line-reason {
-    background:#0f172a;
-    border-left:4px solid #38bdf8;
-    padding:10px 12px;
-    border-radius:8px;
-    margin-top:10px;
-    margin-bottom:10px;
-    color:#cbd5e1 !important;
-    font-size:13px;
-    line-height:1.5;
+    background:#0f172a; border-left:4px solid #38bdf8; padding:10px 12px; border-radius:8px;
+    margin-top:10px; margin-bottom:10px; color:#cbd5e1 !important; font-size:13px; line-height:1.5;
 }
-
 .source-link {
-    display:inline-block;
-    margin-top:8px;
-    color:#38bdf8 !important;
-    font-size:13px;
-    font-weight:800;
-    text-decoration:none;
+    display:inline-block; margin-top:8px; color:#38bdf8 !important; font-size:13px;
+    font-weight:800; text-decoration:none;
 }
-
 .source-link:hover { text-decoration:underline; }
+.stButton button { background:#2563eb; color:white; border-radius:12px; border:0; font-weight:800; }
 
-.stButton button {
-    background:#2563eb;
-    color:white;
-    border-radius:12px;
-    border:0;
-    font-weight:800;
+/* 닫힌 select와 펼친 드롭다운 옵션 모두 어두운 글자로 고정 */
+div[data-baseweb="select"] > div { background:#f8fafc !important; border-color:#cbd5e1 !important; }
+div[data-baseweb="select"] *, div[data-baseweb="select"] input,
+[role="listbox"], [role="listbox"] *, [role="option"], [role="option"] * {
+    color:#0f172a !important; -webkit-text-fill-color:#0f172a !important;
 }
+[role="listbox"], [role="option"] { background:#ffffff !important; }
+[role="option"]:hover, [aria-selected="true"][role="option"] { background:#e2e8f0 !important; }
+input, textarea { color:#0f172a !important; -webkit-text-fill-color:#0f172a !important; }
 
-[data-baseweb="select"] * { color:#111827 !important; }
-[data-baseweb="popover"] * { color:#111827 !important; }
-[data-baseweb="menu"] * { color:#111827 !important; }
-[data-baseweb="option"] * { color:#111827 !important; }
-input, textarea { color:#111827 !important; }
+@media (max-width:900px) {
+    .issue-card { flex-direction:column; }
+    .issue-media { width:100%; flex-basis:190px; }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -115,14 +94,35 @@ THEME_DB_PATH = Path("theme_db.csv")
 OLD_THEME_PATH = Path("theme_pool.csv")
 CONTENT_DB_PATH = Path("content_db.csv")
 
-SOURCE_WEIGHTS = {
-    "유튜브": 35,
-    "온라인 화제": 16,
-    "극장/박스오피스": 22,
-    "OTT/랭킹": 18,
-    "네이버 이슈": 15,
-    "뉴스/공식자료": 10,
+SOURCE_CONFIG = {
+    "YouTube 반응": {
+        "weight_pct": 30,
+        "path_points": 18,
+        "tooltip": "한국 인기 영상, 주요 OTT·방송사 공식 채널의 신규 업로드, 리뷰·해석·명장면 검색 결과를 수집하며 조회수·댓글·공개 후 반응 속도를 반영합니다.",
+    },
+    "극장·박스오피스": {
+        "weight_pct": 25,
+        "path_points": 15,
+        "tooltip": "KOBIS 일별 박스오피스의 순위, 신규 진입, 순위 변화, 일일·누적 관객 수를 반영합니다. 관련 기사는 흥행 배경을 설명하는 보조자료로 사용합니다.",
+    },
+    "OTT 랭킹·신작": {
+        "weight_pct": 25,
+        "path_points": 15,
+        "tooltip": "넷플릭스 한국 Top 10 등 실제 OTT 순위와 넷플릭스·티빙·웨이브·디즈니+·쿠팡플레이의 공식 신작·공개 예정 정보를 반영합니다.",
+    },
+    "온라인 화제성": {
+        "weight_pct": 15,
+        "path_points": 9,
+        "tooltip": "네이버 데이터랩 검색 관심도 변화와 관련 뉴스 언급량, YouTube 반응을 함께 확인해 실제 온라인 관심 상승 여부를 검증합니다.",
+    },
+    "뉴스·공식자료": {
+        "weight_pct": 5,
+        "path_points": 3,
+        "tooltip": "콘텐츠 관련 뉴스와 플랫폼·방송사·제작사의 공식 발표를 수집해 공개, 캐스팅, 수상, 편성 변경 등 이슈의 원인과 배경을 설명합니다.",
+    },
 }
+
+SOURCE_WEIGHTS = {name: info["weight_pct"] for name, info in SOURCE_CONFIG.items()}
 
 STOPWORDS = [
     "좋은", "보기", "보면", "볼", "때", "추천", "싶은", "생각나는",
@@ -208,8 +208,9 @@ def load_data():
 
     contents = pd.read_csv(CONTENT_DB_PATH, sep="|").fillna("")
 
-    if "source_url" not in issues.columns:
-        issues["source_url"] = ""
+    for optional_column in ["source_url", "image_url"]:
+        if optional_column not in issues.columns:
+            issues[optional_column] = ""
 
     return issues, themes, contents
 
@@ -235,17 +236,16 @@ def classify_source(source):
     s = str(source)
 
     if "유튜브" in s or "YouTube" in s:
-        return "유튜브"
-    if "온라인 화제" in s or "SNS" in s or "인스타" in s or "Instagram" in s or "릴스" in s:
-        return "온라인 화제"
-    if "극장" in s or "KOFIC" in s or "박스오피스" in s or "CGV" in s or "롯데시네마" in s or "메가박스" in s:
-        return "극장/박스오피스"
-    if "OTT" in s or "넷플릭스" in s or "티빙" in s or "웨이브" in s or "디즈니" in s or "쿠팡플레이" in s:
-        return "OTT/랭킹"
-    if "네이버" in s:
-        return "네이버 이슈"
+        return "YouTube 반응"
+    if any(token in s for token in ["극장", "KOFIC", "KOBIS", "박스오피스", "CGV", "롯데시네마", "메가박스"]):
+        return "극장·박스오피스"
+    if any(token in s for token in ["OTT", "넷플릭스", "티빙", "웨이브", "디즈니", "쿠팡플레이"]):
+        return "OTT 랭킹·신작"
+    if any(token in s for token in ["온라인 화제성", "데이터랩", "검색 관심도"]):
+        return "온라인 화제성"
 
-    return "뉴스/공식자료"
+    # 기존 온라인 화제 기사·네이버 이슈는 기사 데이터이므로 뉴스로 분류합니다.
+    return "뉴스·공식자료"
 
 
 def split_keywords(text):
@@ -377,28 +377,146 @@ def natural_theme_search(themes, query):
     return result
 
 
-def score_issue(issue):
-    source_group = classify_source(issue.get("source", ""))
-    base = SOURCE_WEIGHTS.get(source_group, 5)
+def normalize_issue_key(text):
+    value = str(text or "").lower()
+    value = re.sub(r"관련\s*(유튜브|youtube)?\s*(반응 상승|화제 영상|반응 확인)", " ", value)
+    value = re.sub(r"[^0-9a-z가-힣]+", " ", value)
+    return re.sub(r"\s+", " ", value).strip()
 
-    keywords = split_keywords(issue.get("keywords", ""))
-    keyword_bonus = min(len(keywords), 12)
 
-    related_bonus = 8 if str(issue.get("related_content", "")).strip() else 0
-    link_bonus = 8 if safe_url(issue.get("source_url", "")) else 0
+def issue_group_key(issue):
+    related = normalize_issue_key(issue.get("related_content", ""))
+    generic = {"", "드라마", "영화", "예능", "콘텐츠", "ott", "신작"}
+    if related not in generic and len(related) >= 2:
+        return related
+    return normalize_issue_key(issue.get("issue_title", ""))
 
+
+def parse_metric(description, labels):
+    text = str(description or "")
+    for label in labels:
+        match = re.search(rf"{label}\s*(?:약\s*)?([0-9][0-9,]*)", text)
+        if match:
+            try:
+                return int(match.group(1).replace(",", ""))
+            except ValueError:
+                pass
+    return 0
+
+
+def row_reaction_strength(issue):
+    group = issue.get("source_group", classify_source(issue.get("source", "")))
     desc = str(issue.get("description", ""))
-    detail_bonus = min(len(desc) // 35, 8)
+    score = 0.0
 
-    return base + keyword_bonus + related_bonus + link_bonus + detail_bonus
+    if group == "YouTube 반응":
+        views = parse_metric(desc, ["조회수", "일평균 조회수"])
+        comments = parse_metric(desc, ["댓글"])
+        if views > 0:
+            score += min(9.0, math.log10(max(views, 10)) * 1.8)
+        if comments > 0:
+            score += min(4.0, math.log10(max(comments, 10)) * 1.4)
+        if any(word in desc for word in ["빠르게 확산", "증가", "높은 반응"]):
+            score += 2.0
+    elif group == "극장·박스오피스":
+        audience = parse_metric(desc, ["일일 관객", "관객 수", "누적 관객"])
+        if audience > 0:
+            score += min(10.0, math.log10(max(audience, 10)) * 2.0)
+        if any(word in desc for word in ["1위", "신규 진입", "순위 상승"]):
+            score += 4.0
+    elif group == "OTT 랭킹·신작":
+        if re.search(r"(?:top\s*10|톱\s*10|[1-9]위)", desc, re.I):
+            score += 8.0
+        if any(word in desc for word in ["신규 진입", "순위 상승", "공개 예정", "신작"]):
+            score += 4.0
+    elif group == "온라인 화제성":
+        percent = parse_metric(desc, ["상승", "증가"])
+        score += min(12.0, percent / 10.0) if percent else 5.0
+    else:
+        if any(word in str(issue.get("source", "")) for word in ["공식", "보도자료", "KOBIS", "Netflix"]):
+            score += 5.0
+        score += min(4.0, len(desc) / 100.0)
+
+    return min(score, 15.0)
+
+
+def recency_points(date_value):
+    date_dt = pd.to_datetime(date_value, errors="coerce")
+    if pd.isna(date_dt):
+        return 0
+    age = max((pd.Timestamp.today().normalize() - date_dt.normalize()).days, 0)
+    if age <= 1:
+        return 5
+    if age <= 3:
+        return 4
+    if age <= 7:
+        return 2
+    return 0
+
+
+def cross_source_points(route_count):
+    if route_count >= 4:
+        return 15
+    if route_count == 3:
+        return 10
+    if route_count == 2:
+        return 5
+    return 0
 
 
 def prepare_issues(issues):
     issues = issues.copy()
     issues["source_group"] = issues["source"].apply(classify_source)
-    issues["issue_score"] = issues.apply(score_issue, axis=1)
-    return issues.sort_values("issue_score", ascending=False)
+    issues["issue_group_key"] = issues.apply(issue_group_key, axis=1)
+    issues["row_reaction"] = issues.apply(row_reaction_strength, axis=1)
 
+    group_stats = {}
+    for key, group in issues.groupby("issue_group_key", dropna=False):
+        routes = sorted(set(group["source_group"].astype(str)))
+        feed_count = len(group)
+        path_score = min(sum(SOURCE_CONFIG.get(route, {}).get("path_points", 0) for route in routes), 60)
+        repetition = min(8.0, max(feed_count - 1, 0) * 2.0)
+        reaction_score = min(20, round(float(group["row_reaction"].max()) + repetition))
+        cross_score = cross_source_points(len(routes))
+        latest_date = pd.to_datetime(group["date"], errors="coerce").max()
+        recent_score = recency_points(latest_date)
+        total = min(100, int(round(path_score + reaction_score + cross_score + recent_score)))
+        group_stats[key] = {
+            "issue_score": total,
+            "path_score": path_score,
+            "reaction_score": reaction_score,
+            "cross_score": cross_score,
+            "recent_score": recent_score,
+            "route_count": len(routes),
+            "feed_count": feed_count,
+            "confirmed_routes": " · ".join(routes),
+        }
+
+    for column in ["issue_score", "path_score", "reaction_score", "cross_score", "recent_score", "route_count", "feed_count", "confirmed_routes"]:
+        issues[column] = issues["issue_group_key"].map(lambda key: group_stats.get(key, {}).get(column, 0))
+
+    return issues.sort_values(["issue_score", "date"], ascending=[False, False])
+
+
+def representative_priority(row):
+    source = str(row.get("source", ""))
+    official_bonus = 3 if any(token in source for token in ["공식", "KOBIS", "보도자료", "Netflix"]) else 0
+    route = row.get("source_group", "뉴스·공식자료")
+    path_points = SOURCE_CONFIG.get(route, {}).get("path_points", 0)
+    image_bonus = 2 if get_issue_image_url(row) else 0
+    return official_bonus + path_points + image_bonus
+
+
+def build_core_issues(issues):
+    if issues.empty:
+        return issues.copy()
+    representatives = []
+    for _, group in issues.groupby("issue_group_key", sort=False):
+        ranked = group.copy()
+        ranked["representative_priority"] = ranked.apply(representative_priority, axis=1)
+        ranked = ranked.sort_values(["representative_priority", "date"], ascending=[False, False])
+        representatives.append(ranked.iloc[0])
+    return pd.DataFrame(representatives).sort_values(["issue_score", "date"], ascending=[False, False])
 
 def find_matched_issues(theme, issues):
     theme_keywords = split_keywords(theme.get("trigger_keywords", ""))
@@ -524,6 +642,50 @@ def render_metric(title, number, subtitle=None):
     )
 
 
+def youtube_video_id(url):
+    value = safe_url(url)
+    if not value:
+        return ""
+    parsed = urlparse(value)
+    if parsed.netloc in {"youtu.be", "www.youtu.be"}:
+        return parsed.path.strip("/")
+    if "youtube.com" in parsed.netloc:
+        if parsed.path == "/watch":
+            return parse_qs(parsed.query).get("v", [""])[0]
+        if parsed.path.startswith("/shorts/") or parsed.path.startswith("/embed/"):
+            return parsed.path.rstrip("/").split("/")[-1]
+    return ""
+
+
+def get_issue_image_url(issue):
+    explicit = safe_url(issue.get("image_url", ""))
+    if explicit:
+        return explicit
+    video_id = youtube_video_id(issue.get("source_url", ""))
+    if video_id:
+        return f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg"
+    return ""
+
+
+def render_issue_media(issue):
+    image_url = get_issue_image_url(issue)
+    title = html.escape(str(issue.get("related_content", "") or issue.get("issue_title", "")))
+    source_group = html.escape(str(issue.get("source_group", "콘텐츠 이슈")))
+    if image_url:
+        safe_image = html.escape(image_url, quote=True)
+        return '<div class="issue-media">' + f'<img src="{safe_image}" alt="{title}" loading="lazy">' + '</div>'
+    return '<div class="issue-media"><div class="issue-placeholder">' + f'<span>{source_group}</span><strong>{title}</strong>' + '</div></div>'
+
+
+def score_tooltip(issue):
+    return (
+        f"수집 경로 {int(issue.get('path_score', 0))}/60 · "
+        f"반응 강도 {int(issue.get('reaction_score', 0))}/20 · "
+        f"교차 확인 {int(issue.get('cross_score', 0))}/15 · "
+        f"최근성 {int(issue.get('recent_score', 0))}/5"
+    )
+
+
 def render_source_link(url):
     url = safe_url(url)
     if not url:
@@ -534,22 +696,30 @@ def render_source_link(url):
 def render_issue_card(issue):
     url_html = render_source_link(issue.get("source_url", ""))
     related = str(issue.get("related_content", "")).strip()
-    related_html = f" · {related}" if related else ""
-    source_group = issue.get("source_group", classify_source(issue.get("source", "")))
-    issue_score = issue.get("issue_score", "")
+    related_html = f" · {html.escape(related)}" if related else ""
+    source_group = html.escape(str(issue.get("source_group", classify_source(issue.get("source", "")))))
+    issue_score = int(issue.get("issue_score", 0))
+    tooltip = html.escape(score_tooltip(issue), quote=True)
+    media_html = render_issue_media(issue)
+    routes = html.escape(str(issue.get("confirmed_routes", source_group)))
+    feed_count = int(issue.get("feed_count", 1))
+    route_count = int(issue.get("route_count", 1))
 
-    html = (
-        '<div class="card">'
-        f'<span class="tag">{source_group}</span><br>'
-        f'<b>{issue["issue_title"]}</b><br>'
-        f'<span class="small">{issue["source"]}{related_html}</span><br>'
-        f'<span class="small">{issue["description"]}</span><br>'
-        f'<span class="small">이슈 점수: <span class="score">{issue_score}</span></span><br>'
+    body = (
+        '<div class="issue-card-body">'
+        f'<span class="tag">{source_group}</span>'
+        f'<div class="theme-name">{html.escape(str(issue.get("issue_title", "")))}</div>'
+        f'<div class="small">{html.escape(str(issue.get("date", "")))} · {html.escape(str(issue.get("source", "")))}{related_html}</div>'
+        '<div class="issue-meta-row">'
+        f'<span class="small" title="{tooltip}">핵심 이슈 점수: <span class="score">{issue_score}</span></span>'
+        f'<span class="small">확인 경로 {route_count}개 · 관련 피드 {feed_count}개</span>'
+        '</div>'
+        f'<div class="small">확인 경로: {routes}</div>'
+        f'<div class="small">{html.escape(str(issue.get("description", "")))}</div>'
         f'{url_html}'
         '</div>'
     )
-    st.markdown(html, unsafe_allow_html=True)
-
+    st.markdown(f'<div class="card issue-card">{body}{media_html}</div>', unsafe_allow_html=True)
 
 def render_content_tags(matched_contents):
     if not matched_contents:
@@ -594,34 +764,21 @@ def render_theme_card(idx, rec):
 
 
 def render_collection_logic():
-    html = (
+    chips = "".join(
+        f'<span class="weight-chip" data-tooltip="{html.escape(info["tooltip"], quote=True)}">{html.escape(name)} {info["weight_pct"]}%</span>'
+        for name, info in SOURCE_CONFIG.items()
+    )
+    html_block = (
         '<div class="logic-card">'
         '<div class="theme-name">이슈 수집·선정 로직</div>'
-        '<div class="logic-desc">'
-        '최근 이슈는 오늘 기준 최근 7일 이내의 외부 콘텐츠 신호 중, '
-        '실제 시청 전환 가능성이 높은 이슈를 우선 노출합니다. '
-        '단순 뉴스량보다 <b>실제 유튜브/쇼츠 반응, 온라인 화제 기사, 극장 흥행, '
-        'OTT 화제성, 뉴스/공식자료 신뢰도</b>를 함께 반영합니다.'
-        '</div>'
-
+        '<div class="logic-desc">최근 7일간 YouTube 반응, KOBIS 박스오피스, OTT 공식 랭킹·신작, 온라인 검색 관심도, 뉴스·공식자료를 수집합니다. 동일 이슈가 여러 경로와 여러 피드에서 반복 확인되고 실제 반응이 강할수록 핵심 이슈 점수가 높아집니다.</div>'
         '<div class="section-label">경로별 가중치</div>'
-        '<span class="tag">유튜브 35</span>'
-        '<span class="tag">온라인 화제 16</span>'
-        '<span class="tag">극장/박스오피스 22</span>'
-        '<span class="tag">OTT/랭킹 18</span>'
-        '<span class="tag">네이버 이슈 15</span>'
-        '<span class="tag">뉴스/공식자료 10</span>'
-
-        '<div class="section-label">이슈 점수 산정 기준</div>'
-        '<div class="logic-desc">'
-        '이슈 점수 = 경로별 가중치 + 키워드 구체성 + 관련 콘텐츠명 존재 여부 '
-        '+ 근거 링크 존재 여부 + 설명 상세도. '
-        '메인 화면에는 이 중 점수가 높은 핵심 이슈만 우선 노출합니다.'
-        '</div>'
+        f'{chips}'
+        '<div class="section-label">핵심 이슈 점수</div>'
+        '<div class="logic-desc">수집 경로 60점 + 반응 강도 20점 + 교차 확인 15점 + 최근성 5점으로 계산합니다. 같은 작품의 피드가 반복되면 반응 강도가 높아지고, 서로 다른 경로에서 동시에 확인되면 교차 확인 점수가 추가됩니다. 각 가중치에 마우스를 올리면 수집 기준을 볼 수 있습니다.</div>'
         '</div>'
     )
-
-    st.markdown(html, unsafe_allow_html=True)
+    st.markdown(html_block, unsafe_allow_html=True)
 
 
 try:
@@ -682,27 +839,13 @@ if st.session_state["page"] == "issue_db":
     st.markdown(f"### 전체 {len(issues)}개 중 {len(filtered)}개 표시")
 
     for _, issue in filtered.iterrows():
-        keyword_tags = ""
-        for kw in split_keywords(issue["keywords"])[:16]:
-            keyword_tags += f'<span class="tag">{kw}</span>'
-
-        url_html = render_source_link(issue.get("source_url", ""))
-
-        html = (
-            '<div class="theme-card">'
-            f'<span class="tag">{issue["source_group"]}</span>'
-            f'<div class="small">{issue["date"]} · {issue["source"]}</div>'
-            f'<div class="theme-name">{issue["issue_title"]}</div>'
-            f'<div class="copy">관련 콘텐츠: {issue["related_content"]}</div>'
-            f'<div class="small">{issue["description"]}</div>'
-            f'<div class="small">이슈 점수: <span class="score">{issue["issue_score"]}</span></div>'
-            '<div class="section-label">이슈 키워드</div>'
-            f'{keyword_tags}<br>'
-            f'{url_html}'
-            '</div>'
+        render_issue_card(issue)
+        keyword_tags = "".join(
+            f'<span class="tag">{html.escape(kw)}</span>'
+            for kw in split_keywords(issue.get("keywords", ""))[:16]
         )
-
-        st.markdown(html, unsafe_allow_html=True)
+        if keyword_tags:
+            st.markdown(f'<div style="margin:-10px 20px 18px 20px">{keyword_tags}</div>', unsafe_allow_html=True)
 
 
 elif st.session_state["page"] == "theme_db":
@@ -830,7 +973,7 @@ else:
         if issues.empty:
             st.warning("최근 기준 수집된 이슈가 없습니다. issue_feed.csv의 date 값을 확인하세요.")
         else:
-            main_issues = issues.head(8)
+            main_issues = build_core_issues(issues).head(8)
 
             for _, issue in main_issues.iterrows():
                 render_issue_card(issue)

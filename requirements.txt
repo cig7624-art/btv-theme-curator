@@ -4,3 +4,4 @@ feedparser
 requests
 yt-dlp
 playwright
+openpyxl
