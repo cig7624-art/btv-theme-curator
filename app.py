@@ -895,6 +895,7 @@ def render_generation_status(meta, added_count, github_result):
     new_count = int(meta.get("new_count", 0))
     existing_count = int(meta.get("existing_count", 0))
     model = html.escape(str(meta.get("model", "")))
+    api_calls = int(meta.get("api_call_count", 1) or 1)
     status = str(github_result.get("status", "not_configured"))
     if status == "success":
         persist_text = "GitHub 테마 DB까지 영구 저장 완료"
@@ -908,7 +909,7 @@ def render_generation_status(meta, added_count, github_result):
         '<div class="logic-card">'
         '<div class="theme-name">이번 주 테마 생성 결과</div>'
         f'<div class="logic-desc">AI 신규 생성 {new_count}개 · 기존 DB 활용 {existing_count}개 · 신규 DB 합류 {added_count}개</div>'
-        f'<div class="small">모델: {model} · {html.escape(persist_text)}</div>'
+        f'<div class="small">모델: {model} · LLM 호출 {api_calls}회 · {html.escape(persist_text)}</div>'
         f'{warning_html}'
         '</div>',
         unsafe_allow_html=True,
@@ -1416,7 +1417,7 @@ else:
         st.subheader("이번주 추천 테마")
 
         openai_api_key = get_runtime_secret("OPENAI_API_KEY")
-        openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-terra")
+        openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
         github_config = get_github_writeback_config()
 
         c1, c2 = st.columns([1, 1])
@@ -1443,9 +1444,10 @@ else:
             st.markdown(
                 """
                 1. 최근 핵심 이슈만 LLM에 전달해 신규 후보를 대량 생성합니다. 이때 기존 500개 테마는 보여주지 않습니다.  
-                2. 신규 후보가 생성된 뒤에만 기존 DB와 비교해 중복·품질을 검수합니다.  
-                3. 기존 DB는 임시 데이터로 취급하며, 기존 표현이 명백히 더 좋은 경우에만 활용합니다. 기존 활용이 0개여도 됩니다.  
-                4. 최종 채택된 AI 신규 테마는 테마 DB에 자동 합류하고, 화면에는 **AI 신규 생성 / 기존 DB 활용**을 구분해 표시합니다.
+                2. 생성된 후보를 기존 DB·최근 추천 이력과 **일반 코드로만** 비교해 중복을 제거합니다.  
+                3. 기존 500개를 다시 LLM에 보내는 두 번째 호출은 삭제했습니다. 기존 DB는 동일 테마 확인과 검증된 테마 재사용에만 활용합니다.  
+                4. 이슈 연관성·새로움·완성도·테마 간 다양성을 로컬 점수로 계산해 최종 목록을 선정합니다.  
+                5. 최종 채택된 AI 신규 테마는 테마 DB에 자동 합류하고, 화면에는 **AI 신규 생성 / 기존 DB 활용**을 구분해 표시합니다.
                 """
             )
 
@@ -1458,7 +1460,7 @@ else:
             disabled=not bool(openai_api_key),
         ):
             try:
-                with st.spinner("최근 이슈 해석 → 신규 테마 발산 → 기존 DB 사후 검수 → 테마 DB 저장 중입니다..."):
+                with st.spinner("Luna 1회 호출로 신규 테마 생성 → 로컬 중복·다양성 검사 → 테마 DB 저장 중입니다..."):
                     issue_records = build_llm_issue_records(issues, max_issues=12)
                     recent_history = load_recommendation_history(THEME_HISTORY_PATH, days=56)
                     recs, run_meta = generate_weekly_themes(
@@ -1502,7 +1504,7 @@ else:
                 st.exception(exc)
 
         if "recs" not in st.session_state:
-            st.info("버튼을 누르면 기존 500개를 재정렬하는 대신, 최근 이슈에서 그때그때 새로운 테마를 생성합니다.")
+            st.info("버튼 1회당 LLM API는 한 번만 호출합니다. 기존 500개 비교와 최종 선별은 앱 내부 코드가 처리합니다.")
         else:
             recs = st.session_state.get("recs", [])
             meta = st.session_state.get("generation_meta", {})

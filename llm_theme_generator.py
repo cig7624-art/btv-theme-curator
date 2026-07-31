@@ -6,6 +6,7 @@ import json
 import os
 import re
 from datetime import date, datetime
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Literal
 
@@ -37,6 +38,15 @@ HISTORY_COLUMNS = [
     "generation_model",
 ]
 
+VALID_ANGLES = {
+    "소재형", "상황형", "감정형", "인물형", "관계형", "공간형", "해석형", "장르변주형"
+}
+
+GENERIC_THEME_WORDS = {
+    "요즘 인기작", "인기 콘텐츠", "주말에 보기 좋은", "이번 주 추천", "화제의 작품",
+    "지금 봐야 할", "놓치면 안 될", "재미있는 영화", "재미있는 드라마",
+}
+
 
 class ThemeGenerationError(RuntimeError):
     """Raised when an LLM theme generation run cannot be completed."""
@@ -49,11 +59,11 @@ class GeneratedTheme(BaseModel):
     display_copy: str = Field(alias="copy", description="테마를 보조하는 짧은 한국어 카피")
     genre: str = Field(description="대표 장르. 복수 장르는 /로 구분")
     mood: str = Field(description="대표 감정 또는 분위기")
-    keywords: list[str] = Field(description="테마를 설명하는 핵심 키워드 5~10개")
+    keywords: list[str] = Field(description="테마를 설명하는 핵심 키워드 5~8개")
     creation_angle: str = Field(description="소재형/상황형/감정형/인물형/관계형/공간형/해석형/장르변주형 중 하나")
     source_issue_keys: list[str] = Field(description="생성 근거가 된 이슈 ID 목록")
     source_issue_summary: str = Field(description="이 테마가 어떤 최근 이슈에서 나왔는지 한 문장 설명")
-    content_search_terms: list[str] = Field(description="추후 콘텐츠 검색에 사용할 검색어 5~8개")
+    content_search_terms: list[str] = Field(description="추후 콘텐츠 검색에 사용할 검색어 4~6개")
     rationale: str = Field(description="여러 작품을 묶는 테마로서 유효한 이유")
 
 
@@ -63,16 +73,12 @@ class GeneratedThemeBatch(BaseModel):
 
 class SelectedThemeDecision(BaseModel):
     source: Literal["NEW", "EXISTING"]
-    candidate_index: int | None = Field(description="NEW인 경우 1부터 시작하는 신규 후보 번호, EXISTING이면 null")
-    existing_theme_id: str | None = Field(description="EXISTING인 경우 기존 테마 ID, NEW이면 null")
+    candidate_index: int | None = None
+    existing_theme_id: str | None = None
     relevance_score: int = Field(ge=0, le=100)
     novelty_score: int = Field(ge=0, le=100)
     quality_score: int = Field(ge=0, le=100)
     reason: str
-
-
-class ThemeSelectionBatch(BaseModel):
-    selected: list[SelectedThemeDecision]
 
 
 def normalize_theme_text(value: Any) -> str:
@@ -101,6 +107,31 @@ def _dedupe_strings(values: list[Any], limit: int) -> list[str]:
     return result
 
 
+def _tokenize(value: Any) -> set[str]:
+    return {
+        token for token in re.findall(r"[0-9a-z가-힣]+", str(value or "").lower())
+        if len(token) >= 2
+    }
+
+
+def _similarity(left: Any, right: Any) -> float:
+    left_text = normalize_theme_text(left)
+    right_text = normalize_theme_text(right)
+    if not left_text or not right_text:
+        return 0.0
+    if left_text == right_text:
+        return 1.0
+    seq = SequenceMatcher(None, left_text, right_text).ratio()
+    left_tokens = _tokenize(left)
+    right_tokens = _tokenize(right)
+    union = left_tokens | right_tokens
+    jaccard = len(left_tokens & right_tokens) / len(union) if union else 0.0
+    containment = 0.0
+    if min(len(left_text), len(right_text)) >= 6 and (left_text in right_text or right_text in left_text):
+        containment = 0.88
+    return min(1.0, max(containment, seq * 0.62 + jaccard * 0.38))
+
+
 def ensure_theme_schema(themes: pd.DataFrame) -> pd.DataFrame:
     df = themes.copy()
     required = ["theme_id", "theme_name", "trigger_keywords", "genre", "mood", "copy"]
@@ -110,8 +141,8 @@ def ensure_theme_schema(themes: pd.DataFrame) -> pd.DataFrame:
     for column, default in THEME_OPTIONAL_DEFAULTS.items():
         if column not in df.columns:
             df[column] = default
-        else:
-            df[column] = df[column].replace("", default) if column in {"source_status", "approved_status"} else df[column]
+        elif column in {"source_status", "approved_status"}:
+            df[column] = df[column].replace("", default)
     return df.fillna("")
 
 
@@ -141,8 +172,8 @@ def _issue_payload(issue_records: list[dict[str, Any]], max_issues: int = 12) ->
             "source_group": _clean_short_text(issue.get("source_group", ""), 50),
             "confirmed_routes": _clean_short_text(issue.get("confirmed_routes", ""), 120),
             "issue_score": int(float(issue.get("issue_score", 0) or 0)),
-            "keywords": _dedupe_strings(str(issue.get("keywords", "")).replace("/", ",").split(","), 16),
-            "description": _clean_short_text(issue.get("description", ""), 500),
+            "keywords": _dedupe_strings(str(issue.get("keywords", "")).replace("/", ",").split(","), 14),
+            "description": _clean_short_text(issue.get("description", ""), 360),
         })
     return payload
 
@@ -156,8 +187,8 @@ def _sanitize_generated(themes: list[GeneratedTheme], candidate_count: int) -> l
         if len(key) < 4 or key in seen_names:
             continue
         seen_names.add(key)
-        keywords = _dedupe_strings(theme.keywords, 10)
-        search_terms = _dedupe_strings(theme.content_search_terms, 8)
+        keywords = _dedupe_strings(theme.keywords, 8)
+        search_terms = _dedupe_strings(theme.content_search_terms, 6)
         cleaned.append({
             "theme_name": name,
             "copy": _clean_short_text(theme.display_copy, 58),
@@ -166,10 +197,10 @@ def _sanitize_generated(themes: list[GeneratedTheme], candidate_count: int) -> l
             "trigger_keywords": ",".join(keywords),
             "keywords": keywords,
             "creation_angle": _clean_short_text(theme.creation_angle, 20),
-            "source_issue_keys": _dedupe_strings(theme.source_issue_keys, 5),
-            "source_issue_summary": _clean_short_text(theme.source_issue_summary, 180),
+            "source_issue_keys": _dedupe_strings(theme.source_issue_keys, 4),
+            "source_issue_summary": _clean_short_text(theme.source_issue_summary, 160),
             "content_search_terms": search_terms,
-            "rationale": _clean_short_text(theme.rationale, 240),
+            "rationale": _clean_short_text(theme.rationale, 180),
         })
         if len(cleaned) >= candidate_count:
             break
@@ -183,14 +214,14 @@ def _generate_candidates(
     recent_history: pd.DataFrame,
     candidate_count: int,
 ) -> list[dict[str, Any]]:
-    recent_names = []
+    recent_names: list[str] = []
     if not recent_history.empty:
-        recent_names = _dedupe_strings(recent_history["theme_name"].astype(str).tolist(), 80)
+        recent_names = _dedupe_strings(recent_history["theme_name"].astype(str).tolist(), 40)
 
     system_prompt = """
 당신은 한국 IPTV의 콘텐츠 편성·큐레이션을 담당하는 시니어 에디터다.
 최근 콘텐츠 이슈를 해석해, 여러 작품을 묶을 수 있는 신선한 큐레이션 테마를 새로 만든다.
-이 단계에서는 기존 테마 DB를 전혀 보지 않는다. 최근 이슈 자체에서만 아이디어를 발산한다.
+기존 테마 DB는 제공되지 않는다. 최근 이슈 자체에서만 아이디어를 발산한다.
 결과는 한국어로 작성하고, 작품 하나의 홍보 문구가 아니라 최소 8편 이상의 영화·드라마·예능을 묶을 수 있는 테마여야 한다.
 "요즘 인기작", "주말에 보기 좋은 영화"처럼 너무 넓거나 뻔한 표현, 최근 이슈 제목을 그대로 붙인 표현, 서로 말만 바꾼 유사 테마를 피한다.
 소재형·상황형·감정형·인물형·관계형·공간형·해석형·장르변주형을 고르게 활용한다.
@@ -205,7 +236,7 @@ def _generate_candidates(
             "각 테마는 최근 이슈와 연결되지만 특정 작품 하나에 종속되지 않을 것",
             "테마끼리 관점과 어휘가 충분히 다를 것",
             "테마명, 짧은 카피, 장르, 무드, 키워드, 생성 관점, 근거 이슈 ID, 콘텐츠 검색어를 모두 작성할 것",
-            "콘텐츠 검색어는 추후 키노라이츠 등에서 작품 후보를 찾기 쉬운 구체적인 표현일 것",
+            "콘텐츠 검색어는 추후 작품 후보를 찾기 쉬운 구체적인 표현일 것",
             f"가능한 한 정확히 {candidate_count}개를 생성할 것",
         ],
     }
@@ -228,76 +259,119 @@ def _generate_candidates(
     return _sanitize_generated(parsed.themes, candidate_count)
 
 
-def _existing_theme_payload(themes: pd.DataFrame) -> list[dict[str, Any]]:
-    df = ensure_theme_schema(themes)
-    result: list[dict[str, Any]] = []
-    for _, row in df.iterrows():
-        result.append({
-            "theme_id": str(row.get("theme_id", "")),
-            "theme_name": _clean_short_text(row.get("theme_name", ""), 60),
-            "copy": _clean_short_text(row.get("copy", ""), 80),
-            "keywords": _dedupe_strings(str(row.get("trigger_keywords", "")).split(","), 12),
-            "genre": _clean_short_text(row.get("genre", ""), 40),
-            "mood": _clean_short_text(row.get("mood", ""), 30),
-            "source_status": str(row.get("source_status", "LEGACY_UNVERIFIED")),
-            "approved_status": str(row.get("approved_status", "UNVERIFIED")),
-        })
-    return result
+def _candidate_text(candidate: dict[str, Any]) -> str:
+    return " ".join([
+        str(candidate.get("theme_name", "")),
+        str(candidate.get("copy", "")),
+        str(candidate.get("genre", "")),
+        str(candidate.get("mood", "")),
+        str(candidate.get("trigger_keywords", "")),
+    ])
 
 
-def _review_and_select(
-    client: OpenAI,
-    model: str,
-    candidates: list[dict[str, Any]],
+def _row_text(row: pd.Series) -> str:
+    return " ".join([
+        str(row.get("theme_name", "")),
+        str(row.get("copy", "")),
+        str(row.get("genre", "")),
+        str(row.get("mood", "")),
+        str(row.get("trigger_keywords", "")),
+    ])
+
+
+def _quality_score(candidate: dict[str, Any]) -> int:
+    name = str(candidate.get("theme_name", "")).strip()
+    copy = str(candidate.get("copy", "")).strip()
+    keywords = candidate.get("keywords", []) or []
+    search_terms = candidate.get("content_search_terms", []) or []
+    rationale = str(candidate.get("rationale", "")).strip()
+    score = 48
+    if 7 <= len(name) <= 28:
+        score += 15
+    elif 5 <= len(name) <= 34:
+        score += 8
+    else:
+        score -= 8
+    if 10 <= len(copy) <= 58:
+        score += 8
+    if len(keywords) >= 5:
+        score += 9
+    if len(search_terms) >= 4:
+        score += 8
+    if str(candidate.get("creation_angle", "")) in VALID_ANGLES:
+        score += 6
+    if len(rationale) >= 20:
+        score += 6
+    normalized_name = normalize_theme_text(name)
+    if any(normalize_theme_text(word) in normalized_name for word in GENERIC_THEME_WORDS):
+        score -= 20
+    if len(_tokenize(name)) <= 1:
+        score -= 8
+    return max(0, min(100, score))
+
+
+def _relevance_score(candidate: dict[str, Any], issues_payload: list[dict[str, Any]]) -> int:
+    issue_map = {str(item.get("issue_key", "")): item for item in issues_payload}
+    keys = [key for key in candidate.get("source_issue_keys", []) if key in issue_map]
+    selected_issues = [issue_map[key] for key in keys]
+    if not selected_issues:
+        selected_issues = issues_payload[:2]
+    issue_text = " ".join(
+        " ".join([
+            str(issue.get("title", "")),
+            str(issue.get("related_content", "")),
+            " ".join(issue.get("keywords", []) or []),
+            str(issue.get("description", "")),
+        ])
+        for issue in selected_issues
+    )
+    candidate_tokens = _tokenize(_candidate_text(candidate))
+    issue_tokens = _tokenize(issue_text)
+    overlap = len(candidate_tokens & issue_tokens)
+    coverage = overlap / max(1, min(len(candidate_tokens), 12))
+    score = 58 + min(26, round(coverage * 40))
+    if keys:
+        score += min(12, len(keys) * 5)
+    return max(0, min(100, score))
+
+
+def _existing_match(candidate: dict[str, Any], themes: pd.DataFrame) -> tuple[pd.Series | None, float]:
+    if themes.empty:
+        return None, 0.0
+    candidate_name = str(candidate.get("theme_name", ""))
+    candidate_text = _candidate_text(candidate)
+    best_row: pd.Series | None = None
+    best_score = 0.0
+    for _, row in themes.iterrows():
+        name_score = _similarity(candidate_name, row.get("theme_name", ""))
+        text_score = _similarity(candidate_text, _row_text(row))
+        score = max(name_score, name_score * 0.78 + text_score * 0.22)
+        if score > best_score:
+            best_score = score
+            best_row = row
+    return best_row, best_score
+
+
+def _novelty_score(
+    candidate: dict[str, Any],
     themes: pd.DataFrame,
-    top_n: int,
-) -> tuple[list[SelectedThemeDecision], str | None]:
-    existing_payload = _existing_theme_payload(themes)
-    numbered_candidates = [dict(candidate_index=index, **item) for index, item in enumerate(candidates, start=1)]
-
-    system_prompt = """
-당신은 콘텐츠 큐레이션 테마의 편집장이다.
-1차 LLM이 기존 DB를 보지 않고 만든 신규 후보를 검수하고 최종 추천 목록을 고른다.
-기존 DB는 검증된 정답지가 아니라 대부분 임시 장난감 데이터다. 따라서 기존 테마를 억지로 섞지 않는다.
-기존 테마는 신규 후보와 사실상 같은 아이디어인데 문구와 완성도가 명백히 더 좋고 최근 이슈와도 정확히 맞을 때만 선택한다.
-신규 후보가 더 신선하거나 완성도가 높으면 기존 DB와 비슷해도 신규 후보를 선택할 수 있다.
-최종 목록은 최근 이슈와의 연결성, 실제 편성 가능성, 표현의 매력, 테마 간 다양성을 기준으로 정한다.
-같은 이슈와 같은 관점에 과도하게 몰리지 않게 한다.
-""".strip()
-
-    user_payload = {
-        "requested_final_count": top_n,
-        "new_candidates": numbered_candidates,
-        "existing_theme_db_unverified": existing_payload,
-        "selection_rules": [
-            f"최종 {top_n}개를 순서대로 선택",
-            "기존 DB 활용은 0개여도 됨",
-            "NEW이면 candidate_index를, EXISTING이면 existing_theme_id를 정확히 기입",
-            "완전히 같은 아이디어를 두 번 선택하지 않음",
-            "가능하면 서로 다른 최근 이슈와 생성 관점을 분산",
-        ],
-    }
-
-    try:
-        response = client.responses.parse(
-            model=model,
-            input=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)},
-            ],
-            text_format=ThemeSelectionBatch,
-        )
-        parsed = response.output_parsed
-        if parsed is None:
-            return [], "LLM 검수 결과가 비어 있습니다."
-        return parsed.selected, None
-    except Exception as exc:
-        return [], f"사후 중복·품질 검수 호출 실패: {exc}"
+    recent_history: pd.DataFrame,
+) -> tuple[int, pd.Series | None, float]:
+    best_row, existing_similarity = _existing_match(candidate, themes)
+    recent_similarity = 0.0
+    if not recent_history.empty:
+        for value in recent_history.get("theme_name", pd.Series(dtype=str)).astype(str):
+            recent_similarity = max(recent_similarity, _similarity(candidate.get("theme_name", ""), value))
+    strongest = max(existing_similarity, recent_similarity)
+    novelty = round(100 - strongest * 88)
+    if strongest < 0.45:
+        novelty = max(novelty, 82)
+    return max(0, min(100, novelty)), best_row, existing_similarity
 
 
 def _candidate_to_recommendation(
     candidate: dict[str, Any],
-    decision: SelectedThemeDecision | None,
+    decision: SelectedThemeDecision,
     model: str,
 ) -> dict[str, Any]:
     return {
@@ -324,28 +398,6 @@ def _candidate_to_recommendation(
         "creation_angle": candidate["creation_angle"],
         "rationale": candidate["rationale"],
         "content_search_terms": candidate["content_search_terms"],
-        "relevance_score": decision.relevance_score if decision else 0,
-        "novelty_score": decision.novelty_score if decision else 0,
-        "quality_score": decision.quality_score if decision else 0,
-        "selection_reason": decision.reason if decision else "LLM 1차 생성 후보 중 순서대로 보완 선택",
-        "contents": [],
-    }
-
-
-def _existing_to_recommendation(
-    row: pd.Series,
-    decision: SelectedThemeDecision,
-) -> dict[str, Any]:
-    theme = {key: str(row.get(key, "")) for key in ensure_theme_schema(pd.DataFrame([row])).columns}
-    return {
-        "recommendation_source": "EXISTING_DB",
-        "source_label": "기존 DB 활용",
-        "theme": theme,
-        "source_issue_keys": [],
-        "source_issue_summary": str(row.get("source_issue", "")),
-        "creation_angle": str(row.get("creation_angle", "기존 테마")) or "기존 테마",
-        "rationale": "기존 테마가 최근 이슈와 직접 연결되고 신규 후보보다 표현 완성도가 높다고 판단되어 활용했습니다.",
-        "content_search_terms": _dedupe_strings(str(row.get("content_search_terms", "")).split(","), 8),
         "relevance_score": decision.relevance_score,
         "novelty_score": decision.novelty_score,
         "quality_score": decision.quality_score,
@@ -354,12 +406,139 @@ def _existing_to_recommendation(
     }
 
 
+def _existing_to_recommendation(
+    row: pd.Series,
+    decision: SelectedThemeDecision,
+    candidate: dict[str, Any],
+) -> dict[str, Any]:
+    theme = {key: str(row.get(key, "")) for key in ensure_theme_schema(pd.DataFrame([row])).columns}
+    return {
+        "recommendation_source": "EXISTING_DB",
+        "source_label": "기존 DB 활용",
+        "theme": theme,
+        "source_issue_keys": candidate.get("source_issue_keys", []),
+        "source_issue_summary": candidate.get("source_issue_summary", ""),
+        "creation_angle": candidate.get("creation_angle", "기존 테마") or "기존 테마",
+        "rationale": candidate.get("rationale", ""),
+        "content_search_terms": candidate.get("content_search_terms", []),
+        "relevance_score": decision.relevance_score,
+        "novelty_score": decision.novelty_score,
+        "quality_score": decision.quality_score,
+        "selection_reason": decision.reason,
+        "contents": [],
+    }
+
+
+def _local_review_and_select(
+    candidates: list[dict[str, Any]],
+    themes: pd.DataFrame,
+    recent_history: pd.DataFrame,
+    issues_payload: list[dict[str, Any]],
+    top_n: int,
+    model: str,
+) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    theme_df = ensure_theme_schema(themes)
+    evaluated: list[dict[str, Any]] = []
+
+    for index, candidate in enumerate(candidates, start=1):
+        relevance = _relevance_score(candidate, issues_payload)
+        quality = _quality_score(candidate)
+        novelty, best_row, existing_similarity = _novelty_score(candidate, theme_df, recent_history)
+        total = relevance * 0.43 + quality * 0.32 + novelty * 0.25
+        evaluated.append({
+            "index": index,
+            "candidate": candidate,
+            "relevance": relevance,
+            "quality": quality,
+            "novelty": novelty,
+            "total": total,
+            "best_row": best_row,
+            "existing_similarity": existing_similarity,
+        })
+
+    selected: list[dict[str, Any]] = []
+    angle_counts: dict[str, int] = {}
+    issue_counts: dict[str, int] = {}
+    remaining = evaluated.copy()
+
+    while remaining and len(selected) < top_n:
+        best_item: dict[str, Any] | None = None
+        best_adjusted = -10_000.0
+        for item in remaining:
+            candidate = item["candidate"]
+            angle = str(candidate.get("creation_angle", ""))
+            issue_key = str((candidate.get("source_issue_keys", []) or [""])[0])
+            similarity_to_selected = max(
+                (_similarity(candidate.get("theme_name", ""), other["candidate"].get("theme_name", "")) for other in selected),
+                default=0.0,
+            )
+            diversity_penalty = angle_counts.get(angle, 0) * 5 + issue_counts.get(issue_key, 0) * 4
+            similarity_penalty = similarity_to_selected * 18
+            if similarity_to_selected >= 0.88:
+                similarity_penalty += 24
+            adjusted = item["total"] - diversity_penalty - similarity_penalty
+            if adjusted > best_adjusted:
+                best_adjusted = adjusted
+                best_item = item
+        if best_item is None:
+            break
+        selected.append(best_item)
+        remaining.remove(best_item)
+        candidate = best_item["candidate"]
+        angle = str(candidate.get("creation_angle", ""))
+        issue_key = str((candidate.get("source_issue_keys", []) or [""])[0])
+        angle_counts[angle] = angle_counts.get(angle, 0) + 1
+        issue_counts[issue_key] = issue_counts.get(issue_key, 0) + 1
+
+    recommendations: list[dict[str, Any]] = []
+    existing_count = 0
+    for item in selected:
+        candidate = item["candidate"]
+        best_row = item["best_row"]
+        similarity = float(item["existing_similarity"])
+        source_status = str(best_row.get("source_status", "")) if best_row is not None else ""
+        approved_status = str(best_row.get("approved_status", "")) if best_row is not None else ""
+        exact_name = bool(
+            best_row is not None
+            and normalize_theme_text(candidate.get("theme_name", "")) == normalize_theme_text(best_row.get("theme_name", ""))
+        )
+        trusted_existing = source_status in {"HUMAN_APPROVED", "USED"} or approved_status in {"HUMAN_APPROVED", "APPROVED", "USED"}
+        use_existing = best_row is not None and (exact_name or (trusted_existing and similarity >= 0.93))
+
+        if use_existing:
+            decision = SelectedThemeDecision(
+                source="EXISTING",
+                existing_theme_id=str(best_row.get("theme_id", "")),
+                relevance_score=item["relevance"],
+                novelty_score=item["novelty"],
+                quality_score=item["quality"],
+                reason=f"LLM이 독립적으로 만든 후보가 기존 테마와 {round(similarity * 100)}% 일치해 기존 DB 항목을 재사용했습니다. 추가 LLM 검수 호출은 하지 않았습니다.",
+            )
+            recommendations.append(_existing_to_recommendation(best_row, decision, candidate))
+            existing_count += 1
+        else:
+            decision = SelectedThemeDecision(
+                source="NEW",
+                candidate_index=int(item["index"]),
+                relevance_score=item["relevance"],
+                novelty_score=item["novelty"],
+                quality_score=item["quality"],
+                reason="최근 이슈 연관성·표현 완성도·기존/최근 테마와의 거리·테마 간 다양성을 코드로 계산해 선정했습니다.",
+            )
+            recommendations.append(_candidate_to_recommendation(candidate, decision, model))
+
+    return recommendations, {
+        "existing_count": existing_count,
+        "new_count": len(recommendations) - existing_count,
+    }
+
+
 def generate_weekly_themes(
     issue_records: list[dict[str, Any]],
     themes: pd.DataFrame,
     top_n: int,
     api_key: str,
-    model: str = "gpt-5.6-terra",
+    model: str = "gpt-5.6-luna",
     recent_history: pd.DataFrame | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     if not api_key:
@@ -368,11 +547,12 @@ def generate_weekly_themes(
         raise ThemeGenerationError("신규 테마를 만들 최근 핵심 이슈가 없습니다.")
 
     top_n = max(1, min(int(top_n), 30))
-    candidate_count = min(max(top_n * 2, 30), 60)
+    candidate_count = min(max(top_n + 12, 24), 45)
     history = recent_history if recent_history is not None else pd.DataFrame(columns=HISTORY_COLUMNS)
     issues_payload = _issue_payload(issue_records)
     client = OpenAI(api_key=api_key)
 
+    # 비용이 드는 LLM API 호출은 여기 한 번뿐입니다.
     candidates = _generate_candidates(
         client=client,
         model=model,
@@ -383,58 +563,18 @@ def generate_weekly_themes(
     if len(candidates) < top_n:
         raise ThemeGenerationError(f"신규 테마 후보가 {len(candidates)}개만 생성되어 최종 {top_n}개를 만들 수 없습니다.")
 
-    decisions, review_warning = _review_and_select(
-        client=client,
-        model=model,
+    recommendations, local_meta = _local_review_and_select(
         candidates=candidates,
         themes=themes,
+        recent_history=history,
+        issues_payload=issues_payload,
         top_n=top_n,
+        model=model,
     )
-
-    candidate_map = {index: candidate for index, candidate in enumerate(candidates, start=1)}
-    theme_df = ensure_theme_schema(themes)
-    theme_map = {str(row.get("theme_id", "")): row for _, row in theme_df.iterrows()}
-
-    recommendations: list[dict[str, Any]] = []
-    used_new: set[int] = set()
-    used_existing: set[str] = set()
-    used_names: set[str] = set()
-
-    for decision in decisions:
-        if len(recommendations) >= top_n:
-            break
-        if decision.source == "NEW" and decision.candidate_index in candidate_map:
-            idx = int(decision.candidate_index or 0)
-            candidate = candidate_map[idx]
-            name_key = normalize_theme_text(candidate["theme_name"])
-            if idx in used_new or not name_key or name_key in used_names:
-                continue
-            recommendations.append(_candidate_to_recommendation(candidate, decision, model))
-            used_new.add(idx)
-            used_names.add(name_key)
-        elif decision.source == "EXISTING" and decision.existing_theme_id in theme_map:
-            theme_id = str(decision.existing_theme_id or "")
-            row = theme_map[theme_id]
-            name_key = normalize_theme_text(row.get("theme_name", ""))
-            if theme_id in used_existing or not name_key or name_key in used_names:
-                continue
-            recommendations.append(_existing_to_recommendation(row, decision))
-            used_existing.add(theme_id)
-            used_names.add(name_key)
-
-    # 검수 응답이 부족하거나 실패했을 때 신규 후보로만 안전하게 채웁니다.
     if len(recommendations) < top_n:
-        for idx, candidate in candidate_map.items():
-            if idx in used_new:
-                continue
-            name_key = normalize_theme_text(candidate["theme_name"])
-            if not name_key or name_key in used_names:
-                continue
-            recommendations.append(_candidate_to_recommendation(candidate, None, model))
-            used_new.add(idx)
-            used_names.add(name_key)
-            if len(recommendations) >= top_n:
-                break
+        raise ThemeGenerationError(
+            f"중복·다양성 필터 후 추천 가능 테마가 {len(recommendations)}개만 남았습니다. 다시 생성해 주세요."
+        )
 
     run_id = datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + hashlib.sha1(
         "|".join(rec["theme"]["theme_name"] for rec in recommendations).encode("utf-8")
@@ -443,12 +583,13 @@ def generate_weekly_themes(
     meta = {
         "run_id": run_id,
         "model": model,
+        "api_call_count": 1,
         "candidate_count_requested": candidate_count,
         "candidate_count_received": len(candidates),
         "selected_count": len(recommendations),
-        "new_count": sum(1 for rec in recommendations if rec["recommendation_source"] == "AI_GENERATED"),
-        "existing_count": sum(1 for rec in recommendations if rec["recommendation_source"] == "EXISTING_DB"),
-        "review_warning": review_warning or "",
+        "new_count": local_meta["new_count"],
+        "existing_count": local_meta["existing_count"],
+        "review_warning": "기존 테마 DB 비교와 최종 선별은 추가 API 호출 없이 로컬 유사도·품질·다양성 계산으로 처리했습니다.",
         "issue_count": len(issues_payload),
     }
     return recommendations[:top_n], meta
