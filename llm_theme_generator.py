@@ -9,6 +9,7 @@ from datetime import date, datetime
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Literal
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import requests
@@ -30,11 +31,19 @@ THEME_OPTIONAL_DEFAULTS: dict[str, str] = {
 HISTORY_COLUMNS = [
     "run_id",
     "recommended_date",
+    "recommended_at",
+    "rank",
     "theme_id",
     "theme_name",
+    "theme_copy",
+    "genre",
+    "mood",
+    "trigger_keywords",
     "recommendation_source",
     "source_issue",
+    "rationale",
     "creation_angle",
+    "content_search_terms",
     "generation_model",
 ]
 
@@ -166,7 +175,7 @@ def ensure_theme_schema(themes: pd.DataFrame) -> pd.DataFrame:
     return df.fillna("")
 
 
-def load_recommendation_history(path: Path, days: int = 56) -> pd.DataFrame:
+def _read_recommendation_history(path: Path) -> pd.DataFrame:
     if not path.exists():
         return pd.DataFrame(columns=HISTORY_COLUMNS)
     try:
@@ -176,9 +185,132 @@ def load_recommendation_history(path: Path, days: int = 56) -> pd.DataFrame:
     for column in HISTORY_COLUMNS:
         if column not in history.columns:
             history[column] = ""
+    return history[HISTORY_COLUMNS].copy()
+
+
+def load_recommendation_history(path: Path, days: int = 56) -> pd.DataFrame:
+    history = _read_recommendation_history(path)
+    if history.empty:
+        return history
     dates = pd.to_datetime(history["recommended_date"], errors="coerce")
     cutoff = pd.Timestamp.today().normalize() - pd.Timedelta(days=days)
     return history[(dates >= cutoff) | dates.isna()].copy()
+
+
+def _history_run_timestamp(row: pd.Series) -> pd.Timestamp:
+    value = pd.to_datetime(str(row.get("recommended_at", "")), errors="coerce")
+    if not pd.isna(value):
+        if getattr(value, "tzinfo", None) is not None:
+            value = value.tz_convert("Asia/Seoul").tz_localize(None)
+        return value
+    run_id = str(row.get("run_id", ""))
+    match = re.match(r"^(\d{8}-\d{6})", run_id)
+    if match:
+        parsed = pd.to_datetime(match.group(1), format="%Y%m%d-%H%M%S", errors="coerce")
+        if not pd.isna(parsed):
+            return parsed
+    return pd.to_datetime(str(row.get("recommended_date", "")), errors="coerce")
+
+
+def load_recommendation_runs(path: Path, themes: pd.DataFrame) -> list[dict[str, Any]]:
+    """추천 이력 CSV를 실행 단위로 복원합니다.
+
+    각 버튼 실행은 run_id 하나로 묶이며, 새로고침 후에도 최신 실행을 기본으로
+    다시 표시할 수 있도록 카드 렌더링에 필요한 스냅샷을 함께 복원합니다.
+    """
+    history = _read_recommendation_history(path)
+    if history.empty:
+        return []
+
+    theme_df = ensure_theme_schema(themes)
+    by_id = {
+        str(row.get("theme_id", "")): row.to_dict()
+        for _, row in theme_df.iterrows()
+        if str(row.get("theme_id", ""))
+    }
+    by_name = {
+        normalize_theme_text(row.get("theme_name", "")): row.to_dict()
+        for _, row in theme_df.iterrows()
+        if normalize_theme_text(row.get("theme_name", ""))
+    }
+
+    history = history.copy()
+    history["_run_ts"] = history.apply(_history_run_timestamp, axis=1)
+    history["_row_order"] = range(len(history))
+    runs: list[dict[str, Any]] = []
+
+    for run_id, group in history.groupby("run_id", sort=False):
+        if not str(run_id).strip():
+            continue
+        group = group.copy()
+        group["_rank_num"] = pd.to_numeric(group["rank"], errors="coerce")
+        group = group.sort_values(["_rank_num", "_row_order"], na_position="last")
+        recs: list[dict[str, Any]] = []
+
+        for _, row in group.iterrows():
+            theme_id = str(row.get("theme_id", ""))
+            theme_name = str(row.get("theme_name", ""))
+            base = by_id.get(theme_id) or by_name.get(normalize_theme_text(theme_name)) or {}
+            theme = {column: str(base.get(column, "")) for column in theme_df.columns}
+            snapshots = {
+                "theme_id": theme_id,
+                "theme_name": theme_name,
+                "copy": str(row.get("theme_copy", "")),
+                "genre": str(row.get("genre", "")),
+                "mood": str(row.get("mood", "")),
+                "trigger_keywords": str(row.get("trigger_keywords", "")),
+                "source_issue": str(row.get("source_issue", "")),
+                "creation_angle": str(row.get("creation_angle", "")),
+                "content_search_terms": str(row.get("content_search_terms", "")),
+                "generation_model": str(row.get("generation_model", "")),
+            }
+            for key, value in snapshots.items():
+                if value:
+                    theme[key] = value
+
+            source = str(row.get("recommendation_source", "")) or "AI_GENERATED"
+            recs.append({
+                "recommendation_source": source,
+                "source_label": "AI 신규 생성" if source == "AI_GENERATED" else "기존 DB 활용",
+                "theme": theme,
+                "source_issue_summary": str(row.get("source_issue", "")),
+                "creation_angle": str(row.get("creation_angle", "")),
+                "rationale": str(row.get("rationale", "")),
+                "content_search_terms": _dedupe_strings(
+                    str(row.get("content_search_terms", "")).replace("/", ",").split(","), 8
+                ),
+                "contents": [],
+            })
+
+        run_ts = group["_run_ts"].dropna().max() if group["_run_ts"].notna().any() else pd.NaT
+        recommended_at = ""
+        if not pd.isna(run_ts):
+            recommended_at = run_ts.strftime("%Y-%m-%d %H:%M:%S")
+        model_values = [str(v) for v in group["generation_model"].tolist() if str(v)]
+        model = model_values[0] if model_values else ""
+        new_count = sum(1 for rec in recs if rec["recommendation_source"] == "AI_GENERATED")
+        existing_count = len(recs) - new_count
+        runs.append({
+            "run_id": str(run_id),
+            "recommended_at": recommended_at,
+            "sort_timestamp": run_ts,
+            "recommendations": recs,
+            "meta": {
+                "run_id": str(run_id),
+                "model": model,
+                "selected_count": len(recs),
+                "new_count": new_count,
+                "existing_count": existing_count,
+                "recommended_at": recommended_at,
+                "restored": True,
+            },
+        })
+
+    runs.sort(
+        key=lambda item: item.get("sort_timestamp") if not pd.isna(item.get("sort_timestamp")) else pd.Timestamp.min,
+        reverse=True,
+    )
+    return runs
 
 
 def _issue_payload(issue_records: list[dict[str, Any]], max_issues: int = 12) -> list[dict[str, Any]]:
@@ -641,7 +773,7 @@ def generate_weekly_themes(
             f"중복·다양성 필터 후 추천 가능 테마가 {len(recommendations)}개만 남았습니다. 다시 생성해 주세요."
         )
 
-    run_id = datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + hashlib.sha1(
+    run_id = datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y%m%d-%H%M%S") + "-" + hashlib.sha1(
         "|".join(rec["theme"]["theme_name"] for rec in recommendations).encode("utf-8")
     ).hexdigest()[:8]
 
@@ -716,31 +848,32 @@ def persist_recommendations_locally(
     theme_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(theme_path, sep="|", index=False, encoding="utf-8-sig")
 
-    if history_path.exists():
-        try:
-            history = pd.read_csv(history_path, sep="|").fillna("")
-        except Exception:
-            history = pd.DataFrame(columns=HISTORY_COLUMNS)
-    else:
-        history = pd.DataFrame(columns=HISTORY_COLUMNS)
-    for column in HISTORY_COLUMNS:
-        if column not in history.columns:
-            history[column] = ""
-
+    # 화면과 영구 저장에는 가장 최근 추천 1회만 유지합니다.
+    # 새로 생성할 때마다 이전 추천 결과를 교체하므로 새로고침 후에도 최신 결과만 복원됩니다.
     history_rows = []
-    for rec in recommendations:
+    recommended_at = datetime.now(ZoneInfo("Asia/Seoul")).isoformat(timespec="seconds")
+    for rank, rec in enumerate(recommendations, start=1):
         theme = rec["theme"]
         history_rows.append({
             "run_id": str(run_meta.get("run_id", "")),
             "recommended_date": date.today().isoformat(),
+            "recommended_at": recommended_at,
+            "rank": rank,
             "theme_id": str(theme.get("theme_id", "")),
             "theme_name": str(theme.get("theme_name", "")),
+            "theme_copy": str(theme.get("copy", "")),
+            "genre": str(theme.get("genre", "")),
+            "mood": str(theme.get("mood", "")),
+            "trigger_keywords": str(theme.get("trigger_keywords", "")),
             "recommendation_source": rec["recommendation_source"],
             "source_issue": str(rec.get("source_issue_summary", "")),
+            "rationale": str(rec.get("rationale", "")),
             "creation_angle": str(rec.get("creation_angle", "")),
+            "content_search_terms": ",".join(rec.get("content_search_terms", []) or []),
             "generation_model": str(run_meta.get("model", "")),
         })
-    history = pd.concat([history, pd.DataFrame(history_rows)], ignore_index=True)
+    history = pd.DataFrame(history_rows, columns=HISTORY_COLUMNS)
+    history_path.parent.mkdir(parents=True, exist_ok=True)
     history.to_csv(history_path, sep="|", index=False, encoding="utf-8-sig")
     return df, history, added_rows
 

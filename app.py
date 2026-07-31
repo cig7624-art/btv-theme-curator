@@ -14,6 +14,7 @@ from llm_theme_generator import (
     generate_weekly_themes,
     github_writeback_configured,
     load_recommendation_history,
+    load_recommendation_runs,
     persist_files_to_github,
     persist_recommendations_locally,
     sync_files_from_github,
@@ -924,21 +925,40 @@ def source_status_label(value):
     return mapping.get(str(value), str(value) or "기존 임시 DB")
 
 
+def format_recommended_at(value):
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    parsed = pd.to_datetime(text, errors="coerce")
+    if pd.isna(parsed):
+        return text
+    if getattr(parsed, "tzinfo", None) is not None:
+        try:
+            parsed = parsed.tz_convert("Asia/Seoul").tz_localize(None)
+        except Exception:
+            pass
+    return parsed.strftime("%Y.%m.%d %H:%M")
+
+
 def render_generation_status(meta, added_count, github_result):
     new_count = int(meta.get("new_count", 0))
     existing_count = int(meta.get("existing_count", 0))
     status = str(github_result.get("status", "not_configured"))
     if status == "success":
         persist_text = "영구 저장 완료"
+    elif status == "restored":
+        persist_text = "영구 저장된 최신 추천"
     elif status == "error":
         persist_text = "영구 저장 실패"
     else:
         persist_text = "영구 저장 미설정"
+    recommended_at = format_recommended_at(meta.get("recommended_at", ""))
+    generated_text = f"마지막 생성: {recommended_at}" if recommended_at else "마지막 생성 시각 없음"
     st.markdown(
         '<div class="logic-card">'
         '<div class="theme-name">이번 주 테마 생성 결과</div>'
         f'<div class="logic-desc">신규 {new_count}개 · 기존 활용 {existing_count}개 · DB 추가 {added_count}개</div>'
-        f'<div class="small">{html.escape(persist_text)}</div>'
+        f'<div class="small">{html.escape(generated_text)} · {html.escape(persist_text)}</div>'
         '</div>',
         unsafe_allow_html=True,
     )
@@ -1519,6 +1539,7 @@ else:
 
                     st.session_state["recs"] = recs
                     st.session_state["generation_meta"] = run_meta
+                    st.session_state["last_generated_run_id"] = str(run_meta.get("run_id", ""))
                     st.session_state["generation_added_count"] = len(added_rows)
                     st.session_state["github_writeback_result"] = github_result
                     st.session_state["updated_theme_csv"] = updated_themes.to_csv(
@@ -1530,13 +1551,22 @@ else:
             except Exception as exc:
                 st.exception(exc)
 
-        if "recs" not in st.session_state:
+        recommendation_runs = load_recommendation_runs(THEME_HISTORY_PATH, themes)
+        if not recommendation_runs:
             st.info("최근 핵심 이슈를 바탕으로 이번 주 큐레이션 테마를 생성합니다.")
         else:
-            recs = st.session_state.get("recs", [])
-            meta = st.session_state.get("generation_meta", {})
-            github_result = st.session_state.get("github_writeback_result", {"status": "not_configured"})
-            added_count = int(st.session_state.get("generation_added_count", 0))
+            # 과거 목록은 노출하지 않고, 영구 저장된 가장 최근 추천만 자동 복원합니다.
+            selected_run = recommendation_runs[0]
+            recs = selected_run.get("recommendations", [])
+            meta = selected_run.get("meta", {})
+
+            if selected_run["run_id"] == st.session_state.get("last_generated_run_id"):
+                github_result = st.session_state.get("github_writeback_result", {"status": "restored"})
+                added_count = int(st.session_state.get("generation_added_count", meta.get("new_count", 0)))
+            else:
+                github_result = {"status": "restored"}
+                added_count = int(meta.get("new_count", 0))
+
             render_generation_status(meta, added_count, github_result)
 
             if github_result.get("status") == "error":
