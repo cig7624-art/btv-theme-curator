@@ -107,6 +107,35 @@ div[data-baseweb="select"] *, div[data-baseweb="select"] input,
 [role="option"]:hover, [aria-selected="true"][role="option"] { background:#e2e8f0 !important; }
 input, textarea { color:#0f172a !important; -webkit-text-fill-color:#0f172a !important; }
 
+/* Streamlit dialog: 기본 흰색 배경 때문에 흰 글자가 사라지는 문제 방지 */
+div[data-testid="stDialog"] div[role="dialog"],
+div[role="dialog"][aria-modal="true"] {
+    background:#090d1a !important;
+    color:#f8fafc !important;
+    border:1px solid #334155 !important;
+}
+div[data-testid="stDialog"] div[role="dialog"] > div,
+div[role="dialog"][aria-modal="true"] > div {
+    background:#090d1a !important;
+}
+div[data-testid="stDialog"] h1, div[data-testid="stDialog"] h2,
+div[data-testid="stDialog"] h3, div[data-testid="stDialog"] p,
+div[data-testid="stDialog"] span, div[data-testid="stDialog"] li,
+div[role="dialog"][aria-modal="true"] h1, div[role="dialog"][aria-modal="true"] h2,
+div[role="dialog"][aria-modal="true"] h3, div[role="dialog"][aria-modal="true"] p,
+div[role="dialog"][aria-modal="true"] span, div[role="dialog"][aria-modal="true"] li {
+    color:#f8fafc !important;
+    -webkit-text-fill-color:#f8fafc !important;
+}
+div[data-testid="stDialog"] [data-testid="stCaptionContainer"] p,
+div[role="dialog"][aria-modal="true"] [data-testid="stCaptionContainer"] p {
+    color:#cbd5e1 !important;
+    -webkit-text-fill-color:#cbd5e1 !important;
+}
+div[data-testid="stDialog"] button, div[role="dialog"][aria-modal="true"] button {
+    color:#f8fafc !important;
+}
+
 @media (max-width:900px) {
     .issue-card { flex-direction:column; }
     .issue-media { width:100%; flex-basis:190px; }
@@ -134,7 +163,7 @@ SOURCE_CONFIG = {
     "OTT 랭킹·신작": {
         "weight_pct": 25,
         "path_points": 15,
-        "tooltip": "넷플릭스 한국 Top 10 등 실제 OTT 순위와 넷플릭스·티빙·웨이브·디즈니+·쿠팡플레이의 공식 신작·공개 예정 정보를 반영합니다.",
+        "tooltip": "Netflix 공식 국가별 Top 10 데이터에서 한국 순위를 자동 수집하고, 티빙·웨이브·디즈니+·쿠팡플레이는 공식 신작·공개 예정 기사와 YouTube 공식 채널 신호를 반영합니다.",
     },
     "온라인 화제성": {
         "weight_pct": 15,
@@ -156,6 +185,7 @@ SOURCE_DETAIL_LOGIC = {
         "source_name": "YouTube 반응",
         "weight": "30% · 경로 점수 최대 18점",
         "purpose": "공개 직후 반응이 큰 콘텐츠 영상과 공식 채널 신규 업로드를 발견합니다.",
+        "integration": "YouTube Data API v3를 사용합니다. 검색어 검색, 한국 인기 영상, 지정 공식 채널 업로드를 API로 조회합니다.",
         "collection": [
             "최근 7일 기준 12개 검색어별 최대 8개 영상 수집",
             "검색어 없이 YouTube 한국 인기 영상(mostPopular) 최대 50개 수집 후 콘텐츠 관련 영상만 유지",
@@ -186,6 +216,7 @@ SOURCE_DETAIL_LOGIC = {
         "source_name": "극장·박스오피스",
         "weight": "25% · 경로 점수 최대 15점",
         "purpose": "기사 제목이 아니라 KOBIS의 실제 극장 관객 데이터를 수집합니다.",
+        "integration": "KOBIS OpenAPI를 사용합니다. GitHub Secret의 KOBIS_API_KEY로 전일 일별 박스오피스 데이터를 요청합니다.",
         "collection": [
             "매일 전일 기준 KOBIS 일별 박스오피스 API 호출",
             "KOBIS가 제공하는 일별 Top 10 전 작품 수집",
@@ -203,10 +234,11 @@ SOURCE_DETAIL_LOGIC = {
     "ott": {
         "source_name": "OTT 랭킹·신작",
         "weight": "25% · 경로 점수 최대 15점",
-        "purpose": "OTT 실제 순위와 주요 플랫폼의 신규 공개·공개 예정 신호를 함께 확인합니다.",
+        "purpose": "Netflix 실제 순위와 주요 플랫폼의 신규 공개·공개 예정 신호를 함께 확인합니다.",
+        "integration": "Netflix 순위는 API가 아니라 Netflix가 공개하는 국가별 주간 Top 10 엑셀 파일을 자동 다운로드해 읽습니다. 다른 OTT의 신작 정보는 Google News RSS와 YouTube 공식 채널 데이터로 수집합니다.",
         "collection": [
-            "Netflix 공식 국가별 주간 Top 10 엑셀 데이터에서 한국 최신 집계 주간 추출",
-            "한국 데이터 중 순위 1~10위 작품을 모두 등록",
+            "Netflix 공식 국가별 주간 Top 10 엑셀 파일을 매 실행 시 자동 다운로드",
+            "파일에서 한국 최신 집계 주간을 찾고 순위 1~10위 작품을 모두 등록",
             "Google News RSS에서 넷플릭스·티빙·웨이브·디즈니+·쿠팡플레이 신작·공개 예정 관련 기사 수집",
         ],
         "filters": [
@@ -216,12 +248,13 @@ SOURCE_DETAIL_LOGIC = {
         ],
         "ranking": "Netflix의 공식 주간 순위를 그대로 사용합니다. 신작 관련 기사는 자체 순위가 아니라 보조 피드입니다.",
         "score": "Top 10 순위가 확인되면 반응 강도 기본점수가 반영되고, 신작·공개 예정·신규 진입 신호가 있으면 추가됩니다.",
-        "limitations": "현재 실제 통합 랭킹은 Netflix만 직접 수집합니다. 티빙·웨이브·디즈니+·쿠팡플레이는 공식 신작 관련 기사와 YouTube 공식 채널 신규 업로드를 사용합니다.",
+        "limitations": "현재 자동 수집되는 실제 순위는 Netflix 한국 Top 10뿐입니다. 티빙·웨이브·디즈니+·쿠팡플레이의 실제 순위 API는 연동되어 있지 않으며, 공식 신작 관련 기사와 YouTube 공식 채널 신규 업로드만 사용합니다.",
     },
     "buzz": {
         "source_name": "온라인 화제성",
         "weight": "15% · 경로 점수 최대 9점",
         "purpose": "다른 경로에서 먼저 발견한 작품이 실제 검색 관심도 상승을 보이는지 검증합니다.",
+        "integration": "네이버 데이터랩 검색어 트렌드 API를 사용합니다. NAVER_CLIENT_ID와 NAVER_CLIENT_SECRET이 없으면 이 경로는 건너뜁니다.",
         "collection": [
             "YouTube·KOBIS·Netflix·뉴스에서 발견된 작품 중 작품명이 신뢰 가능한 후보를 선정",
             "서로 다른 출처 수와 피드 수가 많은 순으로 최대 25개 후보 선정",
@@ -241,6 +274,7 @@ SOURCE_DETAIL_LOGIC = {
         "source_name": "뉴스·공식자료",
         "weight": "5% · 경로 점수 최대 3점",
         "purpose": "공개·캐스팅·수상·시청률·제작 발표 등 이슈가 발생한 이유와 맥락을 보완합니다.",
+        "integration": "Google News RSS를 검색어별로 조회합니다. 별도 뉴스 API 키는 사용하지 않습니다.",
         "collection": [
             "Google News RSS에서 일반 콘텐츠 뉴스 9개 검색어 사용",
             "OTT 신작 관련 5개 검색어는 OTT 랭킹·신작 경로의 보조자료로 분류",
@@ -375,6 +409,8 @@ def _render_source_detail(detail_key):
     st.markdown(f"### {detail['source_name']}")
     st.caption(detail["weight"])
     _detail_box("역할", detail["purpose"])
+    if detail.get("integration"):
+        _detail_box("연동 방식", detail["integration"])
     _detail_list("수집 단계", detail.get("collection", []))
     _detail_list("선정·제외 기준", detail.get("filters", []))
     _detail_box("경로 내 정렬 기준", detail.get("ranking", ""))
