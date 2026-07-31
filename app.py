@@ -12,15 +12,19 @@ import streamlit as st
 from llm_theme_generator import (
     ThemeGenerationError,
     ensure_theme_schema,
+    generate_content_candidates_for_themes,
     generate_weekly_themes,
     github_writeback_configured,
     interpret_theme_search_query,
     load_recommendation_history,
     load_recommendation_runs,
+    persist_content_candidates_to_github,
     persist_files_to_github,
     persist_recommendations_locally,
     sync_files_from_github,
 )
+
+from kinolights_candidates import content_rows_to_frame, validate_content_suggestions
 
 st.set_page_config(
     page_title="B tv+ AI Theme Curator",
@@ -151,15 +155,41 @@ div[data-testid="stDownloadButton"] button span {
 }
 div[data-testid="stDownloadButton"] button:hover { background:#1d4ed8 !important; }
 
-/* 닫힌 select와 펼친 드롭다운 옵션 모두 어두운 글자로 고정 */
-div[data-baseweb="select"] > div { background:#f8fafc !important; border-color:#cbd5e1 !important; }
-div[data-baseweb="select"] *, div[data-baseweb="select"] input,
-[role="listbox"], [role="listbox"] *, [role="option"], [role="option"] * {
-    color:#0f172a !important; -webkit-text-fill-color:#0f172a !important;
+/* 입력·선택·폼 버튼을 다크 UI로 통일 */
+div[data-baseweb="input"] > div,
+div[data-baseweb="textarea"] > div,
+div[data-baseweb="select"] > div {
+    background:#0f172a !important; border-color:#334155 !important; color:#f8fafc !important;
 }
-[role="listbox"], [role="option"] { background:#ffffff !important; }
-[role="option"]:hover, [aria-selected="true"][role="option"] { background:#e2e8f0 !important; }
-input, textarea { color:#0f172a !important; -webkit-text-fill-color:#0f172a !important; }
+div[data-baseweb="input"] input, div[data-baseweb="textarea"] textarea,
+div[data-baseweb="select"] *, div[data-baseweb="select"] input {
+    color:#f8fafc !important; -webkit-text-fill-color:#f8fafc !important; caret-color:#f8fafc !important;
+}
+div[data-baseweb="input"] input::placeholder, div[data-baseweb="textarea"] textarea::placeholder {
+    color:#94a3b8 !important; -webkit-text-fill-color:#94a3b8 !important; opacity:1 !important;
+}
+[role="listbox"], [role="option"] { background:#111827 !important; }
+[role="listbox"] *, [role="option"] * { color:#f8fafc !important; -webkit-text-fill-color:#f8fafc !important; }
+[role="option"]:hover, [aria-selected="true"][role="option"] { background:#1e293b !important; }
+div[data-testid="stFormSubmitButton"] button {
+    background:#2563eb !important; color:#ffffff !important; border:0 !important;
+    border-radius:12px !important; font-weight:800 !important;
+}
+div[data-testid="stFormSubmitButton"] button p,
+div[data-testid="stFormSubmitButton"] button span {
+    color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;
+}
+button:disabled, div[data-testid="stFormSubmitButton"] button:disabled {
+    background:#1e293b !important; color:#64748b !important; opacity:1 !important;
+}
+button:disabled *, div[data-testid="stFormSubmitButton"] button:disabled * {
+    color:#64748b !important; -webkit-text-fill-color:#64748b !important;
+}
+.ai-suggestion-card {
+    background:#0f172a; border:1px dashed #475569; border-radius:14px; padding:14px 16px; margin:10px 0;
+}
+.content-verified { border-color:#22c55e !important; }
+.content-link-only { border-color:#f59e0b !important; }
 .content-tag-link {
     display:inline-block; background:#13213a; border:1px solid #3b82f6; border-radius:999px;
     padding:5px 10px; margin-right:6px; margin-top:6px; font-size:12px; font-weight:800;
@@ -181,6 +211,7 @@ THEME_DB_PATH = Path("theme_db.csv")
 OLD_THEME_PATH = Path("theme_pool.csv")
 CONTENT_DB_PATH = Path("content_db.csv")
 THEME_HISTORY_PATH = Path("theme_recommendation_history.csv")
+THEME_CONTENT_PATH = Path("theme_content_candidates.csv")
 
 SOURCE_CONFIG = {
     "YouTube 반응": {
@@ -396,7 +427,10 @@ if "page" not in st.session_state:
 
 
 def clear_theme_ai_search_state():
-    for key in ["theme_ai_search_intent", "theme_ai_search_usage", "theme_ai_search_query", "theme_ai_search_input"]:
+    for key in [
+        "theme_ai_search_intent", "theme_ai_search_usage", "theme_ai_search_query",
+        "theme_ai_search_input", "theme_quick_search_input",
+    ]:
         st.session_state.pop(key, None)
 
 
@@ -715,7 +749,7 @@ def render_ai_search_intent(intent, usage=None):
         for value in intent.get(key, []) or []:
             if value and value not in chips:
                 chips.append(str(value))
-    chip_html = "".join(f'<span class="tag">{html.escape(value)}</span>' for value in chips[:12])
+    chip_html = "".join(f'<span class="tag">{html.escape(value)}</span>' for value in chips[:8])
     negative = intent.get("negative_keywords", []) or []
     negative_html = ""
     if negative:
@@ -1017,6 +1051,7 @@ def get_github_writeback_config():
         "branch": get_runtime_secret("GITHUB_BRANCH", "main"),
         "theme_path": get_runtime_secret("THEME_DB_GITHUB_PATH", get_active_theme_path().name),
         "history_path": get_runtime_secret("THEME_HISTORY_GITHUB_PATH", THEME_HISTORY_PATH.name),
+        "content_path": get_runtime_secret("THEME_CONTENT_GITHUB_PATH", THEME_CONTENT_PATH.name),
     }
 
 
@@ -1032,6 +1067,7 @@ def sync_persistent_storage_once():
             result = sync_files_from_github(
                 theme_path=get_active_theme_path(),
                 history_path=THEME_HISTORY_PATH,
+                content_path=THEME_CONTENT_PATH,
                 config=config,
             )
         except Exception as exc:
@@ -1040,6 +1076,143 @@ def sync_persistent_storage_once():
     st.session_state["persistent_storage_synced"] = True
     st.session_state["persistent_storage_sync_result"] = result
     return result
+
+
+def _dedupe_text_values(values, limit=20):
+    result = []
+    seen = set()
+    for value in values:
+        text = re.sub(r"\s+", " ", str(value or "")).strip()
+        key = _normalize_search_text(text)
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        result.append(text)
+        if len(result) >= limit:
+            break
+    return result
+
+
+def enrich_ai_intent_from_issues(intent, query, issues):
+    enriched = dict(intent or {})
+    query_norm = _normalize_search_text(query)
+    matched_rows = []
+    for _, issue in issues.iterrows():
+        anchors = [issue.get("related_content", ""), issue.get("issue_title", "")]
+        if any(
+            _normalize_search_text(anchor)
+            and (
+                _normalize_search_text(anchor) in query_norm
+                or query_norm in _normalize_search_text(anchor)
+            )
+            for anchor in anchors
+        ):
+            matched_rows.append(issue)
+    if not matched_rows:
+        # 작품명이 일부만 입력된 경우를 대비해 2글자 이상 핵심 토큰으로 한 번 더 확인합니다.
+        query_tokens = {token for token in re.findall(r"[0-9a-z가-힣]+", str(query).lower()) if len(token) >= 2}
+        for _, issue in issues.iterrows():
+            related_tokens = set(split_keywords(issue.get("related_content", "")))
+            title_tokens = set(split_keywords(issue.get("issue_title", "")))
+            if query_tokens & (related_tokens | title_tokens):
+                matched_rows.append(issue)
+
+    positive = list(enriched.get("positive_keywords", []) or [])
+    subjects = list(enriched.get("subjects", []) or [])
+    moods = list(enriched.get("moods", []) or [])
+    genres = list(enriched.get("genres", []) or [])
+    anchors = list(enriched.get("anchor_titles", []) or [])
+    for issue in matched_rows[:4]:
+        anchors.append(issue.get("related_content", ""))
+        positive.extend(split_keywords(issue.get("keywords", "")))
+        positive.extend(split_keywords(issue.get("description", ""))[:12])
+        subjects.extend(split_keywords(issue.get("keywords", ""))[:8])
+        issue_text = " ".join([str(issue.get("issue_title", "")), str(issue.get("description", "")), str(issue.get("keywords", ""))])
+        for genre in ["공포", "스릴러", "미스터리", "SF", "사극", "로맨스", "코미디", "액션", "범죄", "애니메이션", "다큐"]:
+            if genre.lower() in issue_text.lower():
+                genres.append(genre)
+        for mood in ["긴장감", "서늘한", "기괴한", "잔잔한", "따뜻한", "유쾌한", "묵직한", "감동", "설렘"]:
+            if mood in issue_text:
+                moods.append(mood)
+
+    for suggestion in enriched.get("suggested_themes", []) or []:
+        positive.extend(suggestion.get("keywords", []) or [])
+        genres.append(suggestion.get("genre", ""))
+        moods.append(suggestion.get("mood", ""))
+
+    enriched["anchor_titles"] = _dedupe_text_values(anchors, 8)
+    enriched["genres"] = _dedupe_text_values(genres, 8)
+    enriched["moods"] = _dedupe_text_values(moods, 10)
+    enriched["subjects"] = _dedupe_text_values(subjects, 14)
+    enriched["positive_keywords"] = _dedupe_text_values(positive, 24)
+    return enriched
+
+
+def render_ai_theme_suggestions(intent):
+    suggestions = (intent or {}).get("suggested_themes", []) or []
+    if not suggestions:
+        return
+    st.markdown("### AI 신규 테마 제안")
+    st.caption("현재 DB에 정확한 테마가 부족할 때 참고하는 임시 제안입니다. 자동으로 DB에 저장되지는 않습니다.")
+    for item in suggestions[:5]:
+        tags = "".join(
+            f'<span class="tag">{html.escape(str(keyword))}</span>'
+            for keyword in (item.get("keywords", []) or [])[:6]
+        )
+        st.markdown(
+            '<div class="ai-suggestion-card">'
+            '<div class="small">[AI 제안 · 미등록]</div>'
+            f'<div class="theme-name">{html.escape(str(item.get("theme_name", "")))}</div>'
+            f'<div class="copy">{html.escape(str(item.get("copy", "")))}</div>'
+            f'<div class="small">{html.escape(str(item.get("genre", "")))} · {html.escape(str(item.get("mood", "")))}</div>'
+            f'{tags}'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+
+def load_content_candidate_frame():
+    if not THEME_CONTENT_PATH.exists():
+        return pd.DataFrame()
+    try:
+        return pd.read_csv(THEME_CONTENT_PATH, sep="|", dtype=str).fillna("")
+    except Exception:
+        return pd.DataFrame()
+
+
+def attach_content_candidates(recommendations, run_id):
+    frame = load_content_candidate_frame()
+    if frame.empty or "run_id" not in frame.columns:
+        return recommendations
+    run_rows = frame[frame["run_id"].astype(str) == str(run_id)].copy()
+    if run_rows.empty:
+        return recommendations
+    for index, rec in enumerate(recommendations, start=1):
+        theme = rec.get("theme", {}) or {}
+        theme_key = str(theme.get("theme_id", "")).strip() or f"R{index:02d}"
+        rows = run_rows[run_rows.get("theme_key", pd.Series(dtype=str)).astype(str) == theme_key]
+        if "rank" in rows.columns:
+            rows = rows.assign(_rank=pd.to_numeric(rows["rank"], errors="coerce")).sort_values("_rank")
+        contents = []
+        for _, row in rows.iterrows():
+            status = str(row.get("kinolights_status", ""))
+            contents.append({
+                "title": row.get("title", ""),
+                "type": row.get("content_type", ""),
+                "year": row.get("year", ""),
+                "source_url": row.get("source_url", ""),
+                "source": "키노라이츠 확인" if status == "verified" else "키노라이츠 제목 검색 링크",
+                "kinolights_status": status,
+                "reason": row.get("reason", ""),
+            })
+        rec["contents"] = contents
+    return recommendations
+
+
+def save_content_candidates(frame):
+    THEME_CONTENT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    frame.to_csv(THEME_CONTENT_PATH, sep="|", index=False, encoding="utf-8-sig")
+
 
 
 def source_status_label(value):
@@ -1212,14 +1385,18 @@ def render_content_tags(matched_contents):
         year = html.escape(str(c.get("year", "")))
         source_url = safe_url(c.get("source_url", ""))
         source = str(c.get("source", ""))
+        reason = str(c.get("reason", ""))
+        status = str(c.get("kinolights_status", ""))
 
         meta_parts = [part for part in [content_type, year] if part]
         label = title + (" · " + " · ".join(meta_parts) if meta_parts else "")
-        css_class = "content-tag-link" if source_url else "tag"
+        status_class = "content-verified" if status == "verified" else "content-link-only"
+        css_class = f"content-tag-link {status_class}" if source_url else "tag"
+        tooltip = " · ".join(part for part in [source, reason] if part)
         if source_url:
             content_tags += (
                 f'<a class="{css_class}" href="{html.escape(source_url, quote=True)}" '
-                f'target="_blank" rel="noopener noreferrer" title="{html.escape(source)}">{label}</a>'
+                f'target="_blank" rel="noopener noreferrer" title="{html.escape(tooltip)}">{label}</a>'
             )
         else:
             content_tags += f'<span class="{css_class}" title="{html.escape(source)}">{label}</span>'
@@ -1462,7 +1639,7 @@ if st.session_state["page"] == "issue_db":
 
 elif st.session_state["page"] == "theme_db":
     st.markdown("<h1>📚 테마 DB 전체 보기</h1>", unsafe_allow_html=True)
-    st.caption("기존 임시 테마와 AI 신규 생성 테마를 구분해서 확인합니다. 신규 테마는 이번 주 추천에 최종 채택될 때 DB에 자동 합류합니다.")
+    st.caption("빠른 검색은 무료로 즉시 필터링하고, 기존 검색으로 찾기 어려울 때만 AI 테마 검색을 사용합니다.")
 
     if st.button("← 추천 화면으로 돌아가기"):
         go_page("home")
@@ -1473,39 +1650,56 @@ elif st.session_state["page"] == "theme_db":
     openai_api_key = get_runtime_secret("OPENAI_API_KEY")
     openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
 
-    c1, c2 = st.columns([2, 1])
-    with c1:
-        with st.form("ai_theme_search_form", clear_on_submit=False):
-            search_query = st.text_input(
-                "AI 테마 검색",
-                key="theme_ai_search_input",
-                placeholder="예: 살목지를 가지고 큐레이션하고 싶어. 유사한 테마 추천해줘",
-            )
-            search_submitted = st.form_submit_button("🔎 AI로 테마 찾기", use_container_width=True)
-        st.caption("문장을 입력하는 동안에는 비용이 들지 않고, 검색 버튼을 누를 때만 LLM API를 1회 호출합니다.")
-    with c2:
+    st.markdown("### 빠른 검색")
+    quick_col, status_col = st.columns([2, 1])
+    with quick_col:
+        quick_query = st.text_input(
+            "테마명·키워드·장르·무드 검색",
+            key="theme_quick_search_input",
+            placeholder="예: 공포, 왕, 정주행, 팬 반응, 여름밤",
+        )
+    with status_col:
         status_options = ["전체", "AI 신규 생성", "기존 임시 DB", "검증 테마", "실제 활용"]
         selected_status = st.selectbox("테마 출처·상태", status_options)
-        st.button(
-            "검색 초기화",
+
+    with st.expander("AI 테마 검색 · 문장으로 요청", expanded=bool(st.session_state.get("theme_ai_search_intent"))):
+        with st.form("ai_theme_search_form", clear_on_submit=False):
+            search_query = st.text_input(
+                "찾고 싶은 큐레이션을 문장으로 입력",
+                key="theme_ai_search_input",
+                placeholder="예: 살목지와 비슷한 분위기의 공포 테마를 추천해줘",
+            )
+            search_submitted = st.form_submit_button("🔎 AI로 유사 테마 찾기", use_container_width=True)
+        st.caption("검색 버튼을 누를 때만 Luna API를 1회 호출합니다. 테마 DB 전체는 LLM에 보내지 않습니다.")
+
+    reset_col, download_col = st.columns([1, 2])
+    with reset_col:
+        st.button("검색 초기화", use_container_width=True, on_click=clear_theme_ai_search_state)
+    with download_col:
+        export_df = ensure_theme_schema(themes)
+        st.download_button(
+            "⬇ 현재 테마 DB 다운로드",
+            data=export_df.to_csv(sep="|", index=False, encoding="utf-8-sig").encode("utf-8-sig"),
+            file_name="theme_db_current.csv",
+            mime="text/csv",
             use_container_width=True,
-            on_click=clear_theme_ai_search_state,
         )
 
     if search_submitted:
         if not str(search_query or "").strip():
-            st.warning("찾고 싶은 테마를 문장이나 키워드로 입력해 주세요.")
+            st.warning("찾고 싶은 테마를 문장으로 입력해 주세요.")
         elif not openai_api_key:
             st.error("OPENAI_API_KEY가 연결되지 않았습니다.")
         else:
             try:
-                with st.spinner("검색 의도를 해석해 테마 DB에서 유사한 테마를 찾는 중입니다..."):
+                with st.spinner("검색 의도를 해석해 기존 테마와 신규 제안을 함께 찾는 중입니다..."):
                     search_intent, search_usage = interpret_theme_search_query(
                         query=search_query,
                         api_key=openai_api_key,
                         model=openai_model,
                         issue_records=build_llm_issue_records(issues, max_issues=20),
                     )
+                    search_intent = enrich_ai_intent_from_issues(search_intent, search_query, issues)
                 st.session_state["theme_ai_search_intent"] = search_intent
                 st.session_state["theme_ai_search_usage"] = search_usage
                 st.session_state["theme_ai_search_query"] = str(search_query).strip()
@@ -1519,15 +1713,6 @@ elif st.session_state["page"] == "theme_db":
     if active_intent:
         render_ai_search_intent(active_intent, active_usage)
 
-    export_df = ensure_theme_schema(themes)
-    st.download_button(
-        "⬇ 현재 테마 DB 다운로드",
-        data=export_df.to_csv(sep="|", index=False, encoding="utf-8-sig").encode("utf-8-sig"),
-        file_name="theme_db_current.csv",
-        mime="text/csv",
-        use_container_width=True,
-    )
-
     filtered = themes.copy()
     if selected_status != "전체":
         reverse_map = {
@@ -1539,12 +1724,18 @@ elif st.session_state["page"] == "theme_db":
         filtered = filtered[filtered["source_status"].astype(str) == reverse_map[selected_status]]
 
     if active_intent:
-        filtered = rank_themes_by_ai_intent(filtered, active_intent)
-        result_limit = int(active_intent.get("result_count", 20) or 20)
-        shown = filtered.head(result_limit).copy()
-        st.markdown(f"### AI 추천 {len(shown)}개 · 테마 DB {len(themes)}개에서 검색")
+        ranked = rank_themes_by_ai_intent(filtered, active_intent)
+        result_limit = int(active_intent.get("result_count", 10) or 10)
+        shown = ranked.head(result_limit).copy()
+        st.markdown(f"### 기존 DB 유사 테마 {len(shown)}개")
         if shown.empty:
-            st.info("현재 테마 DB에서 검색 의도와 충분히 가까운 테마를 찾지 못했습니다.")
+            st.info("기존 DB에서 충분히 가까운 테마가 없어 아래에 AI 신규 테마 제안을 표시합니다.")
+        render_ai_theme_suggestions(active_intent)
+    elif str(quick_query or "").strip():
+        shown = natural_theme_search(filtered, quick_query).copy()
+        st.markdown(f"### 빠른 검색 결과 {len(shown)}개")
+        if shown.empty:
+            st.info("빠른 검색 결과가 없습니다. 위의 AI 테마 검색에서 문장으로 요청해 보세요.")
     else:
         shown = filtered.copy()
         st.markdown(f"### 전체 {len(themes)}개 중 {len(shown)}개 표시")
@@ -1579,7 +1770,7 @@ elif st.session_state["page"] == "theme_db":
 
 else:
     st.markdown("<h1>🧠 B tv+ AI Theme Curator</h1>", unsafe_allow_html=True)
-    st.caption("최근 외부 콘텐츠 이슈를 LLM이 해석해 이번주 신규 테마를 생성합니다. 콘텐츠 후보 연결은 다음 단계에서 일괄 처리합니다.")
+    st.caption("최근 외부 콘텐츠 이슈에서 신규 테마를 만들고, 선택된 테마의 콘텐츠 후보를 키노라이츠 검색과 연결합니다.")
 
     col1, col2 = st.columns(2)
 
@@ -1741,12 +1932,77 @@ else:
             if not recs:
                 st.warning("추천 결과가 없습니다.")
             else:
-                st.button(
-                    f"🎬 추천 테마 {len(recs)}개 콘텐츠 후보 일괄 불러오기 · 다음 단계",
-                    use_container_width=True,
-                    disabled=True,
-                    help="테마 생성 품질을 먼저 확인한 뒤 키노라이츠 콘텐츠 일괄 연결을 붙입니다.",
+                recs = attach_content_candidates(recs, selected_run.get("run_id", ""))
+                content_frame = load_content_candidate_frame()
+                has_current_contents = (
+                    not content_frame.empty
+                    and "run_id" in content_frame.columns
+                    and content_frame["run_id"].astype(str).eq(str(selected_run.get("run_id", ""))).any()
                 )
+                content_button_label = (
+                    f"🎬 추천 테마 {len(recs)}개 콘텐츠 후보 다시 불러오기"
+                    if has_current_contents else
+                    f"🎬 추천 테마 {len(recs)}개 콘텐츠 후보 일괄 불러오기"
+                )
+                if st.button(content_button_label, use_container_width=True):
+                    try:
+                        with st.spinner("전체 테마의 콘텐츠 제목을 생성하고 키노라이츠에서 확인하는 중입니다..."):
+                            suggestions, content_usage = generate_content_candidates_for_themes(
+                                recommendations=recs,
+                                api_key=openai_api_key,
+                                model=openai_model,
+                                per_theme=8,
+                            )
+                            validated, kino_meta = validate_content_suggestions(
+                                suggestions,
+                                max_workers=10,
+                                allow_browser_fallback=False,
+                            )
+                            candidate_frame = content_rows_to_frame(
+                                run_id=str(selected_run.get("run_id", "")),
+                                recommendations=recs,
+                                validated=validated,
+                            )
+                            save_content_candidates(candidate_frame)
+                            try:
+                                content_github_result = persist_content_candidates_to_github(
+                                    content_path=THEME_CONTENT_PATH,
+                                    config=github_config,
+                                    run_id=str(selected_run.get("run_id", "")),
+                                )
+                            except Exception as github_exc:
+                                content_github_result = {"status": "error", "error": str(github_exc)}
+                            st.session_state["content_candidate_meta"] = {
+                                **kino_meta,
+                                "total_tokens": content_usage.get("total_tokens", 0),
+                                "github_status": content_github_result.get("status", ""),
+                                "github_error": content_github_result.get("error", ""),
+                            }
+                        st.rerun()
+                    except ThemeGenerationError as exc:
+                        st.error(str(exc))
+                    except Exception as exc:
+                        st.error(f"콘텐츠 후보 일괄 연결 실패: {exc}")
+
+                content_meta = st.session_state.get("content_candidate_meta", {})
+                if has_current_contents:
+                    current_rows = content_frame[content_frame["run_id"].astype(str) == str(selected_run.get("run_id", ""))]
+                    verified_count = int((current_rows.get("kinolights_status", pd.Series(dtype=str)).astype(str) == "verified").sum())
+                    link_count = len(current_rows) - verified_count
+                    st.caption(
+                        f"콘텐츠 후보 {len(current_rows)}개 · 키노라이츠 직접 확인 {verified_count}개 · "
+                        f"제목 검색 링크 {link_count}개"
+                    )
+                elif content_meta:
+                    st.caption(
+                        f"키노라이츠 직접 확인 {content_meta.get('verified_count', 0)}개 · "
+                        f"제목 검색 링크 {content_meta.get('search_link_only_count', 0)}개"
+                    )
+                if content_meta.get("github_status") == "error":
+                    st.warning(f"콘텐츠 후보 영구 저장 실패: {content_meta.get('github_error', '')}")
+                if has_current_contents:
+                    st.caption("초록 테두리: 키노라이츠 결과 직접 확인 · 주황 테두리: 키노라이츠 제목 검색 링크")
+
                 for idx, rec in enumerate(recs, start=1):
                     render_theme_card(idx, rec)
 

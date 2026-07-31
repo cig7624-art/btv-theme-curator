@@ -100,6 +100,14 @@ class GeneratedThemeBatch(BaseModel):
     themes: list[GeneratedTheme]
 
 
+class SuggestedThemeSearchResult(BaseModel):
+    theme_name: str = Field(description="콘텐츠 범위를 바로 이해할 수 있는 구체적인 테마명")
+    theme_copy: str = Field(description="테마를 보조하는 짧은 설명")
+    genre: str = Field(description="대표 장르")
+    mood: str = Field(description="대표 분위기")
+    keywords: list[str] = Field(default_factory=list, description="핵심 키워드")
+
+
 class ThemeSearchIntent(BaseModel):
     interpreted_request: str = Field(description="사용자의 큐레이션 의도를 한 문장으로 요약")
     anchor_titles: list[str] = Field(default_factory=list, description="기준이 되는 작품명 또는 인물명")
@@ -109,7 +117,24 @@ class ThemeSearchIntent(BaseModel):
     narrative_elements: list[str] = Field(default_factory=list, description="서사 구조·상황·행동")
     positive_keywords: list[str] = Field(default_factory=list, description="테마 DB 검색에 사용할 확장 키워드")
     negative_keywords: list[str] = Field(default_factory=list, description="사용자가 제외한 조건")
-    result_count: int = Field(default=20, ge=5, le=30, description="추천 결과 수")
+    suggested_themes: list[SuggestedThemeSearchResult] = Field(default_factory=list, description="DB 검색 결과가 부족할 때 보여줄 신규 테마 제안")
+    result_count: int = Field(default=10, ge=5, le=20, description="추천 결과 수")
+
+
+class ContentCandidateSuggestion(BaseModel):
+    title: str = Field(description="실제로 공개된 콘텐츠의 한국어 제목")
+    content_type: str = Field(description="영화/드라마/예능/애니메이션/다큐 중 하나")
+    year: str = Field(default="", description="공개 연도. 확실하지 않으면 빈 문자열")
+    reason: str = Field(description="해당 테마에 포함되는 이유를 45자 이내로 설명")
+
+
+class ThemeContentCandidateSet(BaseModel):
+    theme_key: str = Field(description="입력으로 받은 테마 키")
+    candidates: list[ContentCandidateSuggestion]
+
+
+class ThemeContentCandidateBatch(BaseModel):
+    themes: list[ThemeContentCandidateSet]
 
 
 class SelectedThemeDecision(BaseModel):
@@ -465,18 +490,20 @@ def interpret_theme_search_query(
     system_prompt = """
 당신은 한국 IPTV 콘텐츠 큐레이션 검색 도우미다.
 사용자의 자유로운 문장을 기존 테마 DB를 검색하기 위한 구조화된 의도로 변환한다.
-테마 DB 자체는 보지 않으며 새로운 테마를 생성하지 않는다.
+테마 DB 자체는 보지 않으며, 우선 검색 의도를 구조화한다. 기존 DB에 결과가 없을 때 보여줄 임시 테마 제안만 별도로 만든다.
 작품명이 최근 이슈 맥락에 있으면 그 작품의 소재·장르·분위기를 검색어로 확장한다.
 맥락에 없는 작품의 세부 내용을 확신할 수 없다면 작품명은 기준 작품으로만 유지하고 사실을 만들어내지 않는다.
 사용자가 '잔인하지 않은', '로맨스 제외'처럼 제외 조건을 말하면 negative_keywords에 넣는다.
-positive_keywords는 동의어와 유사 소재를 포함하되 너무 일반적인 단어는 피하고 6~14개로 작성한다.
+positive_keywords는 동의어와 유사 소재를 포함하되 너무 일반적인 단어는 피하고 6~12개로 작성한다.
 interpreted_request는 사용자가 원하는 큐레이션 범위를 한국어 한 문장으로 명확히 요약한다.
+현재 DB에 적합한 테마가 없을 경우를 대비해 suggested_themes에 구체적인 테마 5개를 제안한다.
+suggested_themes의 이름은 제목만 봐도 어떤 콘텐츠가 묶일지 예측할 수 있어야 하며 추상적 은유는 피한다.
 """.strip()
 
     payload = {
         "user_query": cleaned_query,
         "recent_issue_context": compact_issues,
-        "default_result_count": 20,
+        "default_result_count": 10,
     }
 
     try:
@@ -488,6 +515,8 @@ interpreted_request는 사용자가 원하는 큐레이션 범위를 한국어 �
                 {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
             ],
             text_format=ThemeSearchIntent,
+            reasoning={"effort": "minimal"},
+            max_output_tokens=1200,
         )
     except Exception as exc:
         raise ThemeGenerationError(f"AI 테마 검색 해석 실패: {exc}") from exc
@@ -503,13 +532,118 @@ interpreted_request는 사용자가 원하는 큐레이션 범위를 한국어 �
     ]:
         intent[key] = _dedupe_strings(intent.get(key, []), 14)
     intent["interpreted_request"] = _clean_short_text(intent.get("interpreted_request", cleaned_query), 140)
-    intent["result_count"] = max(5, min(int(intent.get("result_count", 20) or 20), 30))
+    intent["result_count"] = max(5, min(int(intent.get("result_count", 10) or 10), 20))
+    suggestions = []
+    for item in intent.get("suggested_themes", []) or []:
+        if not isinstance(item, dict):
+            continue
+        suggestions.append({
+            "theme_name": _clean_short_text(item.get("theme_name", ""), 42),
+            "copy": _clean_short_text(item.get("theme_copy", ""), 58),
+            "genre": _clean_short_text(item.get("genre", ""), 40),
+            "mood": _clean_short_text(item.get("mood", ""), 30),
+            "keywords": _dedupe_strings(item.get("keywords", []) or [], 8),
+        })
+    intent["suggested_themes"] = [item for item in suggestions if item.get("theme_name")][:5]
 
     usage = getattr(response, "usage", None)
     input_tokens = int(getattr(usage, "input_tokens", 0) or 0) if usage is not None else 0
     output_tokens = int(getattr(usage, "output_tokens", 0) or 0) if usage is not None else 0
     total_tokens = int(getattr(usage, "total_tokens", input_tokens + output_tokens) or (input_tokens + output_tokens)) if usage is not None else 0
     return intent, {
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "total_tokens": total_tokens,
+        "api_call_count": 1,
+    }
+
+
+def generate_content_candidates_for_themes(
+    recommendations: list[dict[str, Any]],
+    api_key: str,
+    model: str = "gpt-5.6-luna",
+    per_theme: int = 8,
+) -> tuple[dict[str, list[dict[str, Any]]], dict[str, int]]:
+    """Generate real-title candidate lists for all recommended themes in one LLM call.
+
+    Kinolights verification is performed separately. This call only proposes known titles
+    so that title-oriented Kinolights search can validate them.
+    """
+    if not api_key:
+        raise ThemeGenerationError("OPENAI_API_KEY가 설정되지 않았습니다.")
+    per_theme = max(4, min(int(per_theme or 8), 12))
+    payload_themes: list[dict[str, Any]] = []
+    key_order: list[str] = []
+    for index, rec in enumerate(recommendations, start=1):
+        theme = rec.get("theme", {}) or {}
+        theme_key = str(theme.get("theme_id", "")).strip() or f"R{index:02d}"
+        key_order.append(theme_key)
+        payload_themes.append({
+            "theme_key": theme_key,
+            "theme_name": _clean_short_text(theme.get("theme_name", ""), 50),
+            "copy": _clean_short_text(theme.get("copy", ""), 80),
+            "genre": _clean_short_text(theme.get("genre", ""), 50),
+            "mood": _clean_short_text(theme.get("mood", ""), 40),
+            "keywords": _clean_short_text(theme.get("trigger_keywords", ""), 140),
+            "source_issue": _clean_short_text(rec.get("source_issue_summary") or theme.get("source_issue", ""), 140),
+            "rationale": _clean_short_text(rec.get("rationale", ""), 120),
+        })
+
+    system_prompt = f"""
+당신은 한국 IPTV 편성용 콘텐츠 큐레이터다.
+입력된 모든 테마에 대해 실제 존재하고 공개된 영화·드라마·예능·애니메이션·다큐 후보를 각각 {per_theme}개 제안한다.
+한국에서 통용되는 공식 제목을 쓰고, 존재 여부가 불확실한 작품은 절대 만들지 않는다.
+한 테마 안에서는 같은 시리즈가 과도하게 반복되지 않게 하고 국내·해외, 신작·기성작을 적절히 섞는다.
+테마의 핵심 소재·관계·상황에 직접 맞는 작품만 고르고 단순히 장르만 같은 작품은 제외한다.
+year는 확실한 경우에만 적고 content_type은 영화/드라마/예능/애니메이션/다큐 중 하나로 쓴다.
+입력받은 theme_key를 그대로 반환한다.
+""".strip()
+
+    try:
+        client = OpenAI(api_key=api_key)
+        response = client.responses.parse(
+            model=model,
+            input=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": json.dumps({"themes": payload_themes}, ensure_ascii=False)},
+            ],
+            text_format=ThemeContentCandidateBatch,
+            reasoning={"effort": "minimal"},
+            max_output_tokens=max(3000, len(payload_themes) * per_theme * 75),
+        )
+    except Exception as exc:
+        raise ThemeGenerationError(f"콘텐츠 후보 생성 실패: {exc}") from exc
+
+    parsed = response.output_parsed
+    if parsed is None:
+        raise ThemeGenerationError("콘텐츠 후보를 생성하지 못했습니다.")
+
+    result: dict[str, list[dict[str, Any]]] = {key: [] for key in key_order}
+    for theme_set in parsed.themes:
+        key = _clean_short_text(theme_set.theme_key, 40)
+        if key not in result:
+            continue
+        seen: set[str] = set()
+        for item in theme_set.candidates:
+            title = _clean_short_text(item.title, 80)
+            title_key = normalize_theme_text(title)
+            if not title_key or title_key in seen:
+                continue
+            seen.add(title_key)
+            result[key].append({
+                "title": title,
+                "content_type": _clean_short_text(item.content_type, 20),
+                "year": _clean_short_text(item.year, 8),
+                "reason": _clean_short_text(item.reason, 70),
+            })
+            if len(result[key]) >= per_theme:
+                break
+
+    usage = getattr(response, "usage", None)
+    input_tokens = int(getattr(usage, "input_tokens", 0) or 0) if usage is not None else 0
+    output_tokens = int(getattr(usage, "output_tokens", 0) or 0) if usage is not None else 0
+    total_tokens = int(getattr(usage, "total_tokens", input_tokens + output_tokens) or (input_tokens + output_tokens)) if usage is not None else 0
+    return result, {
         "input_tokens": input_tokens,
         "output_tokens": output_tokens,
         "total_tokens": total_tokens,
@@ -1000,6 +1134,7 @@ def sync_files_from_github(
     theme_path: Path,
     history_path: Path,
     config: dict[str, str],
+    content_path: Path | None = None,
 ) -> dict[str, Any]:
     if not github_writeback_configured(config):
         return {"status": "not_configured"}
@@ -1021,6 +1156,16 @@ def sync_files_from_github(
             path=history_remote_path,
         )
 
+    content_remote_path = config.get("content_path", "theme_content_candidates.csv")
+    content_bytes = None
+    if content_path is not None and content_remote_path:
+        content_bytes = _github_get_file(
+            token=config["token"],
+            repo=config["repo"],
+            branch=branch,
+            path=content_remote_path,
+        )
+
     synced = []
     if theme_content is not None:
         theme_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1030,6 +1175,10 @@ def sync_files_from_github(
         history_path.parent.mkdir(parents=True, exist_ok=True)
         history_path.write_bytes(history_content)
         synced.append(str(history_path))
+    if content_path is not None and content_bytes is not None:
+        content_path.parent.mkdir(parents=True, exist_ok=True)
+        content_path.write_bytes(content_bytes)
+        synced.append(str(content_path))
 
     return {"status": "success", "synced": synced}
 
@@ -1105,4 +1254,28 @@ def persist_files_to_github(
         "status": "success",
         "theme_commit": theme_result.get("commit", {}).get("html_url", ""),
         "history_commit": (history_result or {}).get("commit", {}).get("html_url", ""),
+    }
+
+
+def persist_content_candidates_to_github(
+    content_path: Path,
+    config: dict[str, str],
+    run_id: str,
+) -> dict[str, Any]:
+    if not github_writeback_configured(config):
+        return {"status": "not_configured"}
+    if not content_path.exists():
+        return {"status": "missing"}
+    remote_path = config.get("content_path", "theme_content_candidates.csv")
+    result = _github_put_file(
+        token=config["token"],
+        repo=config["repo"],
+        branch=config.get("branch") or "main",
+        path=remote_path,
+        content=content_path.read_bytes(),
+        message=f"Update theme content candidates ({run_id})",
+    )
+    return {
+        "status": "success",
+        "content_commit": result.get("commit", {}).get("html_url", ""),
     }

@@ -2,9 +2,10 @@ streamlit
 pandas
 feedparser
 requests
-yt-dlp
-playwright
-openpyxl
-googlenewsdecoder==0.1.7
+beautifulsoup4
 openai
 pydantic>=2
+playwright
+openpyxl
+yt-dlp
+googlenewsdecoder==0.1.7
