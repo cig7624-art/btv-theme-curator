@@ -33,6 +33,9 @@ jobs:
       - name: Collect external issues
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          KOBIS_API_KEY: ${{ secrets.KOBIS_API_KEY }}
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
           YOUTUBE_MAX_RESULTS_PER_QUERY: "8"
         run: python collect_issues.py
 
