@@ -22,7 +22,8 @@ import time
 from io import BytesIO
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import quote
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from urllib.parse import quote, urljoin, urlparse
 
 import feedparser
 import pandas as pd
@@ -53,6 +54,8 @@ YOUTUBE_MAX_RESULTS_PER_QUERY = max(
     1, min(int(os.getenv("YOUTUBE_MAX_RESULTS_PER_QUERY", "8")), 50)
 )
 REQUEST_TIMEOUT_SECONDS = 20
+ARTICLE_IMAGE_FETCH_LIMIT = max(0, int(os.getenv("ARTICLE_IMAGE_FETCH_LIMIT", "60")))
+ARTICLE_IMAGE_TIMEOUT_SECONDS = max(3, int(os.getenv("ARTICLE_IMAGE_TIMEOUT_SECONDS", "8")))
 
 ISSUE_COLUMNS = [
     "date",
@@ -229,6 +232,111 @@ def extract_entry_image(entry):
     return ""
 
 
+def _html_attributes(tag):
+    """HTML 태그 한 개에서 따옴표로 감싼 속성값을 소문자 키로 추출합니다."""
+    attrs = {}
+    for key, value in re.findall(r"([:\w-]+)\s*=\s*[\"']([^\"']*)[\"']", tag, flags=re.I):
+        attrs[key.lower()] = html.unescape(value).strip()
+    return attrs
+
+
+def extract_page_image(page_html, base_url):
+    """기사 HTML의 Open Graph/Twitter/JSON-LD 대표 이미지를 추출합니다."""
+    if not page_html:
+        return ""
+
+    candidates = []
+    for tag in re.findall(r"<meta\b[^>]*>", page_html, flags=re.I):
+        attrs = _html_attributes(tag)
+        key = (attrs.get("property") or attrs.get("name") or attrs.get("itemprop") or "").lower()
+        if key in {
+            "og:image", "og:image:url", "og:image:secure_url",
+            "twitter:image", "twitter:image:src", "image",
+        }:
+            candidates.append(attrs.get("content", ""))
+
+    for tag in re.findall(r"<link\b[^>]*>", page_html, flags=re.I):
+        attrs = _html_attributes(tag)
+        if attrs.get("rel", "").lower() in {"image_src", "preload"}:
+            href = attrs.get("href", "")
+            if href and (attrs.get("as", "").lower() in {"", "image"}):
+                candidates.append(href)
+
+    # JSON-LD에서 가장 흔한 image / thumbnailUrl 문자열도 보조로 확인합니다.
+    for pattern in [
+        r'["\'](?:image|thumbnailUrl)["\']\s*:\s*["\']([^"\']+)',
+        r'["\']image["\']\s*:\s*\[\s*["\']([^"\']+)',
+    ]:
+        match = re.search(pattern, page_html, flags=re.I)
+        if match:
+            candidates.append(html.unescape(match.group(1)))
+
+    for candidate in candidates:
+        candidate = normalize_text(candidate)
+        if not candidate or candidate.startswith("data:"):
+            continue
+        absolute = urljoin(base_url, candidate)
+        if absolute.startswith("https://") or absolute.startswith("http://"):
+            return absolute
+    return ""
+
+
+def fetch_article_image(url):
+    """기사 링크를 따라가 대표 이미지를 가져옵니다. 실패하면 빈 문자열을 반환합니다."""
+    url = normalize_text(url)
+    if not url:
+        return ""
+    try:
+        response = requests.get(
+            url,
+            timeout=ARTICLE_IMAGE_TIMEOUT_SECONDS,
+            allow_redirects=True,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
+                ),
+                "Accept-Language": "ko-KR,ko;q=0.9,en;q=0.7",
+            },
+        )
+        response.raise_for_status()
+        content_type = response.headers.get("content-type", "").lower()
+        if "html" not in content_type and not response.text.lstrip().startswith("<"):
+            return ""
+        # 지나치게 큰 페이지 전체를 보관하지 않고 메타태그가 있는 앞부분 위주로 봅니다.
+        page_html = response.text[:1_500_000]
+        return extract_page_image(page_html, response.url)
+    except Exception:
+        return ""
+
+
+def enrich_news_images(rows):
+    """RSS에 이미지가 없던 기사에 한해 원문 Open Graph 이미지를 병렬로 보강합니다."""
+    if not rows or ARTICLE_IMAGE_FETCH_LIMIT <= 0:
+        return rows
+
+    targets = [
+        (idx, row.get("source_url", ""))
+        for idx, row in enumerate(rows)
+        if not normalize_text(row.get("image_url", "")) and normalize_text(row.get("source_url", ""))
+    ][:ARTICLE_IMAGE_FETCH_LIMIT]
+    if not targets:
+        return rows
+
+    with ThreadPoolExecutor(max_workers=min(8, len(targets))) as executor:
+        future_map = {executor.submit(fetch_article_image, url): idx for idx, url in targets}
+        for future in as_completed(future_map):
+            idx = future_map[future]
+            try:
+                image_url = future.result()
+            except Exception:
+                image_url = ""
+            if image_url:
+                rows[idx]["image_url"] = image_url
+
+    return rows
+
+
 def parse_int(value):
     try:
         if value is None or value == "":
@@ -390,8 +498,7 @@ def collect_google_news():
                 "image_url": extract_entry_image(entry),
             })
 
-    return rows
-
+    return enrich_news_images(rows)
 
 def api_key():
     return normalize_text(os.getenv("YOUTUBE_API_KEY", ""))

@@ -669,12 +669,32 @@ def get_issue_image_url(issue):
 
 def render_issue_media(issue):
     image_url = get_issue_image_url(issue)
-    title = html.escape(str(issue.get("related_content", "") or issue.get("issue_title", "")))
+    issue_title = str(issue.get("issue_title", "")).strip()
+    related = str(issue.get("related_content", "")).strip()
+    # "1위", "신규"처럼 작품명이 아닌 추출값은 이미지 대체 문구로 쓰지 않습니다.
+    invalid_related = (
+        not related
+        or bool(re.fullmatch(r"(?:제?\d+위|\d+위|신규|상승|공개)", related))
+        or len(related) < 3
+    )
+    media_title = issue_title if invalid_related else related
+    title = html.escape(media_title)
     source_group = html.escape(str(issue.get("source_group", "콘텐츠 이슈")))
     if image_url:
         safe_image = html.escape(image_url, quote=True)
-        return '<div class="issue-media">' + f'<img src="{safe_image}" alt="{title}" loading="lazy">' + '</div>'
-    return '<div class="issue-media"><div class="issue-placeholder">' + f'<span>{source_group}</span><strong>{title}</strong>' + '</div></div>'
+        return (
+            '<div class="issue-media">'
+            f'<img src="{safe_image}" alt="{title}" loading="lazy" '
+            'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">'
+            '<div class="issue-placeholder image-error-placeholder" style="display:none">'
+            f'<span>{source_group}</span><strong>대표 이미지 없음</strong>'
+            '</div></div>'
+        )
+    return (
+        '<div class="issue-media"><div class="issue-placeholder">'
+        f'<span>{source_group}</span><strong>대표 이미지 없음</strong>'
+        '</div></div>'
+    )
 
 
 def score_tooltip(issue):
@@ -695,8 +715,6 @@ def render_source_link(url):
 
 def render_issue_card(issue):
     url_html = render_source_link(issue.get("source_url", ""))
-    related = str(issue.get("related_content", "")).strip()
-    related_html = f" · {html.escape(related)}" if related else ""
     source_group = html.escape(str(issue.get("source_group", classify_source(issue.get("source", "")))))
     issue_score = int(issue.get("issue_score", 0))
     tooltip = html.escape(score_tooltip(issue), quote=True)
@@ -709,7 +727,7 @@ def render_issue_card(issue):
         '<div class="issue-card-body">'
         f'<span class="tag">{source_group}</span>'
         f'<div class="theme-name">{html.escape(str(issue.get("issue_title", "")))}</div>'
-        f'<div class="small">{html.escape(str(issue.get("date", "")))} · {html.escape(str(issue.get("source", "")))}{related_html}</div>'
+        f'<div class="small">{html.escape(str(issue.get("date", "")))} · {html.escape(str(issue.get("source", "")))}</div>'
         '<div class="issue-meta-row">'
         f'<span class="small" title="{tooltip}">핵심 이슈 점수: <span class="score">{issue_score}</span></span>'
         f'<span class="small">확인 경로 {route_count}개 · 관련 피드 {feed_count}개</span>'
