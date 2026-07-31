@@ -571,7 +571,7 @@ def generate_content_candidates_for_themes(
     """
     if not api_key:
         raise ThemeGenerationError("OPENAI_API_KEY가 설정되지 않았습니다.")
-    per_theme = max(4, min(int(per_theme or 8), 12))
+    per_theme = max(4, min(int(per_theme or 8), 20))
     payload_themes: list[dict[str, Any]] = []
     key_order: list[str] = []
     for index, rec in enumerate(recommendations, start=1):
@@ -609,7 +609,7 @@ year는 확실한 경우에만 적고 content_type은 영화/드라마/예능/�
             ],
             text_format=ThemeContentCandidateBatch,
             reasoning={"effort": "none"},
-            max_output_tokens=max(3000, len(payload_themes) * per_theme * 75),
+            max_output_tokens=max(3000, min(24000, len(payload_themes) * per_theme * 85)),
         )
     except Exception as exc:
         raise ThemeGenerationError(f"콘텐츠 후보 생성 실패: {exc}") from exc
