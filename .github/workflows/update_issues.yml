@@ -6,6 +6,10 @@ on:
     - cron: "0 23 * * *"
   workflow_dispatch:
 
+concurrency:
+  group: update-external-issues
+  cancel-in-progress: false
+
 jobs:
   update-issues:
     runs-on: ubuntu-latest
@@ -21,14 +25,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
 
       - name: Install packages
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Collect external issues
-        run: |
-          python collect_issues.py
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YOUTUBE_MAX_RESULTS_PER_QUERY: "8"
+        run: python collect_issues.py
 
       - name: Commit updated data
         run: |
