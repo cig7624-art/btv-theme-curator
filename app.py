@@ -51,12 +51,38 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     display:inline-block; background:#1e293b; border:1px solid #475569; border-radius:999px;
     padding:5px 10px; margin-right:6px; margin-top:6px; font-size:12px;
 }
-.weight-chip { position:relative; cursor:help; font-weight:800; }
-.weight-chip:hover::after {
-    content:attr(data-tooltip); position:absolute; z-index:9999; left:0; top:calc(100% + 9px);
-    width:330px; white-space:normal; padding:11px 12px; border-radius:10px;
+.weight-chip-wrap {
+    position:relative; display:inline-block; margin-right:6px; margin-top:6px;
+}
+.weight-chip { position:relative; cursor:help; font-weight:800; margin:0; }
+.weight-tooltip {
+    display:none; position:absolute; z-index:9999; left:0; top:calc(100% + 8px);
+    width:350px; white-space:normal; padding:12px 13px 10px; border-radius:11px;
     background:#020617; border:1px solid #475569; box-shadow:0 12px 34px rgba(0,0,0,.45);
-    color:#f8fafc !important; font-size:12px; font-weight:500; line-height:1.5;
+    color:#f8fafc !important; font-size:12px; font-weight:500; line-height:1.55;
+}
+.weight-chip-wrap:hover .weight-tooltip,
+.weight-tooltip:hover { display:block; }
+.weight-tooltip::before {
+    content:""; position:absolute; left:20px; top:-7px; width:12px; height:12px;
+    background:#020617; border-left:1px solid #475569; border-top:1px solid #475569;
+    transform:rotate(45deg);
+}
+.weight-detail-link {
+    display:block; margin-top:9px; padding-top:8px; border-top:1px solid #334155;
+    color:#38bdf8 !important; font-weight:900; text-align:right; text-decoration:none;
+}
+.weight-detail-link:hover { text-decoration:underline; }
+.logic-detail-box {
+    background:#0f172a; border:1px solid #334155; border-radius:12px;
+    padding:12px 14px; margin:8px 0 14px;
+}
+.logic-detail-title { font-size:14px; font-weight:900; margin-bottom:5px; }
+.logic-detail-text { color:#cbd5e1 !important; font-size:13px; line-height:1.6; }
+.logic-code {
+    background:#020617; border:1px solid #334155; border-radius:10px;
+    padding:10px 12px; color:#e2e8f0 !important; font-size:12px; line-height:1.6;
+    white-space:pre-wrap; overflow-wrap:anywhere;
 }
 .score { color:#22c55e !important; font-weight:900; }
 .section-label { margin-top:14px; margin-bottom:8px; font-weight:900; font-size:15px; }
@@ -123,6 +149,127 @@ SOURCE_CONFIG = {
 }
 
 SOURCE_WEIGHTS = {name: info["weight_pct"] for name, info in SOURCE_CONFIG.items()}
+
+
+SOURCE_DETAIL_LOGIC = {
+    "youtube": {
+        "source_name": "YouTube 반응",
+        "weight": "30% · 경로 점수 최대 18점",
+        "purpose": "공개 직후 반응이 큰 콘텐츠 영상과 공식 채널 신규 업로드를 발견합니다.",
+        "collection": [
+            "최근 7일 기준 12개 검색어별 최대 8개 영상 수집",
+            "검색어 없이 YouTube 한국 인기 영상(mostPopular) 최대 50개 수집 후 콘텐츠 관련 영상만 유지",
+            "넷플릭스·티빙·웨이브·디즈니+·쿠팡플레이와 주요 방송사 11개 공식 채널의 최근 업로드 수집",
+        ],
+        "filters": [
+            "일반 검색·공식 채널 영상은 최근 7일 이내만 후보로 사용",
+            "한국 인기 영상은 인기 목록 신호가 있으므로 업로드일 제한을 별도로 적용하지 않음",
+            "조회수 10만 이상, 일평균 조회수 2만 이상, 댓글 200개 이상 중 하나를 충족하면 후보",
+            "공식 채널 영상은 조회수 3만 이상 또는 댓글 50개 이상이면 후보",
+            "영상 제목에서 신뢰할 수 있는 작품명이 추출된 경우만 이슈로 등록",
+            "같은 작품은 YouTube 피드에서 1건만 남기고 신호가 강한 순으로 최대 15건 저장",
+        ],
+        "ranking": "YouTube 내부 후보 순서는 일평균 조회수 + 댓글×250 + 한국 인기 영상 보너스 30,000 + 공식 채널 보너스 15,000으로 계산합니다.",
+        "score": "핵심 이슈 점수에서는 조회수와 댓글을 로그 스케일로 환산해 반응 강도에 반영합니다. 같은 작품이 다른 경로에서도 발견되면 경로 점수와 교차 확인 점수가 추가됩니다.",
+        "limitations": "YouTube 전체 급상승 순위를 직접 제공받는 구조는 아닙니다. 12개 검색어, 한국 인기 영상, 지정 공식 채널 범위에서 발견한 후보만 대상으로 합니다.",
+        "queries": [
+            "한국 드라마 리뷰", "한국 영화 리뷰", "한국 예능 리뷰", "드라마 결말 해석",
+            "영화 결말 해석", "드라마 몰아보기", "영화 요약", "드라마 명장면 쇼츠",
+            "예능 명장면 쇼츠", "영화 명장면 쇼츠", "OTT 신작 반응", "배우 신작 인터뷰",
+        ],
+        "channels": [
+            "Netflix Korea", "TVING", "wavve", "Disney Plus Korea", "Coupang Play",
+            "SBS Drama", "MBC Drama", "KBS Drama", "tvN D ENT", "JTBC Drama", "ENA",
+        ],
+    },
+    "boxoffice": {
+        "source_name": "극장·박스오피스",
+        "weight": "25% · 경로 점수 최대 15점",
+        "purpose": "기사 제목이 아니라 KOBIS의 실제 극장 관객 데이터를 수집합니다.",
+        "collection": [
+            "매일 전일 기준 KOBIS 일별 박스오피스 API 호출",
+            "KOBIS가 제공하는 일별 Top 10 전 작품 수집",
+            "순위, 전일 대비 순위 변화, 신규 진입 여부, 일일 관객, 누적 관객, 매출 점유율 저장",
+        ],
+        "filters": [
+            "영화명이 비어 있는 행만 제외하고 Top 10을 모두 등록",
+            "신규 진입이면 '신규 진입', 1위면 '일일 1위', 2계단 이상 상승이면 '순위 상승' 문구로 강조",
+            "관련 뉴스는 박스오피스 수치가 아니라 흥행 원인을 설명하는 별도 보조 피드로 취급",
+        ],
+        "ranking": "KOBIS 순위를 그대로 수집하며 별도의 내부 후보 컷은 적용하지 않습니다.",
+        "score": "반응 강도는 일일 관객 수를 로그 스케일로 환산하며, 1위·신규 진입 등 강한 신호가 있으면 추가 점수를 부여합니다.",
+        "limitations": "현재 대표 이미지는 KOBIS API에서 제공되지 않습니다. 같은 작품으로 묶인 YouTube·뉴스 피드에 이미지가 있으면 그 이미지를 카드에 사용합니다.",
+    },
+    "ott": {
+        "source_name": "OTT 랭킹·신작",
+        "weight": "25% · 경로 점수 최대 15점",
+        "purpose": "OTT 실제 순위와 주요 플랫폼의 신규 공개·공개 예정 신호를 함께 확인합니다.",
+        "collection": [
+            "Netflix 공식 국가별 주간 Top 10 엑셀 데이터에서 한국 최신 집계 주간 추출",
+            "한국 데이터 중 순위 1~10위 작품을 모두 등록",
+            "Google News RSS에서 넷플릭스·티빙·웨이브·디즈니+·쿠팡플레이 신작·공개 예정 관련 기사 수집",
+        ],
+        "filters": [
+            "Netflix는 최신 주간의 한국 Top 10만 사용",
+            "OTT 신작 기사는 최근 7일 이내, 검색어별 최대 12개 기사 후보 수집",
+            "동일 작품은 이후 핵심 이슈 묶음 단계에서 하나의 이슈로 통합",
+        ],
+        "ranking": "Netflix의 공식 주간 순위를 그대로 사용합니다. 신작 관련 기사는 자체 순위가 아니라 보조 피드입니다.",
+        "score": "Top 10 순위가 확인되면 반응 강도 기본점수가 반영되고, 신작·공개 예정·신규 진입 신호가 있으면 추가됩니다.",
+        "limitations": "현재 실제 통합 랭킹은 Netflix만 직접 수집합니다. 티빙·웨이브·디즈니+·쿠팡플레이는 공식 신작 관련 기사와 YouTube 공식 채널 신규 업로드를 사용합니다.",
+    },
+    "buzz": {
+        "source_name": "온라인 화제성",
+        "weight": "15% · 경로 점수 최대 9점",
+        "purpose": "다른 경로에서 먼저 발견한 작품이 실제 검색 관심도 상승을 보이는지 검증합니다.",
+        "collection": [
+            "YouTube·KOBIS·Netflix·뉴스에서 발견된 작품 중 작품명이 신뢰 가능한 후보를 선정",
+            "서로 다른 출처 수와 피드 수가 많은 순으로 최대 25개 후보 선정",
+            "네이버 데이터랩에서 최근 14일 일별 검색 관심도 조회",
+        ],
+        "filters": [
+            "직전 7일 평균과 최근 7일 평균을 비교",
+            "최근 평균이 직전 평균보다 20% 이상 상승해야 등록",
+            "최근 7일 관심도 평균이 5 이상이어야 등록",
+            "상승률이 높은 순으로 최대 10개 저장",
+        ],
+        "ranking": "상승률이 큰 작품 순으로 온라인 화제성 피드를 정렬합니다.",
+        "score": "현재 온라인 화제성 경로 자체 점수와 교차 확인 점수에 반영됩니다. 이 경로는 새로운 작품을 단독 발견하기보다 기존 이슈를 검증하는 역할입니다.",
+        "limitations": "네이버 데이터랩은 절대 검색량이 아니라 조회 기간 내 상대 지수입니다. 작품명이 모호하거나 동명이작이면 값이 왜곡될 수 있습니다.",
+    },
+    "news": {
+        "source_name": "뉴스·공식자료",
+        "weight": "5% · 경로 점수 최대 3점",
+        "purpose": "공개·캐스팅·수상·시청률·제작 발표 등 이슈가 발생한 이유와 맥락을 보완합니다.",
+        "collection": [
+            "Google News RSS에서 일반 콘텐츠 뉴스 9개 검색어 사용",
+            "OTT 신작 관련 5개 검색어는 OTT 랭킹·신작 경로의 보조자료로 분류",
+            "검색어별 최대 12개, 최근 7일 기사만 수집",
+            "가능하면 Google News 중계 URL을 원문 URL로 변환하고 og:image·twitter:image를 추출",
+        ],
+        "filters": [
+            "제목과 링크가 없는 기사는 제외",
+            "기사 제목·요약에서 작품명과 키워드를 추출",
+            "같은 작품의 여러 기사와 타 경로 피드는 핵심 이슈 묶음 단계에서 통합",
+        ],
+        "ranking": "뉴스 자체는 단독 화제성을 과대평가하지 않도록 경로 가중치를 가장 낮게 설정합니다.",
+        "score": "공식자료 여부와 설명의 구체성을 반응 강도 보조점수로 반영합니다. 동일 이슈가 여러 기사에서 반복되면 관련 피드 수 보너스가 붙습니다.",
+        "limitations": "현재 검색어 기반 Google News RSS이므로 모든 언론 보도를 전수 수집하지 않습니다. '공식자료' 표시는 원문 출처를 완전히 검증한 인증 마크가 아니라 수집 분류입니다.",
+        "queries": [
+            "한국 드라마 신작 공개", "한국 예능 신작 공개", "한국 영화 신작 공개",
+            "드라마 캐스팅 확정", "예능 새 멤버 합류", "콘텐츠 수상 화제",
+            "드라마 시청률 상승", "웹툰 원작 드라마 제작", "배우 감독 인터뷰 신작",
+        ],
+    },
+}
+
+SOURCE_DETAIL_KEY_BY_NAME = {
+    "YouTube 반응": "youtube",
+    "극장·박스오피스": "boxoffice",
+    "OTT 랭킹·신작": "ott",
+    "온라인 화제성": "buzz",
+    "뉴스·공식자료": "news",
+}
 
 STOPWORDS = [
     "좋은", "보기", "보면", "볼", "때", "추천", "싶은", "생각나는",
@@ -194,6 +341,100 @@ def go_page(page):
 
 if "page" not in st.session_state:
     st.session_state["page"] = "home"
+
+
+def _detail_box(title, text):
+    st.markdown(
+        '<div class="logic-detail-box">'
+        f'<div class="logic-detail-title">{html.escape(title)}</div>'
+        f'<div class="logic-detail-text">{html.escape(str(text))}</div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
+
+
+def _detail_list(title, items):
+    if not items:
+        return
+    rendered = "".join(f"<li>{html.escape(str(item))}</li>" for item in items)
+    st.markdown(
+        '<div class="logic-detail-box">'
+        f'<div class="logic-detail-title">{html.escape(title)}</div>'
+        f'<div class="logic-detail-text"><ol style="margin:6px 0 0 20px;padding:0;">{rendered}</ol></div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
+
+
+def _render_source_detail(detail_key):
+    detail = SOURCE_DETAIL_LOGIC.get(detail_key)
+    if not detail:
+        st.warning("세부 로직 정보를 찾지 못했습니다.")
+        return
+
+    st.markdown(f"### {detail['source_name']}")
+    st.caption(detail["weight"])
+    _detail_box("역할", detail["purpose"])
+    _detail_list("수집 단계", detail.get("collection", []))
+    _detail_list("선정·제외 기준", detail.get("filters", []))
+    _detail_box("경로 내 정렬 기준", detail.get("ranking", ""))
+    _detail_box("핵심 이슈 점수 반영", detail.get("score", ""))
+
+    if detail.get("queries"):
+        st.markdown("**실제 검색어**")
+        st.markdown(
+            '<div class="logic-code">' + html.escape("\n".join(detail["queries"])) + '</div>',
+            unsafe_allow_html=True,
+        )
+    if detail.get("channels"):
+        st.markdown("**수집 대상 공식 채널**")
+        st.markdown(
+            '<div class="logic-code">' + html.escape("\n".join(detail["channels"])) + '</div>',
+            unsafe_allow_html=True,
+        )
+
+    _detail_box("현재 한계", detail.get("limitations", ""))
+    st.caption("이 내용은 현재 app.py와 collect_issues.py에 구현된 실제 기준을 설명합니다.")
+
+
+if hasattr(st, "dialog"):
+    @st.dialog("수집 경로 세부 로직", width="large")
+    def show_source_detail_dialog(detail_key):
+        _render_source_detail(detail_key)
+else:
+    def show_source_detail_dialog(detail_key):
+        st.session_state["logic_detail_fallback"] = detail_key
+
+
+def handle_logic_detail_request():
+    try:
+        detail_key = st.query_params.get("logic_detail", "")
+        view = st.query_params.get("view", "")
+    except Exception:
+        detail_key = ""
+        view = ""
+
+    if isinstance(detail_key, list):
+        detail_key = detail_key[0] if detail_key else ""
+    if isinstance(view, list):
+        view = view[0] if view else ""
+
+    if view in {"home", "issue_db", "theme_db"}:
+        st.session_state["page"] = view
+
+    if detail_key in SOURCE_DETAIL_LOGIC:
+        try:
+            st.query_params.clear()
+        except Exception:
+            pass
+        show_source_detail_dialog(detail_key)
+
+
+handle_logic_detail_request()
+
+if st.session_state.get("logic_detail_fallback"):
+    with st.expander("수집 경로 세부 로직", expanded=True):
+        _render_source_detail(st.session_state.pop("logic_detail_fallback"))
 
 
 def load_data():
@@ -808,10 +1049,20 @@ def render_theme_card(idx, rec):
 
 
 def render_collection_logic():
-    chips = "".join(
-        f'<span class="weight-chip" data-tooltip="{html.escape(info["tooltip"], quote=True)}">{html.escape(name)} {info["weight_pct"]}%</span>'
-        for name, info in SOURCE_CONFIG.items()
-    )
+    chip_parts = []
+    for name, info in SOURCE_CONFIG.items():
+        detail_key = SOURCE_DETAIL_KEY_BY_NAME.get(name, "")
+        detail_href = f"?logic_detail={detail_key}&view=issue_db"
+        chip_parts.append(
+            '<span class="weight-chip-wrap">'
+            f'<span class="weight-chip">{html.escape(name)} {info["weight_pct"]}%</span>'
+            '<span class="weight-tooltip">'
+            f'{html.escape(info["tooltip"])}'
+            f'<a class="weight-detail-link" href="{html.escape(detail_href, quote=True)}" target="_self">세부내용 보기 →</a>'
+            '</span>'
+            '</span>'
+        )
+    chips = "".join(chip_parts)
     html_block = (
         '<div class="logic-card">'
         '<div class="theme-name">이슈 수집·선정 로직</div>'
