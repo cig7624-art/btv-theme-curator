@@ -179,12 +179,23 @@ KEYWORD_LEXICON = [
     "명장면", "몰아보기", "세계관", "원작", "범죄", "수사", "오컬트",
 ]
 
+GENERIC_TITLE_WORDS = {
+    "여러분이", "몰랐던", "최고의", "수작", "탄탄한", "스토리", "충격적", "반전",
+    "섬세한", "연출", "탄생한", "트리거", "관련", "영상", "리뷰", "요약", "해석",
+    "결말", "총정리", "스포주의", "공식", "예고편", "하이라이트", "명장면", "몰아보기",
+    "드라마", "영화", "예능", "한국", "넷플릭스", "코리아", "Netflix", "Korea",
+}
+
 # 첫 수집일에도 화제 영상을 선별하기 위한 기준
 NEW_VIDEO_HIGH_VIEW_THRESHOLD = int(os.getenv("YOUTUBE_NEW_VIDEO_VIEW_THRESHOLD", "100000"))
 NEW_VIDEO_VIEWS_PER_DAY_THRESHOLD = int(
     os.getenv("YOUTUBE_NEW_VIDEO_VELOCITY_THRESHOLD", "30000")
 )
 NEW_VIDEO_COMMENT_THRESHOLD = int(os.getenv("YOUTUBE_NEW_VIDEO_COMMENT_THRESHOLD", "300"))
+# 최초 관측 시에는 누적 조회수만으로 오래된 영상을 이슈로 오인하지 않도록
+# 업로드 후 최대 허용 일수를 별도로 둔다. 이후 관측부터는 업로드일과 무관하게
+# 전일 대비 증가량으로 급등 여부를 판단한다.
+INITIAL_ISSUE_MAX_AGE_DAYS = int(os.getenv("YOUTUBE_INITIAL_ISSUE_MAX_AGE_DAYS", "14"))
 
 # 전일 대비 급등 조건
 DAILY_VIEW_DELTA_THRESHOLD = int(os.getenv("YOUTUBE_DAILY_VIEW_DELTA", "50000"))
@@ -231,30 +242,75 @@ def extract_keywords(text):
             found.append(kw)
 
     tokens = re.findall(r"[가-힣A-Za-z0-9]{2,}", text)
-
-    for token in tokens[:14]:
-        if token not in found and len(found) < 16:
-            found.append(token)
+    for token in tokens:
+        cleaned = token.strip("_-·.,!?'\"“”‘’()[]{}")
+        if not cleaned or cleaned in GENERIC_TITLE_WORDS:
+            continue
+        if cleaned.lower() in {"the", "and", "with", "official", "trailer", "review"}:
+            continue
+        if cleaned not in found:
+            found.append(cleaned)
+        if len(found) >= 16:
+            break
 
     return ",".join(found[:16])
+
+
+def _clean_content_candidate(value):
+    value = normalize_text(value)
+    value = re.sub(r"^[#'\"“”‘’]+|[#'\"“”‘’]+$", "", value).strip()
+    value = re.sub(r"\s*(공식\s*)?(예고편|티저|리뷰|요약|해석|결말|총정리|하이라이트|명장면|몰아보기).*?$", "", value, flags=re.I).strip()
+    return value[:60]
+
+
+def is_reliable_related_content(value):
+    value = _clean_content_candidate(value)
+    if not value or len(value) < 2 or len(value) > 32:
+        return False
+    tokens = re.findall(r"[가-힣A-Za-z0-9]+", value)
+    if not tokens:
+        return False
+    generic_count = sum(token in GENERIC_TITLE_WORDS for token in tokens)
+    if generic_count >= max(2, len(tokens) // 2):
+        return False
+    # 완성된 설명문처럼 긴 표현은 작품명으로 사용하지 않는다.
+    if len(tokens) >= 6 and any(word in value for word in ["탄생", "스토리", "연출", "충격", "최고"]):
+        return False
+    return True
 
 
 def guess_related_content(title):
     title = normalize_text(title)
 
-    for pattern in [r"《([^》]+)》", r"[\"“']([^\"”']+)[\"”']", r"\[([^\]]+)\]"]:
+    # 작품명을 명시하는 괄호 표기를 가장 신뢰한다.
+    for pattern in [r"《([^》]+)》", r"〈([^〉]+)〉", r"<([^>]+)>", r"\[([^\]]+)\]"]:
         match = re.search(pattern, title)
         if match:
-            value = normalize_text(match.group(1))
-            if 1 < len(value) <= 40:
-                return value
+            candidate = _clean_content_candidate(match.group(1))
+            if is_reliable_related_content(candidate):
+                return candidate
+
+    # 따옴표는 문장 전체를 감싸는 경우가 많으므로 짧은 작품명일 때만 채택한다.
+    for pattern in [r"[\"“']([^\"”']+)[\"”']", r"[‘]([^’]+)[’]"]:
+        match = re.search(pattern, title)
+        if match:
+            candidate = _clean_content_candidate(match.group(1))
+            if is_reliable_related_content(candidate):
+                return candidate
 
     cleaned = re.sub(r"\[[^\]]+\]", "", title).strip()
+    # 공식 예고편처럼 구분자로 작품명이 앞에 오는 제목을 처리한다.
     for sep in [" - ", " | ", "…", ":", "：", "ㅣ"]:
         if sep in cleaned:
-            return cleaned.split(sep)[0].strip()[:40]
+            candidate = _clean_content_candidate(cleaned.split(sep)[0])
+            if is_reliable_related_content(candidate):
+                return candidate
 
-    return cleaned[:40]
+    # '작품명 리뷰/예고편' 형태를 처리하되 설명문이면 비워 둔다.
+    candidate = _clean_content_candidate(cleaned)
+    if is_reliable_related_content(candidate):
+        return candidate
+    return ""
 
 
 def parse_entry_date(entry):
@@ -410,9 +466,16 @@ def parse_iso8601_duration(value):
     return values["days"] * 86400 + values["hours"] * 3600 + values["minutes"] * 60 + values["seconds"]
 
 
-def video_type_from_duration(duration_seconds):
-    # YouTube Shorts의 최대 길이 변화에도 대응하도록 3분 이하를 숏폼 후보로 본다.
-    return "쇼츠/숏폼" if 0 < duration_seconds <= 180 else "일반 영상"
+def video_type_from_duration(duration_seconds, text=""):
+    # API 응답만으로는 세로형 여부를 확인할 수 없다. 60초 이하는 숏폼 후보로,
+    # 3분 이하는 제목/설명에 Shorts 표기가 있을 때만 숏폼 후보로 본다.
+    lowered = normalize_text(text).lower()
+    has_short_marker = any(marker in lowered for marker in ["#shorts", " shorts", "쇼츠", "숏츠", "shorts/"])
+    if 0 < duration_seconds <= 60:
+        return "쇼츠/숏폼 후보"
+    if 60 < duration_seconds <= 180 and has_short_marker:
+        return "쇼츠/숏폼 후보"
+    return "일반 영상"
 
 
 def chunked(values, size=50):
@@ -530,7 +593,7 @@ def discover_youtube_videos_api():
         row["query"] = query_text
         row["keywords"] = extract_keywords(metadata_text)
         row["duration_seconds"] = duration_seconds
-        row["video_type"] = video_type_from_duration(duration_seconds)
+        row["video_type"] = video_type_from_duration(duration_seconds, metadata_text)
         rows.append(row)
 
     return pd.DataFrame(rows, columns=WATCHLIST_COLUMNS).fillna("")
@@ -611,7 +674,7 @@ def discover_youtube_videos_ytdlp():
                     "query": query,
                     "description": normalize_text(item.get("description", ""))[:500],
                     "duration_seconds": duration_seconds,
-                    "video_type": video_type_from_duration(duration_seconds),
+                    "video_type": video_type_from_duration(duration_seconds, f"{title} {item.get('description', '')}"),
                 })
 
     return pd.DataFrame(rows, columns=WATCHLIST_COLUMNS).fillna("").drop_duplicates("video_id")
@@ -788,23 +851,30 @@ def make_youtube_issues(watchlist, stats):
 
             age_days = max((today - upload_dt).days + 1, 1)
             views_per_day = view_count / age_days
-            if view_count >= NEW_VIDEO_HIGH_VIEW_THRESHOLD:
-                reason = f"최근 {age_days}일 내 조회수 {view_count:,}회 기록"
-            elif views_per_day >= NEW_VIDEO_VIEWS_PER_DAY_THRESHOLD:
-                reason = f"일평균 조회수 약 {views_per_day:,.0f}회로 빠르게 확산"
-            elif comment_count >= NEW_VIDEO_COMMENT_THRESHOLD:
-                reason = f"최근 댓글 {comment_count:,}개로 높은 반응 확인"
+            # 최초 관측에서는 최근 업로드만 이슈 후보로 인정한다. 오래된 영상의
+            # 누적 조회수를 오늘의 급상승으로 오인하지 않기 위함이다.
+            if age_days <= INITIAL_ISSUE_MAX_AGE_DAYS:
+                if view_count >= NEW_VIDEO_HIGH_VIEW_THRESHOLD and views_per_day >= 10000:
+                    reason = f"공개 {age_days}일 만에 조회수 {view_count:,}회 기록"
+                elif views_per_day >= NEW_VIDEO_VIEWS_PER_DAY_THRESHOLD:
+                    reason = f"공개 후 일평균 조회수 약 {views_per_day:,.0f}회로 빠르게 확산"
+                elif comment_count >= NEW_VIDEO_COMMENT_THRESHOLD:
+                    reason = f"공개 {age_days}일 만에 댓글 {comment_count:,}개로 높은 반응 확인"
 
         if not reason:
             continue
 
         title = normalize_text(meta.get("title", ""))
         related = normalize_text(meta.get("related_content", ""))
+        # 작품명이나 프로그램명을 신뢰할 수 없는 일반 리뷰 문장은 큐레이션
+        # 트리거로 쓰지 않는다. 통계 이력에는 남기되 issue_feed에서는 제외한다.
+        if not is_reliable_related_content(related):
+            continue
         keywords = normalize_text(meta.get("keywords", ""))
         url = normalize_text(meta.get("url", ""))
         channel = normalize_text(meta.get("channel", ""))
         video_type = normalize_text(meta.get("video_type", "")) or "일반 영상"
-        source = "유튜브/쇼츠" if video_type == "쇼츠/숏폼" else "유튜브"
+        source = "유튜브/숏폼 후보" if video_type == "쇼츠/숏폼 후보" else "유튜브"
 
         desc = (
             f"'{title}' 영상이 {reason}. 채널: {channel}. "
@@ -851,8 +921,26 @@ def normalize_legacy_issue_sources(df):
     return df
 
 
+def cleanup_legacy_youtube_issues(df):
+    """첫 실행에서 오래된 누적 조회수를 급상승으로 저장한 행을 정리한다."""
+    if df.empty:
+        return df
+    df = df.copy()
+
+    def should_drop(row):
+        source = str(row.get("source", ""))
+        description = str(row.get("description", ""))
+        if not source.startswith("유튜브"):
+            return False
+        match = re.search(r"최근\s+(\d+)일\s+내\s+조회수", description)
+        return bool(match and int(match.group(1)) > INITIAL_ISSUE_MAX_AGE_DAYS)
+
+    mask = df.apply(should_drop, axis=1)
+    return df[~mask].copy()
+
+
 def save_issue_feed(new_rows):
-    existing = normalize_legacy_issue_sources(load_existing_issues())
+    existing = cleanup_legacy_youtube_issues(normalize_legacy_issue_sources(load_existing_issues()))
     if not new_rows:
         save_csv(existing, ISSUE_PATH, ISSUE_COLUMNS)
         return 0, len(existing)
