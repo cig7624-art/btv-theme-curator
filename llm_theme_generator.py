@@ -515,7 +515,7 @@ suggested_themes의 이름은 제목만 봐도 어떤 콘텐츠가 묶일지 예
                 {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
             ],
             text_format=ThemeSearchIntent,
-            reasoning={"effort": "minimal"},
+            reasoning={"effort": "none"},
             max_output_tokens=1200,
         )
     except Exception as exc:
@@ -608,7 +608,7 @@ year는 확실한 경우에만 적고 content_type은 영화/드라마/예능/�
                 {"role": "user", "content": json.dumps({"themes": payload_themes}, ensure_ascii=False)},
             ],
             text_format=ThemeContentCandidateBatch,
-            reasoning={"effort": "minimal"},
+            reasoning={"effort": "none"},
             max_output_tokens=max(3000, len(payload_themes) * per_theme * 75),
         )
     except Exception as exc:

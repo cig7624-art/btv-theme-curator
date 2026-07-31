@@ -198,6 +198,51 @@ button:disabled *, div[data-testid="stFormSubmitButton"] button:disabled * {
 .content-tag-link:hover { background:#1e3a5f; color:#ffffff !important; text-decoration:underline; }
 .content-source-note { color:#93c5fd !important; font-size:12px; line-height:1.55; margin-top:9px; }
 
+/* Streamlit 위젯 다크 모드 강제 적용: 버전별 DOM 차이 대응 */
+[data-testid="stTextInput"] div[data-baseweb="input"],
+[data-testid="stTextInput"] div[data-baseweb="base-input"],
+[data-testid="stTextArea"] div[data-baseweb="textarea"],
+[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
+[data-testid="stSelectbox"] div[data-baseweb="select"] div {
+    background-color:#0f172a !important;
+    border-color:#334155 !important;
+}
+[data-testid="stTextInput"] input,
+[data-testid="stTextArea"] textarea,
+[data-testid="stSelectbox"] input,
+[data-testid="stSelectbox"] span,
+[data-testid="stSelectbox"] svg {
+    color:#f8fafc !important;
+    fill:#f8fafc !important;
+    -webkit-text-fill-color:#f8fafc !important;
+}
+[data-testid="stTextInput"] input::placeholder,
+[data-testid="stTextArea"] textarea::placeholder {
+    color:#94a3b8 !important;
+    -webkit-text-fill-color:#94a3b8 !important;
+    opacity:1 !important;
+}
+[data-testid="stExpander"] details,
+[data-testid="stExpander"] summary {
+    background:#0b1220 !important;
+    border-color:#263449 !important;
+    color:#f8fafc !important;
+}
+[data-testid="stExpander"] summary *,
+[data-testid="stExpander"] details * {
+    color:#f8fafc;
+}
+[data-testid="stExpander"] summary:hover { background:#111827 !important; }
+[data-testid="stForm"] {
+    background:#0b1220 !important;
+    border:1px solid #263449 !important;
+    border-radius:12px !important;
+    padding:12px 14px 14px !important;
+}
+[data-testid="stForm"] [data-testid="stTextInput"] input {
+    background:#0f172a !important;
+}
+
 @media (max-width:900px) {
     .issue-card { flex-direction:column; }
     .issue-media { width:100%; flex-basis:190px; }
@@ -1044,6 +1089,58 @@ def build_llm_issue_records(issues, max_issues=12):
     return records
 
 
+def build_search_issue_records(issues, query, max_issues=5):
+    """AI 검색 문장과 직접 연결되는 최근 이슈만 LLM에 전달합니다.
+
+    일반적인 분위기·장르 요청에는 이슈 전체를 보내지 않아 속도와 토큰을 줄이고,
+    작품명이 포함된 요청에서만 해당 작품의 최근 이슈 맥락을 보강합니다.
+    """
+    query_text = str(query or "").strip()
+    query_norm = _normalize_search_text(query_text)
+    query_tokens = {
+        token for token in re.findall(r"[0-9a-z가-힣]+", query_text.lower())
+        if len(token) >= 2 and token not in STOPWORDS
+    }
+    if not query_norm and not query_tokens:
+        return []
+
+    scored = []
+    for _, issue in issues.iterrows():
+        related = str(issue.get("related_content", "")).strip()
+        title = str(issue.get("issue_title", "")).strip()
+        keywords = str(issue.get("keywords", "")).strip()
+        description = str(issue.get("description", "")).strip()
+        anchors = [related, title]
+        score = 0
+        for anchor in anchors:
+            anchor_norm = _normalize_search_text(anchor)
+            if not anchor_norm:
+                continue
+            if anchor_norm in query_norm or query_norm in anchor_norm:
+                score += 100
+        issue_tokens = {
+            token for token in re.findall(
+                r"[0-9a-z가-힣]+",
+                f"{related} {title} {keywords}".lower(),
+            )
+            if len(token) >= 2
+        }
+        overlap = query_tokens & issue_tokens
+        score += len(overlap) * 12
+        if score <= 0:
+            continue
+        score += min(20, float(issue.get("issue_score", 0) or 0) / 5)
+        scored.append((score, {
+            "issue_title": title,
+            "related_content": related,
+            "keywords": keywords,
+            "description": description,
+        }))
+
+    scored.sort(key=lambda item: item[0], reverse=True)
+    return [record for _, record in scored[:max_issues]]
+
+
 def get_github_writeback_config():
     return {
         "token": get_runtime_secret("GITHUB_WRITE_TOKEN"),
@@ -1697,7 +1794,7 @@ elif st.session_state["page"] == "theme_db":
                         query=search_query,
                         api_key=openai_api_key,
                         model=openai_model,
-                        issue_records=build_llm_issue_records(issues, max_issues=20),
+                        issue_records=build_search_issue_records(issues, search_query, max_issues=5),
                     )
                     search_intent = enrich_ai_intent_from_issues(search_intent, search_query, issues)
                 st.session_state["theme_ai_search_intent"] = search_intent
