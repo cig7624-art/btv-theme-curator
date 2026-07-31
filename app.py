@@ -117,7 +117,7 @@ CONTENT_DB_PATH = Path("content_db.csv")
 
 SOURCE_WEIGHTS = {
     "유튜브": 35,
-    "SNS/숏폼": 28,
+    "온라인 화제": 16,
     "극장/박스오피스": 22,
     "OTT/랭킹": 18,
     "네이버 이슈": 15,
@@ -236,8 +236,8 @@ def classify_source(source):
 
     if "유튜브" in s or "YouTube" in s:
         return "유튜브"
-    if "SNS" in s or "인스타" in s or "Instagram" in s or "쇼츠" in s or "숏폼" in s:
-        return "SNS/숏폼"
+    if "온라인 화제" in s or "SNS" in s or "인스타" in s or "Instagram" in s or "릴스" in s:
+        return "온라인 화제"
     if "극장" in s or "KOFIC" in s or "박스오피스" in s or "CGV" in s or "롯데시네마" in s or "메가박스" in s:
         return "극장/박스오피스"
     if "OTT" in s or "넷플릭스" in s or "티빙" in s or "웨이브" in s or "디즈니" in s or "쿠팡플레이" in s:
@@ -600,13 +600,13 @@ def render_collection_logic():
         '<div class="logic-desc">'
         '최근 이슈는 오늘 기준 최근 7일 이내의 외부 콘텐츠 신호 중, '
         '실제 시청 전환 가능성이 높은 이슈를 우선 노출합니다. '
-        '단순 뉴스량보다 <b>유튜브/숏폼 확산, SNS 반응, 극장 흥행, '
+        '단순 뉴스량보다 <b>실제 유튜브/쇼츠 반응, 온라인 화제 기사, 극장 흥행, '
         'OTT 화제성, 뉴스/공식자료 신뢰도</b>를 함께 반영합니다.'
         '</div>'
 
         '<div class="section-label">경로별 가중치</div>'
         '<span class="tag">유튜브 35</span>'
-        '<span class="tag">SNS/숏폼 28</span>'
+        '<span class="tag">온라인 화제 16</span>'
         '<span class="tag">극장/박스오피스 22</span>'
         '<span class="tag">OTT/랭킹 18</span>'
         '<span class="tag">네이버 이슈 15</span>'
