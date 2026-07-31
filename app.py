@@ -138,6 +138,15 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
 }
 .issue-title-link:hover { color:#38bdf8 !important; text-decoration:underline; }
 .stButton button { background:#2563eb; color:white; border-radius:12px; border:0; font-weight:800; }
+div[data-testid="stDownloadButton"] button {
+    background:#2563eb !important; color:#ffffff !important; border:0 !important;
+    border-radius:12px !important; font-weight:800 !important;
+}
+div[data-testid="stDownloadButton"] button p,
+div[data-testid="stDownloadButton"] button span {
+    color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;
+}
+div[data-testid="stDownloadButton"] button:hover { background:#1d4ed8 !important; }
 
 /* 닫힌 select와 펼친 드롭다운 옵션 모두 어두운 글자로 고정 */
 div[data-baseweb="select"] > div { background:#f8fafc !important; border-color:#cbd5e1 !important; }
@@ -1323,24 +1332,14 @@ elif st.session_state["page"] == "theme_db":
         status_options = ["전체", "AI 신규 생성", "기존 임시 DB", "검증 테마", "실제 활용"]
         selected_status = st.selectbox("테마 출처·상태", status_options)
 
-    c_limit, c_download = st.columns([1, 1])
-    with c_limit:
-        theme_display_limit = st.slider(
-            "표시 수",
-            min_value=20,
-            max_value=100,
-            value=40,
-            step=20,
-        )
-    with c_download:
-        export_df = ensure_theme_schema(themes)
-        st.download_button(
-            "⬇ 현재 테마 DB 다운로드",
-            data=export_df.to_csv(sep="|", index=False, encoding="utf-8-sig").encode("utf-8-sig"),
-            file_name="theme_pool_updated.csv",
-            mime="text/csv",
-            use_container_width=True,
-        )
+    export_df = ensure_theme_schema(themes)
+    st.download_button(
+        "⬇ 현재 테마 DB 다운로드",
+        data=export_df.to_csv(sep="|", index=False, encoding="utf-8-sig").encode("utf-8-sig"),
+        file_name="theme_db_current.csv",
+        mime="text/csv",
+        use_container_width=True,
+    )
 
     filtered = themes.copy()
     if selected_status != "전체":
@@ -1367,8 +1366,8 @@ elif st.session_state["page"] == "theme_db":
                 | filtered["source_issue"].astype(str).str.contains(s_query, case=False, na=False)
             ].copy()
 
-    shown = filtered.head(theme_display_limit).copy()
-    st.markdown(f"### 전체 {len(themes)}개 중 {len(filtered)}개 검색 · 상위 {len(shown)}개 표시")
+    shown = filtered.copy()
+    st.markdown(f"### 전체 {len(themes)}개 중 {len(shown)}개 표시")
 
     for _, row in shown.iterrows():
         keyword_tags = "".join(
@@ -1544,15 +1543,6 @@ else:
                 st.warning(f"GitHub 영구 저장 실패: {github_result.get('error', '')}")
             elif github_result.get("status") == "not_configured":
                 st.caption("영구 저장이 설정되지 않았습니다.")
-
-            if st.session_state.get("updated_theme_csv"):
-                st.download_button(
-                    "⬇ 신규 테마가 합쳐진 테마 DB 다운로드",
-                    data=st.session_state["updated_theme_csv"],
-                    file_name="theme_pool_updated.csv",
-                    mime="text/csv",
-                    use_container_width=True,
-                )
 
             if not recs:
                 st.warning("추천 결과가 없습니다.")
