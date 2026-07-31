@@ -30,6 +30,11 @@ import pandas as pd
 import requests
 
 try:
+    from googlenewsdecoder import gnewsdecoder
+except Exception:
+    gnewsdecoder = None
+
+try:
     import yt_dlp
 except Exception:
     yt_dlp = None
@@ -281,11 +286,29 @@ def extract_page_image(page_html, base_url):
     return ""
 
 
-def fetch_article_image(url):
-    """기사 링크를 따라가 대표 이미지를 가져옵니다. 실패하면 빈 문자열을 반환합니다."""
+def resolve_article_url(url):
+    """Google News RSS 중계 링크를 가능한 경우 실제 언론사 기사 URL로 바꿉니다."""
     url = normalize_text(url)
     if not url:
         return ""
+
+    host = urlparse(url).netloc.lower()
+    if "news.google.com" not in host:
+        return url
+
+    # Google News RSS 링크는 일반 requests 리다이렉트만으로 원문 URL이
+    # 노출되지 않는 경우가 많아 전용 디코더를 우선 사용합니다.
+    if gnewsdecoder is not None:
+        try:
+            decoded = gnewsdecoder(url, interval=None)
+            if isinstance(decoded, dict) and decoded.get("status"):
+                candidate = normalize_text(decoded.get("decoded_url", ""))
+                if candidate.startswith(("http://", "https://")):
+                    return candidate
+        except Exception:
+            pass
+
+    # 디코더 실패 시 일반 리다이렉트와 canonical/meta refresh를 보조로 확인합니다.
     try:
         response = requests.get(
             url,
@@ -299,41 +322,112 @@ def fetch_article_image(url):
                 "Accept-Language": "ko-KR,ko;q=0.9,en;q=0.7",
             },
         )
+        final_url = normalize_text(response.url)
+        if final_url and "news.google.com" not in urlparse(final_url).netloc.lower():
+            return final_url
+
+        page_html = response.text[:500_000]
+        for tag in re.findall(r"<link\b[^>]*>", page_html, flags=re.I):
+            attrs = _html_attributes(tag)
+            if attrs.get("rel", "").lower() == "canonical":
+                candidate = urljoin(final_url or url, attrs.get("href", ""))
+                if candidate.startswith(("http://", "https://")) and "news.google.com" not in urlparse(candidate).netloc.lower():
+                    return candidate
+        match = re.search(
+            r'<meta[^>]+http-equiv=["\']refresh["\'][^>]+content=["\'][^"\']*url=([^"\']+)',
+            page_html,
+            flags=re.I,
+        )
+        if match:
+            candidate = urljoin(final_url or url, html.unescape(match.group(1)).strip())
+            if candidate.startswith(("http://", "https://")):
+                return candidate
+    except Exception:
+        pass
+
+    return url
+
+
+def fetch_article_image_and_url(url):
+    """원문 URL과 대표 이미지를 함께 반환합니다."""
+    resolved_url = resolve_article_url(url)
+    target_url = resolved_url or normalize_text(url)
+    if not target_url:
+        return "", ""
+    try:
+        response = requests.get(
+            target_url,
+            timeout=ARTICLE_IMAGE_TIMEOUT_SECONDS,
+            allow_redirects=True,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
+                ),
+                "Accept-Language": "ko-KR,ko;q=0.9,en;q=0.7",
+            },
+        )
         response.raise_for_status()
+        final_url = normalize_text(response.url) or target_url
         content_type = response.headers.get("content-type", "").lower()
         if "html" not in content_type and not response.text.lstrip().startswith("<"):
-            return ""
-        # 지나치게 큰 페이지 전체를 보관하지 않고 메타태그가 있는 앞부분 위주로 봅니다.
+            return final_url, ""
         page_html = response.text[:1_500_000]
-        return extract_page_image(page_html, response.url)
+        return final_url, extract_page_image(page_html, final_url)
     except Exception:
-        return ""
+        return target_url, ""
+
+
+def fetch_article_image(url):
+    """호환용 래퍼: 기사 원문을 해석한 뒤 대표 이미지만 반환합니다."""
+    _, image_url = fetch_article_image_and_url(url)
+    return image_url
 
 
 def enrich_news_images(rows):
-    """RSS에 이미지가 없던 기사에 한해 원문 Open Graph 이미지를 병렬로 보강합니다."""
+    """Google News 중계 URL을 원문 URL로 바꾸고 대표 이미지를 병렬 보강합니다."""
     if not rows or ARTICLE_IMAGE_FETCH_LIMIT <= 0:
         return rows
 
-    targets = [
-        (idx, row.get("source_url", ""))
-        for idx, row in enumerate(rows)
-        if not normalize_text(row.get("image_url", "")) and normalize_text(row.get("source_url", ""))
-    ][:ARTICLE_IMAGE_FETCH_LIMIT]
+    targets = []
+    for idx, row in enumerate(rows):
+        source_url = normalize_text(row.get("source_url", ""))
+        if not source_url:
+            continue
+        missing_image = not normalize_text(row.get("image_url", ""))
+        is_google_news = "news.google.com" in urlparse(source_url).netloc.lower()
+        if missing_image or is_google_news:
+            targets.append((idx, source_url))
+
+    # 최신 피드가 먼저 보강되도록 최근 날짜순으로 제한합니다.
+    targets = sorted(
+        targets,
+        key=lambda item: normalize_text(rows[item[0]].get("date", "")),
+        reverse=True,
+    )[:ARTICLE_IMAGE_FETCH_LIMIT]
     if not targets:
         return rows
 
-    with ThreadPoolExecutor(max_workers=min(8, len(targets))) as executor:
-        future_map = {executor.submit(fetch_article_image, url): idx for idx, url in targets}
+    resolved_count = 0
+    image_count = 0
+    with ThreadPoolExecutor(max_workers=min(4, len(targets))) as executor:
+        future_map = {executor.submit(fetch_article_image_and_url, url): idx for idx, url in targets}
         for future in as_completed(future_map):
             idx = future_map[future]
+            original_url = normalize_text(rows[idx].get("source_url", ""))
             try:
-                image_url = future.result()
+                resolved_url, image_url = future.result()
             except Exception:
-                image_url = ""
-            if image_url:
-                rows[idx]["image_url"] = image_url
+                resolved_url, image_url = original_url, ""
 
+            if resolved_url and resolved_url != original_url:
+                rows[idx]["source_url"] = resolved_url
+                resolved_count += 1
+            if image_url and not normalize_text(rows[idx].get("image_url", "")):
+                rows[idx]["image_url"] = image_url
+                image_count += 1
+
+    print(f"기사 원문 URL 해석: {resolved_count}개 / 대표 이미지 보강: {image_count}개")
     return rows
 
 
@@ -1103,9 +1197,8 @@ def collect_kobis_boxoffice():
         rank = parse_int(item.get("rank"))
         rank_inten = parse_int(item.get("rankInten"))
         new_entry = normalize_text(item.get("rankOldAndNew", "")) == "NEW"
-        # Top 5는 기본 수집하고, 그 밖에는 신규 진입·2계단 이상 상승작만 수집합니다.
-        if rank > 5 and not new_entry and rank_inten < 2:
-            continue
+        # KOBIS 일별 박스오피스가 제공하는 Top 10을 모두 수집합니다.
+        # 신규 진입·순위 상승 여부는 제목과 점수 계산에서 별도로 강조합니다.
         movie = normalize_text(item.get("movieNm", ""))
         if not movie:
             continue
@@ -1355,11 +1448,22 @@ def save_issue_feed(new_rows):
         save_csv(merged, ISSUE_PATH, ISSUE_COLUMNS)
         return 0, 0
 
+    # 이전 실행에서 Google News 중계 URL만 저장된 최근 기사도 함께 보강합니다.
+    # 이렇게 해야 새 수집분뿐 아니라 이미 화면에 노출 중인 카드에도 썸네일이 채워집니다.
+    merged = merged.sort_values("date", ascending=False)
+    merged_rows = enrich_news_images(merged.to_dict("records"))
+    merged = pd.DataFrame(merged_rows, columns=ISSUE_COLUMNS).fillna("")
+
+    # KOBIS·Netflix처럼 여러 콘텐츠가 같은 원본 URL을 공유하는 데이터원이 있습니다.
+    # URL만으로 중복 제거하면 서로 다른 작품이 한 건으로 합쳐지므로,
+    # 콘텐츠명과 이슈 제목까지 포함해 실제 동일 피드만 제거합니다.
     merged["dedup_key"] = merged.apply(
         lambda row: "|".join([
             str(row.get("date", "")).strip(),
             str(row.get("source", "")).strip(),
-            str(row.get("source_url", "")).strip() or str(row.get("issue_title", "")).strip(),
+            str(row.get("related_content", "")).strip(),
+            str(row.get("issue_title", "")).strip(),
+            str(row.get("source_url", "")).strip(),
         ]),
         axis=1,
     )

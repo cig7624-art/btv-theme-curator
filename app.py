@@ -510,12 +510,38 @@ def representative_priority(row):
 def build_core_issues(issues):
     if issues.empty:
         return issues.copy()
+
     representatives = []
     for _, group in issues.groupby("issue_group_key", sort=False):
         ranked = group.copy()
         ranked["representative_priority"] = ranked.apply(representative_priority, axis=1)
         ranked = ranked.sort_values(["representative_priority", "date"], ascending=[False, False])
-        representatives.append(ranked.iloc[0])
+        representative = ranked.iloc[0].copy()
+
+        # 카드의 제목·설명은 가장 신뢰도 높은 대표 피드를 사용하되,
+        # 썸네일은 같은 이슈로 묶인 모든 피드 중 실제 이미지가 있는 것을 사용합니다.
+        # KOBIS가 대표 피드여도 관련 YouTube/기사 이미지가 있으면 오른쪽에 표시됩니다.
+        media_candidates = group.copy()
+        media_candidates["resolved_image_url"] = media_candidates.apply(get_issue_image_url, axis=1)
+        media_candidates = media_candidates[media_candidates["resolved_image_url"].astype(str).str.len() > 0].copy()
+        if not media_candidates.empty:
+            media_candidates["media_priority"] = media_candidates.apply(
+                lambda row: (
+                    3 if str(row.get("source_group", "")) == "YouTube 반응" else
+                    2 if str(row.get("source_group", "")) == "뉴스·공식자료" else
+                    1
+                ),
+                axis=1,
+            )
+            media_candidates = media_candidates.sort_values(
+                ["media_priority", "date"], ascending=[False, False]
+            )
+            media_row = media_candidates.iloc[0]
+            representative["image_url"] = media_row.get("resolved_image_url", "")
+            representative["image_source_url"] = media_row.get("source_url", "")
+
+        representatives.append(representative)
+
     return pd.DataFrame(representatives).sort_values(["issue_score", "date"], ascending=[False, False])
 
 def find_matched_issues(theme, issues):
