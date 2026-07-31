@@ -54,31 +54,62 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
 .weight-chip-wrap {
     position:relative; display:inline-block; margin-right:6px; margin-top:6px;
 }
+.weight-chip-wrap::after {
+    content:""; position:absolute; left:-5px; right:-5px; top:100%; height:14px;
+}
 .weight-chip { position:relative; cursor:help; font-weight:800; margin:0; }
 .weight-tooltip {
-    display:none; position:absolute; z-index:9999; left:0; top:calc(100% + 8px);
+    position:absolute; z-index:9999; left:0; top:calc(100% + 10px);
     width:350px; white-space:normal; padding:12px 13px 10px; border-radius:11px;
     background:#020617; border:1px solid #475569; box-shadow:0 12px 34px rgba(0,0,0,.45);
     color:#f8fafc !important; font-size:12px; font-weight:500; line-height:1.55;
+    opacity:0; visibility:hidden; pointer-events:none; transform:translateY(-3px);
+    transition:opacity .12s ease .10s, transform .12s ease .10s, visibility 0s linear .25s;
 }
 .weight-chip-wrap:hover .weight-tooltip,
-.weight-tooltip:hover { display:block; }
+.weight-tooltip:hover {
+    opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0);
+    transition-delay:0s;
+}
 .weight-tooltip::before {
     content:""; position:absolute; left:20px; top:-7px; width:12px; height:12px;
     background:#020617; border-left:1px solid #475569; border-top:1px solid #475569;
     transform:rotate(45deg);
 }
+.logic-modal-toggle { position:absolute; opacity:0; pointer-events:none; width:1px; height:1px; }
 .weight-detail-link {
     display:block; margin-top:9px; padding-top:8px; border-top:1px solid #334155;
-    color:#38bdf8 !important; font-weight:900; text-align:right; text-decoration:none;
+    color:#38bdf8 !important; font-weight:900; text-align:right; cursor:pointer;
 }
 .weight-detail-link:hover { text-decoration:underline; }
+.logic-modal-overlay {
+    display:none; position:fixed; inset:0; z-index:100000; padding:4vh 4vw;
+    background:rgba(2,6,23,.82); backdrop-filter:blur(5px); overflow:auto;
+    align-items:flex-start; justify-content:center;
+}
+.logic-modal-toggle:checked ~ .logic-modal-overlay { display:flex; }
+.logic-modal-panel {
+    position:relative; width:min(1050px,94vw); max-height:92vh; overflow:auto;
+    background:#090d1a; border:1px solid #334155; border-radius:18px;
+    box-shadow:0 24px 70px rgba(0,0,0,.65); padding:26px 28px 30px;
+}
+.logic-modal-close {
+    position:sticky; float:right; top:0; z-index:2; display:flex; width:34px; height:34px;
+    align-items:center; justify-content:center; margin:-8px -8px 4px 12px;
+    border-radius:50%; background:#1e293b; border:1px solid #475569;
+    color:#f8fafc !important; font-size:22px; font-weight:900; cursor:pointer;
+}
+.logic-modal-close:hover { background:#334155; }
+.logic-modal-heading { font-size:25px; font-weight:900; margin:2px 0 4px; }
+.logic-modal-weight { color:#94a3b8 !important; font-size:13px; margin-bottom:18px; }
 .logic-detail-box {
     background:#0f172a; border:1px solid #334155; border-radius:12px;
     padding:12px 14px; margin:8px 0 14px;
 }
 .logic-detail-title { font-size:14px; font-weight:900; margin-bottom:5px; }
 .logic-detail-text { color:#cbd5e1 !important; font-size:13px; line-height:1.6; }
+.logic-detail-list { margin:5px 0 0 20px; padding:0; }
+.logic-detail-list li { color:#cbd5e1 !important; font-size:13px; line-height:1.7; }
 .logic-code {
     background:#020617; border:1px solid #334155; border-radius:10px;
     padding:10px 12px; color:#e2e8f0 !important; font-size:12px; line-height:1.6;
@@ -90,11 +121,10 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     background:#0f172a; border-left:4px solid #38bdf8; padding:10px 12px; border-radius:8px;
     margin-top:10px; margin-bottom:10px; color:#cbd5e1 !important; font-size:13px; line-height:1.5;
 }
-.source-link {
-    display:inline-block; margin-top:8px; color:#38bdf8 !important; font-size:13px;
-    font-weight:800; text-decoration:none;
+.issue-title-link {
+    display:block; color:#f8fafc !important; text-decoration:none;
 }
-.source-link:hover { text-decoration:underline; }
+.issue-title-link:hover { color:#38bdf8 !important; text-decoration:underline; }
 .stButton button { background:#2563eb; color:white; border-radius:12px; border:0; font-weight:800; }
 
 /* 닫힌 select와 펼친 드롭다운 옵션 모두 어두운 글자로 고정 */
@@ -106,35 +136,6 @@ div[data-baseweb="select"] *, div[data-baseweb="select"] input,
 [role="listbox"], [role="option"] { background:#ffffff !important; }
 [role="option"]:hover, [aria-selected="true"][role="option"] { background:#e2e8f0 !important; }
 input, textarea { color:#0f172a !important; -webkit-text-fill-color:#0f172a !important; }
-
-/* Streamlit dialog: 기본 흰색 배경 때문에 흰 글자가 사라지는 문제 방지 */
-div[data-testid="stDialog"] div[role="dialog"],
-div[role="dialog"][aria-modal="true"] {
-    background:#090d1a !important;
-    color:#f8fafc !important;
-    border:1px solid #334155 !important;
-}
-div[data-testid="stDialog"] div[role="dialog"] > div,
-div[role="dialog"][aria-modal="true"] > div {
-    background:#090d1a !important;
-}
-div[data-testid="stDialog"] h1, div[data-testid="stDialog"] h2,
-div[data-testid="stDialog"] h3, div[data-testid="stDialog"] p,
-div[data-testid="stDialog"] span, div[data-testid="stDialog"] li,
-div[role="dialog"][aria-modal="true"] h1, div[role="dialog"][aria-modal="true"] h2,
-div[role="dialog"][aria-modal="true"] h3, div[role="dialog"][aria-modal="true"] p,
-div[role="dialog"][aria-modal="true"] span, div[role="dialog"][aria-modal="true"] li {
-    color:#f8fafc !important;
-    -webkit-text-fill-color:#f8fafc !important;
-}
-div[data-testid="stDialog"] [data-testid="stCaptionContainer"] p,
-div[role="dialog"][aria-modal="true"] [data-testid="stCaptionContainer"] p {
-    color:#cbd5e1 !important;
-    -webkit-text-fill-color:#cbd5e1 !important;
-}
-div[data-testid="stDialog"] button, div[role="dialog"][aria-modal="true"] button {
-    color:#f8fafc !important;
-}
 
 @media (max-width:900px) {
     .issue-card { flex-direction:column; }
@@ -153,27 +154,22 @@ SOURCE_CONFIG = {
     "YouTube 반응": {
         "weight_pct": 30,
         "path_points": 18,
-        "tooltip": "한국 인기 영상, 주요 OTT·방송사 공식 채널의 신규 업로드, 리뷰·해석·명장면 검색 결과를 수집하며 조회수·댓글·공개 후 반응 속도를 반영합니다.",
+        "tooltip": "한국 인기 영상, 주요 OTT·방송사 공식 채널 신규 업로드, 리뷰·해석·명장면 검색 결과를 수집하며 조회수·댓글·공개 후 반응 속도를 반영합니다.",
     },
     "극장·박스오피스": {
         "weight_pct": 25,
         "path_points": 15,
-        "tooltip": "KOBIS 일별 박스오피스의 순위, 신규 진입, 순위 변화, 일일·누적 관객 수를 반영합니다. 관련 기사는 흥행 배경을 설명하는 보조자료로 사용합니다.",
+        "tooltip": "KOBIS 일별 박스오피스의 실제 순위, 신규 진입, 순위 변화, 일일·누적 관객 수를 반영합니다.",
     },
     "OTT 랭킹·신작": {
         "weight_pct": 25,
         "path_points": 15,
-        "tooltip": "Netflix 공식 국가별 Top 10 데이터에서 한국 순위를 자동 수집하고, 티빙·웨이브·디즈니+·쿠팡플레이는 공식 신작·공개 예정 기사와 YouTube 공식 채널 신호를 반영합니다.",
+        "tooltip": "Netflix 공식 한국 Top 10을 자동 수집하고, 티빙·웨이브·디즈니+·쿠팡플레이는 공식 신작·공개 예정 기사와 YouTube 공식 채널 신호를 반영합니다.",
     },
-    "온라인 화제성": {
-        "weight_pct": 15,
-        "path_points": 9,
-        "tooltip": "네이버 데이터랩 검색 관심도 변화와 관련 뉴스 언급량, YouTube 반응을 함께 확인해 실제 온라인 관심 상승 여부를 검증합니다.",
-    },
-    "뉴스·공식자료": {
-        "weight_pct": 5,
-        "path_points": 3,
-        "tooltip": "콘텐츠 관련 뉴스와 플랫폼·방송사·제작사의 공식 발표를 수집해 공개, 캐스팅, 수상, 편성 변경 등 이슈의 원인과 배경을 설명합니다.",
+    "온라인 화제·뉴스": {
+        "weight_pct": 20,
+        "path_points": 12,
+        "tooltip": "최근 콘텐츠 뉴스와 공식 발표를 수집하며, 같은 작품이 여러 매체와 다른 수집 경로에서 반복 확인될수록 화제 신호를 높게 평가합니다.",
     },
 }
 
@@ -250,49 +246,40 @@ SOURCE_DETAIL_LOGIC = {
         "score": "Top 10 순위가 확인되면 반응 강도 기본점수가 반영되고, 신작·공개 예정·신규 진입 신호가 있으면 추가됩니다.",
         "limitations": "현재 자동 수집되는 실제 순위는 Netflix 한국 Top 10뿐입니다. 티빙·웨이브·디즈니+·쿠팡플레이의 실제 순위 API는 연동되어 있지 않으며, 공식 신작 관련 기사와 YouTube 공식 채널 신규 업로드만 사용합니다.",
     },
-    "buzz": {
-        "source_name": "온라인 화제성",
-        "weight": "15% · 경로 점수 최대 9점",
-        "purpose": "다른 경로에서 먼저 발견한 작품이 실제 검색 관심도 상승을 보이는지 검증합니다.",
-        "integration": "네이버 데이터랩 검색어 트렌드 API를 사용합니다. NAVER_CLIENT_ID와 NAVER_CLIENT_SECRET이 없으면 이 경로는 건너뜁니다.",
+    "online_news": {
+        "source_name": "온라인 화제·뉴스",
+        "weight": "20% · 경로 점수 최대 12점",
+        "purpose": "공개·캐스팅·제작·수상·시청 성과·역주행 등 최근 콘텐츠 이슈를 발견하고, 여러 매체의 반복 보도로 온라인 화제성을 확인합니다.",
+        "integration": "Google News RSS를 검색어별로 조회합니다. 별도 뉴스 API 키나 결제수단은 필요하지 않습니다. 기사 원문에서 대표 이미지와 원문 링크를 가능한 범위에서 보강합니다.",
         "collection": [
-            "YouTube·KOBIS·Netflix·뉴스에서 발견된 작품 중 작품명이 신뢰 가능한 후보를 선정",
-            "서로 다른 출처 수와 피드 수가 많은 순으로 최대 25개 후보 선정",
-            "네이버 데이터랩에서 최근 14일 일별 검색 관심도 조회",
-        ],
-        "filters": [
-            "직전 7일 평균과 최근 7일 평균을 비교",
-            "최근 평균이 직전 평균보다 20% 이상 상승해야 등록",
-            "최근 7일 관심도 평균이 5 이상이어야 등록",
-            "상승률이 높은 순으로 최대 10개 저장",
-        ],
-        "ranking": "상승률이 큰 작품 순으로 온라인 화제성 피드를 정렬합니다.",
-        "score": "현재 온라인 화제성 경로 자체 점수와 교차 확인 점수에 반영됩니다. 이 경로는 새로운 작품을 단독 발견하기보다 기존 이슈를 검증하는 역할입니다.",
-        "limitations": "네이버 데이터랩은 절대 검색량이 아니라 조회 기간 내 상대 지수입니다. 작품명이 모호하거나 동명이작이면 값이 왜곡될 수 있습니다.",
-    },
-    "news": {
-        "source_name": "뉴스·공식자료",
-        "weight": "5% · 경로 점수 최대 3점",
-        "purpose": "공개·캐스팅·수상·시청률·제작 발표 등 이슈가 발생한 이유와 맥락을 보완합니다.",
-        "integration": "Google News RSS를 검색어별로 조회합니다. 별도 뉴스 API 키는 사용하지 않습니다.",
-        "collection": [
-            "Google News RSS에서 일반 콘텐츠 뉴스 9개 검색어 사용",
-            "OTT 신작 관련 5개 검색어는 OTT 랭킹·신작 경로의 보조자료로 분류",
+            "Google News RSS에서 일반 콘텐츠 이슈 12개 검색어 사용",
+            "OTT 신작 관련 5개 검색어는 OTT 랭킹·신작 경로의 보조자료로 별도 분류",
             "검색어별 최대 12개, 최근 7일 기사만 수집",
-            "가능하면 Google News 중계 URL을 원문 URL로 변환하고 og:image·twitter:image를 추출",
+            "가능하면 Google News 중계 URL을 원문 주소로 변환하고 og:image·twitter:image를 추출",
         ],
         "filters": [
             "제목과 링크가 없는 기사는 제외",
-            "기사 제목·요약에서 작품명과 키워드를 추출",
-            "같은 작품의 여러 기사와 타 경로 피드는 핵심 이슈 묶음 단계에서 통합",
+            "기사 제목·요약에서 작품명과 이슈 키워드를 추출",
+            "동일 제목·동일 링크는 제거하고, 같은 작품의 여러 기사는 핵심 이슈 단계에서 한 묶음으로 통합",
+            "공개·첫방·개봉·캐스팅·제작 확정·시청 성과·역주행·수상·종영 등 명확한 사건성 신호를 우선",
+            "한 매체의 단일 기사보다 서로 다른 매체와 다른 경로에서 반복 확인된 이슈를 우선",
         ],
-        "ranking": "뉴스 자체는 단독 화제성을 과대평가하지 않도록 경로 가중치를 가장 낮게 설정합니다.",
-        "score": "공식자료 여부와 설명의 구체성을 반응 강도 보조점수로 반영합니다. 동일 이슈가 여러 기사에서 반복되면 관련 피드 수 보너스가 붙습니다.",
-        "limitations": "현재 검색어 기반 Google News RSS이므로 모든 언론 보도를 전수 수집하지 않습니다. '공식자료' 표시는 원문 출처를 완전히 검증한 인증 마크가 아니라 수집 분류입니다.",
+        "ranking": "기사 한 건의 클릭 수를 알 수 없으므로 단독 기사 점수는 제한합니다. 동일 작품의 관련 피드 수, 서로 다른 수집 경로 수, 공식 발표 여부와 최근성을 핵심 이슈 점수에 반영합니다.",
+        "score": "경로 점수 최대 12점에 더해, 같은 작품의 관련 기사·피드가 반복될수록 반응 강도 보너스가 붙고 YouTube·OTT·박스오피스에서도 확인되면 교차 확인 점수가 추가됩니다.",
+        "limitations": "검색어 기반 Google News RSS이므로 전체 언론과 SNS 게시물을 전수 수집하지 않습니다. 별도의 검색량 API는 사용하지 않으며, 여기서 말하는 온라인 화제는 기사 반복 언급과 다른 경로의 교차 확인을 뜻합니다.",
         "queries": [
-            "한국 드라마 신작 공개", "한국 예능 신작 공개", "한국 영화 신작 공개",
-            "드라마 캐스팅 확정", "예능 새 멤버 합류", "콘텐츠 수상 화제",
-            "드라마 시청률 상승", "웹툰 원작 드라마 제작", "배우 감독 인터뷰 신작",
+            "한국 드라마 신작 첫방 공개",
+            "한국 예능 신작 첫방 공개",
+            "한국 영화 개봉 신작",
+            "드라마 예능 캐스팅 출연 확정",
+            "시즌2 후속편 제작 확정",
+            "웹툰 웹소설 원작 영상화 제작",
+            "드라마 예능 시청률 상승",
+            "드라마 영화 역주행 화제",
+            "콘텐츠 수상 해외 반응",
+            "드라마 예능 종영 결말 화제",
+            "콘텐츠 리메이크 제작 확정",
+            "배우 감독 인터뷰 신작",
         ],
     },
 }
@@ -301,8 +288,7 @@ SOURCE_DETAIL_KEY_BY_NAME = {
     "YouTube 반응": "youtube",
     "극장·박스오피스": "boxoffice",
     "OTT 랭킹·신작": "ott",
-    "온라인 화제성": "buzz",
-    "뉴스·공식자료": "news",
+    "온라인 화제·뉴스": "online_news",
 }
 
 STOPWORDS = [
@@ -400,79 +386,6 @@ def _detail_list(title, items):
     )
 
 
-def _render_source_detail(detail_key):
-    detail = SOURCE_DETAIL_LOGIC.get(detail_key)
-    if not detail:
-        st.warning("세부 로직 정보를 찾지 못했습니다.")
-        return
-
-    st.markdown(f"### {detail['source_name']}")
-    st.caption(detail["weight"])
-    _detail_box("역할", detail["purpose"])
-    if detail.get("integration"):
-        _detail_box("연동 방식", detail["integration"])
-    _detail_list("수집 단계", detail.get("collection", []))
-    _detail_list("선정·제외 기준", detail.get("filters", []))
-    _detail_box("경로 내 정렬 기준", detail.get("ranking", ""))
-    _detail_box("핵심 이슈 점수 반영", detail.get("score", ""))
-
-    if detail.get("queries"):
-        st.markdown("**실제 검색어**")
-        st.markdown(
-            '<div class="logic-code">' + html.escape("\n".join(detail["queries"])) + '</div>',
-            unsafe_allow_html=True,
-        )
-    if detail.get("channels"):
-        st.markdown("**수집 대상 공식 채널**")
-        st.markdown(
-            '<div class="logic-code">' + html.escape("\n".join(detail["channels"])) + '</div>',
-            unsafe_allow_html=True,
-        )
-
-    _detail_box("현재 한계", detail.get("limitations", ""))
-    st.caption("이 내용은 현재 app.py와 collect_issues.py에 구현된 실제 기준을 설명합니다.")
-
-
-if hasattr(st, "dialog"):
-    @st.dialog("수집 경로 세부 로직", width="large")
-    def show_source_detail_dialog(detail_key):
-        _render_source_detail(detail_key)
-else:
-    def show_source_detail_dialog(detail_key):
-        st.session_state["logic_detail_fallback"] = detail_key
-
-
-def handle_logic_detail_request():
-    try:
-        detail_key = st.query_params.get("logic_detail", "")
-        view = st.query_params.get("view", "")
-    except Exception:
-        detail_key = ""
-        view = ""
-
-    if isinstance(detail_key, list):
-        detail_key = detail_key[0] if detail_key else ""
-    if isinstance(view, list):
-        view = view[0] if view else ""
-
-    if view in {"home", "issue_db", "theme_db"}:
-        st.session_state["page"] = view
-
-    if detail_key in SOURCE_DETAIL_LOGIC:
-        try:
-            st.query_params.clear()
-        except Exception:
-            pass
-        show_source_detail_dialog(detail_key)
-
-
-handle_logic_detail_request()
-
-if st.session_state.get("logic_detail_fallback"):
-    with st.expander("수집 경로 세부 로직", expanded=True):
-        _render_source_detail(st.session_state.pop("logic_detail_fallback"))
-
-
 def load_data():
     issues = pd.read_csv(ISSUE_PATH, sep="|").fillna("")
 
@@ -518,11 +431,11 @@ def classify_source(source):
         return "극장·박스오피스"
     if any(token in s for token in ["OTT", "넷플릭스", "티빙", "웨이브", "디즈니", "쿠팡플레이"]):
         return "OTT 랭킹·신작"
-    if any(token in s for token in ["온라인 화제성", "데이터랩", "검색 관심도"]):
-        return "온라인 화제성"
+    # 과거 저장된 데이터랩·뉴스·온라인 화제 기사도 현재의 통합 경로로 표시합니다.
+    if any(token in s for token in ["온라인 화제성", "온라인 화제", "데이터랩", "검색 관심도", "뉴스", "공식자료", "보도자료"]):
+        return "온라인 화제·뉴스"
 
-    # 기존 온라인 화제 기사·네이버 이슈는 기사 데이터이므로 뉴스로 분류합니다.
-    return "뉴스·공식자료"
+    return "온라인 화제·뉴스"
 
 
 def split_keywords(text):
@@ -706,13 +619,19 @@ def row_reaction_strength(issue):
             score += 8.0
         if any(word in desc for word in ["신규 진입", "순위 상승", "공개 예정", "신작"]):
             score += 4.0
-    elif group == "온라인 화제성":
-        percent = parse_metric(desc, ["상승", "증가"])
-        score += min(12.0, percent / 10.0) if percent else 5.0
-    else:
-        if any(word in str(issue.get("source", "")) for word in ["공식", "보도자료", "KOBIS", "Netflix"]):
+    elif group == "온라인 화제·뉴스":
+        source_text = str(issue.get("source", ""))
+        title_text = str(issue.get("issue_title", ""))
+        if any(word in source_text for word in ["공식", "보도자료", "방송사", "제작사", "플랫폼"]):
             score += 5.0
-        score += min(4.0, len(desc) / 100.0)
+        if any(word in f"{title_text} {desc}" for word in [
+            "공개", "첫방", "개봉", "캐스팅", "출연 확정", "제작 확정", "시즌2",
+            "시청률 상승", "역주행", "수상", "해외 반응", "종영", "결말 화제", "리메이크",
+        ]):
+            score += 3.0
+        score += min(3.0, len(desc) / 120.0)
+    else:
+        score += min(3.0, len(desc) / 120.0)
 
     return min(score, 15.0)
 
@@ -778,7 +697,7 @@ def prepare_issues(issues):
 def representative_priority(row):
     source = str(row.get("source", ""))
     official_bonus = 3 if any(token in source for token in ["공식", "KOBIS", "보도자료", "Netflix"]) else 0
-    route = row.get("source_group", "뉴스·공식자료")
+    route = row.get("source_group", "온라인 화제·뉴스")
     path_points = SOURCE_CONFIG.get(route, {}).get("path_points", 0)
     image_bonus = 2 if get_issue_image_url(row) else 0
     return official_bonus + path_points + image_bonus
@@ -805,7 +724,7 @@ def build_core_issues(issues):
             media_candidates["media_priority"] = media_candidates.apply(
                 lambda row: (
                     3 if str(row.get("source_group", "")) == "YouTube 반응" else
-                    2 if str(row.get("source_group", "")) == "뉴스·공식자료" else
+                    2 if str(row.get("source_group", "")) == "온라인 화제·뉴스" else
                     1
                 ),
                 axis=1,
@@ -1009,15 +928,8 @@ def score_tooltip(issue):
     )
 
 
-def render_source_link(url):
-    url = safe_url(url)
-    if not url:
-        return ""
-    return f'<a class="source-link" href="{url}" target="_blank">근거 링크 보기 ↗</a>'
-
-
 def render_issue_card(issue):
-    url_html = render_source_link(issue.get("source_url", ""))
+    source_url = safe_url(issue.get("source_url", ""))
     source_group = html.escape(str(issue.get("source_group", classify_source(issue.get("source", "")))))
     issue_score = int(issue.get("issue_score", 0))
     tooltip = html.escape(score_tooltip(issue), quote=True)
@@ -1026,10 +938,16 @@ def render_issue_card(issue):
     feed_count = int(issue.get("feed_count", 1))
     route_count = int(issue.get("route_count", 1))
 
+    title_text = html.escape(str(issue.get("issue_title", "")))
+    title_html = (
+        f'<a class="theme-name issue-title-link" href="{html.escape(source_url, quote=True)}" target="_blank" rel="noopener noreferrer">{title_text}</a>'
+        if source_url else
+        f'<div class="theme-name">{title_text}</div>'
+    )
     body = (
         '<div class="issue-card-body">'
         f'<span class="tag">{source_group}</span>'
-        f'<div class="theme-name">{html.escape(str(issue.get("issue_title", "")))}</div>'
+        f'{title_html}'
         f'<div class="small">{html.escape(str(issue.get("date", "")))} · {html.escape(str(issue.get("source", "")))}</div>'
         '<div class="issue-meta-row">'
         f'<span class="small" title="{tooltip}">핵심 이슈 점수: <span class="score">{issue_score}</span></span>'
@@ -1037,7 +955,6 @@ def render_issue_card(issue):
         '</div>'
         f'<div class="small">확인 경로: {routes}</div>'
         f'<div class="small">{html.escape(str(issue.get("description", "")))}</div>'
-        f'{url_html}'
         '</div>'
     )
     st.markdown(f'<div class="card issue-card">{body}{media_html}</div>', unsafe_allow_html=True)
@@ -1084,29 +1001,86 @@ def render_theme_card(idx, rec):
     st.markdown(html, unsafe_allow_html=True)
 
 
+
+def _logic_detail_box_html(title, text):
+    if not text:
+        return ""
+    return (
+        '<div class="logic-detail-box">'
+        f'<div class="logic-detail-title">{html.escape(str(title))}</div>'
+        f'<div class="logic-detail-text">{html.escape(str(text))}</div>'
+        '</div>'
+    )
+
+
+def _logic_detail_list_html(title, items):
+    if not items:
+        return ""
+    lis = "".join(f'<li>{html.escape(str(item))}</li>' for item in items)
+    return (
+        '<div class="logic-detail-box">'
+        f'<div class="logic-detail-title">{html.escape(str(title))}</div>'
+        f'<ol class="logic-detail-list">{lis}</ol>'
+        '</div>'
+    )
+
+
+def build_logic_modal_html(detail_key):
+    detail = SOURCE_DETAIL_LOGIC.get(detail_key, {})
+    if not detail:
+        return ""
+    parts = [
+        f'<div class="logic-modal-heading">{html.escape(detail.get("source_name", "수집 경로 세부 로직"))}</div>',
+        f'<div class="logic-modal-weight">{html.escape(detail.get("weight", ""))}</div>',
+        _logic_detail_box_html("역할", detail.get("purpose", "")),
+        _logic_detail_box_html("연동 방식", detail.get("integration", "")),
+        _logic_detail_list_html("수집 단계", detail.get("collection", [])),
+        _logic_detail_list_html("선정·제외 기준", detail.get("filters", [])),
+        _logic_detail_box_html("경로 내 정렬 기준", detail.get("ranking", "")),
+        _logic_detail_box_html("핵심 이슈 점수 반영", detail.get("score", "")),
+    ]
+    if detail.get("queries"):
+        query_text = "\n".join(detail["queries"])
+        parts.append('<div class="logic-detail-title">실제 검색어</div>')
+        parts.append(f'<div class="logic-code">{html.escape(query_text)}</div>')
+    if detail.get("channels"):
+        channel_text = "\n".join(detail["channels"])
+        parts.append('<div class="logic-detail-title" style="margin-top:14px">수집 대상 공식 채널</div>')
+        parts.append(f'<div class="logic-code">{html.escape(channel_text)}</div>')
+    parts.append(_logic_detail_box_html("현재 한계", detail.get("limitations", "")))
+    parts.append('<div class="small">이 내용은 현재 app.py와 collect_issues.py에 구현된 실제 기준입니다.</div>')
+    return "".join(parts)
+
 def render_collection_logic():
     chip_parts = []
     for name, info in SOURCE_CONFIG.items():
         detail_key = SOURCE_DETAIL_KEY_BY_NAME.get(name, "")
-        detail_href = f"?logic_detail={detail_key}&view=issue_db"
+        modal_id = f"logic-modal-{detail_key}"
+        detail_html = build_logic_modal_html(detail_key)
         chip_parts.append(
-            '<span class="weight-chip-wrap">'
+            f'<div class="weight-chip-wrap">'
+            f'<input class="logic-modal-toggle" type="checkbox" id="{modal_id}">'
             f'<span class="weight-chip">{html.escape(name)} {info["weight_pct"]}%</span>'
-            '<span class="weight-tooltip">'
+            '<div class="weight-tooltip">'
             f'{html.escape(info["tooltip"])}'
-            f'<a class="weight-detail-link" href="{html.escape(detail_href, quote=True)}" target="_self">세부내용 보기 →</a>'
-            '</span>'
-            '</span>'
+            f'<label class="weight-detail-link" for="{modal_id}">세부내용 보기 →</label>'
+            '</div>'
+            f'<div class="logic-modal-overlay">'
+            f'<div class="logic-modal-panel">'
+            f'<label class="logic-modal-close" for="{modal_id}" aria-label="닫기">×</label>'
+            f'{detail_html}'
+            '</div></div>'
+            '</div>'
         )
     chips = "".join(chip_parts)
     html_block = (
         '<div class="logic-card">'
         '<div class="theme-name">이슈 수집·선정 로직</div>'
-        '<div class="logic-desc">최근 7일간 YouTube 반응, KOBIS 박스오피스, OTT 공식 랭킹·신작, 온라인 검색 관심도, 뉴스·공식자료를 수집합니다. 동일 이슈가 여러 경로와 여러 피드에서 반복 확인되고 실제 반응이 강할수록 핵심 이슈 점수가 높아집니다.</div>'
+        '<div class="logic-desc">최근 7일간 YouTube 반응, KOBIS 박스오피스, OTT 공식 랭킹·신작, 온라인 화제·뉴스를 수집합니다. 동일 작품이 여러 매체와 여러 수집 경로에서 반복 확인되고 실제 반응이 강할수록 핵심 이슈 점수가 높아집니다.</div>'
         '<div class="section-label">경로별 가중치</div>'
         f'{chips}'
         '<div class="section-label">핵심 이슈 점수</div>'
-        '<div class="logic-desc">수집 경로 60점 + 반응 강도 20점 + 교차 확인 15점 + 최근성 5점으로 계산합니다. 같은 작품의 피드가 반복되면 반응 강도가 높아지고, 서로 다른 경로에서 동시에 확인되면 교차 확인 점수가 추가됩니다. 각 가중치에 마우스를 올리면 수집 기준을 볼 수 있습니다.</div>'
+        '<div class="logic-desc">수집 경로 60점 + 반응 강도 20점 + 교차 확인 15점 + 최근성 5점으로 계산합니다. 같은 작품의 피드가 반복되면 반응 강도가 높아지고, 서로 다른 경로에서 동시에 확인되면 교차 확인 점수가 추가됩니다. 각 가중치에 마우스를 올리면 요약 기준이 표시되고, 세부내용 보기에서 실제 수집·필터·점수 로직을 확인할 수 있습니다.</div>'
         '</div>'
     )
     st.markdown(html_block, unsafe_allow_html=True)

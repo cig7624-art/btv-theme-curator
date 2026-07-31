@@ -4,12 +4,10 @@
 - YouTube 반응: 한국 인기 영상, 주요 공식 채널 신규 업로드, 12개 외부 반응 검색어
 - 극장·박스오피스: KOBIS 일별 박스오피스
 - OTT 랭킹·신작: Netflix 공식 한국 Top 10과 OTT 공식 신작 관련 자료
-- 온라인 화제성: 네이버 데이터랩 검색 관심도 변화
-- 뉴스·공식자료: 이슈의 발생 원인과 맥락을 설명하는 최근 기사·공식 발표
+- 온라인 화제·뉴스: 최근 기사·공식 발표와 반복 보도량을 통한 화제 신호
 
-필수 환경변수는 YOUTUBE_API_KEY이며, KOBIS_API_KEY와 NAVER_CLIENT_ID /
-NAVER_CLIENT_SECRET은 해당 경로를 사용할 때 추가합니다. 키가 없으면 해당 경로만
-건너뛰고 나머지 수집은 계속 진행합니다.
+필수 환경변수는 YOUTUBE_API_KEY이며, 극장 데이터를 사용할 때 KOBIS_API_KEY를 추가합니다.
+키가 없는 경로는 건너뛰고 나머지 수집은 계속 진행합니다.
 """
 
 from __future__ import annotations
@@ -49,7 +47,6 @@ YOUTUBE_VIDEOS_ENDPOINT = "https://www.googleapis.com/youtube/v3/videos"
 YOUTUBE_CHANNELS_ENDPOINT = "https://www.googleapis.com/youtube/v3/channels"
 YOUTUBE_PLAYLIST_ITEMS_ENDPOINT = "https://www.googleapis.com/youtube/v3/playlistItems"
 KOBIS_DAILY_ENDPOINT = "https://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json"
-NAVER_DATALAB_ENDPOINT = "https://openapi.naver.com/v1/datalab/search"
 NETFLIX_COUNTRY_DATA_URL = "https://www.netflix.com/tudum/top10/data/all-weeks-countries.xlsx"
 
 DAYS = int(os.getenv("ISSUE_LOOKBACK_DAYS", "7"))
@@ -97,16 +94,19 @@ STATS_COLUMNS = [
 ]
 
 NEWS_QUERY_GROUPS = [
-    # 일반 콘텐츠 뉴스·공식자료
-    ("뉴스·공식자료", "한국 드라마 신작 공개"),
-    ("뉴스·공식자료", "한국 예능 신작 공개"),
-    ("뉴스·공식자료", "한국 영화 신작 공개"),
-    ("뉴스·공식자료", "드라마 캐스팅 확정"),
-    ("뉴스·공식자료", "예능 새 멤버 합류"),
-    ("뉴스·공식자료", "콘텐츠 수상 화제"),
-    ("뉴스·공식자료", "드라마 시청률 상승"),
-    ("뉴스·공식자료", "웹툰 원작 드라마 제작"),
-    ("뉴스·공식자료", "배우 감독 인터뷰 신작"),
+    # 온라인 화제·뉴스: 큐레이션 기회로 연결하기 쉬운 사건성 신호 중심
+    ("온라인 화제·뉴스", "한국 드라마 신작 첫방 공개"),
+    ("온라인 화제·뉴스", "한국 예능 신작 첫방 공개"),
+    ("온라인 화제·뉴스", "한국 영화 개봉 신작"),
+    ("온라인 화제·뉴스", "드라마 예능 캐스팅 출연 확정"),
+    ("온라인 화제·뉴스", "시즌2 후속편 제작 확정"),
+    ("온라인 화제·뉴스", "웹툰 웹소설 원작 영상화 제작"),
+    ("온라인 화제·뉴스", "드라마 예능 시청률 상승"),
+    ("온라인 화제·뉴스", "드라마 영화 역주행 화제"),
+    ("온라인 화제·뉴스", "콘텐츠 수상 해외 반응"),
+    ("온라인 화제·뉴스", "드라마 예능 종영 결말 화제"),
+    ("온라인 화제·뉴스", "콘텐츠 리메이크 제작 확정"),
+    ("온라인 화제·뉴스", "배우 감독 인터뷰 신작"),
 
     # OTT 신작·공개 예정 관련 자료. 실제 순위는 Netflix 공식 데이터에서 별도 수집합니다.
     ("OTT 공식 신작", "넷플릭스 한국 신작 공개 예정"),
@@ -1304,103 +1304,6 @@ def collect_netflix_top10():
     return rows
 
 
-def reliable_candidate_titles(rows, limit=25):
-    scored = {}
-    for row in rows:
-        title = normalize_text(row.get("related_content", ""))
-        if not is_reliable_related_content(title):
-            continue
-        key = title.lower()
-        scored.setdefault(key, {"title": title, "count": 0, "image_url": "", "sources": set()})
-        scored[key]["count"] += 1
-        scored[key]["sources"].add(normalize_text(row.get("source", "")))
-        if not scored[key]["image_url"]:
-            scored[key]["image_url"] = normalize_text(row.get("image_url", ""))
-    ordered = sorted(scored.values(), key=lambda item: (len(item["sources"]), item["count"]), reverse=True)
-    return ordered[:limit]
-
-
-def collect_naver_trends(candidate_rows):
-    client_id = normalize_text(os.getenv("NAVER_CLIENT_ID", ""))
-    client_secret = normalize_text(os.getenv("NAVER_CLIENT_SECRET", ""))
-    if not client_id or not client_secret:
-        print("NAVER_CLIENT_ID/SECRET 없음: 온라인 화제성 수집을 건너뜁니다.")
-        return []
-
-    candidates = reliable_candidate_titles(candidate_rows)
-    if not candidates:
-        return []
-    today = today_kst_date()
-    start = today - timedelta(days=13)
-    headers = {
-        "X-Naver-Client-Id": client_id,
-        "X-Naver-Client-Secret": client_secret,
-        "Content-Type": "application/json",
-    }
-    rows = []
-    for batch in chunked(candidates, 5):
-        body = {
-            "startDate": start.strftime("%Y-%m-%d"),
-            "endDate": today.strftime("%Y-%m-%d"),
-            "timeUnit": "date",
-            "keywordGroups": [
-                {"groupName": item["title"][:20], "keywords": [item["title"]]}
-                for item in batch
-            ],
-        }
-        try:
-            response = requests.post(NAVER_DATALAB_ENDPOINT, headers=headers, json=body, timeout=REQUEST_TIMEOUT_SECONDS)
-            response.raise_for_status()
-            results = response.json().get("results", [])
-        except Exception as exc:
-            print(f"네이버 데이터랩 수집 실패: {exc}")
-            continue
-
-        meta_map = {item["title"][:20]: item for item in batch}
-        for result in results:
-            group_name = normalize_text(result.get("title", ""))
-            meta = meta_map.get(group_name)
-            if not meta:
-                continue
-            data = result.get("data", [])
-            ratios = [float(item.get("ratio", 0) or 0) for item in data]
-            if len(ratios) < 8:
-                continue
-            previous = ratios[:-7]
-            current = ratios[-7:]
-            prev_avg = sum(previous) / len(previous) if previous else 0
-            cur_avg = sum(current) / len(current) if current else 0
-            if prev_avg > 0:
-                increase = (cur_avg - prev_avg) / prev_avg * 100
-            elif cur_avg > 0:
-                increase = 100.0
-            else:
-                increase = 0.0
-            # 검색 관심이 실제로 상승한 후보만 화제성 신호로 등록합니다.
-            if increase < 20 or cur_avg < 5:
-                continue
-            title = meta["title"]
-            rows.append({
-                "date": today.strftime("%Y-%m-%d"),
-                "source": "네이버 데이터랩 검색 관심도",
-                "issue_title": f"{title} 온라인 검색 관심도 상승",
-                "related_content": title,
-                "keywords": extract_keywords(f"온라인 화제 검색 관심도 상승 {title}"),
-                "description": (
-                    f"네이버 데이터랩 기준 최근 7일 평균 검색 관심도가 직전 기간 대비 "
-                    f"{increase:.1f}% 상승. 최근 관심도 평균 {cur_avg:.1f}, 직전 평균 {prev_avg:.1f}. "
-                    f"다른 수집 경로 확인 {len(meta['sources'])}종, 관련 피드 {meta['count']}개."
-                ),
-                "source_url": "https://datalab.naver.com/keyword/trendSearch.naver",
-                "image_url": meta.get("image_url", ""),
-                "_increase": increase,
-            })
-    rows.sort(key=lambda row: row.get("_increase", 0), reverse=True)
-    for row in rows:
-        row.pop("_increase", None)
-    return rows[:10]
-
-
 def load_existing_issues():
     return load_csv(ISSUE_PATH, ISSUE_COLUMNS)
 
@@ -1412,7 +1315,7 @@ def normalize_legacy_issue_sources(df):
     df = df.copy()
     news_link = df["source_url"].astype(str).str.contains("news.google.com", case=False, na=False)
     mislabeled = df["source"].astype(str).eq("SNS/숏폼") & news_link
-    df.loc[mislabeled, "source"] = "온라인 화제 기사"
+    df.loc[mislabeled, "source"] = "온라인 화제·뉴스"
     return df
 
 
@@ -1480,7 +1383,7 @@ def main():
     print("외부 이슈 통합 수집 시작")
 
     news_rows = collect_google_news()
-    print(f"뉴스·공식자료/OTT 신작 후보: {len(news_rows)}개")
+    print(f"온라인 화제·뉴스/OTT 신작 후보: {len(news_rows)}개")
 
     new_videos = discover_youtube_videos()
     print(f"YouTube 신규 후보: {len(new_videos)}개")
@@ -1497,11 +1400,7 @@ def main():
     netflix_rows = collect_netflix_top10()
     print(f"Netflix 한국 Top 10: {len(netflix_rows)}개")
 
-    base_rows = news_rows + youtube_rows + kobis_rows + netflix_rows
-    naver_rows = collect_naver_trends(base_rows)
-    print(f"네이버 데이터랩 화제성: {len(naver_rows)}개")
-
-    all_rows = base_rows + naver_rows
+    all_rows = news_rows + youtube_rows + kobis_rows + netflix_rows
     new_count, total_count = save_issue_feed(all_rows)
     print(f"issue_feed 오늘 반영: {new_count}개")
     print(f"issue_feed 전체 누적: {total_count}개")
