@@ -6,3 +6,5 @@ yt-dlp
 playwright
 openpyxl
 googlenewsdecoder==0.1.7
+openai
+pydantic>=2

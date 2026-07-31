@@ -1,10 +1,12 @@
-# B tv+ AI Theme Curator
+# B tv+ AI Theme Curator — LLM Theme Generation
 
-외부 이슈 수집과 테마 추천에 키노라이츠 실시간 콘텐츠 후보 탐색을 연결한 버전입니다.
+이번 버전은 기존 500개 테마를 재정렬하지 않고, 최근 핵심 이슈에서 LLM이 신규 테마를 생성합니다.
 
-적용 파일:
-- `app.py`
-- `kinolights_candidates.py` (신규)
-- `requirements.txt`
+- 신규 생성 시 기존 DB 미참조
+- 생성 후 기존 DB와 사후 중복·품질 검수
+- `[AI 신규 생성]` / `[기존 DB 활용]` 구분
+- 채택된 신규 테마 자동 DB 합류
+- 추천 이력 저장으로 최근 반복 방지
+- 향후 추천 테마 전체 콘텐츠 후보 일괄 연결 구조 준비
 
-자세한 내용은 `PHASE2_NOTES.md`를 확인하세요.
+자세한 설정은 `PHASE2A_LLM_NOTES.md`를 확인하세요.

@@ -1,14 +1,22 @@
 import html
 import math
+import os
 import re
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 import pandas as pd
 import streamlit as st
 
-from kinolights_candidates import collect_kinolights_candidates
+from llm_theme_generator import (
+    ThemeGenerationError,
+    ensure_theme_schema,
+    generate_weekly_themes,
+    github_writeback_configured,
+    load_recommendation_history,
+    persist_files_to_github,
+    persist_recommendations_locally,
+)
 
 st.set_page_config(
     page_title="B tv+ AI Theme Curator",
@@ -159,6 +167,7 @@ ISSUE_PATH = Path("issue_feed.csv")
 THEME_DB_PATH = Path("theme_db.csv")
 OLD_THEME_PATH = Path("theme_pool.csv")
 CONTENT_DB_PATH = Path("content_db.csv")
+THEME_HISTORY_PATH = Path("theme_recommendation_history.csv")
 
 SOURCE_CONFIG = {
     "YouTube 반응": {
@@ -405,8 +414,9 @@ def load_data():
         themes = pd.read_csv(OLD_THEME_PATH, sep="|").fillna("")
     else:
         raise FileNotFoundError("theme_db.csv 또는 theme_pool.csv 파일이 없습니다.")
+    themes = ensure_theme_schema(themes)
 
-    # content_db.csv는 더 이상 주 추천 풀로 쓰지 않습니다.
+    # content_db.csv는 신규 테마 생성 단계에서는 사용하지 않습니다.
     # 파일이 남아 있으면 장애 시 사용자가 명시적으로 켠 경우에만 보완 후보로 사용합니다.
     if CONTENT_DB_PATH.exists():
         contents = pd.read_csv(CONTENT_DB_PATH, sep="|").fillna("")
@@ -827,141 +837,82 @@ def build_reason_summary(theme, matched_issues):
     return f"{source} 이슈의 핵심 키워드가 '{theme['theme_name']}' 테마 키워드와 강하게 매칭됩니다."
 
 
-def _legacy_fallback_contents(theme, contents, limit=12):
-    legacy = find_matched_contents(theme, contents, limit=limit) if not contents.empty else []
-    for item in legacy:
-        item["source"] = "기존 콘텐츠풀 보완"
-        item["source_url"] = ""
-        item["match_reason"] = "기존 태그 매칭"
-    return legacy
+
+def get_runtime_secret(name, default=""):
+    value = os.getenv(name, "")
+    try:
+        secret_value = st.secrets.get(name, "")
+        if secret_value:
+            value = str(secret_value)
+    except Exception:
+        pass
+    return value or default
 
 
-def _rank_themes_from_issues(issues, themes, top_n=20):
-    recs = []
+def get_active_theme_path():
+    return THEME_DB_PATH if THEME_DB_PATH.exists() else OLD_THEME_PATH
 
-    for _, theme in themes.iterrows():
-        matched_issues = find_matched_issues(theme, issues)
-        if not matched_issues:
-            continue
 
-        issue_score = sum(i["score"] for i in matched_issues[:5])
-        issue_quality_score = sum(i.get("issue_score", 0) for i in matched_issues[:3])
-        source_diversity = len(set(i["source_group"] for i in matched_issues))
-        related_content_bonus = sum(
-            1 for i in matched_issues
-            if str(i["related_content"]).strip()
-        )
-
-        total_score = (
-            issue_score * 10
-            + issue_quality_score
-            + source_diversity * 3
-            + related_content_bonus * 2
-        )
-
-        recs.append({
-            "theme": theme,
-            "issues": matched_issues[:5],
-            "contents": [],
-            "content_meta": {},
-            "score": total_score,
-            "matched_count": len(matched_issues),
-            "source_diversity": source_diversity,
-            "reason_summary": build_reason_summary(theme, matched_issues)
+def build_llm_issue_records(issues, max_issues=12):
+    core = build_core_issues(issues).head(max_issues)
+    records = []
+    for index, (_, issue) in enumerate(core.iterrows(), start=1):
+        records.append({
+            "issue_key": f"I{index:02d}",
+            "issue_title": issue.get("issue_title", ""),
+            "related_content": issue.get("related_content", ""),
+            "source_group": issue.get("source_group", ""),
+            "confirmed_routes": issue.get("confirmed_routes", ""),
+            "issue_score": issue.get("issue_score", 0),
+            "keywords": issue.get("keywords", ""),
+            "description": issue.get("description", ""),
         })
+    return records
 
-    return sorted(recs, key=lambda x: x["score"], reverse=True)[:top_n]
+
+def get_github_writeback_config():
+    return {
+        "token": get_runtime_secret("GITHUB_WRITE_TOKEN"),
+        "repo": get_runtime_secret("GITHUB_REPO"),
+        "branch": get_runtime_secret("GITHUB_BRANCH", "main"),
+        "theme_path": get_runtime_secret("THEME_DB_GITHUB_PATH", get_active_theme_path().name),
+        "history_path": get_runtime_secret("THEME_HISTORY_GITHUB_PATH", THEME_HISTORY_PATH.name),
+    }
 
 
-def build_theme_recommendations(
-    issues,
-    themes,
-    contents,
-    top_n=20,
-    content_limit=12,
-    use_kinolights=True,
-    allow_legacy_fallback=False,
-):
-    # 테마 순위는 최근 이슈와의 연결성만으로 먼저 확정합니다.
-    # 그 뒤 상위 테마만 병렬 검색해 500개 테마 전체를 불필요하게 호출하지 않습니다.
-    recs = _rank_themes_from_issues(issues, themes, top_n=top_n)
+def source_status_label(value):
+    mapping = {
+        "AI_GENERATED": "AI 신규 생성",
+        "HUMAN_APPROVED": "검증 테마",
+        "USED": "실제 활용",
+        "LEGACY_UNVERIFIED": "기존 임시 DB",
+        "EXISTING_DB": "기존 DB 활용",
+    }
+    return mapping.get(str(value), str(value) or "기존 임시 DB")
 
-    fetched: dict[int, tuple[list[dict], dict]] = {}
-    if use_kinolights and recs:
-        worker_count = max(1, min(4, len(recs)))
-        with ThreadPoolExecutor(max_workers=worker_count) as executor:
-            futures = {
-                executor.submit(
-                    collect_kinolights_candidates,
-                    rec["theme"],
-                    rec["issues"],
-                    limit=content_limit,
-                    max_queries=5,
-                    per_query_limit=12,
-                    max_workers=3,
-                ): index
-                for index, rec in enumerate(recs)
-            }
-            for future in as_completed(futures):
-                index = futures[future]
-                try:
-                    fetched[index] = future.result()
-                except Exception as exc:
-                    fetched[index] = ([], {
-                        "status": "error",
-                        "query_count": 0,
-                        "raw_count": 0,
-                        "unique_count": 0,
-                        "cache_hits": 0,
-                        "errors": [str(exc)],
-                        "queries": [],
-                    })
 
-    for index, rec in enumerate(recs):
-        if use_kinolights:
-            candidates, meta = fetched.get(index, ([], {
-                "status": "error",
-                "query_count": 0,
-                "raw_count": 0,
-                "unique_count": 0,
-                "cache_hits": 0,
-                "errors": ["검색 결과를 받지 못했습니다."],
-                "queries": [],
-            }))
-        else:
-            candidates, meta = [], {
-                "status": "disabled",
-                "query_count": 0,
-                "raw_count": 0,
-                "unique_count": 0,
-                "cache_hits": 0,
-                "errors": [],
-                "queries": [],
-                "note": "키노라이츠 실시간 탐색이 꺼져 있습니다.",
-            }
-
-        if allow_legacy_fallback and len(candidates) < content_limit:
-            needed = content_limit - len(candidates)
-            legacy = _legacy_fallback_contents(rec["theme"], contents, limit=needed * 2)
-            existing = {str(item.get("title", "")).strip().lower() for item in candidates}
-            for item in legacy:
-                title_key = str(item.get("title", "")).strip().lower()
-                if title_key and title_key not in existing:
-                    candidates.append(item)
-                    existing.add(title_key)
-                if len(candidates) >= content_limit:
-                    break
-            meta["legacy_fallback_count"] = sum(
-                1 for item in candidates if item.get("source") == "기존 콘텐츠풀 보완"
-            )
-        else:
-            meta["legacy_fallback_count"] = 0
-
-        rec["contents"] = candidates[:content_limit]
-        rec["content_meta"] = meta
-        rec["score"] += min(len(rec["contents"]), content_limit)
-
-    return recs
+def render_generation_status(meta, added_count, github_result):
+    new_count = int(meta.get("new_count", 0))
+    existing_count = int(meta.get("existing_count", 0))
+    model = html.escape(str(meta.get("model", "")))
+    status = str(github_result.get("status", "not_configured"))
+    if status == "success":
+        persist_text = "GitHub 테마 DB까지 영구 저장 완료"
+    elif status == "error":
+        persist_text = "로컬 DB 저장 완료 · GitHub 저장 실패"
+    else:
+        persist_text = "현재 실행 환경의 테마 DB에 저장 · GitHub 영구 저장 미설정"
+    warning = str(meta.get("review_warning", "")).strip()
+    warning_html = f'<div class="small" style="margin-top:8px">검수 참고: {html.escape(warning)}</div>' if warning else ""
+    st.markdown(
+        '<div class="logic-card">'
+        '<div class="theme-name">이번 주 테마 생성 결과</div>'
+        f'<div class="logic-desc">AI 신규 생성 {new_count}개 · 기존 DB 활용 {existing_count}개 · 신규 DB 합류 {added_count}개</div>'
+        f'<div class="small">모델: {model} · {html.escape(persist_text)}</div>'
+        f'{warning_html}'
+        '</div>',
+        unsafe_allow_html=True,
+    )
 
 
 def render_metric(title, number, subtitle=None):
@@ -1129,34 +1080,49 @@ def _render_content_meta(meta):
 
 def render_theme_card(idx, rec):
     theme = rec["theme"]
-    matched_contents = rec["contents"]
-    content_meta = rec.get("content_meta", {})
+    source = rec.get("recommendation_source", "AI_GENERATED")
+    source_label = rec.get("source_label", source_status_label(source))
+    badge_class = "score" if source == "AI_GENERATED" else "copy"
 
     keyword_tags = ""
-    for kw in split_keywords(theme["trigger_keywords"])[:12]:
+    for kw in split_keywords(theme.get("trigger_keywords", ""))[:12]:
         keyword_tags += f'<span class="tag">{html.escape(str(kw))}</span>'
 
-    content_tags = render_content_tags(matched_contents)
-    content_meta_html = _render_content_meta(content_meta)
+    issue_keys = " · ".join(rec.get("source_issue_keys", []))
+    issue_key_html = f'<div class="small">근거 이슈 ID: {html.escape(issue_keys)}</div>' if issue_keys else ""
+    search_terms = rec.get("content_search_terms", [])
+    search_terms_html = "".join(
+        f'<span class="tag">{html.escape(str(term))}</span>' for term in search_terms[:8]
+    )
+
+    relevance = int(rec.get("relevance_score", 0) or 0)
+    novelty = int(rec.get("novelty_score", 0) or 0)
+    quality = int(rec.get("quality_score", 0) or 0)
+    source_issue = rec.get("source_issue_summary") or theme.get("source_issue", "")
+    creation_angle = rec.get("creation_angle") or theme.get("creation_angle", "")
 
     html_block = (
         '<div class="theme-card">'
         f'<div class="rank">#{idx}</div>'
-        f'<div class="theme-name">{html.escape(str(theme["theme_name"]))}</div>'
-        f'<div class="copy">노출명/카피: {html.escape(str(theme["copy"]))}</div>'
-        f'<div class="small">추천 점수: <span class="score">{rec["score"]}</span> · '
-        f'매칭 이슈 {rec["matched_count"]}개 · 출처 {rec["source_diversity"]}종 · '
-        f'콘텐츠 후보 {len(matched_contents)}개</div>'
-        '<div class="section-label">선정 근거 요약</div>'
-        f'<div class="one-line-reason">{html.escape(str(rec["reason_summary"]))}</div>'
-        '<div class="section-label">매칭 키워드</div>'
+        f'<div class="small"><span class="{badge_class}">[{html.escape(str(source_label))}]</span>'
+        f' · {html.escape(str(creation_angle or "테마"))}</div>'
+        f'<div class="theme-name">{html.escape(str(theme.get("theme_name", "")))}</div>'
+        f'<div class="copy">노출명/카피: {html.escape(str(theme.get("copy", "")))}</div>'
+        f'<div class="small">장르: {html.escape(str(theme.get("genre", "")))} · '
+        f'무드: {html.escape(str(theme.get("mood", "")))}</div>'
+        f'<div class="small">이슈 연관성 {relevance} · 새로움 {novelty} · 완성도 {quality}</div>'
+        '<div class="section-label">생성·선정 근거</div>'
+        f'<div class="one-line-reason">{html.escape(str(rec.get("selection_reason", "")))}</div>'
+        f'<div class="small">연계 이슈: {html.escape(str(source_issue))}</div>'
+        f'{issue_key_html}'
+        f'<div class="small" style="margin-top:6px">테마 확장성: {html.escape(str(rec.get("rationale", "")))}</div>'
+        '<div class="section-label">테마 키워드</div>'
         f'{keyword_tags}'
-        '<div class="section-label">추천 콘텐츠 후보</div>'
-        f'{content_tags}'
-        f'{content_meta_html}'
+        '<div class="section-label">추후 콘텐츠 탐색어</div>'
+        f'{search_terms_html if search_terms_html else "<span class=\"small\">콘텐츠 연결 단계에서 생성 예정</span>"}'
+        '<div class="small" style="margin-top:12px">콘텐츠 후보 연결은 다음 단계에서 추천 테마 전체를 일괄 호출합니다.</div>'
         '</div>'
     )
-
     st.markdown(html_block, unsafe_allow_html=True)
 
 
@@ -1314,7 +1280,7 @@ if st.session_state["page"] == "issue_db":
 
 elif st.session_state["page"] == "theme_db":
     st.markdown("<h1>📚 테마 DB 전체 보기</h1>", unsafe_allow_html=True)
-    st.caption("원하는 테마를 찾은 뒤, 선택한 테마에 대해서만 키노라이츠 전체 검색 후보를 불러옵니다.")
+    st.caption("기존 임시 테마와 AI 신규 생성 테마를 구분해서 확인합니다. 신규 테마는 이번 주 추천에 최종 채택될 때 DB에 자동 합류합니다.")
 
     if st.button("← 추천 화면으로 돌아가기"):
         go_page("home")
@@ -1322,132 +1288,90 @@ elif st.session_state["page"] == "theme_db":
 
     st.markdown("---")
 
-    search = st.text_input(
-        "AI 자연어 테마 검색",
-        placeholder="예: 여름에 보면 좋은 공포영화, 첫사랑이 생각나는 영화, 여행 떠나고 싶을 때"
-    )
+    c1, c2 = st.columns([2, 1])
+    with c1:
+        search = st.text_input(
+            "자연어·키워드 테마 검색",
+            placeholder="예: 여름밤에 보기 좋은 잔인하지 않은 공포물, 인간적인 왕을 다룬 사극"
+        )
+    with c2:
+        status_options = ["전체", "AI 신규 생성", "기존 임시 DB", "검증 테마", "실제 활용"]
+        selected_status = st.selectbox("테마 출처·상태", status_options)
 
-    st.caption(
-        "현재 자연어 검색은 상황·무드·장르 키워드를 해석해 테마 DB를 찾는 방식입니다. "
-        "콘텐츠 후보는 더 이상 500개 content_db에서 자동 표시하지 않고, 선택한 테마를 키노라이츠에서 실시간 탐색합니다."
-    )
-
-    c_limit, c_content = st.columns(2)
+    c_limit, c_download = st.columns([1, 1])
     with c_limit:
         theme_display_limit = st.slider(
-            "테마 검색 결과 표시 수",
-            min_value=10,
-            max_value=50,
-            value=20,
-            step=10,
+            "표시 수",
+            min_value=20,
+            max_value=100,
+            value=40,
+            step=20,
         )
-    with c_content:
-        content_limit_preview = st.slider(
-            "키노라이츠 후보 수",
-            min_value=5,
-            max_value=20,
-            value=12,
-            step=1,
+    with c_download:
+        export_df = ensure_theme_schema(themes)
+        st.download_button(
+            "⬇ 현재 테마 DB 다운로드",
+            data=export_df.to_csv(sep="|", index=False, encoding="utf-8-sig").encode("utf-8-sig"),
+            file_name="theme_pool_updated.csv",
+            mime="text/csv",
+            use_container_width=True,
         )
 
     filtered = themes.copy()
+    if selected_status != "전체":
+        reverse_map = {
+            "AI 신규 생성": "AI_GENERATED",
+            "기존 임시 DB": "LEGACY_UNVERIFIED",
+            "검증 테마": "HUMAN_APPROVED",
+            "실제 활용": "USED",
+        }
+        filtered = filtered[filtered["source_status"].astype(str) == reverse_map[selected_status]]
 
     if search:
-        filtered = natural_theme_search(themes, search)
-
-        if filtered.empty:
+        semantic_like = natural_theme_search(filtered, search)
+        if not semantic_like.empty:
+            filtered = semantic_like
+        else:
             s_query = search.strip()
-            filtered = themes[
-                themes["theme_name"].astype(str).str.contains(s_query, case=False, na=False)
-                | themes["trigger_keywords"].astype(str).str.contains(s_query, case=False, na=False)
-                | themes["genre"].astype(str).str.contains(s_query, case=False, na=False)
-                | themes["mood"].astype(str).str.contains(s_query, case=False, na=False)
-                | themes["copy"].astype(str).str.contains(s_query, case=False, na=False)
+            filtered = filtered[
+                filtered["theme_name"].astype(str).str.contains(s_query, case=False, na=False)
+                | filtered["trigger_keywords"].astype(str).str.contains(s_query, case=False, na=False)
+                | filtered["genre"].astype(str).str.contains(s_query, case=False, na=False)
+                | filtered["mood"].astype(str).str.contains(s_query, case=False, na=False)
+                | filtered["copy"].astype(str).str.contains(s_query, case=False, na=False)
+                | filtered["source_issue"].astype(str).str.contains(s_query, case=False, na=False)
             ].copy()
 
     shown = filtered.head(theme_display_limit).copy()
     st.markdown(f"### 전체 {len(themes)}개 중 {len(filtered)}개 검색 · 상위 {len(shown)}개 표시")
 
-    if not shown.empty:
-        option_map = {
-            f"{row['theme_id']} · {row['theme_name']}": idx
-            for idx, row in shown.iterrows()
-        }
-        selected_label = st.selectbox(
-            "키노라이츠 콘텐츠를 탐색할 테마",
-            list(option_map.keys()),
-        )
-        selected_row = shown.loc[option_map[selected_label]]
-
-        if st.button("🔎 선택 테마 키노라이츠 후보 불러오기", use_container_width=True):
-            with st.spinner("키노라이츠에서 여러 검색어로 콘텐츠 후보를 찾는 중입니다..."):
-                selected_issues = find_matched_issues(selected_row, issues)[:5]
-                kino_contents, kino_meta = collect_kinolights_candidates(
-                    selected_row,
-                    selected_issues,
-                    limit=content_limit_preview,
-                    max_queries=7,
-                    per_query_limit=12,
-                )
-            st.session_state["theme_db_kino_result"] = {
-                "theme_id": str(selected_row.get("theme_id", "")),
-                "contents": kino_contents,
-                "meta": kino_meta,
-            }
-
-        saved_result = st.session_state.get("theme_db_kino_result", {})
-        if saved_result.get("theme_id") == str(selected_row.get("theme_id", "")):
-            st.markdown(
-                '<div class="theme-card">'
-                f'<div class="theme-name">{html.escape(str(selected_row.get("theme_name", "")))}</div>'
-                '<div class="section-label">키노라이츠 추천 콘텐츠 후보</div>'
-                f'{render_content_tags(saved_result.get("contents", []))}'
-                f'{_render_content_meta(saved_result.get("meta", {}))}'
-                '</div>',
-                unsafe_allow_html=True,
-            )
-            meta = saved_result.get("meta", {})
-            if meta.get("errors"):
-                with st.expander("키노라이츠 검색 오류 확인"):
-                    for error in meta.get("errors", []):
-                        st.code(error)
-            st.caption(meta.get("note", ""))
-
     for _, row in shown.iterrows():
-        keyword_tags = ""
-        for kw in split_keywords(row["trigger_keywords"])[:12]:
-            keyword_tags += f'<span class="tag">{html.escape(str(kw))}</span>'
-
-        score_html = ""
-        if "natural_score" in row:
-            try:
-                score_html = f'<div class="small">자연어 매칭 점수: <span class="score">{int(row["natural_score"])}</span></div>'
-            except Exception:
-                score_html = ""
-
-        matched_html = ""
-        if "matched_keywords" in row and str(row["matched_keywords"]).strip():
-            matched_html = f'<div class="small">해석된 키워드: {html.escape(str(row["matched_keywords"]))}</div>'
-
-        card_html = (
+        keyword_tags = "".join(
+            f'<span class="tag">{html.escape(str(kw))}</span>'
+            for kw in split_keywords(row.get("trigger_keywords", ""))[:12]
+        )
+        label = source_status_label(row.get("source_status", "LEGACY_UNVERIFIED"))
+        source_issue = str(row.get("source_issue", "")).strip()
+        source_issue_html = f'<div class="small">생성 근거: {html.escape(source_issue)}</div>' if source_issue else ""
+        created = str(row.get("created_date", "")).strip()
+        created_html = f' · 생성일 {html.escape(created)}' if created else ""
+        st.markdown(
             '<div class="theme-card">'
-            f'<div class="small">{html.escape(str(row["theme_id"]))}</div>'
-            f'<div class="theme-name">{html.escape(str(row["theme_name"]))}</div>'
-            f'<div class="copy">노출명/카피: {html.escape(str(row["copy"]))}</div>'
-            f'<div class="small">장르: {html.escape(str(row["genre"]))} · 무드: {html.escape(str(row["mood"]))}</div>'
-            f'{score_html}'
-            f'{matched_html}'
+            f'<div class="small">{html.escape(str(row.get("theme_id", "")))} · [{html.escape(label)}]{created_html}</div>'
+            f'<div class="theme-name">{html.escape(str(row.get("theme_name", "")))}</div>'
+            f'<div class="copy">노출명/카피: {html.escape(str(row.get("copy", "")))}</div>'
+            f'<div class="small">장르: {html.escape(str(row.get("genre", "")))} · 무드: {html.escape(str(row.get("mood", "")))}</div>'
+            f'{source_issue_html}'
             '<div class="section-label">테마 키워드</div>'
             f'{keyword_tags}'
-            '<div class="small" style="margin-top:12px">콘텐츠 후보는 위에서 이 테마를 선택한 뒤 키노라이츠 검색 버튼을 눌러 확인합니다.</div>'
-            '</div>'
+            '</div>',
+            unsafe_allow_html=True,
         )
-        st.markdown(card_html, unsafe_allow_html=True)
 
 
 else:
     st.markdown("<h1>🧠 B tv+ AI Theme Curator</h1>", unsafe_allow_html=True)
-    st.caption("최근 외부 콘텐츠 이슈를 기반으로 이번주 노출할 테마와 콘텐츠 후보를 추천합니다.")
+    st.caption("최근 외부 콘텐츠 이슈를 LLM이 해석해 이번주 신규 테마를 생성합니다. 콘텐츠 후보 연결은 다음 단계에서 일괄 처리합니다.")
 
     col1, col2 = st.columns(2)
 
@@ -1491,61 +1415,124 @@ else:
     with right:
         st.subheader("이번주 추천 테마")
 
-        c1, c2 = st.columns(2)
+        openai_api_key = get_runtime_secret("OPENAI_API_KEY")
+        openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-terra")
+        github_config = get_github_writeback_config()
 
+        c1, c2 = st.columns([1, 1])
         with c1:
             top_n = st.slider(
-                "AI가 뽑을 테마 수",
+                "최종 추천 테마 수",
                 min_value=5,
                 max_value=30,
                 value=20,
-                step=5
+                step=5,
             )
-
         with c2:
-            content_limit = st.slider(
-                "테마당 추천 콘텐츠 수",
-                min_value=5,
-                max_value=20,
-                value=12,
-                step=1
+            status_text = "연결됨" if openai_api_key else "미연결"
+            st.markdown(
+                '<div class="card" style="padding:12px 16px">'
+                '<div class="small">LLM 생성 엔진</div>'
+                f'<div class="theme-name" style="font-size:17px">{html.escape(openai_model)}</div>'
+                f'<div class="small">API 키: {status_text}</div>'
+                '</div>',
+                unsafe_allow_html=True,
             )
 
-        with st.expander("콘텐츠 후보 탐색 설정", expanded=False):
-            use_kinolights = st.checkbox(
-                "키노라이츠 실시간 후보 탐색",
-                value=True,
-                help="상위 추천 테마를 먼저 선정한 뒤, 테마별 여러 검색어로 키노라이츠 후보를 불러옵니다.",
-            )
-            allow_legacy_fallback = st.checkbox(
-                "키노 검색 결과가 부족하면 기존 500개 콘텐츠풀로 보완",
-                value=False,
-                help="기본값은 꺼짐입니다. content_db.csv를 주 추천 풀로 사용하지 않고, 장애·검색 결과 부족 시에만 보완합니다.",
-            )
-            st.caption(
-                "키노라이츠 검색은 현재 제목 중심 검색입니다. 최근 이슈에서 실제 작품명이 잡힌 테마는 정확도가 높고, "
-                "추상적인 분위기 테마는 후보가 적을 수 있습니다."
+        with st.expander("신규 테마 생성 방식", expanded=False):
+            st.markdown(
+                """
+                1. 최근 핵심 이슈만 LLM에 전달해 신규 후보를 대량 생성합니다. 이때 기존 500개 테마는 보여주지 않습니다.  
+                2. 신규 후보가 생성된 뒤에만 기존 DB와 비교해 중복·품질을 검수합니다.  
+                3. 기존 DB는 임시 데이터로 취급하며, 기존 표현이 명백히 더 좋은 경우에만 활용합니다. 기존 활용이 0개여도 됩니다.  
+                4. 최종 채택된 AI 신규 테마는 테마 DB에 자동 합류하고, 화면에는 **AI 신규 생성 / 기존 DB 활용**을 구분해 표시합니다.
+                """
             )
 
-        if st.button("🔄 이번주 테마 추천 생성", use_container_width=True):
-            with st.spinner("최근 이슈와 테마를 매칭한 뒤 키노라이츠 콘텐츠 후보를 탐색하는 중입니다..."):
-                st.session_state["recs"] = build_theme_recommendations(
-                    issues,
-                    themes,
-                    contents,
-                    top_n=top_n,
-                    content_limit=content_limit,
-                    use_kinolights=use_kinolights,
-                    allow_legacy_fallback=allow_legacy_fallback,
-                )
+        if not openai_api_key:
+            st.warning("OPENAI_API_KEY가 아직 연결되지 않았습니다. Streamlit 앱 Settings → Secrets에 키를 등록한 뒤 생성할 수 있습니다.")
+
+        if st.button(
+            "✨ LLM으로 이번주 신규 테마 생성",
+            use_container_width=True,
+            disabled=not bool(openai_api_key),
+        ):
+            try:
+                with st.spinner("최근 이슈 해석 → 신규 테마 발산 → 기존 DB 사후 검수 → 테마 DB 저장 중입니다..."):
+                    issue_records = build_llm_issue_records(issues, max_issues=12)
+                    recent_history = load_recommendation_history(THEME_HISTORY_PATH, days=56)
+                    recs, run_meta = generate_weekly_themes(
+                        issue_records=issue_records,
+                        themes=themes,
+                        top_n=top_n,
+                        api_key=openai_api_key,
+                        model=openai_model,
+                        recent_history=recent_history,
+                    )
+                    updated_themes, updated_history, added_rows = persist_recommendations_locally(
+                        recommendations=recs,
+                        themes=themes,
+                        theme_path=get_active_theme_path(),
+                        history_path=THEME_HISTORY_PATH,
+                        run_meta=run_meta,
+                    )
+                    github_result = {"status": "not_configured"}
+                    if github_writeback_configured(github_config):
+                        try:
+                            github_result = persist_files_to_github(
+                                theme_path=get_active_theme_path(),
+                                history_path=THEME_HISTORY_PATH,
+                                config=github_config,
+                                run_id=str(run_meta.get("run_id", "")),
+                            )
+                        except Exception as github_exc:
+                            github_result = {"status": "error", "error": str(github_exc)}
+
+                    st.session_state["recs"] = recs
+                    st.session_state["generation_meta"] = run_meta
+                    st.session_state["generation_added_count"] = len(added_rows)
+                    st.session_state["github_writeback_result"] = github_result
+                    st.session_state["updated_theme_csv"] = updated_themes.to_csv(
+                        sep="|", index=False, encoding="utf-8-sig"
+                    ).encode("utf-8-sig")
+                st.rerun()
+            except ThemeGenerationError as exc:
+                st.error(str(exc))
+            except Exception as exc:
+                st.exception(exc)
 
         if "recs" not in st.session_state:
-            st.info("버튼을 누르면 최근 이슈와 가장 밀접한 테마를 먼저 선정하고, 각 테마의 콘텐츠 후보를 키노라이츠에서 탐색합니다.")
+            st.info("버튼을 누르면 기존 500개를 재정렬하는 대신, 최근 이슈에서 그때그때 새로운 테마를 생성합니다.")
         else:
-            recs = st.session_state["recs"]
+            recs = st.session_state.get("recs", [])
+            meta = st.session_state.get("generation_meta", {})
+            github_result = st.session_state.get("github_writeback_result", {"status": "not_configured"})
+            added_count = int(st.session_state.get("generation_added_count", 0))
+            render_generation_status(meta, added_count, github_result)
+
+            if github_result.get("status") == "error":
+                st.warning(f"GitHub 영구 저장 실패: {github_result.get('error', '')}")
+            elif github_result.get("status") == "not_configured":
+                st.caption("Streamlit Cloud의 로컬 파일은 재배포 시 유지가 보장되지 않습니다. 아래 파일을 내려받거나 GitHub 자동 저장 Secret을 설정하면 영구 보관할 수 있습니다.")
+
+            if st.session_state.get("updated_theme_csv"):
+                st.download_button(
+                    "⬇ 신규 테마가 합쳐진 테마 DB 다운로드",
+                    data=st.session_state["updated_theme_csv"],
+                    file_name="theme_pool_updated.csv",
+                    mime="text/csv",
+                    use_container_width=True,
+                )
 
             if not recs:
-                st.warning("추천 결과가 없습니다. 이슈와 테마 키워드 매칭을 확인하세요.")
+                st.warning("추천 결과가 없습니다.")
             else:
+                st.button(
+                    f"🎬 추천 테마 {len(recs)}개 콘텐츠 후보 일괄 불러오기 · 다음 단계",
+                    use_container_width=True,
+                    disabled=True,
+                    help="테마 생성 품질을 먼저 확인한 뒤 키노라이츠 콘텐츠 일괄 연결을 붙입니다.",
+                )
                 for idx, rec in enumerate(recs, start=1):
                     render_theme_card(idx, rec)
+
