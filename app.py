@@ -16,6 +16,7 @@ from llm_theme_generator import (
     load_recommendation_history,
     persist_files_to_github,
     persist_recommendations_locally,
+    sync_files_from_github,
 )
 
 st.set_page_config(
@@ -406,6 +407,7 @@ def _detail_list(title, items):
 
 
 def load_data():
+    sync_persistent_storage_once()
     issues = pd.read_csv(ISSUE_PATH, sep="|").fillna("")
 
     if THEME_DB_PATH.exists():
@@ -880,6 +882,28 @@ def get_github_writeback_config():
     }
 
 
+def sync_persistent_storage_once():
+    if st.session_state.get("persistent_storage_synced"):
+        return st.session_state.get("persistent_storage_sync_result", {"status": "skipped"})
+
+    config = get_github_writeback_config()
+    if not github_writeback_configured(config):
+        result = {"status": "not_configured"}
+    else:
+        try:
+            result = sync_files_from_github(
+                theme_path=get_active_theme_path(),
+                history_path=THEME_HISTORY_PATH,
+                config=config,
+            )
+        except Exception as exc:
+            result = {"status": "error", "error": str(exc)}
+
+    st.session_state["persistent_storage_synced"] = True
+    st.session_state["persistent_storage_sync_result"] = result
+    return result
+
+
 def source_status_label(value):
     mapping = {
         "AI_GENERATED": "AI 신규 생성",
@@ -894,23 +918,18 @@ def source_status_label(value):
 def render_generation_status(meta, added_count, github_result):
     new_count = int(meta.get("new_count", 0))
     existing_count = int(meta.get("existing_count", 0))
-    model = html.escape(str(meta.get("model", "")))
-    api_calls = int(meta.get("api_call_count", 1) or 1)
     status = str(github_result.get("status", "not_configured"))
     if status == "success":
-        persist_text = "GitHub 테마 DB까지 영구 저장 완료"
+        persist_text = "영구 저장 완료"
     elif status == "error":
-        persist_text = "로컬 DB 저장 완료 · GitHub 저장 실패"
+        persist_text = "영구 저장 실패"
     else:
-        persist_text = "현재 실행 환경의 테마 DB에 저장 · GitHub 영구 저장 미설정"
-    warning = str(meta.get("review_warning", "")).strip()
-    warning_html = f'<div class="small" style="margin-top:8px">검수 참고: {html.escape(warning)}</div>' if warning else ""
+        persist_text = "영구 저장 미설정"
     st.markdown(
         '<div class="logic-card">'
         '<div class="theme-name">이번 주 테마 생성 결과</div>'
-        f'<div class="logic-desc">AI 신규 생성 {new_count}개 · 기존 DB 활용 {existing_count}개 · 신규 DB 합류 {added_count}개</div>'
-        f'<div class="small">모델: {model} · LLM 호출 {api_calls}회 · {html.escape(persist_text)}</div>'
-        f'{warning_html}'
+        f'<div class="logic-desc">신규 {new_count}개 · 기존 활용 {existing_count}개 · DB 추가 {added_count}개</div>'
+        f'<div class="small">{html.escape(persist_text)}</div>'
         '</div>',
         unsafe_allow_html=True,
     )
@@ -1079,6 +1098,13 @@ def _render_content_meta(meta):
     return f'<div class="content-source-note">{html.escape(text)}</div>'
 
 
+def _compact_card_text(value, max_chars=95):
+    text = re.sub(r"\s+", " ", str(value or "")).strip()
+    if len(text) <= max_chars:
+        return text
+    return text[: max_chars - 1].rstrip() + "…"
+
+
 def render_theme_card(idx, rec):
     theme = rec["theme"]
     source = rec.get("recommendation_source", "AI_GENERATED")
@@ -1086,21 +1112,21 @@ def render_theme_card(idx, rec):
     badge_class = "score" if source == "AI_GENERATED" else "copy"
 
     keyword_tags = ""
-    for kw in split_keywords(theme.get("trigger_keywords", ""))[:12]:
+    for kw in split_keywords(theme.get("trigger_keywords", ""))[:6]:
         keyword_tags += f'<span class="tag">{html.escape(str(kw))}</span>'
 
-    issue_keys = " · ".join(rec.get("source_issue_keys", []))
-    issue_key_html = f'<div class="small">근거 이슈 ID: {html.escape(issue_keys)}</div>' if issue_keys else ""
-    search_terms = rec.get("content_search_terms", [])
-    search_terms_html = "".join(
-        f'<span class="tag">{html.escape(str(term))}</span>' for term in search_terms[:8]
+    source_issue = _compact_card_text(
+        rec.get("source_issue_summary") or theme.get("source_issue", ""),
+        100,
     )
-
-    relevance = int(rec.get("relevance_score", 0) or 0)
-    novelty = int(rec.get("novelty_score", 0) or 0)
-    quality = int(rec.get("quality_score", 0) or 0)
-    source_issue = rec.get("source_issue_summary") or theme.get("source_issue", "")
+    rationale = _compact_card_text(rec.get("rationale", ""), 100)
     creation_angle = rec.get("creation_angle") or theme.get("creation_angle", "")
+    contents = rec.get("contents") or rec.get("matched_contents") or []
+    content_html = (
+        render_content_tags(contents)
+        if contents
+        else '<span class="small">아직 콘텐츠를 불러오지 않았습니다. 상단의 콘텐츠 후보 일괄 불러오기에서 채워집니다.</span>'
+    )
 
     html_block = (
         '<div class="theme-card">'
@@ -1108,20 +1134,18 @@ def render_theme_card(idx, rec):
         f'<div class="small"><span class="{badge_class}">[{html.escape(str(source_label))}]</span>'
         f' · {html.escape(str(creation_angle or "테마"))}</div>'
         f'<div class="theme-name">{html.escape(str(theme.get("theme_name", "")))}</div>'
-        f'<div class="copy">노출명/카피: {html.escape(str(theme.get("copy", "")))}</div>'
-        f'<div class="small">장르: {html.escape(str(theme.get("genre", "")))} · '
-        f'무드: {html.escape(str(theme.get("mood", "")))}</div>'
-        f'<div class="small">이슈 연관성 {relevance} · 새로움 {novelty} · 완성도 {quality}</div>'
-        '<div class="section-label">생성·선정 근거</div>'
-        f'<div class="one-line-reason">{html.escape(str(rec.get("selection_reason", "")))}</div>'
-        f'<div class="small">연계 이슈: {html.escape(str(source_issue))}</div>'
-        f'{issue_key_html}'
-        f'<div class="small" style="margin-top:6px">테마 확장성: {html.escape(str(rec.get("rationale", "")))}</div>'
+        f'<div class="copy">{html.escape(str(theme.get("copy", "")))}</div>'
+        f'<div class="small">{html.escape(str(theme.get("genre", "")))} · '
+        f'{html.escape(str(theme.get("mood", "")))}</div>'
+        '<div class="section-label">선정 근거</div>'
+        '<div class="one-line-reason">'
+        f'<b>최근 이슈</b> · {html.escape(source_issue or "최근 핵심 이슈 기반")}<br>'
+        f'<b>선정 이유</b> · {html.escape(rationale or "여러 작품으로 확장 가능한 테마로 판단")}'
+        '</div>'
         '<div class="section-label">테마 키워드</div>'
         f'{keyword_tags}'
-        '<div class="section-label">추후 콘텐츠 탐색어</div>'
-        f'{search_terms_html if search_terms_html else "<span class=\"small\">콘텐츠 연결 단계에서 생성 예정</span>"}'
-        '<div class="small" style="margin-top:12px">콘텐츠 후보 연결은 다음 단계에서 추천 테마 전체를 일괄 호출합니다.</div>'
+        '<div class="section-label">추천 콘텐츠 후보</div>'
+        f'{content_html}'
         '</div>'
     )
     st.markdown(html_block, unsafe_allow_html=True)
@@ -1419,6 +1443,7 @@ else:
         openai_api_key = get_runtime_secret("OPENAI_API_KEY")
         openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
         github_config = get_github_writeback_config()
+        persistent_ready = github_writeback_configured(github_config)
 
         c1, c2 = st.columns([1, 1])
         with c1:
@@ -1426,16 +1451,17 @@ else:
                 "최종 추천 테마 수",
                 min_value=5,
                 max_value=30,
-                value=20,
+                value=10,
                 step=5,
             )
         with c2:
             status_text = "연결됨" if openai_api_key else "미연결"
+            storage_text = "연결됨" if persistent_ready else "미설정"
             st.markdown(
                 '<div class="card" style="padding:12px 16px">'
                 '<div class="small">LLM 생성 엔진</div>'
                 f'<div class="theme-name" style="font-size:17px">{html.escape(openai_model)}</div>'
-                f'<div class="small">API 키: {status_text}</div>'
+                f'<div class="small">API 키: {status_text} · 영구 저장: {storage_text}</div>'
                 '</div>',
                 unsafe_allow_html=True,
             )
@@ -1443,24 +1469,26 @@ else:
         with st.expander("신규 테마 생성 방식", expanded=False):
             st.markdown(
                 """
-                1. 최근 핵심 이슈만 LLM에 전달해 신규 후보를 대량 생성합니다. 이때 기존 500개 테마는 보여주지 않습니다.  
-                2. 생성된 후보를 기존 DB·최근 추천 이력과 **일반 코드로만** 비교해 중복을 제거합니다.  
-                3. 기존 500개를 다시 LLM에 보내는 두 번째 호출은 삭제했습니다. 기존 DB는 동일 테마 확인과 검증된 테마 재사용에만 활용합니다.  
-                4. 이슈 연관성·새로움·완성도·테마 간 다양성을 로컬 점수로 계산해 최종 목록을 선정합니다.  
-                5. 최종 채택된 AI 신규 테마는 테마 DB에 자동 합류하고, 화면에는 **AI 신규 생성 / 기존 DB 활용**을 구분해 표시합니다.
+                1. 최근 핵심 이슈의 작품·사건·반응을 분석합니다.  
+                2. 콘텐츠 범위가 바로 보이는 신규 테마 후보를 생성합니다.  
+                3. 테마명 명확성, 여러 작품으로의 확장성, 이슈 연관성을 검사합니다.  
+                4. 기존 DB와 최근 추천 이력의 유사 테마를 걸러냅니다.  
+                5. 최종 테마를 선정해 테마 DB와 추천 이력에 저장합니다.
                 """
             )
 
         if not openai_api_key:
-            st.warning("OPENAI_API_KEY가 아직 연결되지 않았습니다. Streamlit 앱 Settings → Secrets에 키를 등록한 뒤 생성할 수 있습니다.")
+            st.warning("OPENAI_API_KEY가 연결되지 않았습니다.")
+        if not persistent_ready:
+            st.warning("재배포 후에도 테마를 유지하려면 GitHub 영구 저장 Secret을 먼저 등록해야 합니다.")
 
         if st.button(
             "✨ LLM으로 이번주 신규 테마 생성",
             use_container_width=True,
-            disabled=not bool(openai_api_key),
+            disabled=not bool(openai_api_key) or not persistent_ready,
         ):
             try:
-                with st.spinner("Luna 1회 호출로 신규 테마 생성 → 로컬 중복·다양성 검사 → 테마 DB 저장 중입니다..."):
+                with st.spinner("최근 이슈를 분석해 신규 테마를 생성하고 저장하는 중입니다..."):
                     issue_records = build_llm_issue_records(issues, max_issues=12)
                     recent_history = load_recommendation_history(THEME_HISTORY_PATH, days=56)
                     recs, run_meta = generate_weekly_themes(
@@ -1504,7 +1532,7 @@ else:
                 st.exception(exc)
 
         if "recs" not in st.session_state:
-            st.info("버튼 1회당 LLM API는 한 번만 호출합니다. 기존 500개 비교와 최종 선별은 앱 내부 코드가 처리합니다.")
+            st.info("최근 핵심 이슈를 바탕으로 이번 주 큐레이션 테마를 생성합니다.")
         else:
             recs = st.session_state.get("recs", [])
             meta = st.session_state.get("generation_meta", {})
@@ -1515,7 +1543,7 @@ else:
             if github_result.get("status") == "error":
                 st.warning(f"GitHub 영구 저장 실패: {github_result.get('error', '')}")
             elif github_result.get("status") == "not_configured":
-                st.caption("Streamlit Cloud의 로컬 파일은 재배포 시 유지가 보장되지 않습니다. 아래 파일을 내려받거나 GitHub 자동 저장 Secret을 설정하면 영구 보관할 수 있습니다.")
+                st.caption("영구 저장이 설정되지 않았습니다.")
 
             if st.session_state.get("updated_theme_csv"):
                 st.download_button(

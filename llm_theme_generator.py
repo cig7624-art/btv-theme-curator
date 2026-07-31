@@ -47,6 +47,26 @@ GENERIC_THEME_WORDS = {
     "지금 봐야 할", "놓치면 안 될", "재미있는 영화", "재미있는 드라마",
 }
 
+CONCRETE_THEME_TERMS = {
+    "팬", "팬덤", "전문가", "평론가", "관객", "배우", "감독", "작가", "주인공", "악당",
+    "영웅", "형사", "범인", "왕", "재벌", "가족", "부부", "친구", "동료", "아이", "부모",
+    "원작", "웹툰", "웹소설", "애니메이션", "실사", "리메이크", "시리즈", "후속편", "시즌",
+    "극장", "OTT", "드라마", "영화", "예능", "다큐", "공포", "로맨스", "사극", "SF",
+    "반전", "결말", "해석", "복수", "생존", "추리", "법정", "수사", "괴물", "외계인",
+    "재개봉", "역주행", "정주행", "공개", "캐스팅", "연기", "명장면", "빌런", "능력", "무기",
+}
+
+AMBIGUOUS_TITLE_PHRASES = {
+    "한 장면으로 뒤집힌 기대", "스크린으로 찢고 나온 세계", "극장 밖에서 다시 뜬다",
+    "악당의 기술, 주인공의 무기", "호불호를 넘어선 밤",
+}
+
+ACTION_MARKERS = {
+    "하는", "되는", "된", "맞선", "훔친", "빼앗은", "되찾은", "돌아온", "숨긴", "쫓는",
+    "구한", "먼저", "다시", "넘어선", "바꾼", "뒤집은", "지킨", "살린", "무너뜨린",
+    "공개", "정주행", "역주행", "재회", "복수", "생존", "해석", "싸우는", "찾는",
+}
+
 
 class ThemeGenerationError(RuntimeError):
     """Raised when an LLM theme generation run cannot be completed."""
@@ -62,9 +82,9 @@ class GeneratedTheme(BaseModel):
     keywords: list[str] = Field(description="테마를 설명하는 핵심 키워드 5~8개")
     creation_angle: str = Field(description="소재형/상황형/감정형/인물형/관계형/공간형/해석형/장르변주형 중 하나")
     source_issue_keys: list[str] = Field(description="생성 근거가 된 이슈 ID 목록")
-    source_issue_summary: str = Field(description="이 테마가 어떤 최근 이슈에서 나왔는지 한 문장 설명")
+    source_issue_summary: str = Field(description="실제 작품명·사건명을 포함한 최근 이슈 요약. 내부 이슈 ID는 쓰지 말고 70자 이내 한 문장")
     content_search_terms: list[str] = Field(description="추후 콘텐츠 검색에 사용할 검색어 4~6개")
-    rationale: str = Field(description="여러 작품을 묶는 테마로서 유효한 이유")
+    rationale: str = Field(description="최근 이슈가 이 테마로 확장되는 이유. 80자 이내 한 문장")
 
 
 class GeneratedThemeBatch(BaseModel):
@@ -198,9 +218,9 @@ def _sanitize_generated(themes: list[GeneratedTheme], candidate_count: int) -> l
             "keywords": keywords,
             "creation_angle": _clean_short_text(theme.creation_angle, 20),
             "source_issue_keys": _dedupe_strings(theme.source_issue_keys, 4),
-            "source_issue_summary": _clean_short_text(theme.source_issue_summary, 160),
+            "source_issue_summary": _clean_short_text(theme.source_issue_summary, 100),
             "content_search_terms": search_terms,
-            "rationale": _clean_short_text(theme.rationale, 180),
+            "rationale": _clean_short_text(theme.rationale, 100),
         })
         if len(cleaned) >= candidate_count:
             break
@@ -220,12 +240,19 @@ def _generate_candidates(
 
     system_prompt = """
 당신은 한국 IPTV의 콘텐츠 편성·큐레이션을 담당하는 시니어 에디터다.
-최근 콘텐츠 이슈를 해석해, 여러 작품을 묶을 수 있는 신선한 큐레이션 테마를 새로 만든다.
-기존 테마 DB는 제공되지 않는다. 최근 이슈 자체에서만 아이디어를 발산한다.
-결과는 한국어로 작성하고, 작품 하나의 홍보 문구가 아니라 최소 8편 이상의 영화·드라마·예능을 묶을 수 있는 테마여야 한다.
-"요즘 인기작", "주말에 보기 좋은 영화"처럼 너무 넓거나 뻔한 표현, 최근 이슈 제목을 그대로 붙인 표현, 서로 말만 바꾼 유사 테마를 피한다.
+최근 콘텐츠 이슈를 해석해 여러 작품을 묶을 수 있는 신규 큐레이션 테마를 만든다.
+기존 테마 DB는 제공되지 않으며 최근 이슈에서만 아이디어를 발산한다.
+
+가장 중요한 기준은 테마명만 읽어도 어떤 콘텐츠가 들어갈지 바로 예측되는 것이다.
+테마명에는 인물, 관계, 소재, 장르, 사건, 서사 행동 중 하나 이상을 구체적으로 드러낸다.
+주어·대상·콘텐츠 범위가 없는 시적 문구나 은유형 문구는 만들지 않는다.
+최소 8편 이상의 영화·드라마·예능을 묶을 수 있어야 하며 특정 작품 하나의 홍보 문구가 되어서는 안 된다.
+
+나쁜 예: '한 장면으로 뒤집힌 기대', '스크린으로 찢고 나온 세계', '극장 밖에서 다시 뜬다', '악당의 기술, 주인공의 무기', '호불호를 넘어선 밤'
+좋은 방향: '한 장면으로 평가가 뒤집힌 영화', '애니메이션 세계를 실사로 옮긴 영화', 'OTT 공개 후 역주행한 영화', '악당의 능력을 빼앗아 싸우는 주인공', '혹평 뒤 입소문으로 살아난 공포영화'
+
 소재형·상황형·감정형·인물형·관계형·공간형·해석형·장르변주형을 고르게 활용한다.
-테마명은 실제 B tv+ 화면에 노출할 수 있도록 짧고 매력적으로 쓴다.
+테마명은 한국어 8~28자 안팎으로 간결하게 작성한다.
 """.strip()
 
     user_payload = {
@@ -233,9 +260,14 @@ def _generate_candidates(
         "recent_issues": issues_payload,
         "avoid_recently_recommended_theme_names": recent_names,
         "requirements": [
+            "테마명만 보고 포함될 콘텐츠의 공통점을 바로 이해할 수 있을 것",
+            "테마명에 구체적인 인물·관계·소재·장르·사건·행동 중 하나 이상을 포함할 것",
+            "주어와 대상이 없는 시적 문구, 추상적 은유, 명사 두 개만 병렬한 문구는 금지",
             "각 테마는 최근 이슈와 연결되지만 특정 작품 하나에 종속되지 않을 것",
             "테마끼리 관점과 어휘가 충분히 다를 것",
-            "테마명, 짧은 카피, 장르, 무드, 키워드, 생성 관점, 근거 이슈 ID, 콘텐츠 검색어를 모두 작성할 것",
+            "테마명, 짧은 카피, 장르, 무드, 키워드, 생성 관점, 연계 이슈 요약, 콘텐츠 검색어를 모두 작성할 것",
+            "연계 이슈 요약에는 I01 같은 내부 ID 대신 실제 작품명·사건명을 쓰고 70자 이내로 작성할 것",
+            "선정 이유는 최근 이슈와 테마의 연결만 80자 이내 한 문장으로 작성할 것",
             "콘텐츠 검색어는 추후 작품 후보를 찾기 쉬운 구체적인 표현일 것",
             f"가능한 한 정확히 {candidate_count}개를 생성할 것",
         ],
@@ -279,34 +311,64 @@ def _row_text(row: pd.Series) -> str:
     ])
 
 
+def _title_clarity_score(candidate: dict[str, Any]) -> int:
+    name = str(candidate.get("theme_name", "")).strip()
+    normalized = normalize_theme_text(name)
+    score = 34
+
+    if 8 <= len(name) <= 28:
+        score += 14
+    elif 5 <= len(name) <= 34:
+        score += 7
+    else:
+        score -= 10
+
+    concrete_hits = sum(1 for term in CONCRETE_THEME_TERMS if normalize_theme_text(term) in normalized)
+    score += min(26, concrete_hits * 8)
+
+    if any(marker in name for marker in ACTION_MARKERS):
+        score += 10
+    elif any(separator in name for separator in [",", "·", "/", ":"]):
+        score -= 18
+
+    if any(normalize_theme_text(phrase) in normalized for phrase in AMBIGUOUS_TITLE_PHRASES):
+        score -= 34
+    if concrete_hits == 0:
+        score -= 24
+    if len(_tokenize(name)) <= 2 and concrete_hits <= 1:
+        score -= 12
+
+    keyword_tokens = set()
+    for keyword in candidate.get("keywords", []) or []:
+        keyword_tokens |= _tokenize(keyword)
+    title_overlap = len(_tokenize(name) & keyword_tokens)
+    score += min(8, title_overlap * 2)
+
+    return max(0, min(100, score))
+
+
 def _quality_score(candidate: dict[str, Any]) -> int:
     name = str(candidate.get("theme_name", "")).strip()
     copy = str(candidate.get("copy", "")).strip()
+    genre = str(candidate.get("genre", "")).strip()
+    mood = str(candidate.get("mood", "")).strip()
     keywords = candidate.get("keywords", []) or []
     search_terms = candidate.get("content_search_terms", []) or []
     rationale = str(candidate.get("rationale", "")).strip()
-    score = 48
-    if 7 <= len(name) <= 28:
-        score += 15
-    elif 5 <= len(name) <= 34:
-        score += 8
-    else:
-        score -= 8
-    if 10 <= len(copy) <= 58:
-        score += 8
-    if len(keywords) >= 5:
-        score += 9
-    if len(search_terms) >= 4:
-        score += 8
-    if str(candidate.get("creation_angle", "")) in VALID_ANGLES:
-        score += 6
-    if len(rationale) >= 20:
-        score += 6
+
+    clarity = _title_clarity_score(candidate)
+    score = round(clarity * 0.48)
+    score += min(12, max(0, len(copy) - 6) // 4)
+    score += min(10, len(keywords) * 2)
+    score += min(8, len(search_terms) * 2)
+    score += 6 if str(candidate.get("creation_angle", "")) in VALID_ANGLES else 0
+    score += 5 if genre else 0
+    score += 4 if mood else 0
+    score += min(7, max(0, len(rationale) - 12) // 8)
+
     normalized_name = normalize_theme_text(name)
     if any(normalize_theme_text(word) in normalized_name for word in GENERIC_THEME_WORDS):
-        score -= 20
-    if len(_tokenize(name)) <= 1:
-        score -= 8
+        score -= 18
     return max(0, min(100, score))
 
 
@@ -441,13 +503,17 @@ def _local_review_and_select(
     evaluated: list[dict[str, Any]] = []
 
     for index, candidate in enumerate(candidates, start=1):
+        clarity = _title_clarity_score(candidate)
+        if clarity < 52:
+            continue
         relevance = _relevance_score(candidate, issues_payload)
         quality = _quality_score(candidate)
         novelty, best_row, existing_similarity = _novelty_score(candidate, theme_df, recent_history)
-        total = relevance * 0.43 + quality * 0.32 + novelty * 0.25
+        total = relevance * 0.38 + quality * 0.27 + novelty * 0.20 + clarity * 0.15
         evaluated.append({
             "index": index,
             "candidate": candidate,
+            "clarity": clarity,
             "relevance": relevance,
             "quality": quality,
             "novelty": novelty,
@@ -512,7 +578,7 @@ def _local_review_and_select(
                 relevance_score=item["relevance"],
                 novelty_score=item["novelty"],
                 quality_score=item["quality"],
-                reason=f"LLM이 독립적으로 만든 후보가 기존 테마와 {round(similarity * 100)}% 일치해 기존 DB 항목을 재사용했습니다. 추가 LLM 검수 호출은 하지 않았습니다.",
+                reason=f"기존 검증 테마와 {round(similarity * 100)}% 유사해 해당 테마를 활용했습니다.",
             )
             recommendations.append(_existing_to_recommendation(best_row, decision, candidate))
             existing_count += 1
@@ -523,7 +589,7 @@ def _local_review_and_select(
                 relevance_score=item["relevance"],
                 novelty_score=item["novelty"],
                 quality_score=item["quality"],
-                reason="최근 이슈 연관성·표현 완성도·기존/최근 테마와의 거리·테마 간 다양성을 코드로 계산해 선정했습니다.",
+                reason="최근 이슈와의 연결, 테마명의 명확성, 여러 작품으로의 확장성을 기준으로 선정했습니다.",
             )
             recommendations.append(_candidate_to_recommendation(candidate, decision, model))
 
@@ -547,12 +613,11 @@ def generate_weekly_themes(
         raise ThemeGenerationError("신규 테마를 만들 최근 핵심 이슈가 없습니다.")
 
     top_n = max(1, min(int(top_n), 30))
-    candidate_count = min(max(top_n + 12, 24), 45)
+    candidate_count = min(max(top_n + 15, 25), 45)
     history = recent_history if recent_history is not None else pd.DataFrame(columns=HISTORY_COLUMNS)
     issues_payload = _issue_payload(issue_records)
     client = OpenAI(api_key=api_key)
 
-    # 비용이 드는 LLM API 호출은 여기 한 번뿐입니다.
     candidates = _generate_candidates(
         client=client,
         model=model,
@@ -589,7 +654,6 @@ def generate_weekly_themes(
         "selected_count": len(recommendations),
         "new_count": local_meta["new_count"],
         "existing_count": local_meta["existing_count"],
-        "review_warning": "기존 테마 DB 비교와 최종 선별은 추가 API 호출 없이 로컬 유사도·품질·다양성 계산으로 처리했습니다.",
         "issue_count": len(issues_payload),
     }
     return recommendations[:top_n], meta
@@ -679,6 +743,68 @@ def persist_recommendations_locally(
     history = pd.concat([history, pd.DataFrame(history_rows)], ignore_index=True)
     history.to_csv(history_path, sep="|", index=False, encoding="utf-8-sig")
     return df, history, added_rows
+
+
+def _github_get_file(
+    *,
+    token: str,
+    repo: str,
+    branch: str,
+    path: str,
+) -> bytes | None:
+    api_url = f"https://api.github.com/repos/{repo}/contents/{path}"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    response = requests.get(api_url, headers=headers, params={"ref": branch}, timeout=20)
+    if response.status_code == 404:
+        return None
+    if response.status_code != 200:
+        raise ThemeGenerationError(f"GitHub 파일 조회 실패({response.status_code}): {response.text[:300]}")
+    encoded = str(response.json().get("content", "")).replace("\n", "")
+    if not encoded:
+        return None
+    return base64.b64decode(encoded)
+
+
+def sync_files_from_github(
+    theme_path: Path,
+    history_path: Path,
+    config: dict[str, str],
+) -> dict[str, Any]:
+    if not github_writeback_configured(config):
+        return {"status": "not_configured"}
+
+    branch = config.get("branch") or "main"
+    theme_content = _github_get_file(
+        token=config["token"],
+        repo=config["repo"],
+        branch=branch,
+        path=config["theme_path"],
+    )
+    history_remote_path = config.get("history_path", "theme_recommendation_history.csv")
+    history_content = None
+    if history_remote_path:
+        history_content = _github_get_file(
+            token=config["token"],
+            repo=config["repo"],
+            branch=branch,
+            path=history_remote_path,
+        )
+
+    synced = []
+    if theme_content is not None:
+        theme_path.parent.mkdir(parents=True, exist_ok=True)
+        theme_path.write_bytes(theme_content)
+        synced.append(str(theme_path))
+    if history_content is not None:
+        history_path.parent.mkdir(parents=True, exist_ok=True)
+        history_path.write_bytes(history_content)
+        synced.append(str(history_path))
+
+    return {"status": "success", "synced": synced}
 
 
 def github_writeback_configured(config: dict[str, str]) -> bool:
