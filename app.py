@@ -303,7 +303,27 @@ button:disabled *, div[data-testid="stFormSubmitButton"] button:disabled * {
 }
 [data-testid="stSelectbox"] svg { fill:#111827 !important; color:#111827 !important; }
 
-/* 콘텐츠 후보는 한 줄 전체가 아니라 작은 칩 형태로 가로 배치 */
+/* AI 테마 검색 입력창: 다크 배경 + 흰 글씨 */
+div[class*="st-key-theme_ai_search_input"] div[data-baseweb="input"],
+div[class*="st-key-theme_ai_search_input"] div[data-baseweb="base-input"],
+[data-testid="stForm"] div[class*="st-key-theme_ai_search_input"] div[data-baseweb="input"] {
+    background:#0f172a !important;
+    border-color:#64748b !important;
+}
+div[class*="st-key-theme_ai_search_input"] input,
+[data-testid="stForm"] div[class*="st-key-theme_ai_search_input"] input {
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    caret-color:#ffffff !important;
+}
+div[class*="st-key-theme_ai_search_input"] input::placeholder,
+[data-testid="stForm"] div[class*="st-key-theme_ai_search_input"] input::placeholder {
+    color:#94a3b8 !important;
+    -webkit-text-fill-color:#94a3b8 !important;
+    opacity:1 !important;
+}
+
+/* 콘텐츠 후보: 차분한 블루그레이 칩으로 가독성 강화 */
 .content-chip-wrap {
     display:flex;
     flex-wrap:wrap;
@@ -316,19 +336,26 @@ button:disabled *, div[data-testid="stFormSubmitButton"] button:disabled * {
     align-items:center;
     width:auto !important;
     max-width:100%;
-    background:transparent !important;
-    border:1px solid #f59e0b !important;
-    color:#f8fafc !important;
+    background:#172033 !important;
+    border:1px solid #3b4b63 !important;
+    color:#dbe7f5 !important;
     border-radius:999px !important;
     padding:5px 10px !important;
     margin:0 !important;
+    font-size:12px !important;
+    font-weight:600 !important;
     line-height:1.25;
+    letter-spacing:-0.01em;
     white-space:normal;
+    text-decoration:none !important;
+    box-shadow:none !important;
 }
 .theme-db-contents .content-tag-link:hover,
 .ai-suggestion-content .content-tag-link:hover {
-    background:#3b2a08 !important;
+    background:#22324b !important;
+    border-color:#60a5fa !important;
     color:#ffffff !important;
+    text-decoration:none !important;
 }
 
 
@@ -347,17 +374,39 @@ button:disabled *, div[data-testid="stFormSubmitButton"] button:disabled * {
 }
 .content-refresh-link:hover { background:#1d4ed8; color:#ffffff !important; }
 
-/* 테마별 카드 경계를 분명하게 표시 */
-div[class*="st-key-theme_card_"][data-testid="stVerticalBlockBorderWrapper"],
-div[class*="st-key-theme_card_"] > div[data-testid="stVerticalBlockBorderWrapper"],
-div[class*="st-key-theme_card_"] [data-testid="stVerticalBlockBorderWrapper"] {
-    background:#0f172a !important;
-    border:1px solid #3b4a63 !important;
-    border-left:3px solid #2563eb !important;
+/* 테마별 카드 경계: 카드 전체에 확실한 블록감 부여 */
+div[class*="st-key-theme_card_"] {
+    position:relative !important;
+    background:linear-gradient(145deg,#101827 0%,#0d1422 100%) !important;
+    border:1px solid #344763 !important;
+    border-left:4px solid #3b82f6 !important;
     border-radius:16px !important;
-    box-shadow:0 8px 24px rgba(0,0,0,.16) !important;
+    padding:16px 18px !important;
+    margin:0 0 16px 0 !important;
+    box-shadow:0 7px 22px rgba(0,0,0,.22) !important;
+    overflow:hidden !important;
 }
-div[class*="st-key-theme_card_"] { margin-bottom:14px; }
+div[class*="st-key-theme_card_"]::before {
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    height:1px;
+    background:linear-gradient(90deg,rgba(96,165,250,.55),rgba(96,165,250,0));
+    pointer-events:none;
+}
+div[class*="st-key-theme_card_"] [data-testid="stVerticalBlockBorderWrapper"],
+div[class*="st-key-theme_card_"] > div[data-testid="stVerticalBlockBorderWrapper"] {
+    background:transparent !important;
+    border:0 !important;
+    border-radius:0 !important;
+    padding:0 !important;
+    box-shadow:none !important;
+}
+div[class*="st-key-theme_card_"] [data-testid="stVerticalBlock"] {
+    background:transparent !important;
+}
 
 @media (max-width:900px) {
     .issue-card { flex-direction:column; }
