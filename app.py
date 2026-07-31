@@ -2,6 +2,7 @@ import html
 import math
 import os
 import re
+from difflib import SequenceMatcher
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -13,6 +14,7 @@ from llm_theme_generator import (
     ensure_theme_schema,
     generate_weekly_themes,
     github_writeback_configured,
+    interpret_theme_search_query,
     load_recommendation_history,
     load_recommendation_runs,
     persist_files_to_github,
@@ -393,6 +395,11 @@ if "page" not in st.session_state:
     st.session_state["page"] = "home"
 
 
+def clear_theme_ai_search_state():
+    for key in ["theme_ai_search_intent", "theme_ai_search_usage", "theme_ai_search_query", "theme_ai_search_input"]:
+        st.session_state.pop(key, None)
+
+
 def _detail_box(title, text):
     st.markdown(
         '<div class="logic-detail-box">'
@@ -604,6 +611,127 @@ def natural_theme_search(themes, query):
     result = pd.DataFrame(scored_rows)
     result = result.sort_values("natural_score", ascending=False)
     return result
+
+
+def _normalize_search_text(value):
+    return re.sub(r"[^0-9a-z가-힣]+", "", str(value or "").lower())
+
+
+def _search_term_score(term, field_value, exact_weight):
+    term_text = str(term or "").strip().lower()
+    field_text = str(field_value or "").strip().lower()
+    if len(term_text) < 2 or not field_text:
+        return 0.0
+    term_norm = _normalize_search_text(term_text)
+    field_norm = _normalize_search_text(field_text)
+    if not term_norm or not field_norm:
+        return 0.0
+    if term_norm in field_norm:
+        return float(exact_weight)
+
+    field_tokens = [token for token in re.findall(r"[0-9a-z가-힣]+", field_text) if len(token) >= 2]
+    best = 0.0
+    for token in field_tokens:
+        ratio = SequenceMatcher(None, term_norm, _normalize_search_text(token)).ratio()
+        best = max(best, ratio)
+    if best >= 0.86:
+        return exact_weight * 0.55
+    if best >= 0.76:
+        return exact_weight * 0.25
+    return 0.0
+
+
+def rank_themes_by_ai_intent(themes, intent):
+    if not intent:
+        return themes.copy()
+
+    weighted_terms = []
+    for key, weight in [
+        ("genres", 12),
+        ("subjects", 11),
+        ("narrative_elements", 10),
+        ("moods", 8),
+        ("positive_keywords", 8),
+        ("anchor_titles", 3),
+    ]:
+        for value in intent.get(key, []) or []:
+            if str(value).strip():
+                weighted_terms.append((str(value).strip(), weight))
+
+    negative_terms = [str(value).strip() for value in (intent.get("negative_keywords", []) or []) if str(value).strip()]
+    scored_rows = []
+
+    for _, row in themes.iterrows():
+        fields = {
+            "theme_name": row.get("theme_name", ""),
+            "copy": row.get("copy", ""),
+            "trigger_keywords": row.get("trigger_keywords", ""),
+            "genre": row.get("genre", ""),
+            "mood": row.get("mood", ""),
+            "source_issue": row.get("source_issue", ""),
+        }
+        score = 0.0
+        matched = []
+        for term, base_weight in weighted_terms:
+            term_score = max(
+                _search_term_score(term, fields["theme_name"], base_weight * 1.35),
+                _search_term_score(term, fields["copy"], base_weight * 1.15),
+                _search_term_score(term, fields["trigger_keywords"], base_weight * 1.25),
+                _search_term_score(term, fields["genre"], base_weight),
+                _search_term_score(term, fields["mood"], base_weight * 0.85),
+                _search_term_score(term, fields["source_issue"], base_weight * 0.55),
+            )
+            if term_score > 0:
+                score += term_score
+                matched.append(term)
+
+        combined_text = " ".join(str(value) for value in fields.values()).lower()
+        for negative in negative_terms:
+            if _normalize_search_text(negative) in _normalize_search_text(combined_text):
+                score -= 25
+
+        # 여러 서로 다른 의도 축이 동시에 맞는 테마를 우선합니다.
+        unique_matches = len({_normalize_search_text(value) for value in matched if value})
+        score += min(18, unique_matches * 3)
+
+        if score > 0:
+            item = row.copy()
+            item["ai_search_score"] = round(score, 2)
+            item["ai_matched_terms"] = ",".join(dict.fromkeys(matched))
+            scored_rows.append(item)
+
+    if not scored_rows:
+        return themes.iloc[0:0].copy()
+
+    result = pd.DataFrame(scored_rows)
+    return result.sort_values(["ai_search_score", "theme_name"], ascending=[False, True])
+
+
+def render_ai_search_intent(intent, usage=None):
+    if not intent:
+        return
+    chips = []
+    for key in ["anchor_titles", "genres", "subjects", "narrative_elements", "moods", "positive_keywords"]:
+        for value in intent.get(key, []) or []:
+            if value and value not in chips:
+                chips.append(str(value))
+    chip_html = "".join(f'<span class="tag">{html.escape(value)}</span>' for value in chips[:12])
+    negative = intent.get("negative_keywords", []) or []
+    negative_html = ""
+    if negative:
+        negative_html = '<div class="small" style="margin-top:8px">제외 조건 · ' + html.escape(" · ".join(map(str, negative[:6]))) + '</div>'
+    usage_text = "API 1회"
+    if usage and usage.get("total_tokens"):
+        usage_text += f' · {int(usage.get("total_tokens", 0)):,}토큰'
+    st.markdown(
+        '<div class="logic-card" style="margin-top:12px">'
+        '<div class="small">AI 검색 의도</div>'
+        f'<div style="font-weight:800;margin:4px 0 10px">{html.escape(str(intent.get("interpreted_request", "")))}</div>'
+        f'{chip_html}{negative_html}'
+        f'<div class="small" style="margin-top:10px">{html.escape(usage_text)}</div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
 
 
 def normalize_issue_key(text):
@@ -1342,15 +1470,54 @@ elif st.session_state["page"] == "theme_db":
 
     st.markdown("---")
 
+    openai_api_key = get_runtime_secret("OPENAI_API_KEY")
+    openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
+
     c1, c2 = st.columns([2, 1])
     with c1:
-        search = st.text_input(
-            "자연어·키워드 테마 검색",
-            placeholder="예: 여름밤에 보기 좋은 잔인하지 않은 공포물, 인간적인 왕을 다룬 사극"
-        )
+        with st.form("ai_theme_search_form", clear_on_submit=False):
+            search_query = st.text_input(
+                "AI 테마 검색",
+                key="theme_ai_search_input",
+                placeholder="예: 살목지를 가지고 큐레이션하고 싶어. 유사한 테마 추천해줘",
+            )
+            search_submitted = st.form_submit_button("🔎 AI로 테마 찾기", use_container_width=True)
+        st.caption("문장을 입력하는 동안에는 비용이 들지 않고, 검색 버튼을 누를 때만 LLM API를 1회 호출합니다.")
     with c2:
         status_options = ["전체", "AI 신규 생성", "기존 임시 DB", "검증 테마", "실제 활용"]
         selected_status = st.selectbox("테마 출처·상태", status_options)
+        st.button(
+            "검색 초기화",
+            use_container_width=True,
+            on_click=clear_theme_ai_search_state,
+        )
+
+    if search_submitted:
+        if not str(search_query or "").strip():
+            st.warning("찾고 싶은 테마를 문장이나 키워드로 입력해 주세요.")
+        elif not openai_api_key:
+            st.error("OPENAI_API_KEY가 연결되지 않았습니다.")
+        else:
+            try:
+                with st.spinner("검색 의도를 해석해 테마 DB에서 유사한 테마를 찾는 중입니다..."):
+                    search_intent, search_usage = interpret_theme_search_query(
+                        query=search_query,
+                        api_key=openai_api_key,
+                        model=openai_model,
+                        issue_records=build_llm_issue_records(issues, max_issues=20),
+                    )
+                st.session_state["theme_ai_search_intent"] = search_intent
+                st.session_state["theme_ai_search_usage"] = search_usage
+                st.session_state["theme_ai_search_query"] = str(search_query).strip()
+            except ThemeGenerationError as exc:
+                st.error(str(exc))
+            except Exception as exc:
+                st.error(f"AI 테마 검색 실패: {exc}")
+
+    active_intent = st.session_state.get("theme_ai_search_intent")
+    active_usage = st.session_state.get("theme_ai_search_usage", {})
+    if active_intent:
+        render_ai_search_intent(active_intent, active_usage)
 
     export_df = ensure_theme_schema(themes)
     st.download_button(
@@ -1371,23 +1538,16 @@ elif st.session_state["page"] == "theme_db":
         }
         filtered = filtered[filtered["source_status"].astype(str) == reverse_map[selected_status]]
 
-    if search:
-        semantic_like = natural_theme_search(filtered, search)
-        if not semantic_like.empty:
-            filtered = semantic_like
-        else:
-            s_query = search.strip()
-            filtered = filtered[
-                filtered["theme_name"].astype(str).str.contains(s_query, case=False, na=False)
-                | filtered["trigger_keywords"].astype(str).str.contains(s_query, case=False, na=False)
-                | filtered["genre"].astype(str).str.contains(s_query, case=False, na=False)
-                | filtered["mood"].astype(str).str.contains(s_query, case=False, na=False)
-                | filtered["copy"].astype(str).str.contains(s_query, case=False, na=False)
-                | filtered["source_issue"].astype(str).str.contains(s_query, case=False, na=False)
-            ].copy()
-
-    shown = filtered.copy()
-    st.markdown(f"### 전체 {len(themes)}개 중 {len(shown)}개 표시")
+    if active_intent:
+        filtered = rank_themes_by_ai_intent(filtered, active_intent)
+        result_limit = int(active_intent.get("result_count", 20) or 20)
+        shown = filtered.head(result_limit).copy()
+        st.markdown(f"### AI 추천 {len(shown)}개 · 테마 DB {len(themes)}개에서 검색")
+        if shown.empty:
+            st.info("현재 테마 DB에서 검색 의도와 충분히 가까운 테마를 찾지 못했습니다.")
+    else:
+        shown = filtered.copy()
+        st.markdown(f"### 전체 {len(themes)}개 중 {len(shown)}개 표시")
 
     for _, row in shown.iterrows():
         keyword_tags = "".join(
@@ -1399,13 +1559,17 @@ elif st.session_state["page"] == "theme_db":
         source_issue_html = f'<div class="small">생성 근거: {html.escape(source_issue)}</div>' if source_issue else ""
         created = str(row.get("created_date", "")).strip()
         created_html = f' · 생성일 {html.escape(created)}' if created else ""
+        matched_terms = split_keywords(row.get("ai_matched_terms", ""))[:8]
+        matched_html = ""
+        if active_intent and matched_terms:
+            matched_html = '<div class="small" style="margin-top:8px">AI 매칭 · ' + html.escape(" · ".join(matched_terms)) + '</div>'
         st.markdown(
             '<div class="theme-card">'
             f'<div class="small">{html.escape(str(row.get("theme_id", "")))} · [{html.escape(label)}]{created_html}</div>'
             f'<div class="theme-name">{html.escape(str(row.get("theme_name", "")))}</div>'
             f'<div class="copy">노출명/카피: {html.escape(str(row.get("copy", "")))}</div>'
             f'<div class="small">장르: {html.escape(str(row.get("genre", "")))} · 무드: {html.escape(str(row.get("mood", "")))}</div>'
-            f'{source_issue_html}'
+            f'{source_issue_html}{matched_html}'
             '<div class="section-label">테마 키워드</div>'
             f'{keyword_tags}'
             '</div>',

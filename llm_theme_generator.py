@@ -100,6 +100,18 @@ class GeneratedThemeBatch(BaseModel):
     themes: list[GeneratedTheme]
 
 
+class ThemeSearchIntent(BaseModel):
+    interpreted_request: str = Field(description="사용자의 큐레이션 의도를 한 문장으로 요약")
+    anchor_titles: list[str] = Field(default_factory=list, description="기준이 되는 작품명 또는 인물명")
+    genres: list[str] = Field(default_factory=list, description="원하는 장르")
+    moods: list[str] = Field(default_factory=list, description="원하는 분위기와 감정")
+    subjects: list[str] = Field(default_factory=list, description="핵심 소재·인물·관계·공간")
+    narrative_elements: list[str] = Field(default_factory=list, description="서사 구조·상황·행동")
+    positive_keywords: list[str] = Field(default_factory=list, description="테마 DB 검색에 사용할 확장 키워드")
+    negative_keywords: list[str] = Field(default_factory=list, description="사용자가 제외한 조건")
+    result_count: int = Field(default=20, ge=5, le=30, description="추천 결과 수")
+
+
 class SelectedThemeDecision(BaseModel):
     source: Literal["NEW", "EXISTING"]
     candidate_index: int | None = None
@@ -421,6 +433,88 @@ def _generate_candidates(
     if parsed is None or not parsed.themes:
         raise ThemeGenerationError("LLM이 신규 테마를 반환하지 않았습니다.")
     return _sanitize_generated(parsed.themes, candidate_count)
+
+
+def interpret_theme_search_query(
+    query: str,
+    api_key: str,
+    model: str = "gpt-5.6-luna",
+    issue_records: list[dict[str, Any]] | None = None,
+) -> tuple[dict[str, Any], dict[str, int]]:
+    """Interpret a natural-language theme search request with one LLM call.
+
+    The theme database itself is deliberately not sent to the model. The model only
+    converts the user's sentence into a compact search intent; ranking is performed
+    locally by app.py.
+    """
+    cleaned_query = re.sub(r"\s+", " ", str(query or "")).strip()
+    if not cleaned_query:
+        raise ThemeGenerationError("검색 문장을 입력해 주세요.")
+    if not api_key:
+        raise ThemeGenerationError("OPENAI_API_KEY가 설정되지 않았습니다.")
+
+    compact_issues: list[dict[str, Any]] = []
+    for issue in (issue_records or [])[:20]:
+        compact_issues.append({
+            "issue_title": _clean_short_text(issue.get("issue_title", ""), 90),
+            "related_content": _clean_short_text(issue.get("related_content", ""), 60),
+            "keywords": _clean_short_text(issue.get("keywords", ""), 120),
+            "description": _clean_short_text(issue.get("description", ""), 160),
+        })
+
+    system_prompt = """
+당신은 한국 IPTV 콘텐츠 큐레이션 검색 도우미다.
+사용자의 자유로운 문장을 기존 테마 DB를 검색하기 위한 구조화된 의도로 변환한다.
+테마 DB 자체는 보지 않으며 새로운 테마를 생성하지 않는다.
+작품명이 최근 이슈 맥락에 있으면 그 작품의 소재·장르·분위기를 검색어로 확장한다.
+맥락에 없는 작품의 세부 내용을 확신할 수 없다면 작품명은 기준 작품으로만 유지하고 사실을 만들어내지 않는다.
+사용자가 '잔인하지 않은', '로맨스 제외'처럼 제외 조건을 말하면 negative_keywords에 넣는다.
+positive_keywords는 동의어와 유사 소재를 포함하되 너무 일반적인 단어는 피하고 6~14개로 작성한다.
+interpreted_request는 사용자가 원하는 큐레이션 범위를 한국어 한 문장으로 명확히 요약한다.
+""".strip()
+
+    payload = {
+        "user_query": cleaned_query,
+        "recent_issue_context": compact_issues,
+        "default_result_count": 20,
+    }
+
+    try:
+        client = OpenAI(api_key=api_key)
+        response = client.responses.parse(
+            model=model,
+            input=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
+            ],
+            text_format=ThemeSearchIntent,
+        )
+    except Exception as exc:
+        raise ThemeGenerationError(f"AI 테마 검색 해석 실패: {exc}") from exc
+
+    parsed = response.output_parsed
+    if parsed is None:
+        raise ThemeGenerationError("AI가 검색 의도를 해석하지 못했습니다.")
+
+    intent = parsed.model_dump()
+    for key in [
+        "anchor_titles", "genres", "moods", "subjects", "narrative_elements",
+        "positive_keywords", "negative_keywords",
+    ]:
+        intent[key] = _dedupe_strings(intent.get(key, []), 14)
+    intent["interpreted_request"] = _clean_short_text(intent.get("interpreted_request", cleaned_query), 140)
+    intent["result_count"] = max(5, min(int(intent.get("result_count", 20) or 20), 30))
+
+    usage = getattr(response, "usage", None)
+    input_tokens = int(getattr(usage, "input_tokens", 0) or 0) if usage is not None else 0
+    output_tokens = int(getattr(usage, "output_tokens", 0) or 0) if usage is not None else 0
+    total_tokens = int(getattr(usage, "total_tokens", input_tokens + output_tokens) or (input_tokens + output_tokens)) if usage is not None else 0
+    return intent, {
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "total_tokens": total_tokens,
+        "api_call_count": 1,
+    }
 
 
 def _candidate_text(candidate: dict[str, Any]) -> str:
