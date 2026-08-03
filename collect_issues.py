@@ -21,7 +21,7 @@ from io import BytesIO
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from urllib.parse import quote, urljoin, urlparse
+from urllib.parse import quote, urljoin, urlparse, parse_qsl, urlencode
 
 import feedparser
 import pandas as pd
@@ -1304,6 +1304,124 @@ def collect_netflix_top10():
     return rows
 
 
+
+
+def extract_youtube_video_id(url):
+    """YouTube URL 형식이 달라도 동일 영상 ID를 반환합니다."""
+    value = normalize_text(url)
+    if not value:
+        return ""
+    try:
+        parsed = urlparse(value)
+    except Exception:
+        return ""
+
+    host = parsed.netloc.lower().split(":")[0]
+    path = parsed.path.strip("/")
+
+    if host in {"youtu.be", "www.youtu.be"} and path:
+        return path.split("/")[0]
+
+    if host.endswith("youtube.com"):
+        query = dict(parse_qsl(parsed.query, keep_blank_values=True))
+        if query.get("v"):
+            return normalize_text(query.get("v"))
+        parts = [part for part in path.split("/") if part]
+        if len(parts) >= 2 and parts[0] in {"shorts", "embed", "live"}:
+            return parts[1]
+    return ""
+
+
+def canonical_content_url(url):
+    """추적 파라미터를 제거해 동일 원문 URL을 안정적으로 비교합니다."""
+    value = normalize_text(url)
+    if not value:
+        return ""
+    try:
+        parsed = urlparse(value)
+    except Exception:
+        return value
+
+    host = parsed.netloc.lower().split(":")[0]
+    if host.startswith("www."):
+        host = host[4:]
+
+    ignored_params = {
+        "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+        "gclid", "fbclid", "igshid", "ref", "source", "feature", "si",
+    }
+    query_pairs = [
+        (key, val)
+        for key, val in parse_qsl(parsed.query, keep_blank_values=True)
+        if key.lower() not in ignored_params
+    ]
+    path = re.sub(r"/{2,}", "/", parsed.path or "/")
+    if path != "/":
+        path = path.rstrip("/")
+    return parsed._replace(
+        scheme=(parsed.scheme or "https").lower(),
+        netloc=host,
+        path=path,
+        query=urlencode(sorted(query_pairs)),
+        fragment="",
+    ).geturl()
+
+
+def exact_content_key(row):
+    """날짜가 달라도 같은 영상·기사면 동일 키를 반환합니다.
+
+    KOBIS와 Netflix는 여러 작품이 같은 대표 URL을 공유하므로 기존의
+    날짜·작품 기준 중복 제거를 유지합니다.
+    """
+    source = normalize_text(row.get("source", ""))
+    source_url = normalize_text(row.get("source_url", ""))
+
+    video_id = extract_youtube_video_id(source_url)
+    if video_id:
+        return f"youtube:{video_id}"
+
+    shared_url_source = any(token in source for token in [
+        "KOBIS", "KOFIC", "박스오피스", "Netflix Top 10", "넷플릭스 Top 10",
+    ])
+    canonical_url = canonical_content_url(source_url)
+    if canonical_url and not shared_url_source:
+        return f"url:{canonical_url}"
+    return ""
+
+
+def collapse_exact_content_duplicates(df):
+    """동일 콘텐츠는 한 행만 유지합니다.
+
+    최초 포착 날짜는 보존하고, 조회수·설명·이미지 등 내용은 가장 최근
+    수집값으로 갱신합니다. 따라서 같은 영상이 매일 새 카드로 생기지 않고,
+    시간이 지나며 최근성 점수가 낮아져 새로운 이슈가 상위로 교체됩니다.
+    """
+    if df.empty:
+        return df
+
+    working = df.copy().reset_index(drop=True)
+    working["_exact_content_key"] = working.apply(exact_content_key, axis=1)
+    working["_date_dt"] = pd.to_datetime(working["date"], errors="coerce")
+    working["_row_order"] = range(len(working))
+
+    no_key = working[working["_exact_content_key"].eq("")].copy()
+    keyed = working[~working["_exact_content_key"].eq("")].copy()
+    collapsed_rows = []
+
+    for _, group in keyed.groupby("_exact_content_key", sort=False):
+        valid_dates = group["_date_dt"].dropna()
+        first_date = valid_dates.min() if not valid_dates.empty else pd.NaT
+        # 최신 수집값을 대표로 사용합니다. 날짜가 같으면 뒤에 수집된 행을 우선합니다.
+        latest = group.sort_values(["_date_dt", "_row_order"], ascending=[True, True]).iloc[-1].copy()
+        if pd.notna(first_date):
+            latest["date"] = first_date.strftime("%Y-%m-%d")
+        collapsed_rows.append(latest)
+
+    collapsed = pd.DataFrame(collapsed_rows, columns=working.columns) if collapsed_rows else working.iloc[0:0].copy()
+    result = pd.concat([no_key, collapsed], ignore_index=True)
+    return result.drop(columns=["_exact_content_key", "_date_dt", "_row_order"], errors="ignore")
+
+
 def load_existing_issues():
     return load_csv(ISSUE_PATH, ISSUE_COLUMNS)
 
@@ -1357,9 +1475,12 @@ def save_issue_feed(new_rows):
     merged_rows = enrich_news_images(merged.to_dict("records"))
     merged = pd.DataFrame(merged_rows, columns=ISSUE_COLUMNS).fillna("")
 
-    # KOBIS·Netflix처럼 여러 콘텐츠가 같은 원본 URL을 공유하는 데이터원이 있습니다.
-    # URL만으로 중복 제거하면 서로 다른 작품이 한 건으로 합쳐지므로,
-    # 콘텐츠명과 이슈 제목까지 포함해 실제 동일 피드만 제거합니다.
+    # 동일 영상·동일 기사는 날짜가 달라도 한 행만 유지합니다.
+    # 최초 포착 날짜는 보존하고 조회수·설명 등은 최신 수집값으로 갱신합니다.
+    merged = collapse_exact_content_duplicates(merged)
+
+    # KOBIS·Netflix처럼 대표 URL을 여러 작품이 공유하거나 안정적인 원문 URL이
+    # 없는 행은 기존처럼 날짜·작품·제목을 합친 키로 동일 실행 중 중복만 제거합니다.
     merged["dedup_key"] = merged.apply(
         lambda row: "|".join([
             str(row.get("date", "")).strip(),
