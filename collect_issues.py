@@ -1367,24 +1367,41 @@ def canonical_content_url(url):
     ).geturl()
 
 
-def exact_content_key(row):
-    """날짜가 달라도 같은 영상·기사면 동일 키를 반환합니다.
+def normalize_dedup_text(value):
+    """작품명 비교용으로 공백·기호·대소문자 차이를 정리합니다."""
+    text = normalize_text(value).lower()
+    text = re.sub(r"\s+", "", text)
+    text = re.sub(r"[^0-9a-z가-힣]", "", text)
+    return text
 
-    KOBIS와 Netflix는 여러 작품이 같은 대표 URL을 공유하므로 기존의
-    날짜·작품 기준 중복 제거를 유지합니다.
+
+def exact_content_key(row):
+    """수집 경로별로 같은 콘텐츠를 하나의 키로 묶습니다.
+
+    - YouTube: 동일 video_id
+    - 뉴스·공식자료: 동일 원문 URL
+    - KOBIS: 동일 영화명
+    - Netflix Top 10: 동일 작품명
+
+    KOBIS와 Netflix는 여러 작품이 같은 대표 URL을 공유하므로 URL 대신
+    작품명을 사용합니다.
     """
     source = normalize_text(row.get("source", ""))
     source_url = normalize_text(row.get("source_url", ""))
+    related_content = normalize_text(row.get("related_content", ""))
 
     video_id = extract_youtube_video_id(source_url)
     if video_id:
         return f"youtube:{video_id}"
 
-    shared_url_source = any(token in source for token in [
-        "KOBIS", "KOFIC", "박스오피스", "Netflix Top 10", "넷플릭스 Top 10",
-    ])
+    content_key = normalize_dedup_text(related_content)
+    if any(token in source for token in ["KOBIS", "KOFIC", "박스오피스"]):
+        return f"kobis:{content_key}" if content_key else ""
+    if any(token in source for token in ["Netflix Top 10", "넷플릭스 Top 10"]):
+        return f"netflix:{content_key}" if content_key else ""
+
     canonical_url = canonical_content_url(source_url)
-    if canonical_url and not shared_url_source:
+    if canonical_url:
         return f"url:{canonical_url}"
     return ""
 
@@ -1408,12 +1425,15 @@ def collapse_exact_content_duplicates(df):
     keyed = working[~working["_exact_content_key"].eq("")].copy()
     collapsed_rows = []
 
-    for _, group in keyed.groupby("_exact_content_key", sort=False):
+    for content_key, group in keyed.groupby("_exact_content_key", sort=False):
         valid_dates = group["_date_dt"].dropna()
         first_date = valid_dates.min() if not valid_dates.empty else pd.NaT
         # 최신 수집값을 대표로 사용합니다. 날짜가 같으면 뒤에 수집된 행을 우선합니다.
         latest = group.sort_values(["_date_dt", "_row_order"], ascending=[True, True]).iloc[-1].copy()
-        if pd.notna(first_date):
+
+        # 동일 영상·기사는 최초 포착일을 유지해 시간이 지나며 자연스럽게 순위가 내려가게 합니다.
+        # KOBIS·Netflix는 일별/주별 순위 데이터이므로 최신 상태와 날짜를 유지합니다.
+        if not str(content_key).startswith(("kobis:", "netflix:")) and pd.notna(first_date):
             latest["date"] = first_date.strftime("%Y-%m-%d")
         collapsed_rows.append(latest)
 
@@ -1475,8 +1495,8 @@ def save_issue_feed(new_rows):
     merged_rows = enrich_news_images(merged.to_dict("records"))
     merged = pd.DataFrame(merged_rows, columns=ISSUE_COLUMNS).fillna("")
 
-    # 동일 영상·동일 기사는 날짜가 달라도 한 행만 유지합니다.
-    # 최초 포착 날짜는 보존하고 조회수·설명 등은 최신 수집값으로 갱신합니다.
+    # 동일 영상·기사·KOBIS 영화·Netflix 작품은 날짜가 달라도 한 행만 유지합니다.
+    # 영상·기사는 최초 포착일, KOBIS·Netflix는 최신 순위 날짜를 유지합니다.
     merged = collapse_exact_content_duplicates(merged)
 
     # KOBIS·Netflix처럼 대표 URL을 여러 작품이 공유하거나 안정적인 원문 URL이

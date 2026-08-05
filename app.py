@@ -1,4 +1,6 @@
+import base64
 import html
+import json
 import math
 import os
 import re
@@ -25,6 +27,8 @@ from llm_theme_generator import (
 )
 
 from kinolights_candidates import content_rows_to_frame, validate_content_suggestions
+from ui_placement_advisor import recommend_theme_positions
+
 from theme_content_manager import (
     ai_suggestions_to_recommendations,
     content_coverage,
@@ -164,6 +168,23 @@ div[data-testid="stDownloadButton"] button span {
     color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;
 }
 div[data-testid="stDownloadButton"] button:hover { background:#1d4ed8 !important; }
+
+.ui-analysis-hero {
+    background:linear-gradient(135deg,rgba(37,99,235,.13),rgba(124,58,237,.10));
+    border:1px solid #334155; border-radius:18px; padding:18px 20px; margin:8px 0 18px;
+}
+.ui-status { display:inline-flex; align-items:center; gap:8px; padding:6px 11px; border-radius:999px;
+    background:#10213f; border:1px solid #285aa8; font-size:12px; font-weight:800; }
+.ui-dot { width:8px; height:8px; border-radius:50%; background:#22c55e; box-shadow:0 0 10px rgba(34,197,94,.7); }
+.ui-block-row { background:#101827; border:1px solid #2b3a50; border-radius:14px; padding:13px 15px; margin-bottom:10px; }
+.ui-block-order { display:inline-flex; width:27px; height:27px; border-radius:9px; align-items:center; justify-content:center;
+    background:#1d4ed8; font-weight:900; margin-right:10px; }
+.ui-content-list { color:#94a3b8 !important; font-size:12px; margin-top:6px; line-height:1.55; }
+.position-card { background:#101827; border:1px solid #334155; border-left:4px solid #8b5cf6;
+    border-radius:14px; padding:15px 17px; margin-bottom:12px; }
+.position-rank { color:#a78bfa !important; font-size:13px; font-weight:900; }
+.position-name { font-size:18px; font-weight:900; margin:4px 0 6px; }
+.position-reason { color:#cbd5e1 !important; font-size:13px; line-height:1.55; }
 
 /* 입력·선택·폼 버튼을 다크 UI로 통일 */
 div[data-baseweb="input"] > div,
@@ -634,8 +655,46 @@ def go_page(page):
     st.session_state["page"] = page
 
 
+def decode_ui_capture(value):
+    raw = str(value or "").strip()
+    if not raw:
+        return None
+    padding = "=" * (-len(raw) % 4)
+    decoded = base64.urlsafe_b64decode((raw + padding).encode("ascii")).decode("utf-8")
+    payload = json.loads(decoded)
+    if not isinstance(payload, dict):
+        raise ValueError("화면 데이터 형식이 올바르지 않습니다.")
+    payload["blocks"] = [b for b in payload.get("blocks", []) if isinstance(b, dict)]
+    return payload
+
+
+def consume_ui_capture_query():
+    try:
+        capture_value = st.query_params.get("capture", "")
+        view_value = st.query_params.get("view", "")
+    except Exception:
+        return
+    if capture_value:
+        try:
+            st.session_state["ui_capture"] = decode_ui_capture(capture_value)
+            st.session_state["page"] = "ui_analysis"
+            st.session_state.pop("ui_capture_error", None)
+        except Exception as exc:
+            st.session_state["ui_capture_error"] = str(exc)
+            st.session_state["page"] = "ui_analysis"
+        try:
+            st.query_params.clear()
+        except Exception:
+            pass
+        st.rerun()
+    elif str(view_value) == "ui_analysis":
+        st.session_state["page"] = "ui_analysis"
+
+
 if "page" not in st.session_state:
     st.session_state["page"] = "home"
+
+consume_ui_capture_query()
 
 
 def clear_theme_ai_search_state():
@@ -2350,6 +2409,127 @@ elif st.session_state["page"] == "theme_db":
         )
 
 
+elif st.session_state["page"] == "ui_analysis":
+    top_left, top_right = st.columns([5, 1])
+    with top_left:
+        st.markdown("<h1>🖥 B tv+ 화면 분석</h1>", unsafe_allow_html=True)
+        st.caption("현재 열려 있는 B tv+ 화면 구조를 읽고, 선택한 테마관의 배치 위치를 추천합니다.")
+    with top_right:
+        if st.button("← 홈으로", use_container_width=True):
+            go_page("home")
+            st.rerun()
+
+    capture = st.session_state.get("ui_capture") or {}
+    capture_error = st.session_state.get("ui_capture_error")
+    if capture_error:
+        st.error(f"화면 데이터 읽기 실패: {capture_error}")
+
+    if not capture:
+        st.markdown(
+            '<div class="ui-analysis-hero">'
+            '<div class="ui-status"><span style="width:8px;height:8px;border-radius:50%;background:#64748b"></span> 확장프로그램 대기 중</div>'
+            '<h3 style="margin-top:14px">B tv+ 화면에서 확장프로그램의 ‘현재 화면 분석’ 버튼을 눌러주세요.</h3>'
+            '<div class="small">별도 JSON 복사나 붙여넣기는 필요 없습니다. 화면을 읽으면 이 페이지가 자동으로 열립니다.</div>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+        with st.expander("확장프로그램 연결 방법", expanded=True):
+            st.markdown(
+                """
+                1. 압축 파일의 `chrome_extension` 폴더를 Chrome 확장프로그램에 로드합니다.  
+                2. 확장프로그램에 Streamlit 앱 주소를 한 번 저장합니다.  
+                3. 분석할 B tv+ 화면에서 확장프로그램을 열고 **현재 화면 분석**을 누릅니다.
+                """
+            )
+    else:
+        page_title = str(capture.get("page_title", "B tv+ 화면"))
+        page_url = str(capture.get("page_url", ""))
+        captured_at = str(capture.get("captured_at", ""))
+        blocks = capture.get("blocks", [])
+        st.markdown(
+            '<div class="ui-analysis-hero">'
+            '<div class="ui-status"><span class="ui-dot"></span> 화면 연결됨</div>'
+            f'<h3 style="margin:12px 0 4px">{html.escape(page_title)}</h3>'
+            f'<div class="small">감지 블록 {len(blocks)}개 · 수집 {html.escape(captured_at or "방금 전")}</div>'
+            f'<div class="small" style="margin-top:4px">{html.escape(page_url)}</div>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+        left_col, right_col = st.columns([1.05, .95], gap="large")
+        with left_col:
+            st.subheader("현재 화면 구조")
+            if not blocks:
+                st.warning("화면에서 블록을 찾지 못했습니다. 확장프로그램의 읽기 규칙을 수정해야 합니다.")
+            for idx, block in enumerate(blocks, start=1):
+                name = block.get("name") or block.get("title") or f"이름 없는 블록 {idx}"
+                contents = block.get("content_titles") or block.get("contents") or []
+                if isinstance(contents, str):
+                    contents = [contents]
+                preview = " · ".join(str(x) for x in contents[:8] if str(x).strip())
+                st.markdown(
+                    '<div class="ui-block-row">'
+                    f'<span class="ui-block-order">{idx}</span><b>{html.escape(str(name))}</b>'
+                    f'<div class="ui-content-list">{html.escape(preview or "콘텐츠 제목 미감지")}</div>'
+                    '</div>',
+                    unsafe_allow_html=True,
+                )
+
+        with right_col:
+            st.subheader("테마관 위치 추천")
+            theme_options = []
+            for _, row in themes.iterrows():
+                theme_id = str(row.get("theme_id", "")).strip()
+                theme_name = str(row.get("theme_name", "")).strip()
+                if theme_id and theme_name:
+                    theme_options.append((theme_id, theme_name))
+            option_ids = [item[0] for item in theme_options]
+            labels = {item[0]: item[1] for item in theme_options}
+            selected_theme_id = st.selectbox(
+                "배치할 테마",
+                option_ids,
+                format_func=lambda value: labels.get(value, value),
+                index=0 if option_ids else None,
+                placeholder="테마를 선택하세요",
+            ) if option_ids else None
+
+            selected_row = None
+            if selected_theme_id:
+                matches = themes[themes["theme_id"].astype(str) == str(selected_theme_id)]
+                if not matches.empty:
+                    selected_row = matches.iloc[0].to_dict()
+            if selected_row:
+                st.markdown(
+                    '<div class="card">'
+                    f'<div class="theme-name">{html.escape(str(selected_row.get("theme_name", "")))}</div>'
+                    f'<div class="copy">{html.escape(str(selected_row.get("copy", "")))}</div>'
+                    f'<div class="small">{html.escape(str(selected_row.get("genre", "")))} · {html.escape(str(selected_row.get("mood", "")))}</div>'
+                    '</div>',
+                    unsafe_allow_html=True,
+                )
+                positions = recommend_theme_positions(
+                    selected_row,
+                    blocks,
+                    viewport_height=float(capture.get("viewport_height", 1080) or 1080),
+                    top_k=3,
+                ) if blocks else []
+                if positions:
+                    for rank, item in enumerate(positions, start=1):
+                        st.markdown(
+                            '<div class="position-card">'
+                            f'<div class="position-rank">추천 {rank}순위 · 적합도 {html.escape(str(item.get("score", "")))}</div>'
+                            f'<div class="position-name">{html.escape(str(item.get("placement", "")))}</div>'
+                            f'<div class="position-reason">{html.escape(str(item.get("reason", "")))}</div>'
+                            '</div>',
+                            unsafe_allow_html=True,
+                        )
+                else:
+                    st.info("화면 블록을 읽으면 추천 위치 3곳이 자동으로 표시됩니다.")
+
+        if st.button("↻ 현재 B tv+ 화면 다시 읽기", use_container_width=True):
+            st.info("B tv+ 탭에서 확장프로그램의 ‘현재 화면 분석’을 다시 눌러주세요.")
+
+
 else:
     st.markdown("<h1>🧠 B tv+ AI Theme Curator</h1>", unsafe_allow_html=True)
     st.caption("최근 외부 콘텐츠 이슈에서 신규 테마를 만들고, 선택된 테마의 콘텐츠 후보를 키노라이츠 검색과 연결합니다.")
@@ -2377,6 +2557,10 @@ else:
         if st.button("📚 테마 DB 전체 보기", use_container_width=True):
             go_page("theme_db")
             st.rerun()
+
+    if st.button("🖥 현재 B tv+ 화면 분석하기", use_container_width=True):
+        go_page("ui_analysis")
+        st.rerun()
 
     st.markdown("---")
 
