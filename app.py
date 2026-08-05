@@ -668,27 +668,36 @@ def decode_ui_capture(value):
     return payload
 
 
+def _query_param_text(value):
+    if isinstance(value, (list, tuple)):
+        return str(value[0] if value else "")
+    return str(value or "")
+
+
 def consume_ui_capture_query():
+    """확장프로그램 URL 파라미터를 같은 실행 안에서 바로 소비한다.
+
+    쿼리를 지운 뒤 재실행하면 Streamlit Cloud에서 새 세션/홈 화면으로
+    돌아가는 경우가 있어, 분석 화면을 먼저 렌더링하고 파라미터는 유지한다.
+    """
     try:
-        capture_value = st.query_params.get("capture", "")
-        view_value = st.query_params.get("view", "")
+        capture_value = _query_param_text(st.query_params.get("capture", ""))
+        view_value = _query_param_text(st.query_params.get("view", ""))
     except Exception:
         return
-    if capture_value:
-        try:
-            st.session_state["ui_capture"] = decode_ui_capture(capture_value)
-            st.session_state["page"] = "ui_analysis"
-            st.session_state.pop("ui_capture_error", None)
-        except Exception as exc:
-            st.session_state["ui_capture_error"] = str(exc)
-            st.session_state["page"] = "ui_analysis"
-        try:
-            st.query_params.clear()
-        except Exception:
-            pass
-        st.rerun()
-    elif str(view_value) == "ui_analysis":
+
+    if view_value == "ui_analysis" or capture_value:
         st.session_state["page"] = "ui_analysis"
+
+    if capture_value:
+        # 동일 URL의 반복 rerun 때 불필요한 재디코딩을 피한다.
+        if st.session_state.get("ui_capture_raw") != capture_value:
+            try:
+                st.session_state["ui_capture"] = decode_ui_capture(capture_value)
+                st.session_state["ui_capture_raw"] = capture_value
+                st.session_state.pop("ui_capture_error", None)
+            except Exception as exc:
+                st.session_state["ui_capture_error"] = str(exc)
 
 
 if "page" not in st.session_state:
