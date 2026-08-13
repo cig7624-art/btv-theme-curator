@@ -159,7 +159,8 @@ h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
     display:block; color:#f8fafc !important; text-decoration:none;
 }
 .issue-title-link:hover { color:#38bdf8 !important; text-decoration:underline; }
-.stButton button { background:#2563eb; color:white; border-radius:12px; border:0; font-weight:800; }
+.stButton button { background:#2563eb !important; color:#ffffff !important; border-radius:12px; border:0; font-weight:800; }
+.stButton button p, .stButton button span { color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; }
 div[data-testid="stDownloadButton"] button {
     background:#2563eb !important; color:#ffffff !important; border:0 !important;
     border-radius:12px !important; font-weight:800 !important;
@@ -2425,12 +2426,11 @@ elif st.session_state["page"] == "theme_db":
 
 
 elif st.session_state["page"] == "ui_analysis":
-    top_left, top_right = st.columns([5, 1])
-    with top_left:
-        st.markdown("<h1>🖥 B tv+ 화면 분석</h1>", unsafe_allow_html=True)
-        st.caption("현재 열려 있는 B tv+ 화면 구조를 읽고, 선택한 테마관의 배치 위치를 추천합니다.")
-    with top_right:
-        if st.button("← 홈으로", use_container_width=True):
+    st.markdown("<h1>🖥 B tv+ 화면 분석</h1>", unsafe_allow_html=True)
+    st.caption("현재 열려 있는 B tv+ 화면 구조를 읽고, 선택한 테마관의 배치 위치를 추천합니다.")
+    nav_home, nav_spacer = st.columns([1.25, 4.75])
+    with nav_home:
+        if st.button("🏠 홈으로 돌아가기", use_container_width=True, key="ui_analysis_home_top"):
             go_page("home")
             st.rerun()
 
@@ -2477,7 +2477,18 @@ elif st.session_state["page"] == "ui_analysis":
         with left_col:
             st.subheader("현재 화면 구조")
             if not blocks:
-                st.warning("화면에서 블록을 찾지 못했습니다. 확장프로그램의 읽기 규칙을 수정해야 합니다.")
+                st.warning("화면에서 블록을 찾지 못했습니다. 이번 캡처의 진단 정보를 아래에 표시합니다.")
+                diag = capture.get("diagnostics") or {}
+                if diag:
+                    st.caption(
+                        f"프레임 {diag.get('frame_count', 1)}개 · 스크롤 영역 {diag.get('scrollable_count', 0)}개 · "
+                        f"iframe {diag.get('iframe_count', 0)}개 · canvas {diag.get('canvas_count', 0)}개 · "
+                        f"감지 텍스트 {diag.get('text_length', 0)}자"
+                    )
+                    sample = str(diag.get("text_sample", "")).strip()
+                    if sample:
+                        with st.expander("감지된 화면 텍스트 확인"):
+                            st.text(sample[:4000])
             for idx, block in enumerate(blocks, start=1):
                 name = block.get("name") or block.get("title") or f"이름 없는 블록 {idx}"
                 contents = block.get("content_titles") or block.get("contents") or []
@@ -2543,8 +2554,14 @@ elif st.session_state["page"] == "ui_analysis":
                 else:
                     st.info("화면 블록을 읽으면 추천 위치 3곳이 자동으로 표시됩니다.")
 
-        if st.button("↻ 현재 B tv+ 전체 화면 다시 읽기", use_container_width=True):
-            st.info("Streamlit 탭에서 확장프로그램의 ‘B tv+ 전체 화면 분석’을 다시 눌러주세요.")
+        bottom_left, bottom_right = st.columns([1, 1])
+        with bottom_left:
+            if st.button("🏠 홈으로 돌아가기", use_container_width=True, key="ui_analysis_home_bottom"):
+                go_page("home")
+                st.rerun()
+        with bottom_right:
+            if st.button("↻ 현재 B tv+ 전체 화면 다시 읽기", use_container_width=True):
+                st.info("Streamlit 탭에서 확장프로그램의 ‘B tv+ 전체 화면 분석’을 다시 눌러주세요.")
 
 
 else:
