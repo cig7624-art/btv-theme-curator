@@ -1,4 +1,5 @@
 import base64
+import gzip
 import html
 import json
 import math
@@ -660,7 +661,12 @@ def decode_ui_capture(value):
     if not raw:
         return None
     padding = "=" * (-len(raw) % 4)
-    decoded = base64.urlsafe_b64decode((raw + padding).encode("ascii")).decode("utf-8")
+    decoded_bytes = base64.urlsafe_b64decode((raw + padding).encode("ascii"))
+    # v16 확장프로그램은 전체 페이지 데이터를 gzip으로 압축한다.
+    # 기존 v15의 평문 base64 JSON도 계속 읽을 수 있게 호환한다.
+    if decoded_bytes[:2] == b"\x1f\x8b":
+        decoded_bytes = gzip.decompress(decoded_bytes)
+    decoded = decoded_bytes.decode("utf-8")
     payload = json.loads(decoded)
     if not isinstance(payload, dict):
         raise ValueError("화면 데이터 형식이 올바르지 않습니다.")
@@ -2447,7 +2453,8 @@ elif st.session_state["page"] == "ui_analysis":
                 """
                 1. 압축 파일의 `chrome_extension` 폴더를 Chrome 확장프로그램에 로드합니다.  
                 2. 확장프로그램에 Streamlit 앱 주소를 한 번 저장합니다.  
-                3. 분석할 B tv+ 화면에서 확장프로그램을 열고 **현재 화면 분석**을 누릅니다.
+                3. 처음 자동 탐색이 안 되면 B tv+가 들어 있는 웹 UI 탭에서 **현재 탭을 B tv+ 대상으로 기억**을 한 번 누릅니다.  
+                4. 이후에는 Streamlit 탭에서 확장프로그램의 **B tv+ 전체 화면 분석**만 누르면 됩니다. 화면은 자동으로 맨 아래까지 읽습니다.
                 """
             )
     else:
@@ -2460,6 +2467,7 @@ elif st.session_state["page"] == "ui_analysis":
             '<div class="ui-status"><span class="ui-dot"></span> 화면 연결됨</div>'
             f'<h3 style="margin:12px 0 4px">{html.escape(page_title)}</h3>'
             f'<div class="small">감지 블록 {len(blocks)}개 · 수집 {html.escape(captured_at or "방금 전")}</div>'
+            f'<div class="small" style="margin-top:4px">{("전체 페이지 스캔 완료 · " + str(capture.get("scroll_steps", 0)) + "회 스크롤 · " + format(int(capture.get("document_height", 0) or 0), ",") + "px") if capture.get("full_page_scan") else "현재 화면 캡처"}</div>'
             f'<div class="small" style="margin-top:4px">{html.escape(page_url)}</div>'
             '</div>',
             unsafe_allow_html=True,
@@ -2535,8 +2543,8 @@ elif st.session_state["page"] == "ui_analysis":
                 else:
                     st.info("화면 블록을 읽으면 추천 위치 3곳이 자동으로 표시됩니다.")
 
-        if st.button("↻ 현재 B tv+ 화면 다시 읽기", use_container_width=True):
-            st.info("B tv+ 탭에서 확장프로그램의 ‘현재 화면 분석’을 다시 눌러주세요.")
+        if st.button("↻ 현재 B tv+ 전체 화면 다시 읽기", use_container_width=True):
+            st.info("Streamlit 탭에서 확장프로그램의 ‘B tv+ 전체 화면 분석’을 다시 눌러주세요.")
 
 
 else:
