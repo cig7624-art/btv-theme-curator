@@ -2427,7 +2427,7 @@ elif st.session_state["page"] == "theme_db":
 
 elif st.session_state["page"] == "ui_analysis":
     st.markdown("<h1>🖥 B tv+ 화면 분석</h1>", unsafe_allow_html=True)
-    st.caption("현재 열려 있는 B tv+ 화면 구조를 읽고, 선택한 테마관의 배치 위치를 추천합니다.")
+    st.caption("B tv+에 자동 진입한 뒤 ‘지금 가장 핫한 콘텐츠’부터 세로 블록 순서를 읽고, 선택한 테마관의 배치 위치를 추천합니다.")
     nav_home, nav_spacer = st.columns([1.25, 4.75])
     with nav_home:
         if st.button("🏠 홈으로 돌아가기", use_container_width=True, key="ui_analysis_home_top"):
@@ -2443,7 +2443,7 @@ elif st.session_state["page"] == "ui_analysis":
         st.markdown(
             '<div class="ui-analysis-hero">'
             '<div class="ui-status"><span style="width:8px;height:8px;border-radius:50%;background:#64748b"></span> 확장프로그램 대기 중</div>'
-            '<h3 style="margin-top:14px">B tv+ 화면에서 확장프로그램의 ‘현재 화면 분석’ 버튼을 눌러주세요.</h3>'
+            '<h3 style="margin-top:14px">확장프로그램의 ‘B tv+ 블록 분석 시작’ 버튼을 눌러주세요.</h3>'
             '<div class="small">별도 JSON 복사나 붙여넣기는 필요 없습니다. 화면을 읽으면 이 페이지가 자동으로 열립니다.</div>'
             '</div>',
             unsafe_allow_html=True,
@@ -2454,7 +2454,7 @@ elif st.session_state["page"] == "ui_analysis":
                 1. 압축 파일의 `chrome_extension` 폴더를 Chrome 확장프로그램에 로드합니다.  
                 2. 확장프로그램에 Streamlit 앱 주소를 한 번 저장합니다.  
                 3. 처음 자동 탐색이 안 되면 B tv+가 들어 있는 웹 UI 탭에서 **현재 탭을 B tv+ 대상으로 기억**을 한 번 누릅니다.  
-                4. 이후에는 Streamlit 탭에서 확장프로그램의 **B tv+ 전체 화면 분석**만 누르면 됩니다. 화면은 자동으로 맨 아래까지 읽습니다.
+                4. 이후에는 Streamlit 탭에서 확장프로그램의 **B tv+ 블록 분석 시작**만 누르면 됩니다. 자동 진입 후 `지금 가장 핫한 콘텐츠`부터 아래 방향으로만 이동하며 블록을 읽습니다.
                 """
             )
     else:
@@ -2467,7 +2467,7 @@ elif st.session_state["page"] == "ui_analysis":
             '<div class="ui-status"><span class="ui-dot"></span> 화면 연결됨</div>'
             f'<h3 style="margin:12px 0 4px">{html.escape(page_title)}</h3>'
             f'<div class="small">감지 블록 {len(blocks)}개 · 수집 {html.escape(captured_at or "방금 전")}</div>'
-            f'<div class="small" style="margin-top:4px">{("전체 페이지 스캔 완료 · " + str(capture.get("scroll_steps", 0)) + "회 스크롤 · " + format(int(capture.get("document_height", 0) or 0), ",") + "px") if capture.get("full_page_scan") else "현재 화면 캡처"}</div>'
+            f'<div class="small" style="margin-top:4px">{("세로 블록 스캔 완료 · 시작점: " + html.escape(str(capture.get("anchor", "지금 가장 핫한 콘텐츠"))) + " · ↓ " + str(capture.get("remote_steps", 0)) + "회 이동") if capture.get("scan_mode") == "remote-blocks" else (("전체 페이지 스캔 완료 · " + str(capture.get("scroll_steps", 0)) + "회 스크롤 · " + format(int(capture.get("document_height", 0) or 0), ",") + "px") if capture.get("full_page_scan") else "현재 화면 캡처")}</div>'
             f'<div class="small" style="margin-top:4px">{html.escape(page_url)}</div>'
             '</div>',
             unsafe_allow_html=True,
@@ -2494,7 +2494,7 @@ elif st.session_state["page"] == "ui_analysis":
                 contents = block.get("content_titles") or block.get("contents") or []
                 if isinstance(contents, str):
                     contents = [contents]
-                preview = " · ".join(str(x) for x in contents[:8] if str(x).strip())
+                preview = " · ".join(str(x) for x in contents[:7] if str(x).strip())
                 st.markdown(
                     '<div class="ui-block-row">'
                     f'<span class="ui-block-order">{idx}</span><b>{html.escape(str(name))}</b>'
@@ -2540,7 +2540,7 @@ elif st.session_state["page"] == "ui_analysis":
                     blocks,
                     viewport_height=float(capture.get("viewport_height", 1080) or 1080),
                     top_k=3,
-                ) if blocks else []
+                ) if len(blocks) >= 3 else []
                 if positions:
                     for rank, item in enumerate(positions, start=1):
                         st.markdown(
@@ -2552,7 +2552,7 @@ elif st.session_state["page"] == "ui_analysis":
                             unsafe_allow_html=True,
                         )
                 else:
-                    st.info("화면 블록을 읽으면 추천 위치 3곳이 자동으로 표시됩니다.")
+                    st.info("블록을 3개 이상 읽으면 추천 위치 3곳이 자동으로 표시됩니다.")
 
         bottom_left, bottom_right = st.columns([1, 1])
         with bottom_left:
@@ -2560,8 +2560,8 @@ elif st.session_state["page"] == "ui_analysis":
                 go_page("home")
                 st.rerun()
         with bottom_right:
-            if st.button("↻ 현재 B tv+ 전체 화면 다시 읽기", use_container_width=True):
-                st.info("Streamlit 탭에서 확장프로그램의 ‘B tv+ 전체 화면 분석’을 다시 눌러주세요.")
+            if st.button("↻ 현재 B tv+ 블록 다시 읽기", use_container_width=True):
+                st.info("Streamlit 탭에서 확장프로그램의 ‘B tv+ 블록 분석 시작’을 다시 눌러주세요.")
 
 
 else:
