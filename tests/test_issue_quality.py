@@ -10,7 +10,7 @@ NOW = "2026-10-21T12:00:00+09:00"
 
 
 def issue(**changes):
-    row = dict(date="2026-10-21", source="온라인 화제·뉴스", issue_title="'실낙원' 21일 개봉", related_content="실낙원", keywords="영화,개봉", description="연상호 신작 영화 실낙원 21일 개봉", source_url="https://news.example.com/story/123", image_url="")
+    row = dict(date="2026-10-21", published_at="2026-10-21", publisher="영화신문", source="온라인 화제·뉴스", issue_title="'실낙원' 21일 개봉", related_content="실낙원", keywords="영화,개봉", description="연상호 신작 영화 실낙원 21일 개봉", source_url="https://news.example.com/story/123", image_url="")
     row.update(changes)
     return row
 
@@ -91,9 +91,9 @@ class IssueQualityTests(unittest.TestCase):
         self.assertFalse(self.assessed(row).eligible)
 
     def test_recent_seven_dates_and_future_are_explicit(self):
-        self.assertTrue(self.assessed(issue(date="2026-10-15")).eligible)
-        self.assertFalse(self.assessed(issue(date="2026-10-14")).eligible)
-        self.assertFalse(self.assessed(issue(date="2026-10-22")).eligible)
+        self.assertTrue(self.assessed(issue(date="2026-10-15", published_at="2026-10-15")).eligible)
+        self.assertFalse(self.assessed(issue(date="2026-10-14", published_at="2026-10-14")).eligible)
+        self.assertFalse(self.assessed(issue(date="2026-10-22", published_at="2026-10-22")).eligible)
 
     def test_timezone_uses_kst_calendar(self):
         row = issue(date="2026-10-14", published_at="2026-10-14T16:00:00Z")
@@ -226,8 +226,10 @@ class IssueQualityTests(unittest.TestCase):
         self.assertNotIn("일반 스포츠", result.exclusion_reason)
 
     def test_legacy_news_record_date_is_not_claimed_as_verified_publication(self):
-        result = self.assessed(issue())
+        result = self.assessed(issue(published_at=""))
         self.assertIn("발행일 미대조", result.reference_label)
+        self.assertFalse(result.eligible)
+        self.assertIn("실제 발행일", result.exclusion_reason)
 
     def test_evidence_records_and_image_enrichment_preserve_original_url(self):
         news = issue()

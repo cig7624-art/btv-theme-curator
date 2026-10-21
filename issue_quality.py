@@ -1,6 +1,6 @@
 """Pure, reproducible issue assessment; native metrics are never a 100-point score.
 
-``sort_priority`` is an ordinal category (4: observed change, 3: official
+``sort_priority`` is an ordinal category (4: current popular list or observed change, 3: official
 ranking, 2: dated content event, 1: initial observation), not a popularity or
 confidence score. A video needs at least 20,000 observed views per day to enter
 category 4; smaller measured changes remain reference evidence. Evidence counts
@@ -18,7 +18,11 @@ from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 import pandas as pd
 
-from issue_rules import ISSUE_LOOKBACK_DAYS, NETFLIX_MAX_AGE_DAYS, YOUTUBE_PRIORITY_VIEW_DELTA
+from issue_rules import (
+    DAILY_COMMENT_DELTA_THRESHOLD, DAILY_VIEW_DELTA_THRESHOLD,
+    GROWTH_MIN_DELTA, GROWTH_RATE_THRESHOLD, ISSUE_LOOKBACK_DAYS,
+    NETFLIX_MAX_AGE_DAYS, YOUTUBE_PRIORITY_VIEW_DELTA,
+)
 
 
 YOUTUBE = "YouTube 반응"
@@ -29,7 +33,7 @@ SOURCE_GROUPS = (YOUTUBE, BOXOFFICE, OTT, NEWS)
 NETFLIX_REFERENCE_URL = "https://www.netflix.com/tudum/top10/south-korea"
 _BASE_COLUMNS = ("date", "source", "issue_title", "related_content", "keywords", "description", "source_url", "image_url")
 _META_COLUMNS = ("published_at", "collected_at", "reference_date", "reference_period", "publisher", "source_type", "content_id", "event_type", "metrics_json", "quality_status", "quality_notes")
-_OUTPUT_COLUMNS = ("source_group", "issue_key", "eligible", "exclusion_reason", "strength_label", "evidence_status", "selection_reason", "reference_label", "metric_summary", "sort_priority", "confirmed_routes", "confirmed_route_count", "issue_count")
+_OUTPUT_COLUMNS = ("source_group", "issue_key", "eligible", "exclusion_reason", "strength_label", "evidence_status", "selection_reason", "reference_label", "metric_summary", "sort_priority", "confirmed_routes", "confirmed_route_count", "issue_count", "comparison_valid", "popular_valid")
 _OFFICIAL_OTT_HOSTS = ("netflix.com", "tving.com", "wavve.com", "disneyplus.com", "coupangplay.com")
 _GENERIC = {
     "", "작품", "영화", "드라마", "예능", "콘텐츠", "신작", "극장가", "한국영화", "한국드라마",
@@ -44,7 +48,7 @@ _ADAPTATIONS = re.compile(r"아케인|\barcane\b|엣지러너|edgerunners|마인
 _SPORT_VARIETY = re.compile(r"신인\s*감독\s*김연경|최강\s*(?:야구|농구)|뭉쳐야\s*찬다|골\s*때리는\s*그녀들|골때녀")
 _MUSIC = re.compile(r"\b(?:official\s*)?(?:mv|m/v|music\s*video)\b|뮤직비디오|컴백\s*무대|직캠|\bfancam\b|\bfeat\.?\s|HYBE LABELS|1theK|A2O LITE|NCT WISH|이수만.*감\s*안\s*죽", re.I)
 _BUSINESS = re.compile(r"주가|목표주가|시가총액|공모주|환율|사막화|유엔서\s*수상|부동산|투자\s*유치|영업이익|매출\s*전망")
-_EVENTS = ("개봉", "공개", "첫방", "캐스팅", "제작 확정", "제작확정", "출연 확정", "출연확정", "예매율", "시청률", "종영", "리메이크", "인터뷰", "영화제", "시즌", "수상")
+_EVENTS = ("개봉", "공개", "첫방", "캐스팅", "제작 확정", "제작확정", "출연 확정", "출연확정", "예매율", "시청률", "종영", "리메이크", "인터뷰", "영화제", "수상")
 
 
 def _text(value):
@@ -157,6 +161,17 @@ def canonical_title(row):
     title = _text(row.get("issue_title"))
     description = _text(row.get("description"))
     publisher = _text(row.get("publisher"))
+    if classify_source(row) == NEWS:
+        # A film mentioned as the record being beaten is not the article's
+        # subject. Keep the collector's corrected subject through assessment.
+        quoted = r"(?:‘[^’]+’|“[^”]+”|'[^']+'|\"[^\"]+\"|`[^`]+`|《[^》]+》|≪[^≫]+≫|〈[^〉]+〉|\[[^\]]+\])"
+        comparison = quoted + r"\s*(?:[을를]\s*)?(?:넘어선|넘었다|넘고|넘는|넘어|제치고|제쳤다|앞선|따라잡은)"
+        targets = [_key(_clean_title(re.match(quoted, match.group()).group()))
+                   for match in re.finditer(comparison, title)]
+        title = re.sub(comparison, " ", title)
+        description = re.sub(comparison, " ", description)
+        if _key(_clean_title(related)) in targets:
+            related = ""
     if classify_source(row) == YOUTUBE:
         promotion = re.search(r"(?:^|[|｜])\s*([^|｜\[\]‘’\"']+?)\s+홍보하러\s+온", title + " " + description)
         if promotion:
@@ -224,6 +239,53 @@ def read_issue_metrics(row):
     return _metrics(row, classify_source(row))
 
 
+def _current_popular_snapshot(metrics, now):
+    """Only a genuine, fresh API list entry proves current list membership.
+
+    Search origins and last_discovered_at are deliberately insufficient.  A
+    position is scoped to the returned category list, never a YouTube-wide rank.
+    """
+    raw = _text(metrics.get("popular_snapshot_at"))
+    snapshot = _date(raw)
+    position = _number(metrics.get("popular_list_position"))
+    complete = metrics.get("popular_snapshot_complete")
+    if (snapshot is None or ":" not in raw or _text(metrics.get("popular_region")).upper() != "KR"
+            or _text(metrics.get("popular_category_id")) not in {"all", "1", "24"}
+            or position is None or not position.is_integer() or not 1 <= position <= 50
+            or str(complete).lower() not in {"true", "1"}):
+        return None
+    if snapshot.normalize() != now.normalize() or snapshot > now + pd.Timedelta(minutes=1) or now - snapshot > pd.Timedelta(hours=36):
+        return None
+    return snapshot
+
+
+def _youtube_comparison(metrics, now):
+    start, end = _date(metrics.get("observation_start")), _date(metrics.get("observation_end"))
+    valid = start is not None and end is not None and end > start and end <= now + pd.Timedelta(minutes=1)
+    days = (end - start).total_seconds() / 86400 if valid else None
+    views, comments = _number(metrics.get("views_change")), _number(metrics.get("comments_change"))
+    daily_views = views / days if views is not None and days else None
+    daily_comments = comments / days if comments is not None and days else None
+    growth = _number(metrics.get("growth_rate"))
+    qualifies = bool(valid and (
+        (daily_views is not None and daily_views >= DAILY_VIEW_DELTA_THRESHOLD)
+        or (daily_comments is not None and daily_comments >= DAILY_COMMENT_DELTA_THRESHOLD)
+        or (growth is not None and growth >= GROWTH_RATE_THRESHOLD and daily_views is not None and daily_views >= GROWTH_MIN_DELTA)
+    ))
+    return start, end, valid, daily_views, daily_comments, qualifies
+
+
+def _rss_news_provenance(row, metrics):
+    """RSS provides article attribution and publication, not body verification."""
+    publisher_host = _host(metrics.get("publisher_url"))
+    rss_url = _text(metrics.get("rss_url"))
+    return (metrics.get("news_provenance") == "google_news_rss"
+            and bool(_text(row.get("publisher"))) and _date(row.get("published_at")) is not None
+            and _valid_url(metrics.get("publisher_url")) and not _domain(publisher_host, "news.google.com")
+            and _valid_url(rss_url) and _domain(_host(rss_url), "news.google.com")
+            and urlparse(rss_url).path.startswith(("/rss/articles/", "/articles/")))
+
+
 def _reference(row, group, metrics):
     desc = _text(row.get("description"))
     explicit = _date(row.get("reference_date"))
@@ -270,9 +332,12 @@ def _season(row, metrics):
     return "", None
 
 
-def _assess_row(original, now):
+def _assess_row(original, now, allow_popular=True):
     row = dict(original)
     group = classify_source(row)
+    metrics = _metrics(row, group)
+    popular_snapshot = _current_popular_snapshot(metrics, now) if group == YOUTUBE and allow_popular else None
+    comparison = _youtube_comparison(metrics, now) if group == YOUTUBE else None
     raw_url = _text(row.get("source_url"))
     original_title = _text(row.get("related_content"))
     title = canonical_title(row)
@@ -295,7 +360,9 @@ def _assess_row(original, now):
         excluded.append("원문 URL 없음 또는 유효하지 않음")
     elif _bad_url(url):
         excluded.append("근거 URL이 오류 또는 로그인 페이지")
-    if _domain(host, "news.google.com"):
+    relay_news = group == NEWS and _domain(host, "news.google.com")
+    rss_news = group == NEWS and _rss_news_provenance(row, metrics)
+    if _domain(host, "news.google.com") and not rss_news:
         excluded.append("뉴스 중계 링크만 있어 원문 미확인")
     if not title:
         excluded.append("작품명이 없거나 일반 문구라 작품 특정 불가")
@@ -311,12 +378,20 @@ def _assess_row(original, now):
         excluded.append("영상 콘텐츠 기획과 무관한 업계·일반 뉴스")
     if _text(row.get("quality_status")).lower() == "rejected":
         excluded.append("수집 단계 품질 검토에서 제외")
-    metrics = _metrics(row, group)
     season_kind, season_number = _season(row, metrics)
     title_key = _key(title)
     if title and season_number is not None:
         title += f" {'시즌' if season_kind == 'season' else '파트'} {season_number}"
     reference, published, collected, mismatch = _reference(row, group, metrics)
+    if group == YOUTUBE:
+        # Upload date must not hide an older clip that is popular or receiving a
+        # qualifying measured reaction now.  A mere new collection is not enough.
+        if popular_snapshot is not None:
+            reference = popular_snapshot
+        elif comparison[5]:
+            reference = comparison[1]
+        elif published is None:
+            excluded.append("초기 반응 영상의 공개일을 확인할 수 없음")
     weekly = group == OTT and ("top 10" in _text(row.get("source")).lower() or _text(row.get("source_type")) == "ott_ranking")
     if reference is None:
         excluded.append("기준일을 확인할 수 없음")
@@ -328,6 +403,11 @@ def _assess_row(original, now):
         excluded.append("수집일이 미래 날짜")
     if published is not None and published.normalize() > now.normalize():
         excluded.append("게시일이 미래 날짜")
+    if group == NEWS:
+        if published is None:
+            excluded.append("기사의 실제 발행일을 확인할 수 없음")
+        if not _text(row.get("publisher")):
+            excluded.append("기사 발행처를 확인할 수 없음")
     if mismatch:
         excluded.append("메타데이터와 설명의 집계 기준일 불일치")
     if weekly and not re.search(r"집계\s*(?:주간|기간|주)", _text(row.get("description"))) and not _text(row.get("reference_date")) and not metrics.get("week"):
@@ -339,6 +419,8 @@ def _assess_row(original, now):
 
     ref_text = reference.strftime("%Y-%m-%d") if reference is not None else "미확인"
     evidence = "공식 출처 기록" if official else "원문 링크 있음 · 내용 재대조 전"
+    if rss_news:
+        evidence = "기사 제목·발행처·발행일 기록" + (" · Google 뉴스 연결" if relay_news else "")
     if restored or "복원" in _text(row.get("quality_notes")):
         evidence = "공식 집계 기록 · 원문 재대조 전"
     strength, summary, reason, priority, magnitude, rank = "사건 정보", "반응 수치 미측정", "최근 콘텐츠 사건의 원문 근거", 1, 0.0, 0.0
@@ -346,8 +428,7 @@ def _assess_row(original, now):
     if group == YOUTUBE:
         total, comments = _number(metrics.get("views_total")), _number(metrics.get("comments_total"))
         change = _number(metrics.get("views_change"))
-        start, end = _date(metrics.get("observation_start")), _date(metrics.get("observation_end"))
-        valid_period = start is not None and end is not None and end > start and end <= now + pd.Timedelta(minutes=1)
+        start, end, valid_period, daily_views, daily_comments, measured_candidate = comparison
         if change is not None and change > 0 and valid_period:
             days = (end - start).total_seconds() / 86400
             magnitude = change / days
@@ -363,7 +444,8 @@ def _assess_row(original, now):
                 summary += f" · {days * 24:g}시간 관측"
             reason = "동일 영상의 서로 다른 관측치에서 실제 조회수 증가가 확인됨"
             reason += "; 관측기간 평균 하루 2만 회 이상인 우선 반응 후보" if priority == 4 else "; 관측기간 평균 하루 2만 회 미만으로 참고 반응"
-            reference_label = f"공개 {ref_text} · 관측 {period}"
+            public_date = published.strftime("%Y-%m-%d") if published is not None else "미확인"
+            reference_label = f"공개 {public_date} · 관측 {period}"
         else:
             strength = "초기 반응 · 증가 미확인"
             parts = []
@@ -373,7 +455,7 @@ def _assess_row(original, now):
                 parts.append(f"누적 댓글 {_format_count(comments)}")
             summary = " · ".join(parts) or "반응 수치 미측정"
             reason = "현재 누적 관측값만 있음; 일일 증가나 급등으로 해석하지 않음"
-            if not parts:
+            if not parts and popular_snapshot is None:
                 excluded.append("YouTube 반응 수치를 확인할 수 없음")
             if change is not None and change < 0:
                 notes.append("관측 수치 감소: 증가 신호로 사용하지 않음")
@@ -383,6 +465,19 @@ def _assess_row(original, now):
                 strength = "관측 증가 없음 · 참고"
                 reason = "관측 사이 조회수 증가가 없음"
             reference_label = f"공개 기준 {ref_text} · 증가 비교 미확인"
+        if measured_candidate and daily_comments is not None and daily_comments >= DAILY_COMMENT_DELTA_THRESHOLD:
+            priority = 4
+            if daily_views is None or daily_views < YOUTUBE_PRIORITY_VIEW_DELTA:
+                strength = "댓글 증가 확인"
+                summary = f"관측기간 댓글 +{_format_count(_number(metrics.get('comments_change')))}"
+                reason = f"동일 영상의 서로 다른 집계에서 하루 평균 댓글 {_format_count(DAILY_COMMENT_DELTA_THRESHOLD)}개 이상 증가"
+                reference_label = f"댓글 비교 {start.strftime('%Y-%m-%d')}→{end.strftime('%Y-%m-%d')}"
+        if popular_snapshot is not None:
+            category = {"all": "전체", "1": "영화·애니메이션", "24": "엔터테인먼트"}[_text(metrics.get("popular_category_id"))]
+            priority, strength = 4, "YouTube 한국 인기 영상 목록 포함"
+            summary = f"한국 {category} 인기 영상 목록 포함"
+            reason = "YouTube가 제공한 한국 인기 영상 목록에 실제 포함된 작품 관련 영상"
+            reference_label = f"인기 목록 확인 {popular_snapshot.strftime('%Y-%m-%d %H:%M')} (한국 시간)"
     elif group == BOXOFFICE:
         audience, rank_value = _number(metrics.get("daily_audience")), _number(metrics.get("rank"))
         reference_label = f"일일 관객 집계 {ref_text}"
@@ -403,9 +498,10 @@ def _assess_row(original, now):
         else:
             excluded.append("주간 순위 수치 미확인")
     else:
-        event = next((word for word in _EVENTS if word in content_text), "")
+        event_text = _text(row.get("issue_title")) or content_text
+        event = {"new_release": "신작 공개", "release": "개봉" if "개봉" in event_text else "공개", "casting": "캐스팅", "production_confirmed": "제작 확정", "production": "제작", "audience": "예매율" if "예매율" in event_text else "시청률" if "시청률" in event_text else "흥행", "award": "수상·영화제", "finale": "종영", "interview": "인터뷰"}.get(_text(row.get("event_type")), "")
         if not event:
-            event = {"new_release": "신작 공개", "casting": "캐스팅", "production_confirmed": "제작 확정"}.get(_text(row.get("event_type")), "")
+            event = next((word for word in _EVENTS if word in content_text), "")
         if event:
             priority = 2
             strength = "공식 발표" if official else "콘텐츠 사건 보도"
@@ -417,6 +513,7 @@ def _assess_row(original, now):
             reference_label = f"기록 기준 {ref_text} · 발행일 미대조"
     if excluded:
         evidence = "검토 필요"
+    observed_at = popular_snapshot or (comparison[1] if comparison is not None and comparison[2] else None) or collected or reference
     row.update({
         "related_content_original": original_title, "related_content": title,
         "source_group": group, "issue_key": f"work:{title_key}" + (f":{season_kind}:{season_number}" if season_number is not None else "") if title else "",
@@ -425,9 +522,10 @@ def _assess_row(original, now):
         "reference_label": reference_label, "metric_summary": summary,
         "sort_priority": priority if not excluded else 0, "quality_notes": "; ".join(dict.fromkeys(notes)),
         "comparison_valid": valid_period if group == YOUTUBE else False,
+        "popular_valid": popular_snapshot is not None,
         "confirmed_routes": group, "confirmed_route_count": 1, "issue_count": 1,
         "_quality_reference": reference.isoformat() if reference is not None else "",
-        "_quality_observed_at": (_date(metrics.get("observation_end")) or collected or reference).isoformat() if (_date(metrics.get("observation_end")) or collected or reference) is not None else "",
+        "_quality_observed_at": observed_at.isoformat() if observed_at is not None else "",
         "_quality_magnitude": magnitude, "_quality_rank": rank,
         "_quality_snapshot_group": f"{group}:{_key(metrics.get('category', ''))}" if weekly else BOXOFFICE if group == BOXOFFICE else "",
     })
@@ -437,7 +535,9 @@ def _assess_row(original, now):
 def assess_issues(df, now=None):
     """Preserve every input row/index and add quality decisions (KST calendar windows).
 
-    Daily/news/video evidence must be within seven calendar dates. Weekly Netflix
+    Daily/news/reaction evidence must be within seven calendar dates. A current
+    popular-list entry must be from today's actual API snapshot; an older upload
+    can qualify through this list or a fresh measured reaction. Weekly Netflix
     evidence gets a fourteen-date window for its weekly publication cadence; the
     actual reference week is mandatory, so a fresh collection date cannot renew it.
     """
@@ -450,9 +550,27 @@ def assess_issues(df, now=None):
         raise ValueError("now must be a valid date or timestamp")
     if frame.empty:
         for column in _OUTPUT_COLUMNS:
-            frame[column] = pd.Series(index=frame.index, dtype=bool if column == "eligible" else object)
+            frame[column] = pd.Series(index=frame.index, dtype=bool if column in {"eligible", "comparison_valid", "popular_valid"} else object)
         return frame
-    assessed = pd.DataFrame([_assess_row(row, clock) for row in frame.to_dict("records")], index=frame.index)
+    originals = frame.to_dict("records")
+    latest_popular = {}
+    for row in originals:
+        if classify_source(row) != YOUTUBE:
+            continue
+        metrics = _metrics(row, YOUTUBE)
+        snapshot = _current_popular_snapshot(metrics, clock)
+        if snapshot is not None:
+            category = _text(metrics.get("popular_category_id"))
+            latest_popular[category] = max(latest_popular.get(category, snapshot), snapshot)
+    decisions = []
+    for row in originals:
+        metrics = _metrics(row, YOUTUBE) if classify_source(row) == YOUTUBE else {}
+        snapshot = _current_popular_snapshot(metrics, clock) if metrics else None
+        # A complete newer response supersedes older membership in the same
+        # category, even when a previously listed work has disappeared.
+        current_list = snapshot is None or snapshot >= latest_popular[_text(metrics.get("popular_category_id"))]
+        decisions.append(_assess_row(row, clock, allow_popular=current_list))
+    assessed = pd.DataFrame(decisions, index=frame.index)
     assessed["eligible"] = assessed["eligible"].astype(bool)
     # An old Top 10 entry must not masquerade as a current rank after it exits
     # the latest available source/category snapshot. Daily data and each weekly

@@ -55,6 +55,27 @@ def _detail_date(value):
     return parsed.strftime('%Y-%m-%d %H:%M (한국 시간)') if isinstance(value, str) and ':' in value else parsed.strftime('%Y-%m-%d')
 
 
+def _true(value):
+    return value is True or str(value).strip().lower() in {'true', '1'}
+
+
+def _popular_video(row, metrics):
+    """Use an assessment decision, or a genuine same-day popular-list snapshot."""
+    if 'popular_valid' in row:
+        return _true(row['popular_valid'])
+    snapshot = _date(metrics.get('popular_snapshot_at'))
+    clock = pd.Timestamp.now(tz='Asia/Seoul')
+    position = _number(metrics.get('popular_list_position'))
+    return (
+        snapshot is not None and snapshot.date() == clock.date()
+        and pd.Timedelta(0) <= clock - snapshot <= pd.Timedelta(hours=36)
+        and str(metrics.get('popular_region', '')).upper() == 'KR'
+        and _true(metrics.get('popular_snapshot_complete'))
+        and position is not None and position >= 1
+        and str(metrics.get('popular_category_id', '')) in {'all', '1', '24'}
+    )
+
+
 def present_issue(row):
     """Return simple card copy plus traceable detail; never infer whole-work views."""
     # Streamlit can retain the previous issue_quality module during a live update.
@@ -78,7 +99,25 @@ def present_issue(row):
         comments_change = _number(metrics.get('comments_change'))
         daily_comments = comments_change / days if comments_change is not None and days else None
         comment_candidate = daily_comments is not None and daily_comments >= DAILY_COMMENT_DELTA_THRESHOLD
-        if comment_candidate and (daily_change is None or daily_change < YOUTUBE_PRIORITY_VIEW_DELTA):
+        if _popular_video(row, metrics):
+            category = {'1': '영화·애니메이션', '24': '엔터테인먼트', 'all': '전체'}.get(str(metrics.get('popular_category_id')), '전체')
+            snapshot = _date(metrics.get('popular_snapshot_at'))
+            result['source_label'] = 'YouTube 인기'
+            result['headline'] = '한국 인기 영상에 오른 관련 영상'
+            result['reason'] = f'YouTube 한국 {category} 인기 영상 목록에 포함된 영상이 있어 선정했어요.'
+            result['period_label'] = _period(snapshot, None, '인기 목록 확인')
+            details.extend([
+                ('이 카드의 선정 기준', f'YouTube 한국 {category} 인기 영상 목록에 포함'),
+                ('인기 목록 확인 시각', _detail_date(metrics.get('popular_snapshot_at'))),
+                ('확인한 목록', f'한국 · {category}'),
+            ])
+            if valid_comparison and change is not None and change > 0:
+                details.extend([
+                    ('조회수 비교 기간', _detail_date(metrics['observation_start']) + '~' + _detail_date(metrics['observation_end'])),
+                    ('관련 영상 조회수 증가', _full_number(change)),
+                ])
+            result['verification_note'] = '표시된 시각에 확인한 인기 영상 목록입니다. 목록은 수시로 바뀌며, 영화·애니메이션과 엔터테인먼트는 각각의 목록이에요.'
+        elif comment_candidate and (daily_change is None or daily_change < YOUTUBE_PRIORITY_VIEW_DELTA):
             result['headline'] = f'관련 영상 댓글 {_short_number(comments_change)} 개 증가'
             result['reason'] = f'하루 평균 댓글이 {_short_number(DAILY_COMMENT_DELTA_THRESHOLD)} 개 이상 늘어난 영상이 있어 선정했어요.'
             result['period_label'] = _period(start, end, '댓글 수 비교')
@@ -156,9 +195,16 @@ def present_issue(row):
     else:
         result['source_label'] = '공식 발표' if group == OTT and row.get('source_type') == 'official_announcement' else '뉴스'
         text = ' '.join(str(row.get(field, '')) for field in ['issue_title', 'description'])
-        event = next((label for pattern, label in [(r'캐스팅|출연\s*확정', '캐스팅'), (r'제작\s*확정|영상화|리메이크', '제작'), (r'개봉', '개봉'), (r'공개|첫방|방영', '공개'), (r'수상|영화제', '수상·영화제'), (r'종영', '종영'), (r'인터뷰', '인터뷰')] if re.search(pattern, text)), '작품 관련')
+        event_text = str(row.get('issue_title', '')) or text
+        event = {'new_release': '공개', 'release': '개봉' if '개봉' in event_text else '공개', 'casting': '캐스팅',
+                 'production_confirmed': '제작', 'production': '제작',
+                 'audience': '예매율' if '예매율' in event_text else '시청률' if '시청률' in event_text else '흥행',
+                 'award': '수상·영화제', 'finale': '종영', 'interview': '인터뷰'}.get(str(row.get('event_type', '')), '')
+        if not event:
+            event = next((label for pattern, label in [(r'캐스팅|출연\s*확정', '캐스팅'), (r'제작\s*확정|영상화|리메이크', '제작'), (r'개봉', '개봉'), (r'공개|첫방|방영', '공개'), (r'수상|영화제', '수상·영화제'), (r'종영', '종영'), (r'인터뷰', '인터뷰'), (r'예매율', '예매율'), (r'시청률', '시청률'), (r'박스오피스|누적\s*관객|역주행', '흥행')] if re.search(pattern, text)), '작품 관련')
         result['headline'] = f'{event} 소식'
         result['reason'] = f'최근 {event} 소식이 나온 작품이라 선정했어요.'
+        result['verification_note'] = '기사 제목·요약에서 확인한 소식이에요. 자세한 내용은 기사에서 확인하세요.'
         published = _date(row.get('published_at'))
         if published is None:
             result['reason'] = f'저장된 자료에 {event} 소식이 있어 선정했어요.'

@@ -26,8 +26,10 @@ from llm_theme_generator import (
 
 from kinolights_candidates import content_rows_to_frame, validate_content_suggestions
 from issue_quality import assess_issues, build_ranked_issues
-# Keep UI imports compatible with modules retained across Streamlit live updates.
+# Independent video/news signals and related articles share the same evidence.
 from issue_presentation import present_issue
+from issue_related_news import attach_related_news
+from issue_collection_context import apply_collection_context
 from issue_rules import ISSUE_LOOKBACK_DAYS
 from issue_selection_copy import SOURCE_CONFIG, SOURCE_DETAIL_LOGIC, SELECTION_STEPS
 
@@ -245,8 +247,12 @@ def keyword_score(a_keywords, b_keywords):
 
 def safe_url(url):
     url = str(url).strip()
-    if url.startswith("http://") or url.startswith("https://"):
-        return url
+    try:
+        parsed = urlparse(url)
+        if parsed.scheme in {"http", "https"} and parsed.hostname and not parsed.username and not parsed.password:
+            return url
+    except ValueError:
+        pass
     return ""
 
 
@@ -483,8 +489,18 @@ def prepare_issues(issues):
     return assessed[assessed["eligible"]].copy()
 
 
-def build_core_issues(issues):
-    return build_ranked_issues(issues)
+def read_collection_status():
+    try:
+        status = json.loads(Path("collection_status.json").read_text(encoding="utf-8"))
+        return status if isinstance(status, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def build_core_issues(issues, news_pool=None):
+    return attach_related_news(
+        build_ranked_issues(issues), issues if news_pool is None else news_pool
+    )
 
 
 def find_matched_issues(theme, issues):
@@ -1151,14 +1167,47 @@ def issue_evidence_html(issue, presentation=None):
         for label, value in public["details"]
     )
     source_url = safe_url(issue.get("source_url", ""))
+    source_host = (urlparse(source_url).hostname or "").lower()
+    source_label = "Google 뉴스에서 기사 보기" if source_host == "news.google.com" or source_host.endswith(".news.google.com") else "원문에서 확인"
     source_link = (
-        f'<a class="evidence-source-link" href="{html.escape(source_url, quote=True)}" target="_blank" rel="noopener noreferrer">원문에서 확인 ↗</a>'
+        f'<a class="evidence-source-link" href="{html.escape(source_url, quote=True)}" target="_blank" rel="noopener noreferrer">{source_label} ↗</a>'
         if source_url else ''
     )
     return (
         '<div class="evidence-panel"><dl class="evidence-facts">' + rows + '</dl>'
         f'<p class="evidence-note">{html.escape(public["verification_note"])}</p>'
-        f'{source_link}</div>'
+        f'{source_link}{related_news_html(issue)}</div>'
+    )
+
+
+def related_news_html(issue):
+    articles = issue.get("related_news", [])
+    if not isinstance(articles, list):
+        return ""
+    links = []
+    for article in articles:
+        if not isinstance(article, dict):
+            continue
+        url = safe_url(article.get("url", ""))
+        if not url:
+            continue
+        label = html.escape(str(article.get("title", "")))
+        byline = html.escape(" · ".join(str(article.get(key, "")) for key in ("publisher", "published_at", "via") if article.get(key)))
+        links.append(
+            '<li><a href="' + html.escape(url, quote=True) + '" target="_blank" rel="noopener noreferrer">'
+            + label + ' ↗</a><span>' + byline + '</span></li>'
+        )
+    return ('<div class="related-news"><p>함께 읽을 관련 기사</p><ul>' + ''.join(links) + '</ul></div>') if links else ''
+
+
+def news_digest_html(issue):
+    public = present_issue(issue)
+    return (
+        '<article class="news-digest-card"><span class="tag">' + html.escape(public["headline"]) + '</span>'
+        '<h3>' + html.escape(str(issue.get("related_content", ""))) + '</h3>'
+        '<p>' + html.escape(str(issue.get("issue_title", ""))) + '</p>'
+        '<span class="small">' + html.escape(str(issue.get("publisher", ""))) + ' · ' + html.escape(public["period_label"]) + '</span>'
+        '<details><summary>선정 근거</summary>' + issue_evidence_html(issue, public) + '</details></article>'
     )
 
 
@@ -1472,7 +1521,7 @@ try:
         all_issues,
         days=ISSUE_LOOKBACK_DAYS
     )
-    assessed_issues = assess_issues(all_issues)
+    assessed_issues = assess_issues(apply_collection_context(all_issues, read_collection_status()))
     issues = assessed_issues[assessed_issues["eligible"]].copy()
     review_issues = assessed_issues[assessed_issues.index.isin(recent_issues.index) & ~assessed_issues["eligible"]].copy()
 except Exception as e:
@@ -1500,7 +1549,8 @@ if st.session_state["page"] == "issue_db":
     with c1:
         selected_source = st.selectbox(
             "경로별 보기",
-            source_options
+            source_options,
+            key="issue_source_filter",
         )
 
     with c2:
@@ -1517,7 +1567,7 @@ if st.session_state["page"] == "issue_db":
         filtered = filtered[filtered["source_group"] == selected_source]
 
     if view == "선정된 작품":
-        filtered = build_core_issues(filtered)
+        filtered = build_core_issues(filtered, news_pool=issues)
 
     if search:
         s = search.strip()
@@ -1813,7 +1863,7 @@ else:
         unsafe_allow_html=True,
     )
     with st.container(key="spotlight_section"):
-        render_section_heading(1, '지금 주목할 이야기', '조회수 증가·관객 순위·새로운 소식에서 고른 작품들. 선정 근거를 눌러 이유를 확인하세요.')
+        render_section_heading(1, '지금 주목할 이야기', 'YouTube 인기 영상·반응, 관객 순위와 작품의 새 소식에서 골랐어요. 선정 근거에서 이유를 확인하세요.')
         if issues.empty:
             st.info("최근 수집된 이슈가 없습니다. 이슈가 수집되면 이곳에서 확인할 수 있어요.")
         else:
@@ -1823,6 +1873,30 @@ else:
                 for index, (_, issue) in enumerate(main_issues.iterrows(), start=1)
             )
             st.markdown(f'<div class="editorial-grid">{cards}</div>', unsafe_allow_html=True)
+
+            news_issues = build_core_issues(issues[issues["source_group"] == "온라인 화제·뉴스"], news_pool=issues)
+            if not news_issues.empty:
+                news_cards = ''.join(news_digest_html(issue) for _, issue in news_issues.head(2).iterrows())
+                st.markdown(
+                    '<div class="news-digest"><h3 class="news-digest-heading">새로운 소식</h3>'
+                    '<p class="small">개봉·공개·캐스팅·제작 등 작품을 새롭게 이야기할 이유를 모았어요.</p>'
+                    '<div class="news-digest-grid">' + news_cards + '</div></div>',
+                    unsafe_allow_html=True,
+                )
+            youtube_issues = issues[issues["source_group"] == "YouTube 반응"]
+            youtube_count = len(build_core_issues(youtube_issues))
+            video_count = youtube_issues["source_url"].nunique()
+            youtube_more, news_more = st.columns(2, gap="small")
+            with youtube_more:
+                if st.button(f"YouTube {youtube_count}개 작품 · {video_count}편 보기 ↗", use_container_width=True):
+                    st.session_state["issue_source_filter"] = "YouTube 반응"
+                    go_page("issue_db")
+                    st.rerun()
+            with news_more:
+                if st.button(f"새로운 소식 {len(news_issues)}개 작품 보기 ↗", use_container_width=True):
+                    st.session_state["issue_source_filter"] = "온라인 화제·뉴스"
+                    go_page("issue_db")
+                    st.rerun()
 
     with st.container(key="curation_section"):
         render_section_heading(2, '새로운 테마 만들기', '최근 이슈를 바탕으로 테마를 만들고, 어울리는 콘텐츠를 연결하세요.')
