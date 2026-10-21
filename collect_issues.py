@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import csv
 import html
+import json
+import math
 import os
 import re
 import time
@@ -41,6 +43,7 @@ except Exception:
 ISSUE_PATH = Path("issue_feed.csv")
 YOUTUBE_WATCHLIST_PATH = Path("youtube_video_watchlist.csv")
 YOUTUBE_STATS_PATH = Path("youtube_video_stats.csv")
+COLLECTION_STATUS_PATH = Path("collection_status.json")
 
 YOUTUBE_SEARCH_ENDPOINT = "https://www.googleapis.com/youtube/v3/search"
 YOUTUBE_VIDEOS_ENDPOINT = "https://www.googleapis.com/youtube/v3/videos"
@@ -68,6 +71,9 @@ ISSUE_COLUMNS = [
     "description",
     "source_url",
     "image_url",
+    "published_at", "collected_at", "reference_date", "reference_period",
+    "publisher", "source_type", "content_id", "event_type", "metrics_json",
+    "quality_status", "quality_notes",
 ]
 
 WATCHLIST_COLUMNS = [
@@ -83,6 +89,7 @@ WATCHLIST_COLUMNS = [
     "description",
     "duration_seconds",
     "video_type",
+    "category_id", "channel_id", "last_discovered_at",
 ]
 
 STATS_COLUMNS = [
@@ -91,7 +98,79 @@ STATS_COLUMNS = [
     "view_count",
     "like_count",
     "comment_count",
+    "observed_at",
 ]
+
+COLLECTION_STATUS = {"schema_version": 1, "sources": {}}
+SOURCE_ERRORS = {}
+NETFLIX_MAX_AGE_DAYS = 14
+OFFICIAL_DOMAINS = (
+    "netflix.com", "tving.com", "wavve.com", "disneyplus.com",
+    "thewaltdisneycompany.com", "coupangplay.com", "news.coupang.com",
+    "sbs.co.kr", "imbc.com", "kbs.co.kr", "jtbc.co.kr", "cjenm.com",
+)
+
+
+def utc_now_iso():
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def safe_error(error):
+    """Keep service diagnostics useful without persisting credential-bearing URLs."""
+    message = str(error)
+    message = re.sub(r"([?&](?:key|api_key|token|access_token)=)[^&\s]+", r"\1[redacted]", message, flags=re.I)
+    for name in ("YOUTUBE_API_KEY", "KOBIS_API_KEY"):
+        value = os.getenv(name, "")
+        if value:
+            message = message.replace(value, "[redacted]")
+    return message[:500]
+
+
+def source_error(source, error):
+    SOURCE_ERRORS.setdefault(source, []).append(safe_error(error))
+
+
+def source_status(source, state, count=0, **details):
+    previous = COLLECTION_STATUS["sources"].get(source, {})
+    errors = SOURCE_ERRORS.get(source, [])
+    if errors and state in {"ok", "empty"}:
+        state = "partial" if count else "failed"
+    entry = {
+        **previous, "state": state, "count": int(count), "collected_at": utc_now_iso(),
+        "reference_date": "", "reference_period": "", "error": "; ".join(errors[-5:]),
+    }
+    if previous.get("last_success_at"):
+        entry["last_success_at"] = previous["last_success_at"]
+    entry.update(details)
+    if state in {"ok", "empty"}:
+        entry["last_success_at"] = entry["collected_at"]
+    COLLECTION_STATUS["sources"][source] = entry
+    return entry
+
+
+def source_key(row):
+    source = str(row.get("source", ""))
+    kind = str(row.get("source_type", ""))
+    if "YouTube" in source or "유튜브" in source or kind == "youtube_reaction":
+        return "youtube"
+    if "KOBIS" in source or kind == "boxoffice":
+        return "kobis"
+    if "Netflix Top 10" in source or kind == "ott_ranking":
+        return "netflix"
+    return "news"
+
+
+def is_official_url(url):
+    host = (urlparse(str(url)).hostname or "").lower()
+    return any(host == domain or host.endswith("." + domain) for domain in OFFICIAL_DOMAINS)
+
+
+def metadata_row(row, **metadata):
+    result = {column: row.get(column, "") for column in ISSUE_COLUMNS}
+    result.update(metadata)
+    if isinstance(result.get("metrics_json"), dict):
+        result["metrics_json"] = json.dumps(result["metrics_json"], ensure_ascii=False, sort_keys=True)
+    return result
 
 NEWS_QUERY_GROUPS = [
     # 온라인 화제·뉴스: 큐레이션 기회로 연결하기 쉬운 사건성 신호 중심
@@ -323,6 +402,7 @@ def resolve_article_url(url):
             },
         )
         final_url = normalize_text(response.url)
+        response.raise_for_status()
         if final_url and "news.google.com" not in urlparse(final_url).netloc.lower():
             return final_url
 
@@ -352,6 +432,9 @@ def fetch_article_image_and_url(url):
     """원문 URL과 대표 이미지를 함께 반환합니다."""
     resolved_url = resolve_article_url(url)
     target_url = resolved_url or normalize_text(url)
+    error_path = r"unsupportedbrowser|(?:^|/)(?:login|signin|consent|error|404|accessdenied)(?:/|$)"
+    if re.search(error_path, urlparse(target_url).path.lower()):
+        target_url = normalize_text(url)
     if not target_url:
         return "", ""
     try:
@@ -369,6 +452,8 @@ def fetch_article_image_and_url(url):
         )
         response.raise_for_status()
         final_url = normalize_text(response.url) or target_url
+        if re.search(error_path, urlparse(final_url).path.lower()):
+            return target_url, ""
         content_type = response.headers.get("content-type", "").lower()
         if "html" not in content_type and not response.text.lstrip().startswith("<"):
             return final_url, ""
@@ -392,7 +477,7 @@ def enrich_news_images(rows):
     targets = []
     for idx, row in enumerate(rows):
         source_url = normalize_text(row.get("source_url", ""))
-        if not source_url:
+        if not source_url or source_key(row) not in {"news"}:
             continue
         missing_image = not normalize_text(row.get("image_url", ""))
         is_google_news = "news.google.com" in urlparse(source_url).netloc.lower()
@@ -435,9 +520,20 @@ def parse_int(value):
     try:
         if value is None or value == "":
             return 0
-        return int(value)
-    except (TypeError, ValueError):
+        return int(float(str(value).strip().replace(",", "")))
+    except (TypeError, ValueError, OverflowError):
         return 0
+
+
+def optional_count(value):
+    """A missing or malformed measurement must not turn into a measured zero."""
+    try:
+        if value is None or str(value).strip() == "":
+            return None
+        number = float(str(value).replace(",", ""))
+        return int(number) if math.isfinite(number) and number >= 0 and number.is_integer() else None
+    except (TypeError, ValueError, OverflowError):
+        return None
 
 
 def extract_keywords(text):
@@ -463,69 +559,81 @@ def extract_keywords(text):
     return ",".join(found[:16])
 
 
+GENERIC_CONTENT_LABEL = re.compile(
+    r"^(?:제?\d+\s*(?:위|화|회|부|편)(?:\s*(?:예고|선공개|클립|미리보기|하이라이트))?"
+    r"|(?:ep\.?\s*)?\d+\s*(?:full|clip)?|[🔔\s]*ep\.?\s*\d+\s*full"
+    r"|메이킹|하이라이트|명장면|예고편?|선공개|미리보기|공식|단독|속보"
+    r"|인터뷰[①-⑳\d]*|eng|sub|자막|스포(?:주의)?|티저|명작맛집)$", re.I,
+)
+
+
 def _clean_content_candidate(value):
     value = normalize_text(value)
     value = re.sub(r"^[#'\"“”‘’]+|[#'\"“”‘’]+$", "", value).strip()
-    value = re.sub(r"\s*(공식\s*)?(예고편|티저|리뷰|요약|해석|결말|총정리|하이라이트|명장면|몰아보기).*?$", "", value, flags=re.I).strip()
-    return value[:60]
+    value = value.strip("[]《》〈〉≪≫")
+    value = re.sub(r"\s*(?:공식\s*)?(?:예고편|티저|리뷰|요약|해석|결말|총정리|하이라이트|명장면|몰아보기).*$", "", value, flags=re.I).strip()
+    return value
 
 
 def is_reliable_related_content(value):
     value = _clean_content_candidate(value)
-    if not value or len(value) < 2 or len(value) > 32:
+    if not value or not 2 <= len(value) <= 40 or GENERIC_CONTENT_LABEL.fullmatch(value):
+        return False
+    if re.search(r"(?:역사상|가장\s*감동|역대급|스펙업|날먹|최강\s*유산|인간쓰레기|일어나는\s*일|벌어지는\s*일)", value):
+        return False
+    if re.search(r"(?:습니다|는데요|했다|이었다|드립니다|나왔다|떴다)[.!?…]*$", value):
         return False
     tokens = re.findall(r"[가-힣A-Za-z0-9]+", value)
-    if not tokens:
+    if not tokens or sum(token in GENERIC_TITLE_WORDS for token in tokens) >= max(2, len(tokens) // 2):
         return False
-    generic_count = sum(token in GENERIC_TITLE_WORDS for token in tokens)
-    if generic_count >= max(2, len(tokens) // 2):
-        return False
-    # 완성된 설명문처럼 긴 표현은 작품명으로 사용하지 않는다.
-    if len(tokens) >= 6 and any(word in value for word in ["탄생", "스토리", "연출", "충격", "최고"]):
-        return False
-    return True
+    return len(tokens) <= 7
 
 
 def guess_related_content(title):
+    """Extract a named work, never an episode marker or an arbitrary headline."""
     title = normalize_text(title)
-
-    # 작품명을 명시하는 괄호 표기를 가장 신뢰한다.
-    for pattern in [r"《([^》]+)》", r"〈([^〉]+)〉", r"<([^>]+)>", r"\[([^\]]+)\]"]:
-        match = re.search(pattern, title)
-        if match:
+    promotion = re.search(r"(?:^|[|｜])\s*([^|｜\[\]‘’\"']+?)\s+홍보하러\s+온", title)
+    if promotion:
+        candidate = _clean_content_candidate(promotion.group(1))
+        if is_reliable_related_content(candidate):
+            return candidate
+    for pattern in [r"《([^》]+)》", r"≪([^≫]+)≫", r"〈([^〉]+)〉", r"「([^」]+)」", r"『([^』]+)』", r"<([^>]+)>", r"\[([^\]]+)\]"]:
+        for match in re.finditer(pattern, title):
+            raw = normalize_text(match.group(1))
+            # Labels like '[김유신 티저]' describe a character, not a work.
+            if GENERIC_CONTENT_LABEL.fullmatch(raw) or re.search(r"(?:티저|인터뷰[①-⑳\d]*|선공개|메이킹)$", raw):
+                continue
+            candidate = _clean_content_candidate(raw)
+            if is_reliable_related_content(candidate):
+                return candidate
+    for pattern in [r"[\"“']([^\"”']+)[\"”']", r"‘([^’]+)’"]:
+        for match in re.finditer(pattern, title):
             candidate = _clean_content_candidate(match.group(1))
+            before = title[max(0, match.start() - 20):match.start()]
+            after = title[match.end():match.end() + 20]
+            context = bool(re.search(r"영화|드라마|예능|시리즈|작품|신작|원작", before)) or bool(re.match(r"\s*(?:시즌|공식|예고|리뷰|몰아보기|공개|개봉|제작|첫방)", after))
+            if context and is_reliable_related_content(candidate):
+                return candidate
+    for hashtag in re.findall(r"#([가-힣A-Za-z0-9]+)", title):
+        if hashtag.lower() in {"sbscatch", "sbs", "kbs", "mbc", "넷플릭스", "드라마", "예능", "영화", "shorts"}:
+            continue
+        if is_reliable_related_content(hashtag):
+            return hashtag
+    # A leading work name followed by an explicit format is usable; free prose is not.
+    for sep in [" | ", "ㅣ", " - ", " 공식 예고편", " 예고편", " 공식 티저", " 리뷰", " 몰아보기"]:
+        if sep in title:
+            candidate = _clean_content_candidate(title.split(sep)[0])
             if is_reliable_related_content(candidate):
                 return candidate
-
-    # 따옴표는 문장 전체를 감싸는 경우가 많으므로 짧은 작품명일 때만 채택한다.
-    for pattern in [r"[\"“']([^\"”']+)[\"”']", r"[‘]([^’]+)[’]"]:
-        match = re.search(pattern, title)
-        if match:
-            candidate = _clean_content_candidate(match.group(1))
-            if is_reliable_related_content(candidate):
-                return candidate
-
-    cleaned = re.sub(r"\[[^\]]+\]", "", title).strip()
-    # 공식 예고편처럼 구분자로 작품명이 앞에 오는 제목을 처리한다.
-    for sep in [" - ", " | ", "…", ":", "：", "ㅣ"]:
-        if sep in cleaned:
-            candidate = _clean_content_candidate(cleaned.split(sep)[0])
-            if is_reliable_related_content(candidate):
-                return candidate
-
-    # '작품명 리뷰/예고편' 형태를 처리하되 설명문이면 비워 둔다.
-    candidate = _clean_content_candidate(cleaned)
-    if is_reliable_related_content(candidate):
-        return candidate
     return ""
 
 
 def parse_entry_date(entry):
-    if hasattr(entry, "published_parsed") and entry.published_parsed:
-        return datetime(*entry.published_parsed[:6]).date()
-    if hasattr(entry, "updated_parsed") and entry.updated_parsed:
-        return datetime(*entry.updated_parsed[:6]).date()
-    return today_kst_date()
+    for field in ("published_parsed", "updated_parsed"):
+        parsed = entry.get(field) if isinstance(entry, dict) else getattr(entry, field, None)
+        if parsed:
+            return datetime(*parsed[:6], tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=9))).date()
+    return None
 
 
 def load_csv(path, columns):
@@ -539,8 +647,8 @@ def load_csv(path, columns):
                 df[col] = ""
         return df[columns]
     except Exception as exc:
-        print(f"CSV 읽기 실패: {path} / {exc}")
-        return pd.DataFrame(columns=columns)
+        # An unreadable existing file is not an empty successful collection.
+        raise RuntimeError(f"기존 CSV 읽기 실패: {path.name}: {safe_error(exc)}") from exc
 
 
 def save_csv(df, path, columns):
@@ -562,37 +670,79 @@ def collect_google_news():
     rows = []
     today = today_kst_date()
     start_date = today - timedelta(days=DAYS - 1)
-
-    for source, query in NEWS_QUERY_GROUPS:
+    missing_dates = 0
+    rejected = 0
+    for requested_source, query in NEWS_QUERY_GROUPS:
         url = "https://news.google.com/rss/search?" + f"q={quote(query)}&hl=ko&gl=KR&ceid=KR:ko"
-        feed = feedparser.parse(url)
-
+        try:
+            response = requests.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
+            response.raise_for_status()
+            feed = feedparser.parse(response.content)
+            if getattr(feed, "bozo", False) and not feed.entries:
+                raise ValueError("RSS 파싱 실패")
+        except Exception as exc:
+            source_error("news", f"RSS 수집 실패 ({query}): {safe_error(exc)}")
+            continue
         for entry in feed.entries[:12]:
             published_date = parse_entry_date(entry)
-            if not (start_date <= published_date <= today):
+            if published_date is None:
+                missing_dates += 1
                 continue
-
+            if not start_date <= published_date <= today:
+                continue
             title = normalize_text(entry.get("title", ""))
             link = normalize_text(entry.get("link", ""))
             summary = clean_html_text(entry.get("summary", ""))
-            if not title or not link:
+            publisher_info = entry.get("source", {}) or {}
+            publisher = normalize_text(publisher_info.get("title", ""))
+            # RSS appends the publisher to the headline; it is not part of a work name.
+            headline = title.rsplit(" - " + publisher, 1)[0] if publisher else title
+            related = guess_related_content(headline)
+            relevant = is_content_relevant_resource({"snippet": {"title": headline, "description": summary}})
+            if not title or not link or not related or not relevant:
+                rejected += 1
                 continue
+            rows.append(metadata_row({
+                "date": published_date.isoformat(), "source": "온라인 화제·뉴스",
+                "issue_title": headline[:140], "related_content": related,
+                "keywords": extract_keywords(f"{headline} {summary}"),
+                "description": summary[:300] or headline,
+                "source_url": link, "image_url": extract_entry_image(entry),
+            }, published_at=published_date.isoformat(), collected_at=utc_now_iso(),
+                reference_date=published_date.isoformat(), reference_period=published_date.isoformat(),
+                publisher=publisher, source_type="news", content_id="", event_type=infer_news_event(headline + " " + summary),
+                metrics_json={}, quality_status="candidate", quality_notes="기사 기반 신호; 작품명 자동 추출 후보"))
+    rows = enrich_news_images(rows)
+    unresolved = 0
+    for row in rows:
+        if is_official_url(row["source_url"]):
+            host = urlparse(row["source_url"]).hostname or ""
+            ott_domains = ("netflix.com", "tving.com", "wavve.com", "disneyplus.com", "coupangplay.com")
+            row["source"] = "OTT 공식 신작" if any(host == domain or host.endswith("." + domain) for domain in ott_domains) else "온라인 화제·뉴스"
+            row["source_type"] = "official_announcement"
+            row["quality_notes"] = "공식 도메인의 발표; 작품명 자동 추출 후보"
+        elif "news.google.com" in (urlparse(row["source_url"]).hostname or ""):
+            row["quality_notes"] += "; 원문 URL 미해석(매체는 RSS 출처)"
+            unresolved += 1
+    if unresolved:
+        source_error("news", f"원문 URL 미해석 {unresolved}건: 자동 선정 전 확인 필요")
+    if missing_dates:
+        source_error("news", f"실제 발행일 미확인 {missing_dates}건 제외")
+    source_status("news", "ok" if rows else "empty", len(rows),
+                  reference_date=today.isoformat(), reference_period=f"{start_date.isoformat()}/{today.isoformat()}",
+                  rejected_count=rejected, missing_publication_date_count=missing_dates,
+                  unresolved_original_count=unresolved)
+    return rows
 
-            related = guess_related_content(title)
-            keywords = extract_keywords(f"{query} {title} {summary}")
-            desc = summary[:220] if summary else f"최근 {source}에서 '{title}' 관련 자료가 확인됨."
-            rows.append({
-                "date": published_date.strftime("%Y-%m-%d"),
-                "source": source,
-                "issue_title": title[:140],
-                "related_content": related,
-                "keywords": keywords,
-                "description": desc,
-                "source_url": link,
-                "image_url": extract_entry_image(entry),
-            })
 
-    return enrich_news_images(rows)
+def infer_news_event(text):
+    for pattern, event in ((r"개봉", "release"), (r"캐스팅|출연\s*확정", "casting"),
+                           (r"제작\s*확정|영상화|리메이크", "production"), (r"공개|첫방|방영|신작", "release"),
+                           (r"시청률|역주행", "audience"), (r"수상|영화제", "award"), (r"종영|결말", "finale")):
+        if re.search(pattern, text):
+            return event
+    return ""
+
 
 def api_key():
     return normalize_text(os.getenv("YOUTUBE_API_KEY", ""))
@@ -683,15 +833,26 @@ def fetch_youtube_video_resources(video_ids, parts="snippet,statistics,contentDe
 
 
 def is_content_relevant_resource(resource):
+    """Require film/TV evidence for every discovery route; query text is not evidence."""
     snippet = resource.get("snippet", {}) or {}
-    category_id = str(snippet.get("categoryId", ""))
-    text = " ".join([
-        normalize_text(snippet.get("title", "")),
-        normalize_text(snippet.get("description", "")),
-        normalize_text(snippet.get("channelTitle", "")),
-        " ".join(snippet.get("tags", [])[:15]),
-    ]).lower()
-    return category_id in CONTENT_VIDEO_CATEGORY_IDS or any(term.lower() in text for term in CONTENT_RELEVANCE_TERMS)
+    title = normalize_text(snippet.get("title", ""))
+    description = normalize_text(snippet.get("description", ""))
+    category = str(snippet.get("categoryId", ""))
+    text = " ".join([title, description, " ".join(snippet.get("tags", [])[:15])]).lower()
+    title_lower = title.lower()
+    explicit_work = bool(re.search(r"영화|드라마|예능|애니메이션|다큐멘터리|시트콤", title_lower))
+    if re.search(r"메이플스토리|로스트아크|스타크래프트|리그\s*오브\s*레전드|발로란트|게임\s*실황|스펙업|대리방송", title_lower) and not explicit_work:
+        return False
+    if category == "20" and not explicit_work:
+        return False
+    if re.search(r"\bmlb\b|\bnba\b|\bkbo\b|프리미어리그|uefa|챔피언스리그", title_lower) and not explicit_work:
+        return False
+    music = re.search(r"\bmv\b|m/v|뮤직비디오|music\s*video|퍼포먼스|1thekillpo|직캠|dance\s*practice|a2o|이수만|케이팝|k팝", title_lower)
+    if (music or category == "10") and not explicit_work:
+        return False
+    strong = ("영화", "드라마", "예능", "시리즈", "넷플릭스", "티빙", "웨이브", "디즈니플러스", "디즈니+", "쿠팡플레이", "애니메이션", "다큐멘터리", "시트콤", "tving", "netflix")
+    # Entertainment/category24 and generic 'review/highlight/interview' are insufficient.
+    return any(term in text for term in strong)
 
 
 def resolve_official_channel(channel):
@@ -709,7 +870,7 @@ def resolve_official_channel(channel):
             if payload.get("items"):
                 return payload["items"][0]
         except Exception as exc:
-            print(f"공식 채널 handle 조회 실패: {channel['name']} / {exc}")
+            source_error("youtube", f"공식 채널 handle 조회 실패 ({channel['name']}): {safe_error(exc)}")
 
     try:
         search = youtube_get(
@@ -740,7 +901,7 @@ def resolve_official_channel(channel):
         )
         return items[0] if items else None
     except Exception as exc:
-        print(f"공식 채널 검색 실패: {channel['name']} / {exc}")
+        source_error("youtube", f"공식 채널 검색 실패 ({channel['name']}): {safe_error(exc)}")
         return None
 
 
@@ -784,7 +945,7 @@ def discover_youtube_videos_api():
             for item in payload.get("items", []):
                 add_candidate(item.get("id", {}).get("videoId", ""), f"검색:{query}", item.get("snippet", {}))
         except Exception as exc:
-            print(f"유튜브 검색 실패: {query} / {exc}")
+            source_error("youtube", f"검색 실패 ({query}): {safe_error(exc)}")
 
     # 2) 검색어 없이 한국 인기 영상
     try:
@@ -802,7 +963,7 @@ def discover_youtube_videos_api():
             if is_content_relevant_resource(item):
                 add_candidate(item.get("id", ""), "한국 인기 영상", item.get("snippet", {}))
     except Exception as exc:
-        print(f"한국 인기 영상 수집 실패: {exc}")
+        source_error("youtube", f"인기 영상 수집 실패: {safe_error(exc)}")
 
     # 3) 주요 OTT·방송사 공식 채널 신규 업로드
     cutoff = today_kst_date() - timedelta(days=DAYS - 1)
@@ -834,7 +995,7 @@ def discover_youtube_videos_api():
                 video_id = item.get("contentDetails", {}).get("videoId", "") or snippet.get("resourceId", {}).get("videoId", "")
                 add_candidate(video_id, f"공식채널:{channel['name']}", snippet)
         except Exception as exc:
-            print(f"공식 채널 업로드 수집 실패: {channel['name']} / {exc}")
+            source_error("youtube", f"공식 채널 업로드 실패 ({channel['name']}): {safe_error(exc)}")
 
     if not candidates:
         return pd.DataFrame(columns=WATCHLIST_COLUMNS)
@@ -854,8 +1015,8 @@ def discover_youtube_videos_api():
             continue
 
         origins = candidates[video_id]["origins"]
-        # 인기 영상은 콘텐츠 관련성 필터를 통과한 것만 유지합니다.
-        if origins == ["한국 인기 영상"] and not is_content_relevant_resource(resource):
+        # Search and official-channel origins are provenance, not relevance evidence.
+        if not is_content_relevant_resource(resource):
             continue
 
         title = normalize_text(snippet.get("title", ""))
@@ -864,7 +1025,7 @@ def discover_youtube_videos_api():
         duration_seconds = parse_iso8601_duration(details.get("duration", ""))
         origin_text = " / ".join(origins[:6])
         metadata_text = " ".join([
-            origin_text, title, channel_title, description,
+            title, channel_title, description,
             " ".join(snippet.get("tags", [])[:10]),
         ])
         rows.append({
@@ -880,6 +1041,9 @@ def discover_youtube_videos_api():
             "description": description,
             "duration_seconds": duration_seconds,
             "video_type": video_type_from_duration(duration_seconds, metadata_text),
+            "category_id": str(snippet.get("categoryId", "")),
+            "channel_id": normalize_text(snippet.get("channelId", "")),
+            "last_discovered_at": utc_now_iso(),
         })
 
     return pd.DataFrame(rows, columns=WATCHLIST_COLUMNS).fillna("").drop_duplicates("video_id")
@@ -904,7 +1068,7 @@ def extract_upload_date(info):
 def discover_youtube_videos_ytdlp():
     """API 키가 없을 때만 사용하는 호환용 보조 수집기."""
     if yt_dlp is None:
-        print("yt-dlp import 실패. 유튜브 수집을 건너뜁니다.")
+        source_error("youtube", "yt-dlp import 실패")
         return pd.DataFrame(columns=WATCHLIST_COLUMNS)
 
     today = today_kst_date().strftime("%Y-%m-%d")
@@ -925,7 +1089,7 @@ def discover_youtube_videos_ytdlp():
                     download=False,
                 )
             except Exception as exc:
-                print(f"yt-dlp 검색 실패: {query} / {exc}")
+                source_error("youtube", f"yt-dlp 검색 실패 ({query}): {safe_error(exc)}")
                 continue
 
             for item in (result or {}).get("entries", []):
@@ -935,6 +1099,8 @@ def discover_youtube_videos_ytdlp():
                 title = normalize_text(item.get("title", ""))
                 channel = normalize_text(item.get("channel", "") or item.get("uploader", ""))
                 if not video_id or not title:
+                    continue
+                if not is_content_relevant_resource({"snippet": {"title": title, "description": item.get("description", ""), "tags": item.get("tags", [])}}):
                     continue
 
                 upload_date = extract_upload_date(item)
@@ -955,11 +1121,12 @@ def discover_youtube_videos_ytdlp():
                     "first_seen_date": today,
                     "upload_date": upload_date,
                     "related_content": guess_related_content(title),
-                    "keywords": extract_keywords(f"{query} {title} {channel}"),
+                    "keywords": extract_keywords(f"{title} {item.get('description', '')}"),
                     "query": query,
                     "description": normalize_text(item.get("description", ""))[:500],
                     "duration_seconds": duration_seconds,
                     "video_type": video_type_from_duration(duration_seconds, f"{title} {item.get('description', '')}"),
+                    "last_discovered_at": utc_now_iso(),
                 })
 
     return pd.DataFrame(rows, columns=WATCHLIST_COLUMNS).fillna("").drop_duplicates("video_id")
@@ -967,11 +1134,12 @@ def discover_youtube_videos_ytdlp():
 
 def discover_youtube_videos():
     if api_key():
-        print("유튜브 수집 방식: YouTube Data API v3")
         return discover_youtube_videos_api()
-
-    print("경고: YOUTUBE_API_KEY가 없어 yt-dlp 보조 수집을 사용합니다.")
-    return discover_youtube_videos_ytdlp()
+    if os.getenv("ALLOW_YTDLP_FALLBACK", "").lower() in {"1", "true", "yes"}:
+        source_error("youtube", "공식 API 키 미설정: 보조 검색 경로만 사용")
+        return discover_youtube_videos_ytdlp()
+    source_status("youtube", "skipped", error="YOUTUBE_API_KEY 미설정: 공식 API 수집을 실행하지 않음")
+    return pd.DataFrame(columns=WATCHLIST_COLUMNS)
 
 
 def update_youtube_watchlist(new_videos):
@@ -1001,12 +1169,17 @@ def fetch_video_stats_api(video_ids):
         if status and status.get("privacyStatus") != "public":
             continue
         statistics = item.get("statistics", {}) or {}
+        views = optional_count(statistics.get("viewCount"))
+        if views is None:
+            source_error("youtube", "조회수 미제공 영상은 관측에서 제외")
+            continue
         rows.append({
             "date": today,
             "video_id": normalize_text(item.get("id", "")),
-            "view_count": parse_int(statistics.get("viewCount")),
-            "like_count": parse_int(statistics.get("likeCount")),
-            "comment_count": parse_int(statistics.get("commentCount")),
+            "view_count": views,
+            "like_count": optional_count(statistics.get("likeCount")),
+            "comment_count": optional_count(statistics.get("commentCount")),
+            "observed_at": utc_now_iso(),
         })
     return rows
 
@@ -1027,12 +1200,17 @@ def fetch_video_stats_ytdlp(video_ids):
                 continue
             if not info:
                 continue
+            views = optional_count(info.get("view_count"))
+            if views is None:
+                source_error("youtube", "조회수 미제공 영상은 보조 관측에서 제외")
+                continue
             rows.append({
                 "date": today,
                 "video_id": video_id,
-                "view_count": parse_int(info.get("view_count")),
-                "like_count": parse_int(info.get("like_count")),
-                "comment_count": parse_int(info.get("comment_count")),
+                "view_count": views,
+                "like_count": optional_count(info.get("like_count")),
+                "comment_count": optional_count(info.get("comment_count")),
+                "observed_at": utc_now_iso(),
             })
     return rows
 
@@ -1043,191 +1221,255 @@ def fetch_video_stats(video_ids):
     return fetch_video_stats_ytdlp(video_ids)
 
 
-def update_youtube_stats(watchlist):
-    existing_stats = load_csv(YOUTUBE_STATS_PATH, STATS_COLUMNS)
-    if watchlist.empty:
-        return existing_stats
+def youtube_meta_relevant(meta):
+    return is_content_relevant_resource({"snippet": {
+        "title": meta.get("title", ""), "description": meta.get("description", ""),
+        "channelTitle": meta.get("channel", ""), "categoryId": meta.get("category_id", ""),
+    }})
 
+
+def build_youtube_metrics(meta, history, as_of_date=None):
+    """Use observations at or before as_of_date; legacy dates never become fake timestamps."""
+    as_of = as_of_date or today_kst_date()
+    as_of = pd.Timestamp(as_of).date()
+    observed = history.copy()
+    if "video_id" in observed and meta.get("video_id"):
+        observed = observed[observed["video_id"].astype(str).eq(str(meta["video_id"]))]
+    observed = observed[observed["view_count"].map(optional_count).notna()].copy()
+    observed["_date"] = pd.to_datetime(observed["date"], errors="coerce").dt.date
+    observed = observed[observed["_date"].notna() & observed["_date"].le(as_of)].copy()
+    if "observed_at" not in observed:
+        observed["observed_at"] = ""
+    observed["_timestamp"] = pd.to_datetime(observed["observed_at"], errors="coerce", utc=True)
+    cutoff = pd.Timestamp(as_of + timedelta(days=1), tz="Asia/Seoul").tz_convert("UTC")
+    observed = observed[observed["_timestamp"].isna() | observed["_timestamp"].lt(cutoff)]
+    observed = observed.sort_values(["_date", "_timestamp"], na_position="first").drop_duplicates("_date", keep="last")
+    if observed.empty:
+        return {}
+    current = observed.iloc[-1]
+    upload = pd.to_datetime(meta.get("upload_date", ""), errors="coerce")
+    age = (current["_date"] - upload.date()).days + 1 if pd.notna(upload) else None
+    metrics = {
+        "views_total": max(0, parse_int(current.get("view_count"))),
+        "likes_total": optional_count(current.get("like_count")),
+        "comments_total": optional_count(current.get("comment_count")),
+        "age_days": age, "reaction_basis": "initial", "observation_precision": "timestamp" if pd.notna(current["_timestamp"]) else "date",
+        "observation_start": "", "observation_end": normalize_text(str(current.get("observed_at", ""))) or current["_date"].isoformat(),
+        "reference_date": current["_date"].isoformat(),
+        "observation_days": None, "views_change": None, "comments_change": None,
+        "views_change_per_day": None, "comments_change_per_day": None,
+        "views_per_day_since_upload": round(max(0, parse_int(current.get("view_count"))) / age, 2) if age and age > 0 else None,
+    }
+    if len(observed) < 2:
+        return metrics
+    previous = observed.iloc[-2]
+    elapsed = (current["_date"] - previous["_date"]).days
+    precision = "date"
+    if pd.notna(current["_timestamp"]) and pd.notna(previous["_timestamp"]):
+        timestamp_days = (current["_timestamp"] - previous["_timestamp"]).total_seconds() / 86400
+        if timestamp_days > 0:
+            elapsed, precision = timestamp_days, "timestamp"
+    if elapsed <= 0:
+        return metrics
+    views_change = parse_int(current.get("view_count")) - parse_int(previous.get("view_count"))
+    current_comments, previous_comments = optional_count(current.get("comment_count")), optional_count(previous.get("comment_count"))
+    comments_change = current_comments - previous_comments if current_comments is not None and previous_comments is not None else None
+    metrics.update({
+        "reaction_basis": "observed_change", "observation_precision": precision,
+        "observation_start": normalize_text(str(previous.get("observed_at", ""))) or previous["_date"].isoformat(),
+        "observation_days": round(float(elapsed), 6),
+        "views_change": views_change, "comments_change": comments_change,
+        "views_change_per_day": round(max(0, views_change) / elapsed, 2),
+        "comments_change_per_day": round(max(0, comments_change) / elapsed, 2) if comments_change is not None else None,
+        "growth_rate": round(max(0, views_change) / max(parse_int(previous.get("view_count")), 1), 6),
+        "counter_decreased": views_change < 0 or (comments_change is not None and comments_change < 0),
+    })
+    return metrics
+
+
+def select_youtube_tracking(watchlist, stats, limit=MAX_TRACKING_VIDEOS):
+    """Balance new work discovery with already-observed reactions instead of newest-only."""
     today = today_kst_date()
-    cutoff = today - timedelta(days=MAX_VIDEO_TRACK_DAYS)
-    active = watchlist.copy()
-    active["first_seen_dt"] = pd.to_datetime(active["first_seen_date"], errors="coerce").dt.date
-    active = active[
-        active["first_seen_dt"].isna() | (active["first_seen_dt"] >= cutoff)
-    ].copy()
+    eligible = []
+    for meta in watchlist.to_dict("records"):
+        upload = pd.to_datetime(meta.get("upload_date", ""), errors="coerce")
+        if pd.isna(upload) or not 0 <= (today - upload.date()).days < MAX_VIDEO_TRACK_DAYS:
+            continue
+        related = guess_related_content(meta.get("title", ""))
+        if not related or not youtube_meta_relevant(meta):
+            continue
+        metrics = build_youtube_metrics(meta, stats, today)
+        impact = (metrics.get("views_change_per_day") or 0) if metrics.get("reaction_basis") == "observed_change" else (metrics.get("views_per_day_since_upload") or 0) * .25
+        eligible.append({**meta, "_upload": upload.date(), "_impact": impact, "_observed": bool(metrics)})
+    recent = sorted(eligible, key=lambda item: (item["_upload"], str(item["video_id"])), reverse=True)
+    impact = sorted((item for item in eligible if item["_observed"]), key=lambda item: (item["_impact"], item["_upload"], str(item["video_id"])), reverse=True)
+    chosen, seen = [], set()
+    def take(items, number):
+        for item in items:
+            if len(chosen) >= number:
+                break
+            if item["video_id"] not in seen:
+                chosen.append(item["video_id"])
+                seen.add(item["video_id"])
+    take(impact, limit // 2)
+    take(recent, limit)
+    source_status("youtube", "ok", tracking_strategy="observed-impact-half/recent-upload-half",
+                  tracking_eligible_count=len(eligible), tracking_selected_count=len(chosen),
+                  tracking_omitted_count=max(0, len(eligible) - len(chosen)))
+    return chosen
 
-    # 최근 발견 영상부터 추적해 오래된 영상이 상한을 독식하지 않게 한다.
-    active = active.sort_values("first_seen_dt", ascending=False, na_position="last").head(MAX_TRACKING_VIDEOS)
-    today_str = today.strftime("%Y-%m-%d")
-    already_today = set(
-        existing_stats[existing_stats["date"].astype(str) == today_str]["video_id"].astype(str)
-    )
-    video_ids = [video_id for video_id in active["video_id"].astype(str) if video_id not in already_today]
-    new_stats = fetch_video_stats(video_ids)
-    if not new_stats:
-        return existing_stats
 
-    merged = pd.concat([
-        existing_stats,
-        pd.DataFrame(new_stats, columns=STATS_COLUMNS).fillna(""),
-    ], ignore_index=True)
-    merged = merged.drop_duplicates(subset=["date", "video_id"], keep="last")
+def update_youtube_stats(watchlist):
+    existing = load_csv(YOUTUBE_STATS_PATH, STATS_COLUMNS)
+    if watchlist.empty:
+        return existing
+    today = today_kst_date().isoformat()
+    selected = select_youtube_tracking(watchlist, existing)
+    already = set(existing.loc[existing["date"].astype(str).eq(today), "video_id"].astype(str))
+    video_ids = [video_id for video_id in selected if video_id not in already]
+    new_stats = fetch_video_stats(video_ids) if video_ids else []
+    if video_ids and not new_stats:
+        raise RuntimeError("YouTube 선택 대상의 통계 응답이 비어 있음")
+    received = {str(row["video_id"]) for row in new_stats}
+    missing = len(set(video_ids) - received)
+    if missing:
+        source_error("youtube", f"선택 대상 {len(video_ids)}개 중 {missing}개 통계 미수신")
+    merged = pd.concat([existing, pd.DataFrame(new_stats, columns=STATS_COLUMNS).fillna("")], ignore_index=True)
+    merged = merged.drop_duplicates(["date", "video_id"], keep="last")
     save_csv(merged, YOUTUBE_STATS_PATH, STATS_COLUMNS)
+    entry = COLLECTION_STATUS["sources"].get("youtube", {})
+    eligible_count = entry.get("tracking_eligible_count", 0)
+    today_count = len(set(merged.loc[merged["date"].astype(str).eq(today), "video_id"].astype(str)) & set(selected))
+    entry.update({"observation_missing_count": missing, "tracking_observed_count": today_count,
+                  "tracking_unobserved_count": max(0, eligible_count - today_count)})
     return merged
 
 
+def youtube_issue_row(meta, metrics, date_text=None):
+    related = guess_related_content(meta.get("title", ""))
+    if not related or not youtube_meta_relevant(meta) or not metrics:
+        return None
+    age = metrics.get("age_days")
+    if age is None or not 1 <= age <= DAYS:
+        return None
+    confirmed = metrics["reaction_basis"] == "observed_change"
+    if confirmed:
+        qualifies = (metrics["views_change_per_day"] >= DAILY_VIEW_DELTA_THRESHOLD
+                     or (metrics["comments_change_per_day"] or 0) >= DAILY_COMMENT_DELTA_THRESHOLD
+                     or (metrics.get("growth_rate", 0) >= GROWTH_RATE_THRESHOLD and metrics["views_change_per_day"] >= GROWTH_MIN_DELTA))
+        signal = metrics["views_change_per_day"]
+        comments_text = f"댓글 {metrics['comments_change']:+,}개 변화" if metrics['comments_change'] is not None else "댓글 변화 미측정"
+        observation = f"{metrics['observation_start']} → {metrics['observation_end']} 관측 사이 조회 {metrics['views_change']:+,}회, {comments_text}."
+        precision_note = "날짜 단위 관측간 증가(정확한 24시간 증가 아님)" if metrics["observation_precision"] == "date" else "기록된 시각 사이 관측 증가"
+    else:
+        qualifies = metrics["views_total"] >= NEW_VIDEO_HIGH_VIEW_THRESHOLD or (metrics["views_per_day_since_upload"] or 0) >= NEW_VIDEO_VIEWS_PER_DAY_THRESHOLD
+        signal = (metrics["views_per_day_since_upload"] or 0) * .35
+        observation = "최초 관측: 이전 관측값이 없어 증가량은 확인되지 않음."
+        precision_note = "초기 누적 반응; 상승/급등으로 확인된 신호 아님"
+    if not qualifies:
+        return None
+    reference = metrics["reference_date"]
+    period = (metrics["observation_start"] + "/" + metrics["observation_end"]) if confirmed else reference
+    return metadata_row({
+        "date": date_text or reference, "source": "YouTube 반응",
+        "issue_title": f"{related} 관련 YouTube {'관측 반응 증가' if confirmed else '초기 반응 후보'}",
+        "related_content": related, "keywords": extract_keywords(f"{related} {meta.get('title', '')}"),
+        "description": f"{meta.get('title', '')} · {observation} 누적 조회 {metrics['views_total']:,}회. 채널: {meta.get('channel', '')}.",
+        "source_url": meta.get("url", ""), "image_url": f"https://i.ytimg.com/vi/{meta.get('video_id', '')}/hqdefault.jpg",
+    }, published_at=meta.get("upload_date", ""), collected_at=metrics["observation_end"] if metrics["observation_precision"] == "timestamp" else "",
+        reference_date=reference, reference_period=period, publisher=meta.get("channel", ""), source_type="youtube_reaction",
+        content_id=meta.get("video_id", ""), event_type="observed_reaction" if confirmed else "initial_reaction",
+        metrics_json=metrics, quality_status="candidate", quality_notes=precision_note + "; 작품명 자동 추출 후보", _signal=signal)
+
+
 def make_youtube_issues(watchlist, stats):
-    """최근 화제 영상 후보를 조회 규모·댓글·공개 후 속도로 선별합니다.
-
-    일일 급등 계산은 핵심 선정 기준에서 제외하고, 한국 인기 영상·공식 채널·12개
-    검색어로 발견된 후보 중 최근 반응이 큰 영상을 선택합니다.
-    """
     if watchlist.empty or stats.empty:
+        source_status("youtube", "empty", 0, error="관측할 영상 또는 통계가 없음")
         return []
-
     today = today_kst_date()
-    today_str = today.strftime("%Y-%m-%d")
-    stats = stats.copy()
-    for column in ["view_count", "like_count", "comment_count"]:
-        stats[column] = pd.to_numeric(stats[column], errors="coerce").fillna(0).astype(int)
-    current = stats[stats["date"].astype(str) == today_str].copy()
-    if current.empty:
+    today_stats = stats[stats["date"].astype(str).eq(today.isoformat())]
+    if today_stats.empty:
+        source_status("youtube", "failed", 0, error="오늘 수집한 YouTube 관측 통계가 없음")
         return []
-
-    watchlist_map = watchlist.set_index("video_id").to_dict("index")
     rows = []
-    for _, metric in current.iterrows():
-        video_id = str(metric["video_id"])
-        meta = watchlist_map.get(video_id)
-        if not meta:
-            continue
-
-        upload_text = normalize_text(meta.get("upload_date", ""))
-        try:
-            upload_date = datetime.strptime(upload_text, "%Y-%m-%d").date()
-        except Exception:
-            upload_date = today
-        age_days = max((today - upload_date).days + 1, 1)
-        origin = normalize_text(meta.get("query", ""))
-        is_popular = "한국 인기 영상" in origin
-        if age_days > DAYS and not is_popular:
-            continue
-
-        view_count = parse_int(metric.get("view_count"))
-        like_count = parse_int(metric.get("like_count"))
-        comment_count = parse_int(metric.get("comment_count"))
-        views_per_day = view_count / age_days
-        official = "공식채널:" in origin
-
-        # 공식 신규 영상은 절대 조회수가 다소 낮아도 후보로 남기고,
-        # 일반 검색 영상은 반응 기준을 더 엄격하게 적용합니다.
-        qualifies = (
-            is_popular
-            or view_count >= 100000
-            or views_per_day >= 20000
-            or comment_count >= 200
-            or (official and (view_count >= 30000 or comment_count >= 50))
-        )
-        if not qualifies:
-            continue
-
-        title = normalize_text(meta.get("title", ""))
-        related = normalize_text(meta.get("related_content", ""))
-        if not is_reliable_related_content(related):
-            continue
-
-        video_type = normalize_text(meta.get("video_type", "")) or "일반 영상"
-        channel = normalize_text(meta.get("channel", ""))
-        url = normalize_text(meta.get("url", ""))
-        keywords = normalize_text(meta.get("keywords", ""))
-        desc = (
-            f"'{title}' 영상이 공개 {age_days}일 기준 조회수 {view_count:,}회, "
-            f"좋아요 {like_count:,}개, 댓글 {comment_count:,}개를 기록. "
-            f"일평균 조회수 약 {views_per_day:,.0f}회. 채널: {channel}. "
-            f"수집 경로: {origin}. 영상 유형: {video_type}."
-        )
-        signal = views_per_day + comment_count * 250 + (30000 if is_popular else 0) + (15000 if official else 0)
-        rows.append({
-            "date": today_str,
-            "source": "YouTube 반응",
-            "issue_title": f"{related} 관련 YouTube 화제 영상",
-            "related_content": related,
-            "keywords": keywords,
-            "description": desc[:420],
-            "source_url": url,
-            "image_url": f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
-            "_signal": signal,
-        })
-
+    for meta in watchlist[watchlist["video_id"].astype(str).isin(today_stats["video_id"].astype(str))].to_dict("records"):
+        row = youtube_issue_row(meta, build_youtube_metrics(meta, stats, today))
+        if row:
+            rows.append(row)
     rows.sort(key=lambda row: row["_signal"], reverse=True)
-    cleaned = []
-    seen_content = set()
+    cleaned, seen = [], set()
     for row in rows:
-        key = normalize_text(row["related_content"]).lower()
-        if key in seen_content:
+        identity = normalize_dedup_text(row["related_content"])
+        if identity in seen:
             continue
-        seen_content.add(key)
+        seen.add(identity)
         row.pop("_signal", None)
         cleaned.append(row)
-    return cleaned[:15]
+    cleaned = cleaned[:15]
+    entry = COLLECTION_STATUS["sources"].get("youtube", {})
+    omissions = entry.get("tracking_unobserved_count", 0)
+    source_status("youtube", "partial" if omissions else ("ok" if cleaned else "empty"), len(cleaned),
+                  reference_date=today.isoformat(), reference_period=today.isoformat())
+    return cleaned
 
 
 def collect_kobis_boxoffice():
     key = normalize_text(os.getenv("KOBIS_API_KEY", ""))
-    if not key:
-        print("KOBIS_API_KEY 없음: 극장·박스오피스 수집을 건너뜁니다.")
-        return []
-
     target = today_kst_date() - timedelta(days=1)
-    try:
-        response = requests.get(
-            KOBIS_DAILY_ENDPOINT,
-            params={"key": key, "targetDt": target.strftime("%Y%m%d")},
-            timeout=REQUEST_TIMEOUT_SECONDS,
-        )
-        response.raise_for_status()
-        payload = response.json().get("boxOfficeResult", {})
-        items = payload.get("dailyBoxOfficeList", [])
-    except Exception as exc:
-        print(f"KOBIS 수집 실패: {exc}")
+    if not key:
+        source_status("kobis", "skipped", error="KOBIS_API_KEY 미설정", reference_date=target.isoformat())
         return []
-
+    try:
+        response = requests.get(KOBIS_DAILY_ENDPOINT,
+            params={"key": key, "targetDt": target.strftime("%Y%m%d")}, timeout=REQUEST_TIMEOUT_SECONDS)
+        response.raise_for_status()
+        data = response.json()
+        if data.get("faultInfo") or "boxOfficeResult" not in data:
+            raise ValueError("KOBIS 오류 응답 또는 boxOfficeResult 누락")
+        payload = data["boxOfficeResult"]
+        items = payload.get("dailyBoxOfficeList")
+        if not isinstance(items, list):
+            raise ValueError("KOBIS dailyBoxOfficeList 형식 오류")
+        show_range = normalize_text(payload.get("showRange", ""))
+        if show_range and not show_range.startswith(target.strftime("%Y%m%d")):
+            raise ValueError("KOBIS 응답 기준일이 요청일과 다름")
+    except Exception as exc:
+        source_error("kobis", exc)
+        source_status("kobis", "failed", reference_date=target.isoformat())
+        return []
     rows = []
     for item in items:
-        rank = parse_int(item.get("rank"))
-        rank_inten = parse_int(item.get("rankInten"))
-        new_entry = normalize_text(item.get("rankOldAndNew", "")) == "NEW"
-        # KOBIS 일별 박스오피스가 제공하는 Top 10을 모두 수집합니다.
-        # 신규 진입·순위 상승 여부는 제목과 점수 계산에서 별도로 강조합니다.
         movie = normalize_text(item.get("movieNm", ""))
-        if not movie:
+        movie_id = normalize_text(item.get("movieCd", ""))
+        rank = parse_int(item.get("rank"))
+        if not movie or not movie_id or not 1 <= rank <= 10:
+            source_error("kobis", "영화 ID·영화명·순위가 없는 항목 제외")
             continue
-        daily_audience = parse_int(item.get("audiCnt"))
-        cumulative = parse_int(item.get("audiAcc"))
-        sales_share = normalize_text(item.get("salesShare", ""))
-        if new_entry:
-            headline = f"{movie} 박스오피스 신규 진입 {rank}위"
-        elif rank == 1:
-            headline = f"{movie} 일일 박스오피스 1위"
-        elif rank_inten >= 2:
-            headline = f"{movie} 박스오피스 {rank_inten}계단 상승해 {rank}위"
-        else:
-            headline = f"{movie} 일일 박스오피스 {rank}위"
-        rows.append({
-            "date": today_kst_date().strftime("%Y-%m-%d"),
-            "source": "KOBIS 박스오피스",
-            "issue_title": headline,
-            "related_content": movie,
-            "keywords": extract_keywords(f"영화 박스오피스 흥행 {movie}"),
-            "description": (
-                f"{target.strftime('%Y-%m-%d')} KOBIS 일별 박스오피스 {rank}위. "
-                f"일일 관객 {daily_audience:,}명, 누적 관객 {cumulative:,}명, "
-                f"매출 점유율 {sales_share}%. "
-                + ("신규 진입." if new_entry else f"전일 대비 순위 변화 {rank_inten:+d}.")
-            ),
+        rank_change = parse_int(item.get("rankInten"))
+        new_entry = normalize_text(item.get("rankOldAndNew", "")) == "NEW"
+        daily = optional_count(item.get("audiCnt"))
+        cumulative = optional_count(item.get("audiAcc"))
+        if daily is None or cumulative is None:
+            source_error("kobis", "필수 관객 수가 누락되거나 숫자 형식이 잘못됨")
+            continue
+        headline = f"{movie} 일일 박스오피스 {rank}위" + (" · 신규 진입" if new_entry else "")
+        rows.append(metadata_row({
+            "date": target.isoformat(), "source": "KOBIS 박스오피스", "issue_title": headline,
+            "related_content": movie, "keywords": extract_keywords(f"영화 박스오피스 {movie}"),
+            "description": f"{target.isoformat()} KOBIS {rank}위. 일일 관객 {daily:,}명, 누적 {cumulative:,}명. 순위 변화 {rank_change:+d}.",
             "source_url": "https://www.kobis.or.kr/kobis/business/stat/boxs/findDailyBoxOfficeList.do",
             "image_url": "",
-        })
+        }, published_at="", collected_at=utc_now_iso(), reference_date=target.isoformat(),
+            reference_period=target.isoformat(), publisher="영화진흥위원회 KOBIS", source_type="boxoffice",
+            content_id=movie_id, event_type="boxoffice_ranking", quality_status="verified", quality_notes="공식 일별 집계",
+            metrics_json={"rank": rank, "rank_change": rank_change, "is_new_entry": new_entry,
+                          "daily_audience": daily, "cumulative_audience": cumulative,
+                          "sales_share": normalize_text(item.get("salesShare", ""))}))
+    if items and not rows:
+        source_error("kobis", "유효한 영화 ID·순위가 없는 응답")
+    source_status("kobis", "ok" if rows else "empty", len(rows),
+                  reference_date=target.isoformat(), reference_period=target.isoformat(),
+                  received_count=len(items), valid_count=len(rows))
     return rows
 
 
@@ -1240,70 +1482,72 @@ def collect_netflix_top10():
         response = requests.get(NETFLIX_COUNTRY_DATA_URL, timeout=45)
         response.raise_for_status()
         df = pd.read_excel(BytesIO(response.content), engine="openpyxl")
+        columns = normalize_netflix_columns(df)
+        def col(*names):
+            return next((columns[name] for name in names if name in columns), None)
+        country_col, iso_col = col("country_name", "country"), col("country_iso2", "country_code")
+        week_col, rank_col = col("week"), col("weekly_rank", "rank")
+        title_col, season_col = col("show_title", "title"), col("season_title", "season")
+        category_col, weeks_col = col("category"), col("cumulative_weeks_in_top_10", "cumulative_weeks")
+        if not all([week_col, rank_col, title_col, category_col]) or not (country_col or iso_col):
+            raise ValueError("Netflix 필수 컬럼 누락")
+        mask = pd.Series(False, index=df.index)
+        if country_col:
+            mask |= df[country_col].astype(str).str.lower().isin(["south korea", "korea, republic of", "대한민국"])
+        if iso_col:
+            mask |= df[iso_col].astype(str).str.upper().eq("KR")
+        korea = df[mask].copy()
+        korea["_week"] = pd.to_datetime(korea[week_col], errors="coerce")
+        if korea.empty or korea["_week"].isna().all():
+            raise ValueError("Netflix 한국 집계 또는 유효 주간 없음")
+        latest = korea["_week"].max().date()
+        if latest > today_kst_date() or (today_kst_date() - latest).days >= NETFLIX_MAX_AGE_DAYS:
+            source_status("netflix", "stale", error=f"최신 제공 집계 {latest.isoformat()}: 허용 범위 {NETFLIX_MAX_AGE_DAYS}일 초과 또는 미래일",
+                          reference_date=latest.isoformat(), reference_period=f"{(latest-timedelta(days=6)).isoformat()}/{latest.isoformat()}")
+            return []
+        korea = korea[korea["_week"].dt.date.eq(latest)].copy()
+        korea["_rank"] = pd.to_numeric(korea[rank_col], errors="coerce")
+        korea = korea[korea["_rank"].between(1, 10)].sort_values([category_col, "_rank"])
+        if korea.empty:
+            raise ValueError("Netflix 한국 Top 10 순위 없음")
     except Exception as exc:
-        print(f"Netflix Top 10 수집 실패: {exc}")
+        source_error("netflix", exc)
+        source_status("netflix", "failed")
         return []
-
-    columns = normalize_netflix_columns(df)
-    def col(*names):
-        for name in names:
-            if name in columns:
-                return columns[name]
-        return None
-
-    country_col = col("country_name", "country")
-    iso_col = col("country_iso2", "country_code")
-    week_col = col("week")
-    rank_col = col("weekly_rank", "rank")
-    title_col = col("show_title", "title")
-    season_col = col("season_title", "season")
-    category_col = col("category")
-    weeks_col = col("cumulative_weeks_in_top_10", "cumulative_weeks")
-    if not all([week_col, rank_col, title_col]) or not (country_col or iso_col):
-        print(f"Netflix Top 10 컬럼 확인 실패: {list(df.columns)}")
-        return []
-
-    mask = pd.Series(False, index=df.index)
-    if country_col:
-        mask |= df[country_col].astype(str).str.lower().isin(["south korea", "korea, republic of", "대한민국"])
-    if iso_col:
-        mask |= df[iso_col].astype(str).str.upper().eq("KR")
-    korea = df[mask].copy()
-    if korea.empty:
-        print("Netflix Top 10에서 한국 데이터를 찾지 못했습니다.")
-        return []
-    korea["_week"] = pd.to_datetime(korea[week_col], errors="coerce")
-    latest_week = korea["_week"].max()
-    korea = korea[korea["_week"] == latest_week]
-    korea["_rank"] = pd.to_numeric(korea[rank_col], errors="coerce").fillna(99).astype(int)
-    korea = korea[korea["_rank"] <= 10].sort_values("_rank")
-
+    period = f"{(latest-timedelta(days=6)).isoformat()}/{latest.isoformat()}"
     rows = []
     for _, item in korea.iterrows():
         title = normalize_text(item.get(title_col, ""))
         season = normalize_text(item.get(season_col, "")) if season_col else ""
-        related = title
-        display = season if season and season.lower() != "nan" else title
+        if season.lower() == "nan":
+            season = ""
+        category = normalize_text(item.get(category_col, ""))
+        if not title or not category:
+            continue
         rank = int(item["_rank"])
-        category = normalize_text(item.get(category_col, "")) if category_col else ""
         weeks = parse_int(item.get(weeks_col, 0)) if weeks_col else 0
-        rows.append({
-            "date": today_kst_date().strftime("%Y-%m-%d"),
-            "source": "Netflix Top 10",
-            "issue_title": f"{display} 넷플릭스 한국 Top 10 {rank}위",
-            "related_content": related,
-            "keywords": extract_keywords(f"OTT 넷플릭스 랭킹 신작 {title} {season} {category}"),
-            "description": (
-                f"Netflix 공식 국가별 주간 Top 10에서 한국 {rank}위. "
-                f"카테고리: {category or '미분류'}. 누적 Top 10 진입 {weeks}주. "
-                f"집계 주간: {latest_week.strftime('%Y-%m-%d') if pd.notna(latest_week) else ''}."
-            ),
-            "source_url": "https://www.netflix.com/tudum/top10",
-            "image_url": "",
-        })
+        identity = "netflix:KR:" + ":".join(normalize_dedup_text(v) for v in (category, title, season))
+        rows.append(metadata_row({
+            "date": latest.isoformat(), "source": "Netflix Top 10", "issue_title": f"{season or title} 넷플릭스 한국 {category} {rank}위",
+            "related_content": title, "keywords": extract_keywords(f"넷플릭스 랭킹 {title} {season} {category}"),
+            "description": f"Netflix 한국 {category} 주간 {rank}위. 집계 {period}. 누적 Top 10 {weeks}주.",
+            "source_url": "https://www.netflix.com/tudum/top10/south-korea", "image_url": "",
+        }, published_at="", collected_at=utc_now_iso(), reference_date=latest.isoformat(), reference_period=period,
+            publisher="Netflix Tudum", source_type="ott_ranking", content_id=identity, event_type="weekly_ranking",
+            quality_status="verified", quality_notes="공식 한국 주간 순위; 실시간 순위 아님",
+            metrics_json={"rank": rank, "category": category, "season": season, "cumulative_weeks": weeks, "country": "KR"}))
+    category_ranks = {}
+    for row in rows:
+        values = json.loads(row["metrics_json"])
+        category_ranks.setdefault(values["category"], []).append(values["rank"])
+    for category, ranks in category_ranks.items():
+        if len(ranks) != 10 or set(ranks) != set(range(1, 11)):
+            source_error("netflix", f"{category} Top 10 집계 누락 또는 순위 중복: {len(ranks)}건")
+    if len(category_ranks) < 2:
+        source_error("netflix", "영화·TV 중 집계 카테고리가 누락됨")
+    source_status("netflix", "ok" if rows else "empty", len(rows), reference_date=latest.isoformat(), reference_period=period,
+                  category_counts={category: len(ranks) for category, ranks in category_ranks.items()})
     return rows
-
-
 
 
 def extract_youtube_video_id(url):
@@ -1375,13 +1619,155 @@ def normalize_dedup_text(value):
     return text
 
 
+def parse_metrics(value):
+    if isinstance(value, dict):
+        return dict(value)
+    try:
+        parsed = json.loads(value or "{}")
+        return parsed if isinstance(parsed, dict) else {}
+    except (ValueError, TypeError):
+        return {}
+
+
+def ranking_reference(row):
+    """Recover explicitly documented reference dates without treating capture dates as publication."""
+    reference = normalize_text(row.get("reference_date", ""))
+    if reference:
+        return reference[:10]
+    description = str(row.get("description", ""))
+    pattern = r"(\d{4}-\d{2}-\d{2})\s+KOBIS" if source_key(row) == "kobis" else r"집계\s*주간\s*:\s*(\d{4}-\d{2}-\d{2})"
+    match = re.search(pattern, description)
+    if not match and source_key(row) == "netflix":
+        match = re.search(r"집계\s+(?:\d{4}-\d{2}-\d{2}/)?(\d{4}-\d{2}-\d{2})", description)
+    return match.group(1) if match else ""
+
+
+def netflix_identity(row, metrics=None):
+    metrics = metrics or parse_metrics(row.get("metrics_json", ""))
+    description = str(row.get("description", ""))
+    category = normalize_text(metrics.get("category", ""))
+    if not category:
+        match = re.search(r"카테고리:\s*([^.;]+)", description)
+        category = normalize_text(match.group(1)) if match else ""
+    season = normalize_text(metrics.get("season", ""))
+    if not season:
+        leading = str(row.get("issue_title", "")).split(" 넷플릭스 한국")[0]
+        title = normalize_text(row.get("related_content", ""))
+        season = normalize_text(leading) if normalize_text(leading) != title else ""
+    identity = "netflix:KR:" + ":".join(normalize_dedup_text(v) for v in (category, row.get("related_content", ""), season))
+    return identity, category, season
+
+
+def annotate_existing_issues(df, watchlist, stats):
+    """Pure offline migration: preserve capture date, title, row order and arbitrary caller columns.
+
+    Historical YouTube observations are bounded by each row's original capture date.
+    Unknown publication/collection times stay unknown; no network or file writes occur.
+    """
+    result = df.copy().fillna("")
+    for column in ISSUE_COLUMNS:
+        if column not in result:
+            result[column] = ""
+    metas = {str(row["video_id"]): row for row in watchlist.to_dict("records")} if "video_id" in watchlist else {}
+    records = []
+    for original in result.to_dict("records"):
+        row = dict(original)
+        route = source_key(row)
+        metrics = parse_metrics(row.get("metrics_json", ""))
+        notes = []
+        row["quality_status"] = row.get("quality_status") or "candidate"
+        if route == "youtube":
+            video_id = extract_youtube_video_id(row.get("source_url", ""))
+            meta = metas.get(video_id)
+            row.update(source_type="youtube_reaction", content_id=video_id)
+            if meta:
+                as_of = pd.to_datetime(original.get("date", ""), errors="coerce")
+                metrics = build_youtube_metrics(meta, stats, as_of.date()) if pd.notna(as_of) else {}
+                related = guess_related_content(meta.get("title", ""))
+                row.update(published_at=meta.get("upload_date", ""), publisher=meta.get("channel", ""),
+                           related_content=related or row.get("related_content", ""))
+                if not related or not youtube_meta_relevant(meta):
+                    row["quality_status"] = "rejected"
+                    notes.append("영화·TV 작품 관련성 또는 작품 식별 근거 부족")
+                if metrics:
+                    confirmed = metrics.get("reaction_basis") == "observed_change"
+                    row.update(reference_date=metrics["reference_date"],
+                               reference_period=f"{metrics['observation_start']}/{metrics['observation_end']}" if confirmed else metrics["reference_date"],
+                               event_type="observed_reaction" if confirmed else "initial_reaction")
+                    notes.append("날짜 단위 관측간 증분; 정확한 24시간 증가는 아님" if confirmed and metrics["observation_precision"] == "date" else
+                                 "기록된 시각 사이 증분" if confirmed else "초기 누적 반응; 상승 확인 전")
+                else:
+                    row["quality_status"] = "rejected"
+                    notes.append("포착일 이전 통계 관측 없음")
+            else:
+                row["quality_status"] = "rejected"
+                notes.append("영상 메타데이터 없음; 작품·게시일 검증 불가")
+        elif route == "kobis":
+            reference = ranking_reference(row)
+            description = str(row.get("description", ""))
+            for key, pattern in (("rank", r"박스오피스\s*(\d+)위"), ("daily_audience", r"일일 관객\s*([\d,]+)"),
+                                 ("cumulative_audience", r"누적(?:\s*관객)?\s*([\d,]+)"), ("rank_change", r"순위 변화\s*([+-]?\d+)")):
+                match = re.search(pattern, description)
+                if match:
+                    metrics[key] = parse_int(match.group(1))
+            row.update(source_type="boxoffice", publisher="영화진흥위원회 KOBIS", event_type="boxoffice_ranking",
+                       reference_date=reference, reference_period=reference)
+            notes.append("기존 설명의 공식 일별 집계 기준일 복구; 영화 ID 미기록" if not row.get("content_id") else "공식 일별 집계")
+            if not reference:
+                row["quality_status"] = "rejected"
+                notes.append("집계 기준일 미확인")
+        elif route == "netflix":
+            reference = ranking_reference(row)
+            identity, category, season = netflix_identity(row, metrics)
+            match = re.search(r"(\d+)위", str(row.get("description", "")))
+            if match:
+                metrics.setdefault("rank", int(match.group(1)))
+            metrics.update(category=category, season=season, country="KR")
+            period = f"{(pd.Timestamp(reference)-timedelta(days=6)).date().isoformat()}/{reference}" if reference else ""
+            row.update(source_type="ott_ranking", publisher="Netflix Tudum", event_type="weekly_ranking",
+                       reference_date=reference, reference_period=period, content_id=identity,
+                       source_url="https://www.netflix.com/tudum/top10/south-korea")
+            notes.append("기존 설명의 한국 주간 집계 복구; 공식 데이터 URL 복원")
+            if not reference or not category:
+                row["quality_status"] = "rejected"
+                notes.append("집계 주간 또는 카테고리 미확인")
+        else:
+            official = is_official_url(row.get("source_url", ""))
+            row["source_type"] = "official_announcement" if official else "news"
+            if not official:
+                row["source"] = "온라인 화제·뉴스"
+            headline = str(row.get("issue_title", ""))
+            related = guess_related_content(headline)
+            if related:
+                row["related_content"] = related
+            # Legacy extracted text is evidence only when it is a plausible work title
+            # and the article independently contains film/TV context.
+            relevant = is_content_relevant_resource({"snippet": {"title": headline, "description": row.get("description", "")}})
+            if not relevant or not is_reliable_related_content(row.get("related_content", "")):
+                row["quality_status"] = "rejected"
+                notes.append("작품 관련성 또는 식별 근거 부족")
+            if not row.get("publisher"):
+                suffix = re.search(r"\s+-\s+([^–—]+)$", headline)
+                row["publisher"] = suffix.group(1).strip() if suffix else (urlparse(str(row.get("source_url", ""))).hostname or "")
+            row["event_type"] = row.get("event_type") or "content_news"
+            if not row.get("published_at"):
+                notes.append("실제 기사 발행일 미확인; 기존 date는 포착일")
+            if "news.google.com" in str(row.get("source_url", "")):
+                notes.append("Google News 중계 URL; 원문 미확인")
+        row["metrics_json"] = json.dumps(metrics, ensure_ascii=False, sort_keys=True) if metrics else ""
+        all_notes = [part.strip() for note in [row.get("quality_notes", ""), *notes] for part in str(note).split(";") if part.strip()]
+        row["quality_notes"] = "; ".join(dict.fromkeys(all_notes))
+        records.append(row)
+    return pd.DataFrame(records, columns=result.columns, index=result.index)
+
+
 def exact_content_key(row):
     """수집 경로별로 같은 콘텐츠를 하나의 키로 묶습니다.
 
     - YouTube: 동일 video_id
     - 뉴스·공식자료: 동일 원문 URL
-    - KOBIS: 동일 영화명
-    - Netflix Top 10: 동일 작품명
+    - KOBIS: 영화 ID/작품명 + 실제 일별 집계일
+    - Netflix Top 10: 작품/카테고리/시즌 + 실제 주간 집계
 
     KOBIS와 Netflix는 여러 작품이 같은 대표 URL을 공유하므로 URL 대신
     작품명을 사용합니다.
@@ -1395,10 +1781,11 @@ def exact_content_key(row):
         return f"youtube:{video_id}"
 
     content_key = normalize_dedup_text(related_content)
-    if any(token in source for token in ["KOBIS", "KOFIC", "박스오피스"]):
-        return f"kobis:{content_key}" if content_key else ""
-    if any(token in source for token in ["Netflix Top 10", "넷플릭스 Top 10"]):
-        return f"netflix:{content_key}" if content_key else ""
+    if source_key(row) == "kobis":
+        return f"kobis:{row.get('content_id') or content_key}:{ranking_reference(row) or row.get('date', '')}" if content_key else ""
+    if source_key(row) == "netflix":
+        identity, _, _ = netflix_identity(row)
+        return f"netflix:{identity}:{ranking_reference(row) or row.get('date', '')}" if content_key else ""
 
     canonical_url = canonical_content_url(source_url)
     if canonical_url:
@@ -1476,75 +1863,76 @@ def cleanup_legacy_youtube_issues(df):
 
 
 def save_issue_feed(new_rows):
-    existing = cleanup_legacy_youtube_issues(normalize_legacy_issue_sources(load_existing_issues()))
-    today_str = today_kst_date().strftime("%Y-%m-%d")
-
-    # 같은 날 워크플로를 다시 실행하면 오늘 수집분을 새 결과로 교체합니다.
+    """Merge only successful routes; failed or partial routes retain their prior rows."""
+    existing = normalize_legacy_issue_sources(load_existing_issues())
+    today = today_kst_date().isoformat()
+    states = COLLECTION_STATUS.get("sources", {})
     if not existing.empty:
-        existing = existing[existing["date"].astype(str) != today_str].copy()
-
+        def replace_row(row):
+            state = states.get(source_key(row), {})
+            if state.get("state") not in {"ok", "empty"}:
+                return False
+            # Ranking histories are keyed by their real reference day/week below.
+            # News/YouTube reruns replace only their own capture-day slice.
+            return source_key(row) in {"youtube", "news"} and str(row.get("date", "")) == today
+        existing = existing[~existing.apply(replace_row, axis=1)].copy()
     new_df = pd.DataFrame(new_rows, columns=ISSUE_COLUMNS).fillna("")
     merged = pd.concat([existing, new_df], ignore_index=True)
-    if merged.empty:
-        save_csv(merged, ISSUE_PATH, ISSUE_COLUMNS)
-        return 0, 0
-
-    # 이전 실행에서 Google News 중계 URL만 저장된 최근 기사도 함께 보강합니다.
-    # 이렇게 해야 새 수집분뿐 아니라 이미 화면에 노출 중인 카드에도 썸네일이 채워집니다.
-    merged = merged.sort_values("date", ascending=False)
-    merged_rows = enrich_news_images(merged.to_dict("records"))
-    merged = pd.DataFrame(merged_rows, columns=ISSUE_COLUMNS).fillna("")
-
-    # 동일 영상·기사·KOBIS 영화·Netflix 작품은 날짜가 달라도 한 행만 유지합니다.
-    # 영상·기사는 최초 포착일, KOBIS·Netflix는 최신 순위 날짜를 유지합니다.
-    merged = collapse_exact_content_duplicates(merged)
-
-    # KOBIS·Netflix처럼 대표 URL을 여러 작품이 공유하거나 안정적인 원문 URL이
-    # 없는 행은 기존처럼 날짜·작품·제목을 합친 키로 동일 실행 중 중복만 제거합니다.
-    merged["dedup_key"] = merged.apply(
-        lambda row: "|".join([
-            str(row.get("date", "")).strip(),
-            str(row.get("source", "")).strip(),
-            str(row.get("related_content", "")).strip(),
-            str(row.get("issue_title", "")).strip(),
-            str(row.get("source_url", "")).strip(),
-        ]),
-        axis=1,
-    )
-    merged = merged.drop_duplicates(subset=["dedup_key"], keep="last").drop(columns=["dedup_key"])
-    merged["date_dt"] = pd.to_datetime(merged["date"], errors="coerce")
-    cutoff = pd.Timestamp(today_kst_date() - timedelta(days=60))
-    merged = merged[merged["date_dt"].isna() | (merged["date_dt"] >= cutoff)].copy()
-    merged = merged.drop(columns=["date_dt"]).sort_values("date", ascending=False)
+    if not merged.empty:
+        merged = collapse_exact_content_duplicates(merged)
+        merged = merged.drop_duplicates(subset=["date", "source", "issue_title", "source_url"], keep="last")
+        dates = pd.to_datetime(merged["date"], errors="coerce")
+        cutoff = pd.Timestamp(today_kst_date() - timedelta(days=60))
+        merged = merged[dates.isna() | dates.ge(cutoff)].sort_values("date", ascending=False, kind="stable")
     save_csv(merged, ISSUE_PATH, ISSUE_COLUMNS)
+    for route, entry in states.items():
+        entry["retained_count"] = sum(source_key(row) == route for row in merged.to_dict("records"))
     return len(new_df), len(merged)
 
 
 def main():
+    # Preserve success history, while clearing errors/diagnostics from prior runs.
+    global COLLECTION_STATUS
+    previous = {}
+    if COLLECTION_STATUS_PATH.exists():
+        try:
+            previous = json.loads(COLLECTION_STATUS_PATH.read_text(encoding="utf-8")).get("sources", {})
+        except (ValueError, OSError):
+            previous = {}
+    COLLECTION_STATUS = {"schema_version": 1, "collected_at": utc_now_iso(), "sources": {
+        route: {"last_success_at": entry["last_success_at"]}
+        for route, entry in previous.items() if entry.get("last_success_at")
+    }}
+    SOURCE_ERRORS.clear()
     print("외부 이슈 통합 수집 시작")
-
-    news_rows = collect_google_news()
-    print(f"온라인 화제·뉴스/OTT 신작 후보: {len(news_rows)}개")
-
-    new_videos = discover_youtube_videos()
-    print(f"YouTube 신규 후보: {len(new_videos)}개")
-    watchlist = update_youtube_watchlist(new_videos)
-    print(f"YouTube watchlist 전체: {len(watchlist)}개")
-    stats = update_youtube_stats(watchlist)
-    print(f"YouTube stats 전체: {len(stats)}개")
-    youtube_rows = make_youtube_issues(watchlist, stats)
-    print(f"YouTube 화제 영상: {len(youtube_rows)}개")
-
-    kobis_rows = collect_kobis_boxoffice()
-    print(f"KOBIS 박스오피스: {len(kobis_rows)}개")
-
-    netflix_rows = collect_netflix_top10()
-    print(f"Netflix 한국 Top 10: {len(netflix_rows)}개")
-
-    all_rows = news_rows + youtube_rows + kobis_rows + netflix_rows
+    all_rows = []
+    for route, collector in (("news", collect_google_news), ("kobis", collect_kobis_boxoffice), ("netflix", collect_netflix_top10)):
+        try:
+            rows = collector()
+            all_rows.extend(rows)
+            if not COLLECTION_STATUS["sources"].get(route, {}).get("state"):
+                source_status(route, "ok" if rows else "empty", len(rows))
+        except (requests.RequestException, RuntimeError, ValueError, OSError) as exc:
+            source_error(route, exc)
+            source_status(route, "failed")
+    try:
+        discovered = discover_youtube_videos()
+        if COLLECTION_STATUS["sources"].get("youtube", {}).get("state") != "skipped":
+            watchlist = update_youtube_watchlist(discovered)
+            stats = update_youtube_stats(watchlist)
+            all_rows.extend(make_youtube_issues(watchlist, stats))
+    except (requests.RequestException, RuntimeError, ValueError, OSError) as exc:
+        source_error("youtube", exc)
+        source_status("youtube", "failed")
+    if not COLLECTION_STATUS["sources"].get("youtube", {}).get("state"):
+        source_status("youtube", "empty")
     new_count, total_count = save_issue_feed(all_rows)
-    print(f"issue_feed 오늘 반영: {new_count}개")
-    print(f"issue_feed 전체 누적: {total_count}개")
+    successful = sum(entry.get("state") in {"ok", "empty"} for entry in COLLECTION_STATUS["sources"].values())
+    COLLECTION_STATUS["overall_state"] = "ok" if successful == 4 else "partial" if successful or all_rows else "failed"
+    COLLECTION_STATUS_PATH.write_text(json.dumps(COLLECTION_STATUS, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"issue_feed 반영 {new_count}개 / 보존 포함 {total_count}개 / 상태 {COLLECTION_STATUS['overall_state']}")
+    # Expected provider failures are persisted for the app and CI to publish.
+    return COLLECTION_STATUS
 
 
 if __name__ == "__main__":

@@ -303,8 +303,8 @@ label.weight-chip { cursor: pointer; }
     .section-heading:has(.section-title-row) p { margin-left: 0; }
     .section-heading p { font-size: 12px; }
     .editorial-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-bottom: 0; }
-    .editorial-card { display: grid; grid-template-columns: 104px minmax(0, 1fr); grid-template-rows: auto auto 1fr; gap: 4px 10px; align-items: start; padding: 10px; }
-    [data-testid="stMarkdownContainer"] .editorial-card .poster-link { grid-column: 1; grid-row: 1 / 4; }
+    .editorial-card { display: grid; grid-template-columns: 104px minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; gap: 4px 10px; align-items: start; padding: 10px; }
+    [data-testid="stMarkdownContainer"] .editorial-card .poster-link { grid-column: 1; grid-row: 1 / 5; }
     .editorial-poster { width: 104px; height: 116px; min-height: 0; max-height: none; aspect-ratio: auto; padding: 11px; border-radius: 6px; }
     .poster-index { top: 10px; left: 10px; font-size: 8px; letter-spacing: .7px; }
     [data-testid="stMarkdownContainer"] .poster-title { font-size: 13px; line-height: 1.45; letter-spacing: -.2px; -webkit-line-clamp: 3; }
@@ -353,3 +353,16 @@ label.weight-chip { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+/* Explainable issue evidence and source collection status. */
+[data-testid="stMarkdownContainer"] .editorial-reference { color: var(--muted); font-size: 11px; line-height: 1.5; margin: 5px 0 0; overflow-wrap: anywhere; }
+.evidence-status { display: inline-block; padding: 3px 8px; border: 1px solid #807052; border-radius: 4px; color: var(--accent); font-size: 12px; }
+.issue-metrics { margin-top: 10px; color: var(--ink); font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.collection-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.collection-source { padding: 12px; border: 1px solid #454c40; border-radius: 6px; min-width: 0; color: var(--muted); font-size: 11px; line-height: 1.7; overflow-wrap: anywhere; }
+.collection-source strong { display: block; color: var(--ink); font-size: 12px; }
+.collection-state { display: block; color: var(--accent); margin: 4px 0; }
+.collection-error { color: #efb8a4; margin-top: 5px; }
+@media (max-width: 900px) { .collection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .collection-grid { grid-template-columns: 1fr; } }
+@media (max-width: 700px) { [data-testid="stMarkdownContainer"] .editorial-reference { grid-column: 2; grid-row: 4; margin: 0; } }

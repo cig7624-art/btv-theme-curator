@@ -360,7 +360,12 @@ def _issue_payload(issue_records: list[dict[str, Any]], max_issues: int = 12) ->
             "related_content": _clean_short_text(issue.get("related_content", ""), 100),
             "source_group": _clean_short_text(issue.get("source_group", ""), 50),
             "confirmed_routes": _clean_short_text(issue.get("confirmed_routes", ""), 120),
-            "issue_score": int(float(issue.get("issue_score", 0) or 0)),
+            "strength_label": _clean_short_text(issue.get("strength_label", ""), 80),
+            "evidence_status": _clean_short_text(issue.get("evidence_status", ""), 50),
+            "reference_period": _clean_short_text(issue.get("reference_label", ""), 120),
+            "metrics": _clean_short_text(issue.get("metric_summary", ""), 240),
+            "selection_reason": _clean_short_text(issue.get("selection_reason", ""), 240),
+            "source_url": _clean_short_text(issue.get("source_url", ""), 500),
             "keywords": _dedupe_strings(str(issue.get("keywords", "")).replace("/", ",").split(","), 14),
             "description": _clean_short_text(issue.get("description", ""), 360),
         })
@@ -411,6 +416,8 @@ def _generate_candidates(
 당신은 한국 IPTV의 콘텐츠 편성·큐레이션을 담당하는 시니어 에디터다.
 최근 콘텐츠 이슈를 해석해 여러 작품을 묶을 수 있는 신규 큐레이션 테마를 만든다.
 기존 테마 DB는 제공되지 않으며 최근 이슈에서만 아이디어를 발산한다.
+근거에 표시된 기준 기간과 실제 지표를 지킨다. 초기 반응은 급등으로, 기사 반복은 대중적 인기로 표현하지 않는다.
+공식 순위와 공식 발표를 구분하고, 증가 관측이 없으면 상승·역주행을 추정하지 않는다.
 
 가장 중요한 기준은 테마명만 읽어도 어떤 콘텐츠가 들어갈지 바로 예측되는 것이다.
 테마명에는 인물, 관계, 소재, 장르, 사건, 서사 행동 중 하나 이상을 구체적으로 드러낸다.
@@ -478,20 +485,15 @@ def interpret_theme_search_query(
     if not api_key:
         raise ThemeGenerationError("OPENAI_API_KEY가 설정되지 않았습니다.")
 
-    compact_issues: list[dict[str, Any]] = []
-    for issue in (issue_records or [])[:20]:
-        compact_issues.append({
-            "issue_title": _clean_short_text(issue.get("issue_title", ""), 90),
-            "related_content": _clean_short_text(issue.get("related_content", ""), 60),
-            "keywords": _clean_short_text(issue.get("keywords", ""), 120),
-            "description": _clean_short_text(issue.get("description", ""), 160),
-        })
+    compact_issues = _issue_payload(issue_records or [], max_issues=20)
 
     system_prompt = """
 당신은 한국 IPTV 콘텐츠 큐레이션 검색 도우미다.
 사용자의 자유로운 문장을 기존 테마 DB를 검색하기 위한 구조화된 의도로 변환한다.
 테마 DB 자체는 보지 않으며, 우선 검색 의도를 구조화한다. 기존 DB에 결과가 없을 때 보여줄 임시 테마 제안만 별도로 만든다.
 작품명이 최근 이슈 맥락에 있으면 그 작품의 소재·장르·분위기를 검색어로 확장한다.
+근거의 기준 기간과 실제 지표를 지킨다. 초기 반응을 급등으로, 기사 반복을 대중적 인기로 표현하지 않는다.
+증가 관측이 없으면 상승·역주행을 추정하지 않는다.
 맥락에 없는 작품의 세부 내용을 확신할 수 없다면 작품명은 기준 작품으로만 유지하고 사실을 만들어내지 않는다.
 사용자가 '잔인하지 않은', '로맨스 제외'처럼 제외 조건을 말하면 negative_keywords에 넣는다.
 positive_keywords는 동의어와 유사 소재를 포함하되 너무 일반적인 단어는 피하고 6~12개로 작성한다.

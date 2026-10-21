@@ -1,5 +1,5 @@
 import html
-import math
+import json
 import os
 import re
 from difflib import SequenceMatcher
@@ -25,6 +25,7 @@ from llm_theme_generator import (
 )
 
 from kinolights_candidates import content_rows_to_frame, validate_content_suggestions
+from issue_quality import assess_issues, build_ranked_issues
 
 from theme_content_manager import (
     ai_suggestions_to_recommendations,
@@ -57,136 +58,52 @@ THEME_HISTORY_PATH = Path("theme_recommendation_history.csv")
 THEME_CONTENT_PATH = Path("theme_content_candidates.csv")
 
 SOURCE_CONFIG = {
-    "YouTube 반응": {
-        "weight_pct": 30,
-        "path_points": 18,
-        "tooltip": "한국 인기 영상, 주요 OTT·방송사 공식 채널 신규 업로드, 리뷰·해석·명장면 검색 결과를 수집하며 조회수·댓글·공개 후 반응 속도를 반영합니다.",
-    },
-    "극장·박스오피스": {
-        "weight_pct": 25,
-        "path_points": 15,
-        "tooltip": "KOBIS 일별 박스오피스의 실제 순위, 신규 진입, 순위 변화, 일일·누적 관객 수를 반영합니다.",
-    },
-    "OTT 랭킹·신작": {
-        "weight_pct": 25,
-        "path_points": 15,
-        "tooltip": "Netflix 공식 한국 Top 10을 자동 수집하고, 티빙·웨이브·디즈니+·쿠팡플레이는 공식 신작·공개 예정 기사와 YouTube 공식 채널 신호를 반영합니다.",
-    },
-    "온라인 화제·뉴스": {
-        "weight_pct": 20,
-        "path_points": 12,
-        "tooltip": "최근 콘텐츠 뉴스와 공식 발표를 수집하며, 같은 작품이 여러 매체와 다른 수집 경로에서 반복 확인될수록 화제 신호를 높게 평가합니다.",
-    },
+    "YouTube 반응": {"tooltip": "작품이 식별된 영화·드라마·예능 영상의 관측 증가량과 초기 반응을 구분합니다."},
+    "극장·박스오피스": {"tooltip": "KOBIS의 집계일, 실제 순위와 일일 관객을 확인합니다."},
+    "OTT 랭킹·신작": {"tooltip": "Netflix 한국 주간 순위와 공식 도메인에서 확인된 발표를 구분합니다."},
+    "온라인 화제·뉴스": {"tooltip": "기사의 발행일·작품·사건을 확인합니다. 기사 수를 인기로 환산하지 않습니다."},
 }
-
-SOURCE_WEIGHTS = {name: info["weight_pct"] for name, info in SOURCE_CONFIG.items()}
-
 
 SOURCE_DETAIL_LOGIC = {
     "youtube": {
-        "source_name": "YouTube 반응",
-        "weight": "30% · 경로 점수 최대 18점",
-        "purpose": "공개 직후 반응이 큰 콘텐츠 영상과 공식 채널 신규 업로드를 발견합니다.",
-        "integration": "YouTube Data API v3를 사용합니다. 검색어 검색, 한국 인기 영상, 지정 공식 채널 업로드를 API로 조회합니다.",
-        "collection": [
-            "최근 7일 기준 12개 검색어별 최대 8개 영상 수집",
-            "검색어 없이 YouTube 한국 인기 영상(mostPopular) 최대 50개 수집 후 콘텐츠 관련 영상만 유지",
-            "넷플릭스·티빙·웨이브·디즈니+·쿠팡플레이와 주요 방송사 11개 공식 채널의 최근 업로드 수집",
-        ],
-        "filters": [
-            "일반 검색·공식 채널 영상은 최근 7일 이내만 후보로 사용",
-            "한국 인기 영상은 인기 목록 신호가 있으므로 업로드일 제한을 별도로 적용하지 않음",
-            "조회수 10만 이상, 일평균 조회수 2만 이상, 댓글 200개 이상 중 하나를 충족하면 후보",
-            "공식 채널 영상은 조회수 3만 이상 또는 댓글 50개 이상이면 후보",
-            "영상 제목에서 신뢰할 수 있는 작품명이 추출된 경우만 이슈로 등록",
-            "같은 작품은 YouTube 피드에서 1건만 남기고 신호가 강한 순으로 최대 15건 저장",
-        ],
-        "ranking": "YouTube 내부 후보 순서는 일평균 조회수 + 댓글×250 + 한국 인기 영상 보너스 30,000 + 공식 채널 보너스 15,000으로 계산합니다.",
-        "score": "핵심 이슈 점수에서는 조회수와 댓글을 로그 스케일로 환산해 반응 강도에 반영합니다. 같은 작품이 다른 경로에서도 발견되면 경로 점수와 교차 확인 점수가 추가됩니다.",
-        "limitations": "YouTube 전체 급상승 순위를 직접 제공받는 구조는 아닙니다. 12개 검색어, 한국 인기 영상, 지정 공식 채널 범위에서 발견한 후보만 대상으로 합니다.",
-        "queries": [
-            "한국 드라마 리뷰", "한국 영화 리뷰", "한국 예능 리뷰", "드라마 결말 해석",
-            "영화 결말 해석", "드라마 몰아보기", "영화 요약", "드라마 명장면 쇼츠",
-            "예능 명장면 쇼츠", "영화 명장면 쇼츠", "OTT 신작 반응", "배우 신작 인터뷰",
-        ],
-        "channels": [
-            "Netflix Korea", "TVING", "wavve", "Disney Plus Korea", "Coupang Play",
-            "SBS Drama", "MBC Drama", "KBS Drama", "tvN D ENT", "JTBC Drama", "ENA",
-        ],
+        "source_name": "YouTube 반응", "weight": "반응 수치와 근거 상태를 별도로 표시",
+        "purpose": "작품이 확인되는 영화·드라마·예능 영상의 반응을 살펴봅니다.",
+        "integration": "YouTube 검색·한국 인기 영상·지정 OTT 및 방송사 채널에서 발견한 후보를 추적합니다.",
+        "collection": ["영상 ID로 중복 제거", "게시일과 통계 관측일을 분리", "조회수와 댓글의 관측 이력을 저장"],
+        "filters": ["게임·일반 음악·콘텐츠와 무관한 업계 뉴스 제외", "회차·예고·메이킹 같은 일반 표현을 작품명으로 사용하지 않음", "작품명·최근 게시일·반응 조건을 통과한 영상만 선정"],
+        "ranking": "관측기간 평균 조회 증가가 하루 2만 회 이상이면 우선 반응 후보로 봅니다. 그 미만은 참고 반응, 이력이 없으면 초기 반응으로 표시합니다. 이 기준은 운영 규칙이며 보정된 인기 점수가 아닙니다.",
+        "score": "누적 수치와 관측 증가를 구분하며, 관측 이력 부재를 급등으로 표현하지 않습니다.",
+        "limitations": "YouTube 전체를 전수 조사하지 않습니다. 날짜만 있는 과거 관측은 정확한 24시간 증가가 아닙니다. 채널·검색 범위와 API 한도가 있습니다.",
     },
     "boxoffice": {
-        "source_name": "극장·박스오피스",
-        "weight": "25% · 경로 점수 최대 15점",
-        "purpose": "기사 제목이 아니라 KOBIS의 실제 극장 관객 데이터를 수집합니다.",
-        "integration": "KOBIS OpenAPI를 사용합니다. GitHub Secret의 KOBIS_API_KEY로 전일 일별 박스오피스 데이터를 요청합니다.",
-        "collection": [
-            "매일 전일 기준 KOBIS 일별 박스오피스 API 호출",
-            "KOBIS가 제공하는 일별 Top 10 전 작품 수집",
-            "순위, 전일 대비 순위 변화, 신규 진입 여부, 일일 관객, 누적 관객, 매출 점유율 저장",
-        ],
-        "filters": [
-            "영화명이 비어 있는 행만 제외하고 Top 10을 모두 등록",
-            "신규 진입이면 '신규 진입', 1위면 '일일 1위', 2계단 이상 상승이면 '순위 상승' 문구로 강조",
-            "관련 뉴스는 박스오피스 수치가 아니라 흥행 원인을 설명하는 별도 보조 피드로 취급",
-        ],
-        "ranking": "KOBIS 순위를 그대로 수집하며 별도의 내부 후보 컷은 적용하지 않습니다.",
-        "score": "반응 강도는 일일 관객 수를 로그 스케일로 환산하며, 1위·신규 진입 등 강한 신호가 있으면 추가 점수를 부여합니다.",
-        "limitations": "현재 대표 이미지는 KOBIS API에서 제공되지 않습니다. 같은 작품으로 묶인 YouTube·뉴스 피드에 이미지가 있으면 그 이미지를 카드에 사용합니다.",
+        "source_name": "극장·박스오피스", "weight": "공식 일별 집계",
+        "purpose": "공식 순위와 실제 관객 수를 확인합니다.",
+        "integration": "KOBIS OpenAPI에서 전일 일별 Top 10을 조회합니다.",
+        "collection": ["영화 식별자·집계일·수집 시각 분리", "순위·일일 관객·누적 관객·순위 변화 저장"],
+        "filters": ["영화명이 확인된 공식 집계만 사용", "집계일이 오래되면 현재 이슈에서 제외"],
+        "ranking": "실제 순위·관객 수를 그대로 제시합니다. 다른 경로의 숫자와 합산하지 않습니다.",
+        "score": "관객 수와 순위 변화는 각각 표시합니다. 비교 이력이 없으면 증가율을 만들지 않습니다.",
+        "limitations": "제공되는 Top 10 범위입니다. 대표 이미지는 별도 근거에서 보완할 수 있습니다.",
     },
     "ott": {
-        "source_name": "OTT 랭킹·신작",
-        "weight": "25% · 경로 점수 최대 15점",
-        "purpose": "Netflix 실제 순위와 주요 플랫폼의 신규 공개·공개 예정 신호를 함께 확인합니다.",
-        "integration": "Netflix 순위는 API가 아니라 Netflix가 공개하는 국가별 주간 Top 10 엑셀 파일을 자동 다운로드해 읽습니다. 다른 OTT의 신작 정보는 Google News RSS와 YouTube 공식 채널 데이터로 수집합니다.",
-        "collection": [
-            "Netflix 공식 국가별 주간 Top 10 엑셀 파일을 매 실행 시 자동 다운로드",
-            "파일에서 한국 최신 집계 주간을 찾고 순위 1~10위 작품을 모두 등록",
-            "Google News RSS에서 넷플릭스·티빙·웨이브·디즈니+·쿠팡플레이 신작·공개 예정 관련 기사 수집",
-        ],
-        "filters": [
-            "Netflix는 최신 주간의 한국 Top 10만 사용",
-            "OTT 신작 기사는 최근 7일 이내, 검색어별 최대 12개 기사 후보 수집",
-            "동일 작품은 이후 핵심 이슈 묶음 단계에서 하나의 이슈로 통합",
-        ],
-        "ranking": "Netflix의 공식 주간 순위를 그대로 사용합니다. 신작 관련 기사는 자체 순위가 아니라 보조 피드입니다.",
-        "score": "Top 10 순위가 확인되면 반응 강도 기본점수가 반영되고, 신작·공개 예정·신규 진입 신호가 있으면 추가됩니다.",
-        "limitations": "현재 자동 수집되는 실제 순위는 Netflix 한국 Top 10뿐입니다. 티빙·웨이브·디즈니+·쿠팡플레이의 실제 순위 API는 연동되어 있지 않으며, 공식 신작 관련 기사와 YouTube 공식 채널 신규 업로드만 사용합니다.",
+        "source_name": "OTT 랭킹·신작", "weight": "주간 순위와 공식 발표 구분",
+        "purpose": "Netflix 한국 영화·TV 주간 순위와 확인 가능한 공식 발표를 확인합니다.",
+        "integration": "Netflix 공식 국가별 주간 Top 10 파일을 읽습니다. 다른 OTT의 전체 인기 순위는 연동되어 있지 않습니다.",
+        "collection": ["한국의 영화·TV를 카테고리별로 집계", "작품·시즌·집계 주간과 수집 시각 저장", "OTT 검색 결과라도 제3자 기사는 뉴스로 분류"],
+        "filters": ["오래된 주간을 오늘의 새 순위로 처리하지 않음", "공식 도메인에서 확인된 자료만 공식 발표로 분류"],
+        "ranking": "최신 유효 주간의 실제 순위를 사용합니다. 일일 급등으로 해석하지 않습니다.",
+        "score": "현재 주간 순위와 기준 주간을 제시합니다. 전주 자료가 없으면 순위 상승을 추정하지 않습니다.",
+        "limitations": "TVING·웨이브·디즈니+·쿠팡플레이의 전체 인기 순위를 확보한 데이터가 아닙니다.",
     },
     "online_news": {
-        "source_name": "온라인 화제·뉴스",
-        "weight": "20% · 경로 점수 최대 12점",
-        "purpose": "공개·캐스팅·제작·수상·시청 성과·역주행 등 최근 콘텐츠 이슈를 발견하고, 여러 매체의 반복 보도로 온라인 화제성을 확인합니다.",
-        "integration": "Google News RSS를 검색어별로 조회합니다. 별도 뉴스 API 키나 결제수단은 필요하지 않습니다. 기사 원문에서 대표 이미지와 원문 링크를 가능한 범위에서 보강합니다.",
-        "collection": [
-            "Google News RSS에서 일반 콘텐츠 이슈 12개 검색어 사용",
-            "OTT 신작 관련 5개 검색어는 OTT 랭킹·신작 경로의 보조자료로 별도 분류",
-            "검색어별 최대 12개, 최근 7일 기사만 수집",
-            "가능하면 Google News 중계 URL을 원문 주소로 변환하고 og:image·twitter:image를 추출",
-        ],
-        "filters": [
-            "제목과 링크가 없는 기사는 제외",
-            "기사 제목·요약에서 작품명과 이슈 키워드를 추출",
-            "동일 제목·동일 링크는 제거하고, 같은 작품의 여러 기사는 핵심 이슈 단계에서 한 묶음으로 통합",
-            "공개·첫방·개봉·캐스팅·제작 확정·시청 성과·역주행·수상·종영 등 명확한 사건성 신호를 우선",
-            "한 매체의 단일 기사보다 서로 다른 매체와 다른 경로에서 반복 확인된 이슈를 우선",
-        ],
-        "ranking": "기사 한 건의 클릭 수를 알 수 없으므로 단독 기사 점수는 제한합니다. 동일 작품의 관련 피드 수, 서로 다른 수집 경로 수, 공식 발표 여부와 최근성을 핵심 이슈 점수에 반영합니다.",
-        "score": "경로 점수 최대 12점에 더해, 같은 작품의 관련 기사·피드가 반복될수록 반응 강도 보너스가 붙고 YouTube·OTT·박스오피스에서도 확인되면 교차 확인 점수가 추가됩니다.",
-        "limitations": "검색어 기반 Google News RSS이므로 전체 언론과 SNS 게시물을 전수 수집하지 않습니다. 별도의 검색량 API는 사용하지 않으며, 여기서 말하는 온라인 화제는 기사 반복 언급과 다른 경로의 교차 확인을 뜻합니다.",
-        "queries": [
-            "한국 드라마 신작 첫방 공개",
-            "한국 예능 신작 첫방 공개",
-            "한국 영화 개봉 신작",
-            "드라마 예능 캐스팅 출연 확정",
-            "시즌2 후속편 제작 확정",
-            "웹툰 웹소설 원작 영상화 제작",
-            "드라마 예능 시청률 상승",
-            "드라마 영화 역주행 화제",
-            "콘텐츠 수상 해외 반응",
-            "드라마 예능 종영 결말 화제",
-            "콘텐츠 리메이크 제작 확정",
-            "배우 감독 인터뷰 신작",
-        ],
+        "source_name": "온라인 화제·뉴스", "weight": "사건 근거 · 인기 측정과 구분",
+        "purpose": "개봉·공개·제작·캐스팅·종영 등 작품에 연결되는 사건을 찾습니다.",
+        "integration": "Google News RSS에서 후보를 찾고 발행일과 매체·원문을 가능한 범위에서 확인합니다.",
+        "collection": ["확인된 기사 발행일 사용", "제목·원문 링크 중복 제거", "작품명·사건·매체 정보를 보존"],
+        "filters": ["작품명이나 발행일이 확인되지 않는 후보 제외", "같은 기사와 재전송은 독립 근거로 가산하지 않음", "OTT 검색어가 붙었다는 이유로 공식 출처로 분류하지 않음"],
+        "ranking": "유효한 사건과 원문을 근거로 사용합니다. 기사 수를 조회수나 대중 반응으로 변환하지 않습니다.",
+        "score": "사건 근거의 상태를 표시합니다. 반복 기사 수에 가산점을 주지 않습니다.",
+        "limitations": "검색 범위 내 기사이며 전수 집계가 아닙니다. 기사만으로 대중적 인기와 원문 접근 성공을 보장하지 않습니다.",
     },
 }
 
@@ -333,7 +250,7 @@ def filter_recent_issues(issues, days=7):
     issues = issues.copy()
     issues["date"] = pd.to_datetime(issues["date"], errors="coerce")
 
-    today = pd.Timestamp.today().normalize()
+    today = pd.Timestamp.now(tz="Asia/Seoul").tz_localize(None).normalize()
     start_date = today - pd.Timedelta(days=days - 1)
 
     recent = issues[
@@ -347,18 +264,13 @@ def filter_recent_issues(issues, days=7):
 
 
 def classify_source(source):
-    s = str(source)
-
-    if "유튜브" in s or "YouTube" in s:
+    value = str(source).lower()
+    if "youtube" in value or "유튜브" in value:
         return "YouTube 반응"
-    if any(token in s for token in ["극장", "KOFIC", "KOBIS", "박스오피스", "CGV", "롯데시네마", "메가박스"]):
+    if any(token in value for token in ["kobis", "kofic", "박스오피스", "극장"]):
         return "극장·박스오피스"
-    if any(token in s for token in ["OTT", "넷플릭스", "티빙", "웨이브", "디즈니", "쿠팡플레이"]):
+    if "netflix top" in value or "넷플릭스 top" in value:
         return "OTT 랭킹·신작"
-    # 과거 저장된 데이터랩·뉴스·온라인 화제 기사도 현재의 통합 경로로 표시합니다.
-    if any(token in s for token in ["온라인 화제성", "온라인 화제", "데이터랩", "검색 관심도", "뉴스", "공식자료", "보도자료"]):
-        return "온라인 화제·뉴스"
-
     return "온라인 화제·뉴스"
 
 
@@ -612,178 +524,14 @@ def render_ai_search_intent(intent, usage=None):
     )
 
 
-def normalize_issue_key(text):
-    value = str(text or "").lower()
-    value = re.sub(r"관련\s*(유튜브|youtube)?\s*(반응 상승|화제 영상|반응 확인)", " ", value)
-    value = re.sub(r"[^0-9a-z가-힣]+", " ", value)
-    return re.sub(r"\s+", " ", value).strip()
-
-
-def issue_group_key(issue):
-    related = normalize_issue_key(issue.get("related_content", ""))
-    generic = {"", "드라마", "영화", "예능", "콘텐츠", "ott", "신작"}
-    if related not in generic and len(related) >= 2:
-        return related
-    return normalize_issue_key(issue.get("issue_title", ""))
-
-
-def parse_metric(description, labels):
-    text = str(description or "")
-    for label in labels:
-        match = re.search(rf"{label}\s*(?:약\s*)?([0-9][0-9,]*)", text)
-        if match:
-            try:
-                return int(match.group(1).replace(",", ""))
-            except ValueError:
-                pass
-    return 0
-
-
-def row_reaction_strength(issue):
-    group = issue.get("source_group", classify_source(issue.get("source", "")))
-    desc = str(issue.get("description", ""))
-    score = 0.0
-
-    if group == "YouTube 반응":
-        views = parse_metric(desc, ["조회수", "일평균 조회수"])
-        comments = parse_metric(desc, ["댓글"])
-        if views > 0:
-            score += min(9.0, math.log10(max(views, 10)) * 1.8)
-        if comments > 0:
-            score += min(4.0, math.log10(max(comments, 10)) * 1.4)
-        if any(word in desc for word in ["빠르게 확산", "증가", "높은 반응"]):
-            score += 2.0
-    elif group == "극장·박스오피스":
-        audience = parse_metric(desc, ["일일 관객", "관객 수", "누적 관객"])
-        if audience > 0:
-            score += min(10.0, math.log10(max(audience, 10)) * 2.0)
-        if any(word in desc for word in ["1위", "신규 진입", "순위 상승"]):
-            score += 4.0
-    elif group == "OTT 랭킹·신작":
-        if re.search(r"(?:top\s*10|톱\s*10|[1-9]위)", desc, re.I):
-            score += 8.0
-        if any(word in desc for word in ["신규 진입", "순위 상승", "공개 예정", "신작"]):
-            score += 4.0
-    elif group == "온라인 화제·뉴스":
-        source_text = str(issue.get("source", ""))
-        title_text = str(issue.get("issue_title", ""))
-        if any(word in source_text for word in ["공식", "보도자료", "방송사", "제작사", "플랫폼"]):
-            score += 5.0
-        if any(word in f"{title_text} {desc}" for word in [
-            "공개", "첫방", "개봉", "캐스팅", "출연 확정", "제작 확정", "시즌2",
-            "시청률 상승", "역주행", "수상", "해외 반응", "종영", "결말 화제", "리메이크",
-        ]):
-            score += 3.0
-        score += min(3.0, len(desc) / 120.0)
-    else:
-        score += min(3.0, len(desc) / 120.0)
-
-    return min(score, 15.0)
-
-
-def recency_points(date_value):
-    date_dt = pd.to_datetime(date_value, errors="coerce")
-    if pd.isna(date_dt):
-        return 0
-    age = max((pd.Timestamp.today().normalize() - date_dt.normalize()).days, 0)
-    if age <= 1:
-        return 5
-    if age <= 3:
-        return 4
-    if age <= 7:
-        return 2
-    return 0
-
-
-def cross_source_points(route_count):
-    if route_count >= 4:
-        return 15
-    if route_count == 3:
-        return 10
-    if route_count == 2:
-        return 5
-    return 0
-
-
 def prepare_issues(issues):
-    issues = issues.copy()
-    issues["source_group"] = issues["source"].apply(classify_source)
-    issues["issue_group_key"] = issues.apply(issue_group_key, axis=1)
-    issues["row_reaction"] = issues.apply(row_reaction_strength, axis=1)
-
-    group_stats = {}
-    for key, group in issues.groupby("issue_group_key", dropna=False):
-        routes = sorted(set(group["source_group"].astype(str)))
-        feed_count = len(group)
-        path_score = min(sum(SOURCE_CONFIG.get(route, {}).get("path_points", 0) for route in routes), 60)
-        repetition = min(8.0, max(feed_count - 1, 0) * 2.0)
-        reaction_score = min(20, round(float(group["row_reaction"].max()) + repetition))
-        cross_score = cross_source_points(len(routes))
-        latest_date = pd.to_datetime(group["date"], errors="coerce").max()
-        recent_score = recency_points(latest_date)
-        total = min(100, int(round(path_score + reaction_score + cross_score + recent_score)))
-        group_stats[key] = {
-            "issue_score": total,
-            "path_score": path_score,
-            "reaction_score": reaction_score,
-            "cross_score": cross_score,
-            "recent_score": recent_score,
-            "route_count": len(routes),
-            "feed_count": feed_count,
-            "confirmed_routes": " · ".join(routes),
-        }
-
-    for column in ["issue_score", "path_score", "reaction_score", "cross_score", "recent_score", "route_count", "feed_count", "confirmed_routes"]:
-        issues[column] = issues["issue_group_key"].map(lambda key: group_stats.get(key, {}).get(column, 0))
-
-    return issues.sort_values(["issue_score", "date"], ascending=[False, False])
-
-
-def representative_priority(row):
-    source = str(row.get("source", ""))
-    official_bonus = 3 if any(token in source for token in ["공식", "KOBIS", "보도자료", "Netflix"]) else 0
-    route = row.get("source_group", "온라인 화제·뉴스")
-    path_points = SOURCE_CONFIG.get(route, {}).get("path_points", 0)
-    image_bonus = 2 if get_issue_image_url(row) else 0
-    return official_bonus + path_points + image_bonus
+    assessed = assess_issues(issues)
+    return assessed[assessed["eligible"]].copy()
 
 
 def build_core_issues(issues):
-    if issues.empty:
-        return issues.copy()
+    return build_ranked_issues(issues)
 
-    representatives = []
-    for _, group in issues.groupby("issue_group_key", sort=False):
-        ranked = group.copy()
-        ranked["representative_priority"] = ranked.apply(representative_priority, axis=1)
-        ranked = ranked.sort_values(["representative_priority", "date"], ascending=[False, False])
-        representative = ranked.iloc[0].copy()
-
-        # 카드의 제목·설명은 가장 신뢰도 높은 대표 피드를 사용하되,
-        # 썸네일은 같은 이슈로 묶인 모든 피드 중 실제 이미지가 있는 것을 사용합니다.
-        # KOBIS가 대표 피드여도 관련 YouTube/기사 이미지가 있으면 오른쪽에 표시됩니다.
-        media_candidates = group.copy()
-        media_candidates["resolved_image_url"] = media_candidates.apply(get_issue_image_url, axis=1)
-        media_candidates = media_candidates[media_candidates["resolved_image_url"].astype(str).str.len() > 0].copy()
-        if not media_candidates.empty:
-            media_candidates["media_priority"] = media_candidates.apply(
-                lambda row: (
-                    3 if str(row.get("source_group", "")) == "YouTube 반응" else
-                    2 if str(row.get("source_group", "")) == "온라인 화제·뉴스" else
-                    1
-                ),
-                axis=1,
-            )
-            media_candidates = media_candidates.sort_values(
-                ["media_priority", "date"], ascending=[False, False]
-            )
-            media_row = media_candidates.iloc[0]
-            representative["image_url"] = media_row.get("resolved_image_url", "")
-            representative["image_source_url"] = media_row.get("source_url", "")
-
-        representatives.append(representative)
-
-    return pd.DataFrame(representatives).sort_values(["issue_score", "date"], ascending=[False, False])
 
 def find_matched_issues(theme, issues):
     theme_keywords = split_keywords(theme.get("trigger_keywords", ""))
@@ -803,12 +551,12 @@ def find_matched_issues(theme, issues):
                 "description": issue.get("description", ""),
                 "source_url": issue.get("source_url", ""),
                 "score": score,
-                "issue_score": issue.get("issue_score", 0)
+                "sort_priority": issue.get("sort_priority", 0)
             })
 
     return sorted(
         matched,
-        key=lambda x: (x["score"], x["issue_score"]),
+        key=lambda x: (x["score"], x["sort_priority"]),
         reverse=True
     )
 
@@ -881,7 +629,12 @@ def build_llm_issue_records(issues, max_issues=12):
             "related_content": issue.get("related_content", ""),
             "source_group": issue.get("source_group", ""),
             "confirmed_routes": issue.get("confirmed_routes", ""),
-            "issue_score": issue.get("issue_score", 0),
+            "strength_label": issue.get("strength_label", ""),
+            "evidence_status": issue.get("evidence_status", ""),
+            "reference_label": issue.get("reference_label", ""),
+            "metric_summary": issue.get("metric_summary", ""),
+            "selection_reason": issue.get("selection_reason", ""),
+            "source_url": issue.get("source_url", ""),
             "keywords": issue.get("keywords", ""),
             "description": issue.get("description", ""),
         })
@@ -928,12 +681,15 @@ def build_search_issue_records(issues, query, max_issues=5):
         score += len(overlap) * 12
         if score <= 0:
             continue
-        score += min(20, float(issue.get("issue_score", 0) or 0) / 5)
         scored.append((score, {
             "issue_title": title,
             "related_content": related,
             "keywords": keywords,
             "description": description,
+            **{field: issue.get(field, "") for field in [
+                "source_group", "strength_label", "evidence_status", "reference_label",
+                "metric_summary", "selection_reason", "source_url",
+            ]},
         }))
 
     scored.sort(key=lambda item: item[0], reverse=True)
@@ -1453,8 +1209,9 @@ def editorial_issue_card_html(issue, index):
         if source_url else '<div class="poster-link">'
     )
     closing = '</a>' if source_url else '</div>'
-    score = int(issue.get("issue_score", 0))
     tooltip = html.escape(score_tooltip(issue), quote=True)
+    status = str(issue.get("evidence_status", "검토 필요"))
+    compact_status = "공식 기록" if status == "공식 출처 기록" else "검토 필요" if status == "검토 필요" else "원문 미대조"
     return (
         '<article class="editorial-card">'
         f'{opening}<div class="editorial-poster tone-{(index - 1) % 4}">'
@@ -1464,52 +1221,53 @@ def editorial_issue_card_html(issue, index):
         f'<h3 class="poster-title">{html.escape(_compact_card_text(related, 50))}</h3>'
         f'</div>{closing}<div class="editorial-meta">'
         f'<span class="editorial-source">{html.escape(source)}</span>'
-        f'<span class="editorial-score" title="{tooltip}">이슈 점수 {score}</span></div>'
-        f'<p class="editorial-title">{html.escape(_compact_card_text(title, 65))}</p>'
-        f'<p class="editorial-description">{html.escape(_compact_card_text(issue.get("description", ""), 85))}</p>'
+        f'<span class="editorial-score" title="{tooltip}">{compact_status}</span></div>'
+        f'<p class="editorial-title" title="{html.escape(title, quote=True)}">{html.escape(str(issue.get("strength_label", "반응 미측정")))}</p>'
+        f'<p class="editorial-description">{html.escape(_compact_card_text(issue.get("metric_summary", "반응 미측정"), 85))}</p>'
+        f'<p class="editorial-reference">{html.escape(str(issue.get("reference_label", "기준일 미확인")))}</p>'
         '</article>'
     )
 
 
 def score_tooltip(issue):
-    return (
-        f"수집 경로 {int(issue.get('path_score', 0))}/60 · "
-        f"반응 강도 {int(issue.get('reaction_score', 0))}/20 · "
-        f"교차 확인 {int(issue.get('cross_score', 0))}/15 · "
-        f"최근성 {int(issue.get('recent_score', 0))}/5"
-    )
+    return " · ".join(str(issue.get(field, "")) for field in [
+        "strength_label", "evidence_status", "reference_label", "selection_reason"
+    ] if issue.get(field, ""))
 
 
 def render_issue_card(issue):
     source_url = safe_url(issue.get("source_url", ""))
-    source_group = html.escape(str(issue.get("source_group", classify_source(issue.get("source", "")))))
-    issue_score = int(issue.get("issue_score", 0))
-    tooltip = html.escape(score_tooltip(issue), quote=True)
-    media_html = render_issue_media(issue)
-    routes = html.escape(str(issue.get("confirmed_routes", source_group)))
-    feed_count = int(issue.get("feed_count", 1))
-    route_count = int(issue.get("route_count", 1))
-
+    source_group = html.escape(str(issue.get("source_group", "")))
     title_text = html.escape(str(issue.get("issue_title", "")))
     title_html = (
         f'<a class="theme-name issue-title-link" href="{html.escape(source_url, quote=True)}" target="_blank" rel="noopener noreferrer">{title_text}</a>'
-        if source_url else
-        f'<div class="theme-name">{title_text}</div>'
+        if source_url else f'<div class="theme-name">{title_text}</div>'
     )
+    status = str(issue.get("evidence_status", "검토 필요"))
+    reason = str(issue.get("selection_reason", "")) if issue.get("eligible", False) else str(issue.get("exclusion_reason", "검토 필요"))
+    if not issue.get("eligible", False) and issue.get("quality_notes", ""):
+        reason += " · " + str(issue["quality_notes"])
     body = (
         '<div class="issue-card-body">'
-        f'<span class="tag">{source_group}</span>'
-        f'{title_html}'
-        f'<div class="issue-byline small">{html.escape(str(issue.get("date", "")))} · {html.escape(str(issue.get("source", "")))}</div>'
+        f'<span class="tag">{source_group}</span>{title_html}'
+        f'<div class="issue-byline small">{html.escape(str(issue.get("reference_label", "기준일 미확인")))} · {html.escape(str(issue.get("source", "")))}</div>'
         '<div class="issue-meta-row">'
-        f'<span class="small" title="{tooltip}">핵심 이슈 점수: <span class="score">{issue_score}</span></span>'
-        f'<span class="small">확인 경로 {route_count}개 · 관련 피드 {feed_count}개</span>'
-        '</div>'
-        f'<div class="issue-routes small">확인 경로: {routes}</div>'
-        f'<div class="issue-description small">{html.escape(str(issue.get("description", "")))}</div>'
+        f'<span class="evidence-status">{html.escape(status)}</span>'
+        f'<span class="small">{html.escape(str(issue.get("strength_label", "반응 미측정")))}</span></div>'
+        f'<div class="issue-metrics">{html.escape(str(issue.get("metric_summary", "반응 미측정")))}</div>'
+        f'<div class="issue-description small">{html.escape(reason)}</div>'
         '</div>'
     )
-    st.markdown(f'<div class="card issue-card">{body}{media_html}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="card issue-card">{body}{render_issue_media(issue)}</div>', unsafe_allow_html=True)
+    records = issue.get("evidence_records", [])
+    if isinstance(records, list) and records:
+        with st.expander(f"원문 근거 {len(records)}건 · 날짜와 수치 확인"):
+            for record in records:
+                url = safe_url(record.get("url", record.get("source_url", "")))
+                label = html.escape(str(record.get("title", record.get("issue_title", "원문"))))
+                link = f'<a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">{label}</a>' if url else label
+                st.markdown(link, unsafe_allow_html=True)
+                st.caption(" · ".join(str(record.get(key, "")) for key in ["source", "reference_label", "metric_summary"] if record.get(key)))
 
 def render_content_tags(matched_contents):
     if not matched_contents:
@@ -1658,7 +1416,7 @@ def build_logic_modal_html(detail_key):
         _logic_detail_list_html("수집 단계", detail.get("collection", [])),
         _logic_detail_list_html("선정·제외 기준", detail.get("filters", [])),
         _logic_detail_box_html("경로 내 정렬 기준", detail.get("ranking", "")),
-        _logic_detail_box_html("핵심 이슈 점수 반영", detail.get("score", "")),
+        _logic_detail_box_html("근거 해석", detail.get("score", "")),
     ]
     if detail.get("queries"):
         query_text = "\n".join(detail["queries"])
@@ -1682,7 +1440,7 @@ def render_collection_logic():
             f'<div class="weight-chip-wrap">'
             f'<input class="logic-modal-toggle" type="checkbox" id="{modal_id}">'
             f'<label class="weight-chip" for="{modal_id}" title="수집 기준 자세히 보기">'
-            f'{html.escape(name)} {info["weight_pct"]}%</label>'
+            f'{html.escape(name)}</label>'
             '<div class="weight-tooltip">'
             f'{html.escape(info["tooltip"])}'
             f'<label class="weight-detail-link" for="{modal_id}">세부내용 보기 →</label>'
@@ -1698,14 +1456,57 @@ def render_collection_logic():
     html_block = (
         '<div class="logic-card">'
         '<div class="theme-name">이슈 수집·선정 로직</div>'
-        '<div class="logic-desc">최근 7일간 YouTube 반응, KOBIS 박스오피스, OTT 공식 랭킹·신작, 온라인 화제·뉴스를 수집합니다. 동일 작품이 여러 매체와 여러 수집 경로에서 반복 확인되고 실제 반응이 강할수록 핵심 이슈 점수가 높아집니다.</div>'
-        '<div class="section-label">경로별 가중치</div>'
+        '<div class="logic-desc">작품·관련성·기준일을 확인한 후보에서 실제 관측 반응과 공식 집계를 우선 살펴봅니다. 수치의 강도와 근거 상태를 각각 표시합니다.</div>'
+        '<div class="section-label">출처별 집계 기준</div>'
         f'{chips}'
-        '<div class="section-label">핵심 이슈 점수</div>'
-        '<div class="logic-desc">수집 경로 60점 + 반응 강도 20점 + 교차 확인 15점 + 최근성 5점으로 계산합니다. 같은 작품의 피드가 반복되면 반응 강도가 높아지고, 서로 다른 경로에서 동시에 확인되면 교차 확인 점수가 추가됩니다. 각 가중치에 마우스를 올리면 요약 기준이 표시되고, 세부내용 보기에서 실제 수집·필터·점수 로직을 확인할 수 있습니다.</div>'
+        '<div class="section-label">선정 원칙</div>'
+        '<div class="logic-desc">종합 100점 대신 원래 수치·기준 기간·선정 이유를 제공합니다. 같은 영상이나 기사를 반복 수집해도 우선순위가 올라가지 않습니다. 관측 이력이 없으면 초기 반응, 기사만 있으면 사건 근거로 표시합니다. 출처 이름을 누르면 상세 기준을 볼 수 있습니다.</div>'
         '</div>'
     )
     st.markdown(html_block, unsafe_allow_html=True)
+
+
+def render_collection_health(assessed, expanded=False):
+    status_path = ISSUE_PATH.with_name("collection_status.json")
+    try:
+        status = json.loads(status_path.read_text(encoding="utf-8")) if status_path.exists() else {}
+    except (OSError, ValueError):
+        status = {}
+    sources = status.get("sources", {})
+    state_names = {
+        "ok": "수집 완료", "empty": "조건 충족 0건", "failed": "수집 실패",
+        "partial": "일부 수집", "skipped": "미실행", "stale": "갱신 지연",
+    }
+    flagged = sum(item.get("state") in {"failed", "partial", "stale", "skipped"} for item in sources.values())
+    summary = f"확인 필요 {flagged}개 경로" if flagged else "저장 데이터와 실행 기록 확인"
+    if not sources:
+        summary = "실행 기록 없음 · 저장 자료 재평가"
+    with st.expander(f"출처별 수집 상태 · {summary}", expanded=expanded):
+        recent, _, _ = filter_recent_issues(assessed)
+        cards = []
+        for key, name in zip(["youtube", "kobis", "netflix", "news"], SOURCE_CONFIG):
+            record = sources.get(key, {})
+            state = record.get("state", "")
+            last_run = str(record.get("collected_at", ""))
+            run_at = pd.to_datetime(last_run, errors="coerce", utc=True)
+            if state in {"ok", "empty"} and pd.notna(run_at) and pd.Timestamp.now(tz="UTC") - run_at > pd.Timedelta(hours=36):
+                state = "stale"
+            candidates = recent[recent["source_group"] == name]
+            usable = assessed[(assessed["source_group"] == name) & assessed["eligible"]]
+            label = state_names.get(state, "실행 기록 없음")
+            reference = str(record.get("reference_period") or record.get("reference_date") or "기준 기간은 개별 근거에 표시")
+            error = str(record.get("error", ""))
+            cards.append(
+                '<div class="collection-source">'
+                f'<strong>{html.escape(name)}</strong><span class="collection-state">{html.escape(label)}</span>'
+                f'<div>저장 후보 {len(candidates)}건 · 사용 가능 {len(usable)}건</div>'
+                f'<div>{html.escape(reference)}</div>'
+                f'<div>{html.escape(last_run or "다음 수집부터 실행 시각 기록")}</div>'
+                + (f'<div class="collection-error">{html.escape(error)}</div>' if error else '')
+                + '</div>'
+            )
+        st.markdown('<div class="collection-grid">' + ''.join(cards) + '</div>', unsafe_allow_html=True)
+        st.caption("저장 후보는 최근 7일 포착 기록입니다. 사용 가능 여부는 각 출처의 실제 기준일로 판단합니다. 수집 실패 시 마지막 정상 자료를 보존하며, 오래된 근거는 선정에서 제외합니다.")
 
 
 try:
@@ -1714,7 +1515,9 @@ try:
         all_issues,
         days=7
     )
-    issues = prepare_issues(recent_issues)
+    assessed_issues = assess_issues(all_issues)
+    issues = assessed_issues[assessed_issues["eligible"]].copy()
+    review_issues = assessed_issues[assessed_issues.index.isin(recent_issues.index) & ~assessed_issues["eligible"]].copy()
 except Exception as e:
     st.error(f"CSV 로드 실패: {e}")
     st.stop()
@@ -1730,9 +1533,10 @@ if st.session_state["page"] == "issue_db":
 
     st.markdown("---")
 
+    render_collection_health(assessed_issues, expanded=True)
     render_collection_logic()
 
-    source_options = ["전체"] + list(SOURCE_WEIGHTS.keys())
+    source_options = ["전체"] + list(SOURCE_CONFIG.keys())
 
     c1, c2 = st.columns([1, 2])
 
@@ -1748,22 +1552,27 @@ if st.session_state["page"] == "issue_db":
             placeholder="예: 미키17, 살목지, 쇼츠, 요리"
         )
 
-    filtered = issues.copy()
+    view = st.radio("선정 상태", ["선정된 작품", "검토·제외 후보"], horizontal=True)
+    filtered = issues.copy() if view == "선정된 작품" else review_issues.copy()
+    total_count = len(build_core_issues(issues)) if view == "선정된 작품" else len(filtered)
 
     if selected_source != "전체":
         filtered = filtered[filtered["source_group"] == selected_source]
 
+    if view == "선정된 작품":
+        filtered = build_core_issues(filtered)
+
     if search:
         s = search.strip()
         filtered = filtered[
-            filtered["issue_title"].astype(str).str.contains(s, case=False, na=False)
-            | filtered["related_content"].astype(str).str.contains(s, case=False, na=False)
-            | filtered["keywords"].astype(str).str.contains(s, case=False, na=False)
-            | filtered["source"].astype(str).str.contains(s, case=False, na=False)
-            | filtered["description"].astype(str).str.contains(s, case=False, na=False)
+            filtered["issue_title"].astype(str).str.contains(s, case=False, na=False, regex=False)
+            | filtered["related_content"].astype(str).str.contains(s, case=False, na=False, regex=False)
+            | filtered["keywords"].astype(str).str.contains(s, case=False, na=False, regex=False)
+            | filtered["source"].astype(str).str.contains(s, case=False, na=False, regex=False)
+            | filtered["description"].astype(str).str.contains(s, case=False, na=False, regex=False)
         ]
 
-    st.markdown(f"### 전체 {len(issues)}개 중 {len(filtered)}개 표시")
+    st.markdown(f"### 전체 {total_count}개 중 {len(filtered)}개 표시")
 
     for _, issue in filtered.iterrows():
         render_issue_card(issue)
@@ -2037,7 +1846,7 @@ else:
         '<h1>이슈를 읽고, 취향을 큐레이션하다.</h1>'
         '<p class="hero-description">이번 주의 이슈에서 새로운 테마를 발견하고, 어울리는 콘텐츠를 연결하세요.</p>'
         '<div class="hero-meta">'
-        f'<span>최근 이슈 <strong>{len(issues):,}</strong></span>'
+        f'<span>선정 작품 <strong>{len(build_core_issues(issues)):,}</strong></span>'
         f'<span>테마 컬렉션 <strong>{len(themes):,}</strong></span>'
         f'<span>{html.escape(str(issue_start_date))} — {html.escape(str(issue_end_date))}</span>'
         '</div></div>'
@@ -2047,7 +1856,7 @@ else:
         unsafe_allow_html=True,
     )
     with st.container(key="spotlight_section"):
-        render_section_heading(1, '지금 주목할 이야기', '여러 출처의 반응을 모아 살펴본, 이번 주 핵심 이슈.')
+        render_section_heading(1, '지금 주목할 이야기', '실제 수치와 집계 기간을 확인한 후보. 출처별 상태와 근거는 이슈 전체 보기에서 확인하세요.')
         if issues.empty:
             st.info("최근 수집된 이슈가 없습니다. 이슈가 수집되면 이곳에서 확인할 수 있어요.")
         else:
@@ -2066,9 +1875,11 @@ else:
         persistent_ready = github_writeback_configured(github_config)
 
         with st.container(key="generation_workspace"):
-            ready = bool(openai_api_key) and persistent_ready
+            ready = bool(openai_api_key) and persistent_ready and not issues.empty
             status_class = " is-ready" if ready else ""
             status_text = "새로운 테마를 만들 준비가 되었어요" if ready else "생성 연결 설정이 필요해요"
+            if issues.empty:
+                status_text = "선정 가능한 최근 이슈가 없어요 · 수집 상태를 확인해 주세요"
             st.markdown(
                 f'<div class="engine-status"><span class="status-dot{status_class}"></span>'
                 f'{status_text}<span class="engine-model">{html.escape(openai_model)}</span></div>',
@@ -2086,7 +1897,7 @@ else:
                 key="generate_weekly_themes",
                 type="primary",
                 use_container_width=True,
-                disabled=not bool(openai_api_key) or not persistent_ready,
+                disabled=not ready,
             ):
                 try:
                     with st.spinner("최근 이슈를 분석해 신규 테마를 생성하고 저장하는 중입니다..."):

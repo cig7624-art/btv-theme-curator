@@ -30,6 +30,9 @@ jobs:
       - name: Install packages
         run: pip install -r requirements.txt
 
+      - name: Validate issue selection
+        run: python -m unittest discover -s tests -v
+
       - name: Collect external issues
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
@@ -41,6 +44,10 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add issue_feed.csv youtube_video_watchlist.csv youtube_video_stats.csv
-          git commit -m "Update external issue feed" || echo "No changes to commit"
+          git add issue_feed.csv youtube_video_watchlist.csv youtube_video_stats.csv collection_status.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Update external issue feed"
+          git pull --rebase origin main
           git push
