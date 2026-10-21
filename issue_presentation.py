@@ -4,7 +4,7 @@ import re
 
 import pandas as pd
 
-from issue_quality import BOXOFFICE, NEWS, OTT, YOUTUBE, classify_source, read_issue_metrics
+from issue_quality import BOXOFFICE, OTT, YOUTUBE, _metrics, classify_source
 from issue_rules import (
     DAILY_COMMENT_DELTA_THRESHOLD, DAILY_VIEW_DELTA_THRESHOLD,
     GROWTH_MIN_DELTA, GROWTH_RATE_THRESHOLD, NEW_VIDEO_HIGH_VIEW_THRESHOLD,
@@ -57,7 +57,9 @@ def _detail_date(value):
 
 def present_issue(row):
     """Return simple card copy plus traceable detail; never infer whole-work views."""
-    metrics = read_issue_metrics(row)
+    # Streamlit can retain the previous issue_quality module during a live update.
+    # These two functions also exist in that version; a newly added export may not.
+    metrics = _metrics(row, classify_source(row))
     group = row.get('source_group') or classify_source(row)
     reference = _date(row.get('_quality_reference') or row.get('reference_date') or row.get('published_at') or row.get('date'))
     details = []
