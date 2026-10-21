@@ -221,7 +221,7 @@
 | 102 | 🔔EP.1 FULL 관련 YouTube 화제 영상 | 작품명이 없거나 일반 문구라 작품 특정 불가; 수집 단계 품질 검토에서 제외; 최근 7일 범위 밖의 게시물 |
 | 103 | 더 커뮤니티3를 한다면? 관련 YouTube 화제 영상 | 수집 단계 품질 검토에서 제외; 최근 7일 범위 밖의 게시물 |
 
-전체 104행의 통과/제외/정정 내역은 `/workspace/scratch/issue-audit/final/after_recent_decisions.csv`에 저장했습니다. 새 상위20 원자료는 `/workspace/scratch/issue-audit/final/after_top20.csv`, 전체 평가 결과는 `/workspace/scratch/issue-audit/final/after_assessed_issues.csv`입니다.
+전체 104행의 통과/제외/정정 내역은 `/workspace/scratch/issue-audit/consumer-copy/after_recent_decisions.csv`에 저장했습니다. 새 상위20 원자료는 `/workspace/scratch/issue-audit/consumer-copy/after_top20.csv`, 전체 평가 결과는 `/workspace/scratch/issue-audit/consumer-copy/after_assessed_issues.csv`입니다.
 
 ## 아직 확인하지 못한 것
 
@@ -239,4 +239,4 @@ PYTHONDONTWRITEBYTECODE=1 python scripts/audit_issue_quality.py --as-of 2026-10-
 
 기본 산출물 경로는 시스템 임시 디렉터리이며 `--output-dir`로 변경할 수 있습니다. 원본 코드·CSV를 Git 기준 커밋에서 읽습니다. 해당 커밋이 없는 얕은 체크아웃은 먼저 커밋을 확보하거나 `--baseline-dir`로 보존한 `before_*` 파일 경로를 지정해야 합니다.
 
-동결 원본 SHA256: `e8a3b7adccf28a061f34c45b54d549a09dc55457c1b5d13b90fea1012d6c339f`. 실제 수정 후 CSV SHA256: `1f22309c8a3ef049b3023f957cb29022f14c0cb97e94045936c1838225ae5abc`. 새 품질 모듈 SHA256: `8d2ab35a2eec047103b770341b0d8476fe201684b553774eba4a6ce80829e399`.
+동결 원본 SHA256: `e8a3b7adccf28a061f34c45b54d549a09dc55457c1b5d13b90fea1012d6c339f`. 실제 수정 후 CSV SHA256: `1f22309c8a3ef049b3023f957cb29022f14c0cb97e94045936c1838225ae5abc`. 새 품질 모듈 SHA256: `f16071fe818e83da5e283ec370ac2310700c2ec7f45415e94f3508c29a7d81f3`.

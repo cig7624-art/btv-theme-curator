@@ -4,7 +4,7 @@
 - YouTube 반응: 한국 인기 영상, 주요 공식 채널 신규 업로드, 12개 외부 반응 검색어
 - 극장·박스오피스: KOBIS 일별 박스오피스
 - OTT 랭킹·신작: Netflix 공식 한국 Top 10과 OTT 공식 신작 관련 자료
-- 온라인 화제·뉴스: 최근 기사·공식 발표와 반복 보도량을 통한 화제 신호
+- 온라인 화제·뉴스: 작품의 개봉·공개·제작 소식과 공식 발표
 
 필수 환경변수는 YOUTUBE_API_KEY이며, 극장 데이터를 사용할 때 KOBIS_API_KEY를 추가합니다.
 키가 없는 경로는 건너뛰고 나머지 수집은 계속 진행합니다.
@@ -29,6 +29,13 @@ import feedparser
 import pandas as pd
 import requests
 
+from issue_rules import (
+    DAILY_COMMENT_DELTA_THRESHOLD, DAILY_VIEW_DELTA_THRESHOLD,
+    GROWTH_MIN_DELTA, GROWTH_RATE_THRESHOLD, ISSUE_LOOKBACK_DAYS,
+    NETFLIX_MAX_AGE_DAYS, NEW_VIDEO_HIGH_VIEW_THRESHOLD,
+    NEW_VIDEO_VIEWS_PER_DAY_THRESHOLD,
+)
+
 try:
     from googlenewsdecoder import gnewsdecoder
 except Exception:
@@ -52,7 +59,7 @@ YOUTUBE_PLAYLIST_ITEMS_ENDPOINT = "https://www.googleapis.com/youtube/v3/playlis
 KOBIS_DAILY_ENDPOINT = "https://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json"
 NETFLIX_COUNTRY_DATA_URL = "https://www.netflix.com/tudum/top10/data/all-weeks-countries.xlsx"
 
-DAYS = int(os.getenv("ISSUE_LOOKBACK_DAYS", "7"))
+DAYS = ISSUE_LOOKBACK_DAYS
 MAX_VIDEO_TRACK_DAYS = int(os.getenv("YOUTUBE_TRACK_DAYS", "30"))
 MAX_TRACKING_VIDEOS = int(os.getenv("YOUTUBE_MAX_TRACKING_VIDEOS", "500"))
 YOUTUBE_MAX_RESULTS_PER_QUERY = max(
@@ -103,7 +110,6 @@ STATS_COLUMNS = [
 
 COLLECTION_STATUS = {"schema_version": 1, "sources": {}}
 SOURCE_ERRORS = {}
-NETFLIX_MAX_AGE_DAYS = 14
 OFFICIAL_DOMAINS = (
     "netflix.com", "tving.com", "wavve.com", "disneyplus.com",
     "thewaltdisneycompany.com", "coupangplay.com", "news.coupang.com",
@@ -249,24 +255,9 @@ GENERIC_TITLE_WORDS = {
     "드라마", "영화", "예능", "한국", "넷플릭스", "코리아", "Netflix", "Korea",
 }
 
-# 첫 수집일에도 화제 영상을 선별하기 위한 기준
-NEW_VIDEO_HIGH_VIEW_THRESHOLD = int(os.getenv("YOUTUBE_NEW_VIDEO_VIEW_THRESHOLD", "100000"))
-NEW_VIDEO_VIEWS_PER_DAY_THRESHOLD = int(
-    os.getenv("YOUTUBE_NEW_VIDEO_VELOCITY_THRESHOLD", "30000")
-)
+# 이전 피드 정리와의 호환 설정. 현재 후보 조건은 issue_rules.py에서 가져옵니다.
 NEW_VIDEO_COMMENT_THRESHOLD = int(os.getenv("YOUTUBE_NEW_VIDEO_COMMENT_THRESHOLD", "300"))
-# 최초 관측 시에는 누적 조회수만으로 오래된 영상을 이슈로 오인하지 않도록
-# 업로드 후 최대 허용 일수를 별도로 둔다. 이후 관측부터는 업로드일과 무관하게
-# 전일 대비 증가량으로 급등 여부를 판단한다.
 INITIAL_ISSUE_MAX_AGE_DAYS = int(os.getenv("YOUTUBE_INITIAL_ISSUE_MAX_AGE_DAYS", "14"))
-
-# 전일 대비 급등 조건
-DAILY_VIEW_DELTA_THRESHOLD = int(os.getenv("YOUTUBE_DAILY_VIEW_DELTA", "50000"))
-DAILY_COMMENT_DELTA_THRESHOLD = int(os.getenv("YOUTUBE_DAILY_COMMENT_DELTA", "100"))
-
-# 성장률 조건. 기존 코드의 2.0은 '200% 증가'를 뜻한다.
-GROWTH_RATE_THRESHOLD = float(os.getenv("YOUTUBE_GROWTH_RATE_THRESHOLD", "2.0"))
-GROWTH_MIN_DELTA = int(os.getenv("YOUTUBE_GROWTH_MIN_DELTA", "20000"))
 
 
 def today_kst_date():

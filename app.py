@@ -26,6 +26,9 @@ from llm_theme_generator import (
 
 from kinolights_candidates import content_rows_to_frame, validate_content_suggestions
 from issue_quality import assess_issues, build_ranked_issues
+from issue_presentation import present_issue
+from issue_rules import ISSUE_LOOKBACK_DAYS
+from issue_selection_copy import SOURCE_CONFIG, SOURCE_DETAIL_LOGIC, SELECTION_STEPS
 
 from theme_content_manager import (
     ai_suggestions_to_recommendations,
@@ -56,56 +59,6 @@ OLD_THEME_PATH = Path("theme_pool.csv")
 CONTENT_DB_PATH = Path("content_db.csv")
 THEME_HISTORY_PATH = Path("theme_recommendation_history.csv")
 THEME_CONTENT_PATH = Path("theme_content_candidates.csv")
-
-SOURCE_CONFIG = {
-    "YouTube 반응": {"tooltip": "작품이 식별된 영화·드라마·예능 영상의 관측 증가량과 초기 반응을 구분합니다."},
-    "극장·박스오피스": {"tooltip": "KOBIS의 집계일, 실제 순위와 일일 관객을 확인합니다."},
-    "OTT 랭킹·신작": {"tooltip": "Netflix 한국 주간 순위와 공식 도메인에서 확인된 발표를 구분합니다."},
-    "온라인 화제·뉴스": {"tooltip": "기사의 발행일·작품·사건을 확인합니다. 기사 수를 인기로 환산하지 않습니다."},
-}
-
-SOURCE_DETAIL_LOGIC = {
-    "youtube": {
-        "source_name": "YouTube 반응", "weight": "반응 수치와 근거 상태를 별도로 표시",
-        "purpose": "작품이 확인되는 영화·드라마·예능 영상의 반응을 살펴봅니다.",
-        "integration": "YouTube 검색·한국 인기 영상·지정 OTT 및 방송사 채널에서 발견한 후보를 추적합니다.",
-        "collection": ["영상 ID로 중복 제거", "게시일과 통계 관측일을 분리", "조회수와 댓글의 관측 이력을 저장"],
-        "filters": ["게임·일반 음악·콘텐츠와 무관한 업계 뉴스 제외", "회차·예고·메이킹 같은 일반 표현을 작품명으로 사용하지 않음", "작품명·최근 게시일·반응 조건을 통과한 영상만 선정"],
-        "ranking": "관측기간 평균 조회 증가가 하루 2만 회 이상이면 우선 반응 후보로 봅니다. 그 미만은 참고 반응, 이력이 없으면 초기 반응으로 표시합니다. 이 기준은 운영 규칙이며 보정된 인기 점수가 아닙니다.",
-        "score": "누적 수치와 관측 증가를 구분하며, 관측 이력 부재를 급등으로 표현하지 않습니다.",
-        "limitations": "YouTube 전체를 전수 조사하지 않습니다. 날짜만 있는 과거 관측은 정확한 24시간 증가가 아닙니다. 채널·검색 범위와 API 한도가 있습니다.",
-    },
-    "boxoffice": {
-        "source_name": "극장·박스오피스", "weight": "공식 일별 집계",
-        "purpose": "공식 순위와 실제 관객 수를 확인합니다.",
-        "integration": "KOBIS OpenAPI에서 전일 일별 Top 10을 조회합니다.",
-        "collection": ["영화 식별자·집계일·수집 시각 분리", "순위·일일 관객·누적 관객·순위 변화 저장"],
-        "filters": ["영화명이 확인된 공식 집계만 사용", "집계일이 오래되면 현재 이슈에서 제외"],
-        "ranking": "실제 순위·관객 수를 그대로 제시합니다. 다른 경로의 숫자와 합산하지 않습니다.",
-        "score": "관객 수와 순위 변화는 각각 표시합니다. 비교 이력이 없으면 증가율을 만들지 않습니다.",
-        "limitations": "제공되는 Top 10 범위입니다. 대표 이미지는 별도 근거에서 보완할 수 있습니다.",
-    },
-    "ott": {
-        "source_name": "OTT 랭킹·신작", "weight": "주간 순위와 공식 발표 구분",
-        "purpose": "Netflix 한국 영화·TV 주간 순위와 확인 가능한 공식 발표를 확인합니다.",
-        "integration": "Netflix 공식 국가별 주간 Top 10 파일을 읽습니다. 다른 OTT의 전체 인기 순위는 연동되어 있지 않습니다.",
-        "collection": ["한국의 영화·TV를 카테고리별로 집계", "작품·시즌·집계 주간과 수집 시각 저장", "OTT 검색 결과라도 제3자 기사는 뉴스로 분류"],
-        "filters": ["오래된 주간을 오늘의 새 순위로 처리하지 않음", "공식 도메인에서 확인된 자료만 공식 발표로 분류"],
-        "ranking": "최신 유효 주간의 실제 순위를 사용합니다. 일일 급등으로 해석하지 않습니다.",
-        "score": "현재 주간 순위와 기준 주간을 제시합니다. 전주 자료가 없으면 순위 상승을 추정하지 않습니다.",
-        "limitations": "TVING·웨이브·디즈니+·쿠팡플레이의 전체 인기 순위를 확보한 데이터가 아닙니다.",
-    },
-    "online_news": {
-        "source_name": "온라인 화제·뉴스", "weight": "사건 근거 · 인기 측정과 구분",
-        "purpose": "개봉·공개·제작·캐스팅·종영 등 작품에 연결되는 사건을 찾습니다.",
-        "integration": "Google News RSS에서 후보를 찾고 발행일과 매체·원문을 가능한 범위에서 확인합니다.",
-        "collection": ["확인된 기사 발행일 사용", "제목·원문 링크 중복 제거", "작품명·사건·매체 정보를 보존"],
-        "filters": ["작품명이나 발행일이 확인되지 않는 후보 제외", "같은 기사와 재전송은 독립 근거로 가산하지 않음", "OTT 검색어가 붙었다는 이유로 공식 출처로 분류하지 않음"],
-        "ranking": "유효한 사건과 원문을 근거로 사용합니다. 기사 수를 조회수나 대중 반응으로 변환하지 않습니다.",
-        "score": "사건 근거의 상태를 표시합니다. 반복 기사 수에 가산점을 주지 않습니다.",
-        "limitations": "검색 범위 내 기사이며 전수 집계가 아닙니다. 기사만으로 대중적 인기와 원문 접근 성공을 보장하지 않습니다.",
-    },
-}
 
 SOURCE_DETAIL_KEY_BY_NAME = {
     "YouTube 반응": "youtube",
@@ -246,7 +199,7 @@ def load_data():
     return issues, themes, contents
 
 
-def filter_recent_issues(issues, days=7):
+def filter_recent_issues(issues, days=ISSUE_LOOKBACK_DAYS):
     issues = issues.copy()
     issues["date"] = pd.to_datetime(issues["date"], errors="coerce")
 
@@ -1190,16 +1143,30 @@ def render_issue_media(issue):
     )
 
 
+def issue_evidence_html(issue, presentation=None):
+    public = presentation or present_issue(issue)
+    rows = "".join(
+        f'<div><dt>{html.escape(str(label))}</dt><dd>{html.escape(str(value))}</dd></div>'
+        for label, value in public["details"]
+    )
+    source_url = safe_url(issue.get("source_url", ""))
+    source_link = (
+        f'<a class="evidence-source-link" href="{html.escape(source_url, quote=True)}" target="_blank" rel="noopener noreferrer">원문에서 확인 ↗</a>'
+        if source_url else ''
+    )
+    return (
+        '<div class="evidence-panel"><dl class="evidence-facts">' + rows + '</dl>'
+        f'<p class="evidence-note">{html.escape(public["verification_note"])}</p>'
+        f'{source_link}</div>'
+    )
+
+
 def editorial_issue_card_html(issue, index):
-    title = str(issue.get("issue_title", "")).strip()
-    related = str(issue.get("related_content", "")).strip()
-    if not related or len(related) < 3 or re.fullmatch(r"(?:제?\d+위|신규|상승|공개)", related):
-        related = title
-    source = str(issue.get("source_group", classify_source(issue.get("source", ""))))
+    related = str(issue.get("related_content", "")).strip() or str(issue.get("issue_title", ""))
+    public = present_issue(issue)
     image_url = get_issue_image_url(issue)
     image_style = ""
     if image_url:
-        # Encode CSS delimiters as well as escaping the surrounding HTML attribute.
         image = html.escape(quote(image_url, safe=":/?=&%+#@,;"), quote=True)
         image_style = f' style="background-image:url(\'{image}\')"'
     source_url = safe_url(issue.get("source_url", ""))
@@ -1209,65 +1176,53 @@ def editorial_issue_card_html(issue, index):
         if source_url else '<div class="poster-link">'
     )
     closing = '</a>' if source_url else '</div>'
-    tooltip = html.escape(score_tooltip(issue), quote=True)
-    status = str(issue.get("evidence_status", "검토 필요"))
-    compact_status = "공식 기록" if status == "공식 출처 기록" else "검토 필요" if status == "검토 필요" else "원문 미대조"
     return (
         '<article class="editorial-card">'
         f'{opening}<div class="editorial-poster tone-{(index - 1) % 4}">'
-        f'<div class="poster-image"{image_style}></div>'
-        '<div class="poster-shade"></div>'
+        f'<div class="poster-image"{image_style}></div><div class="poster-shade"></div>'
         f'<span class="poster-index">{index:02d} / THIS WEEK</span>'
         f'<h3 class="poster-title">{html.escape(_compact_card_text(related, 50))}</h3>'
         f'</div>{closing}<div class="editorial-meta">'
-        f'<span class="editorial-source">{html.escape(source)}</span>'
-        f'<span class="editorial-score" title="{tooltip}">{compact_status}</span></div>'
-        f'<p class="editorial-title" title="{html.escape(title, quote=True)}">{html.escape(str(issue.get("strength_label", "반응 미측정")))}</p>'
-        f'<p class="editorial-description">{html.escape(_compact_card_text(issue.get("metric_summary", "반응 미측정"), 85))}</p>'
-        f'<p class="editorial-reference">{html.escape(str(issue.get("reference_label", "기준일 미확인")))}</p>'
-        '</article>'
+        f'<span class="editorial-source">{html.escape(public["source_label"])}</span></div>'
+        f'<p class="editorial-title">{html.escape(public["headline"])}</p>'
+        f'<p class="editorial-description">{html.escape(public["reason"])}</p>'
+        f'<p class="editorial-reference">{html.escape(public["period_label"])}</p>'
+        '<details class="editorial-evidence"><summary>선정 근거</summary>'
+        f'{issue_evidence_html(issue, public)}</details></article>'
     )
 
 
-def score_tooltip(issue):
-    return " · ".join(str(issue.get(field, "")) for field in [
-        "strength_label", "evidence_status", "reference_label", "selection_reason"
-    ] if issue.get(field, ""))
-
-
 def render_issue_card(issue):
+    selected = bool(issue.get("eligible", False))
+    public = present_issue(issue)
     source_url = safe_url(issue.get("source_url", ""))
-    source_group = html.escape(str(issue.get("source_group", "")))
-    title_text = html.escape(str(issue.get("issue_title", "")))
+    title = issue.get("related_content", "") if selected else issue.get("issue_title", "")
+    title_text = html.escape(str(title or issue.get("issue_title", "")))
     title_html = (
         f'<a class="theme-name issue-title-link" href="{html.escape(source_url, quote=True)}" target="_blank" rel="noopener noreferrer">{title_text}</a>'
         if source_url else f'<div class="theme-name">{title_text}</div>'
     )
-    status = str(issue.get("evidence_status", "검토 필요"))
-    reason = str(issue.get("selection_reason", "")) if issue.get("eligible", False) else str(issue.get("exclusion_reason", "검토 필요"))
-    if not issue.get("eligible", False) and issue.get("quality_notes", ""):
+    reason = public["reason"] if selected else str(issue.get("exclusion_reason", "선정 기준 확인이 필요해요"))
+    if not selected and issue.get("quality_notes", ""):
         reason += " · " + str(issue["quality_notes"])
     body = (
         '<div class="issue-card-body">'
-        f'<span class="tag">{source_group}</span>{title_html}'
-        f'<div class="issue-byline small">{html.escape(str(issue.get("reference_label", "기준일 미확인")))} · {html.escape(str(issue.get("source", "")))}</div>'
-        '<div class="issue-meta-row">'
-        f'<span class="evidence-status">{html.escape(status)}</span>'
-        f'<span class="small">{html.escape(str(issue.get("strength_label", "반응 미측정")))}</span></div>'
-        f'<div class="issue-metrics">{html.escape(str(issue.get("metric_summary", "반응 미측정")))}</div>'
-        f'<div class="issue-description small">{html.escape(reason)}</div>'
-        '</div>'
+        f'<span class="tag">{html.escape(public["source_label"])}</span>{title_html}'
+        f'<div class="issue-byline small">{html.escape(public["period_label"])}</div>'
+        f'<div class="issue-metrics">{html.escape(public["headline"] if selected else "선정 보류")}</div>'
+        f'<div class="issue-description small">{html.escape(reason)}</div></div>'
     )
     st.markdown(f'<div class="card issue-card">{body}{render_issue_media(issue)}</div>', unsafe_allow_html=True)
-    records = issue.get("evidence_records", [])
-    if isinstance(records, list) and records:
-        with st.expander(f"원문 근거 {len(records)}건 · 날짜와 수치 확인"):
+    with st.expander("선정 근거 · 숫자와 출처 보기"):
+        st.markdown(issue_evidence_html(issue, public), unsafe_allow_html=True)
+        records = issue.get("evidence_records", [])
+        if isinstance(records, list) and records:
+            st.caption(f"같은 작품으로 묶인 자료 {len(records)}건")
             for record in records:
                 url = safe_url(record.get("url", record.get("source_url", "")))
-                label = html.escape(str(record.get("title", record.get("issue_title", "원문"))))
+                label = html.escape(str(record.get("title", "원문")))
                 link = f'<a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">{label}</a>' if url else label
                 st.markdown(link, unsafe_allow_html=True)
-                st.caption(" · ".join(str(record.get(key, "")) for key in ["source", "reference_label", "metric_summary"] if record.get(key)))
 
 def render_content_tags(matched_contents):
     if not matched_contents:
@@ -1411,12 +1366,12 @@ def build_logic_modal_html(detail_key):
     parts = [
         f'<div class="logic-modal-heading">{html.escape(detail.get("source_name", "수집 경로 세부 로직"))}</div>',
         f'<div class="logic-modal-weight">{html.escape(detail.get("weight", ""))}</div>',
-        _logic_detail_box_html("역할", detail.get("purpose", "")),
-        _logic_detail_box_html("연동 방식", detail.get("integration", "")),
-        _logic_detail_list_html("수집 단계", detail.get("collection", [])),
-        _logic_detail_list_html("선정·제외 기준", detail.get("filters", [])),
-        _logic_detail_box_html("경로 내 정렬 기준", detail.get("ranking", "")),
-        _logic_detail_box_html("근거 해석", detail.get("score", "")),
+        _logic_detail_box_html("어떤 작품을 찾나요?", detail.get("purpose", "")),
+        _logic_detail_box_html("어디에서 가져오나요?", detail.get("integration", "")),
+        _logic_detail_list_html("자료를 모으는 방법", detail.get("collection", [])),
+        _logic_detail_list_html("새 후보로 넣는 조건", detail.get("filters", [])),
+        _logic_detail_box_html("화면에 보이는 순서", detail.get("ranking", "")),
+        _logic_detail_box_html("카드를 읽는 방법", detail.get("score", "")),
     ]
     if detail.get("queries"):
         query_text = "\n".join(detail["queries"])
@@ -1426,8 +1381,7 @@ def build_logic_modal_html(detail_key):
         channel_text = "\n".join(detail["channels"])
         parts.append('<div class="logic-detail-title" style="margin-top:14px">수집 대상 공식 채널</div>')
         parts.append(f'<div class="logic-code">{html.escape(channel_text)}</div>')
-    parts.append(_logic_detail_box_html("현재 한계", detail.get("limitations", "")))
-    parts.append('<div class="small">이 내용은 현재 app.py와 collect_issues.py에 구현된 실제 기준입니다.</div>')
+    parts.append(_logic_detail_box_html("자료를 볼 때 참고해 주세요", detail.get("limitations", "")))
     return "".join(parts)
 
 def render_collection_logic():
@@ -1453,15 +1407,17 @@ def render_collection_logic():
             '</div>'
         )
     chips = "".join(chip_parts)
+    steps = "".join(
+        '<div class="selection-step">'
+        f'<strong>{number}. {html.escape(title)}</strong><p>{html.escape(body)}</p></div>'
+        for number, (title, body) in enumerate(SELECTION_STEPS, 1)
+    )
     html_block = (
         '<div class="logic-card">'
-        '<div class="theme-name">이슈 수집·선정 로직</div>'
-        '<div class="logic-desc">작품·관련성·기준일을 확인한 후보에서 실제 관측 반응과 공식 집계를 우선 살펴봅니다. 수치의 강도와 근거 상태를 각각 표시합니다.</div>'
+        '<div class="theme-name">이슈를 이렇게 골랐어요</div>'
+        '<div class="logic-desc">영화·드라마·예능의 관련 영상, 관객 순위, 넷플릭스 순위와 새로운 소식에서 작품을 고릅니다.</div>'
         '<div class="section-label">출처별 집계 기준</div>'
-        f'{chips}'
-        '<div class="section-label">선정 원칙</div>'
-        '<div class="logic-desc">종합 100점 대신 원래 수치·기준 기간·선정 이유를 제공합니다. 같은 영상이나 기사를 반복 수집해도 우선순위가 올라가지 않습니다. 관측 이력이 없으면 초기 반응, 기사만 있으면 사건 근거로 표시합니다. 출처 이름을 누르면 상세 기준을 볼 수 있습니다.</div>'
-        '</div>'
+        f'{chips}<div class="section-label">선정 원칙</div>{steps}</div>'
     )
     st.markdown(html_block, unsafe_allow_html=True)
 
@@ -1513,7 +1469,7 @@ try:
     all_issues, themes, contents = load_data()
     recent_issues, issue_start_date, issue_end_date = filter_recent_issues(
         all_issues,
-        days=7
+        days=ISSUE_LOOKBACK_DAYS
     )
     assessed_issues = assess_issues(all_issues)
     issues = assessed_issues[assessed_issues["eligible"]].copy()
@@ -1856,7 +1812,7 @@ else:
         unsafe_allow_html=True,
     )
     with st.container(key="spotlight_section"):
-        render_section_heading(1, '지금 주목할 이야기', '실제 수치와 집계 기간을 확인한 후보. 출처별 상태와 근거는 이슈 전체 보기에서 확인하세요.')
+        render_section_heading(1, '지금 주목할 이야기', '조회수 증가·관객 순위·새로운 소식에서 고른 작품들. 선정 근거를 눌러 이유를 확인하세요.')
         if issues.empty:
             st.info("최근 수집된 이슈가 없습니다. 이슈가 수집되면 이곳에서 확인할 수 있어요.")
         else:

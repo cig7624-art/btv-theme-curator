@@ -18,6 +18,8 @@ from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 import pandas as pd
 
+from issue_rules import ISSUE_LOOKBACK_DAYS, NETFLIX_MAX_AGE_DAYS, YOUTUBE_PRIORITY_VIEW_DELTA
+
 
 YOUTUBE = "YouTube 반응"
 BOXOFFICE = "극장·박스오피스"
@@ -217,6 +219,11 @@ def _metrics(row, group):
     return metrics
 
 
+def read_issue_metrics(row):
+    """Return the source's stored measurements, including supported legacy formats."""
+    return _metrics(row, classify_source(row))
+
+
 def _reference(row, group, metrics):
     desc = _text(row.get("description"))
     explicit = _date(row.get("reference_date"))
@@ -315,7 +322,7 @@ def _assess_row(original, now):
         excluded.append("기준일을 확인할 수 없음")
     elif reference.normalize() > now.normalize():
         excluded.append("기준일이 미래 날짜")
-    elif (now.normalize() - reference.normalize()).days >= (14 if weekly else 7):
+    elif (now.normalize() - reference.normalize()).days >= (NETFLIX_MAX_AGE_DAYS if weekly else ISSUE_LOOKBACK_DAYS):
         excluded.append("집계 기준일이 오래됨" if weekly or group == BOXOFFICE else "최근 7일 범위 밖의 게시물")
     if collected is not None and collected.normalize() > now.normalize():
         excluded.append("수집일이 미래 날짜")
@@ -344,7 +351,7 @@ def _assess_row(original, now):
         if change is not None and change > 0 and valid_period:
             days = (end - start).total_seconds() / 86400
             magnitude = change / days
-            priority = 4 if magnitude >= 20000 else 1
+            priority = 4 if magnitude >= YOUTUBE_PRIORITY_VIEW_DELTA else 1
             strength = "관측기간 증가 확인" if priority == 4 else "관측 증가 확인 · 참고"
             precision = _text(metrics.get("observation_precision"))
             approximate = precision == "date" or ("T" not in _text(metrics.get("observation_start")) and ":" not in _text(metrics.get("observation_start")))
@@ -417,6 +424,7 @@ def _assess_row(original, now):
         "strength_label": strength, "evidence_status": evidence, "selection_reason": reason,
         "reference_label": reference_label, "metric_summary": summary,
         "sort_priority": priority if not excluded else 0, "quality_notes": "; ".join(dict.fromkeys(notes)),
+        "comparison_valid": valid_period if group == YOUTUBE else False,
         "confirmed_routes": group, "confirmed_route_count": 1, "issue_count": 1,
         "_quality_reference": reference.isoformat() if reference is not None else "",
         "_quality_observed_at": (_date(metrics.get("observation_end")) or collected or reference).isoformat() if (_date(metrics.get("observation_end")) or collected or reference) is not None else "",
