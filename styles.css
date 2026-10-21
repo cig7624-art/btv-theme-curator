@@ -81,10 +81,32 @@
 .section-heading { margin: 8px 0 12px; }
 [data-testid="stMarkdownContainer"] .section-heading h2 { margin: 4px 0; padding: 0; color: var(--ink); font-size: 21px; letter-spacing: -.5px; }
 .section-heading p { color: var(--muted); font-size: 12px; margin: 0; line-height: 1.6; }
+.st-key-spotlight_section, .st-key-curation_section, .st-key-recommendation_section {
+    padding: 14px;
+    border: 1px solid #484d42;
+    border-radius: 9px;
+    background: #1c201d;
+    box-shadow: inset 0 1px 0 #ffffff03;
+    margin-bottom: 4px;
+}
+:is(.st-key-spotlight_section, .st-key-curation_section, .st-key-recommendation_section) .section-heading {
+    margin: 0 0 10px;
+    padding: 0 0 12px;
+    border-bottom: 1px solid #42483d;
+}
+.section-title-row { display: flex; align-items: center; gap: 9px; }
+.section-number { display: inline-flex; align-items: center; justify-content: center; width: 25px; height: 25px; flex: 0 0 25px; border: 1px solid #897457; border-radius: 5px; background: #e7bd8610; color: var(--accent); font-size: 11px; font-weight: 650; letter-spacing: .5px; }
+[data-testid="stMarkdownContainer"] .section-title-row h2 { font-size: 20px; margin: 4px 0; }
+.section-heading:has(.section-title-row) .eyebrow { margin-bottom: 4px; }
+.section-heading:has(.section-title-row) p { margin-top: 4px; margin-left: 34px; }
+.st-key-curation_section .st-key-generation_workspace { border: 0; margin: 0; padding: 0; }
+/* Streamlit removes a normal paragraph's last margin. Custom card blocks have none. */
+[data-testid="stMarkdownContainer"]:has(> .editorial-grid, > .theme-card, > .issue-card, > .logic-card) { margin-bottom: 0; }
+.st-key-recommendation_section .theme-card { margin-bottom: 0; }
 
 /* Issue covers remain complete when external artwork is unavailable. */
-.editorial-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 14px; }
-.editorial-card { min-width: 0; }
+.editorial-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 0; }
+.editorial-card { min-width: 0; padding: 10px; border: 1px solid #454c40; border-radius: 8px; background: #141816; }
 [data-testid="stMarkdownContainer"] .poster-link { display: block; color: inherit; text-decoration: none; border-radius: 8px; }
 [data-testid="stMarkdownContainer"] a.poster-link:hover { color: inherit; text-decoration: none; }
 .editorial-poster { position: relative; display: flex; flex-direction: column; justify-content: flex-end; isolation: isolate; aspect-ratio: 16 / 10; min-height: 140px; padding: 15px; border-radius: 7px; overflow: hidden; background-size: cover; background-position: center; background-color: #3c3834; transition: transform .22s ease, box-shadow .22s ease; }
@@ -112,7 +134,9 @@
 .magazine-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--line); margin-top: 35px; padding-top: 22px; color: var(--quiet); font-size: 10px; letter-spacing: 1px; }
 
 /* Shared issue and recommendation cards. */
-.card, .theme-card, .logic-card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-bottom: 14px; color: var(--ink); }
+.card, .theme-card, .logic-card { background: var(--surface); border: 1px solid #484f43; border-radius: 8px; padding: 16px; margin-bottom: 14px; color: var(--ink); }
+.card.issue-card, .logic-card { margin-bottom: 0; }
+.theme-card { background: #151a16; border-color: #535c4b; border-left: 2px solid #8e7c5e; }
 .issue-card { display: flex; gap: 16px; align-items: stretch; min-height: 175px; }
 .issue-card-body { flex: 1 1 auto; min-width: 0; }
 .issue-media { flex: 0 0 240px; width: 240px; min-height: 155px; border-radius: 7px; overflow: hidden; background: var(--surface-deep); border: 1px solid var(--line); align-self: stretch; }
@@ -121,6 +145,9 @@
 .issue-placeholder strong { font-size: 21px; line-height: 1.4; font-weight: 600; }
 .issue-placeholder span { color: var(--muted); font-size: 11px; margin-bottom: 8px; }
 .issue-meta-row { display: flex; gap: 8px 14px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
+.issue-card .issue-byline { margin-top: 7px; }
+.issue-card .issue-routes { padding-top: 9px; margin-top: 10px; border-top: 1px solid #3d4439; }
+.issue-card .issue-description { margin-top: 8px; color: #c0c4b8; line-height: 1.8; }
 .rank { color: var(--accent); font-size: 21px; font-weight: 650; letter-spacing: -.6px; }
 .theme-name { color: var(--ink); font-size: 18px; font-weight: 650; line-height: 1.45; letter-spacing: -.4px; margin-bottom: 7px; overflow-wrap: anywhere; }
 .copy { color: var(--accent); font-size: 14px; font-weight: 500; margin-bottom: 10px; line-height: 1.7; }
@@ -128,6 +155,13 @@
 .tag, .weight-chip { display: inline-block; background: #ffffff05; border: 1px solid #444740; color: #c2c2b5; border-radius: 5px; padding: 4px 8px; margin-right: 6px; margin-top: 6px; font-size: 11px; line-height: 1.6; }
 .score { color: var(--green); font-weight: 650; }
 .section-label { margin: 18px 0 10px; font-weight: 650; font-size: 14px; }
+.theme-card .section-label { display: flex; align-items: center; gap: 9px; margin: 15px 0 8px; color: #d7c6ad; font-size: 12px; line-height: 1.5; }
+.theme-card .section-label::before { content: ""; width: 4px; height: 4px; background: #bfa078; border-radius: 1px; flex-shrink: 0; }
+.theme-card .section-label::after { content: ""; height: 1px; flex: 1; background: #414a3c; }
+.theme-card .one-line-reason { margin: 8px 0 11px; padding: 10px 12px; border-left-color: #7f725b; background: #20271f; line-height: 1.85; }
+.theme-card .one-line-reason b { color: var(--ink); font-weight: 600; }
+.theme-card .reason-paragraph { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+.theme-card .reason-paragraph + .reason-paragraph { margin-top: 7px; }
 .one-line-reason { background: var(--surface-deep); border-left: 2px solid var(--accent); padding: 13px 15px; border-radius: 0 5px 5px 0; margin: 13px 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
 [data-testid="stMarkdownContainer"] .issue-title-link { display: block; color: var(--ink); text-decoration: none; }
 [data-testid="stMarkdownContainer"] .issue-title-link:hover { color: var(--accent); }
@@ -235,7 +269,7 @@ label.weight-chip { cursor: pointer; }
     .weight-tooltip { display: none !important; }
     .hero-art { right: -35px; opacity: .35; }
     .hero-copy { max-width: 730px; }
-    .editorial-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .editorial-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
     .editorial-poster { aspect-ratio: 16 / 9; max-height: 180px; min-height: 140px; }
     .theme-db-grid, .ai-suggestion-grid { grid-template-columns: minmax(0, 1fr); }
     .theme-db-contents, .ai-suggestion-content { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; padding-top: 14px; }
@@ -262,10 +296,14 @@ label.weight-chip { cursor: pointer; }
     .hero-meta strong { font-size: 12px; }
     .section-heading { margin: 4px 0 12px; }
     [data-testid="stMarkdownContainer"] .section-heading h2 { font-size: 21px; margin: 4px 0; }
+    .st-key-spotlight_section, .st-key-curation_section, .st-key-recommendation_section { padding: 12px; }
+    :is(.st-key-spotlight_section, .st-key-curation_section, .st-key-recommendation_section) .section-heading { padding-bottom: 10px; margin-bottom: 8px; }
+    [data-testid="stMarkdownContainer"] .section-title-row h2 { font-size: 19px; }
+    .section-number { width: 24px; height: 24px; flex-basis: 24px; }
+    .section-heading:has(.section-title-row) p { margin-left: 0; }
     .section-heading p { font-size: 12px; }
-    .editorial-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-bottom: 10px; }
-    .editorial-card { display: grid; grid-template-columns: 104px minmax(0, 1fr); grid-template-rows: auto auto 1fr; gap: 4px 12px; align-items: start; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
-    .editorial-card:last-child { padding-bottom: 0; border-bottom: 0; }
+    .editorial-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-bottom: 0; }
+    .editorial-card { display: grid; grid-template-columns: 104px minmax(0, 1fr); grid-template-rows: auto auto 1fr; gap: 4px 10px; align-items: start; padding: 10px; }
     [data-testid="stMarkdownContainer"] .editorial-card .poster-link { grid-column: 1; grid-row: 1 / 4; }
     .editorial-poster { width: 104px; height: 116px; min-height: 0; max-height: none; aspect-ratio: auto; padding: 11px; border-radius: 6px; }
     .poster-index { top: 10px; left: 10px; font-size: 8px; letter-spacing: .7px; }
@@ -275,6 +313,7 @@ label.weight-chip { cursor: pointer; }
     [data-testid="stMarkdownContainer"] .editorial-title { grid-column: 2; grid-row: 2; font-size: 13px; line-height: 1.5; margin: 0; -webkit-line-clamp: 2; }
     [data-testid="stMarkdownContainer"] .editorial-description { grid-column: 2; grid-row: 3; font-size: 12px; line-height: 1.55; margin: 0; -webkit-line-clamp: 2; }
     .card, .theme-card, .logic-card, div[class*="st-key-theme_card_"] { padding: 14px; margin-bottom: 12px; }
+    .card.issue-card, .logic-card { margin-bottom: 0; }
     .theme-name { font-size: 17px; }
     .rank { font-size: 20px; }
     .copy { font-size: 13px; }
@@ -293,7 +332,7 @@ label.weight-chip { cursor: pointer; }
     [data-testid="stTextInput"] input, [data-testid="stTextArea"] textarea, [data-testid="stSelectbox"] input, [data-testid="stSelectbox"] span { font-size: 16px !important; }
     [data-testid="stTextInput"] [data-baseweb="input"], [data-testid="stSelectbox"] [data-baseweb="select"] > div { min-height: 44px; }
     div[class*="st-key-recommendation_row_"] [data-testid="stHorizontalBlock"],
-    div[class*="st-key-theme_card_"] [data-testid="stHorizontalBlock"] { flex-direction: column; gap: .65rem; }
+    div[class*="st-key-theme_card_"] [data-testid="stHorizontalBlock"] { flex-direction: column; gap: .75rem; }
     div[class*="st-key-recommendation_row_"] [data-testid="stHorizontalBlock"] > [data-testid="stColumn"],
     div[class*="st-key-theme_card_"] [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] { width: 100% !important; flex: 1 1 100% !important; min-width: 0 !important; }
     [data-testid="stMetricValue"] { font-size: 22px; }
