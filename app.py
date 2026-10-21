@@ -4,7 +4,7 @@ import os
 import re
 from difflib import SequenceMatcher
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 
 import pandas as pd
 import streamlit as st
@@ -43,381 +43,10 @@ st.set_page_config(
     layout="wide"
 )
 
-st.markdown("""
-<style>
-.stApp { background:#090d1a; }
-.block-container { max-width:1800px; padding-top:1.2rem; }
-h1,h2,h3,p,label,div,span,li,b,a { color:#f8fafc !important; }
-
-.card,.theme-card,.logic-card {
-    background:#111827;
-    border:1px solid #334155;
-    border-radius:18px;
-    padding:18px 20px;
-    margin-bottom:16px;
-}
-
-.issue-card { display:flex; gap:18px; align-items:stretch; min-height:210px; }
-.issue-card-body { flex:1 1 auto; min-width:0; }
-.issue-media {
-    flex:0 0 320px; width:320px; min-height:176px; border-radius:14px;
-    overflow:hidden; background:#0b1220; border:1px solid #263449; align-self:stretch;
-}
-.issue-media img { width:100%; height:100%; min-height:176px; object-fit:cover; display:block; }
-.issue-placeholder {
-    width:100%; height:100%; min-height:176px; padding:20px; box-sizing:border-box;
-    display:flex; flex-direction:column; justify-content:flex-end;
-    background:linear-gradient(145deg,#172033,#0b1220 60%,#1e293b);
-}
-.issue-placeholder strong { font-size:22px; line-height:1.25; }
-.issue-placeholder span { color:#94a3b8 !important; font-size:12px; margin-bottom:8px; }
-.issue-meta-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:8px 0; }
-
-.rank { color:#38bdf8 !important; font-size:26px; font-weight:900; }
-.theme-name { font-size:23px; font-weight:900; margin-bottom:6px; }
-.copy { color:#f97316 !important; font-weight:900; font-size:15px; margin-bottom:6px; }
-.small,.logic-desc { color:#cbd5e1 !important; font-size:13px; line-height:1.5; }
-.tag,.weight-chip {
-    display:inline-block; background:#1e293b; border:1px solid #475569; border-radius:999px;
-    padding:5px 10px; margin-right:6px; margin-top:6px; font-size:12px;
-}
-.weight-chip-wrap {
-    position:relative; display:inline-block; margin-right:6px; margin-top:6px;
-}
-.weight-chip-wrap::after {
-    content:""; position:absolute; left:-5px; right:-5px; top:100%; height:14px;
-}
-.weight-chip { position:relative; cursor:help; font-weight:800; margin:0; }
-.weight-tooltip {
-    position:absolute; z-index:9999; left:0; top:calc(100% + 10px);
-    width:350px; white-space:normal; padding:12px 13px 10px; border-radius:11px;
-    background:#020617; border:1px solid #475569; box-shadow:0 12px 34px rgba(0,0,0,.45);
-    color:#f8fafc !important; font-size:12px; font-weight:500; line-height:1.55;
-    opacity:0; visibility:hidden; pointer-events:none; transform:translateY(-3px);
-    transition:opacity .12s ease .10s, transform .12s ease .10s, visibility 0s linear .25s;
-}
-.weight-chip-wrap:hover .weight-tooltip,
-.weight-tooltip:hover {
-    opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0);
-    transition-delay:0s;
-}
-.weight-tooltip::before {
-    content:""; position:absolute; left:20px; top:-7px; width:12px; height:12px;
-    background:#020617; border-left:1px solid #475569; border-top:1px solid #475569;
-    transform:rotate(45deg);
-}
-.logic-modal-toggle { position:absolute; opacity:0; pointer-events:none; width:1px; height:1px; }
-.weight-detail-link {
-    display:block; margin-top:9px; padding-top:8px; border-top:1px solid #334155;
-    color:#38bdf8 !important; font-weight:900; text-align:right; cursor:pointer;
-}
-.weight-detail-link:hover { text-decoration:underline; }
-.logic-modal-overlay {
-    display:none; position:fixed; inset:0; z-index:100000; padding:4vh 4vw;
-    background:rgba(2,6,23,.82); backdrop-filter:blur(5px); overflow:auto;
-    align-items:flex-start; justify-content:center;
-}
-.logic-modal-toggle:checked ~ .logic-modal-overlay { display:flex; }
-.logic-modal-panel {
-    position:relative; width:min(1050px,94vw); max-height:92vh; overflow:auto;
-    background:#090d1a; border:1px solid #334155; border-radius:18px;
-    box-shadow:0 24px 70px rgba(0,0,0,.65); padding:26px 28px 30px;
-}
-.logic-modal-close {
-    position:sticky; float:right; top:0; z-index:2; display:flex; width:34px; height:34px;
-    align-items:center; justify-content:center; margin:-8px -8px 4px 12px;
-    border-radius:50%; background:#1e293b; border:1px solid #475569;
-    color:#f8fafc !important; font-size:22px; font-weight:900; cursor:pointer;
-}
-.logic-modal-close:hover { background:#334155; }
-.logic-modal-heading { font-size:25px; font-weight:900; margin:2px 0 4px; }
-.logic-modal-weight { color:#94a3b8 !important; font-size:13px; margin-bottom:18px; }
-.logic-detail-box {
-    background:#0f172a; border:1px solid #334155; border-radius:12px;
-    padding:12px 14px; margin:8px 0 14px;
-}
-.logic-detail-title { font-size:14px; font-weight:900; margin-bottom:5px; }
-.logic-detail-text { color:#cbd5e1 !important; font-size:13px; line-height:1.6; }
-.logic-detail-list { margin:5px 0 0 20px; padding:0; }
-.logic-detail-list li { color:#cbd5e1 !important; font-size:13px; line-height:1.7; }
-.logic-code {
-    background:#020617; border:1px solid #334155; border-radius:10px;
-    padding:10px 12px; color:#e2e8f0 !important; font-size:12px; line-height:1.6;
-    white-space:pre-wrap; overflow-wrap:anywhere;
-}
-.score { color:#22c55e !important; font-weight:900; }
-.section-label { margin-top:14px; margin-bottom:8px; font-weight:900; font-size:15px; }
-.one-line-reason {
-    background:#0f172a; border-left:4px solid #38bdf8; padding:10px 12px; border-radius:8px;
-    margin-top:10px; margin-bottom:10px; color:#cbd5e1 !important; font-size:13px; line-height:1.5;
-}
-.issue-title-link {
-    display:block; color:#f8fafc !important; text-decoration:none;
-}
-.issue-title-link:hover { color:#38bdf8 !important; text-decoration:underline; }
-.stButton button { background:#2563eb !important; color:#ffffff !important; border-radius:12px; border:0; font-weight:800; }
-.stButton button p, .stButton button span { color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; }
-div[data-testid="stDownloadButton"] button {
-    background:#2563eb !important; color:#ffffff !important; border:0 !important;
-    border-radius:12px !important; font-weight:800 !important;
-}
-div[data-testid="stDownloadButton"] button p,
-div[data-testid="stDownloadButton"] button span {
-    color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;
-}
-div[data-testid="stDownloadButton"] button:hover { background:#1d4ed8 !important; }
-
-/* 입력·선택·폼 버튼을 다크 UI로 통일 */
-div[data-baseweb="input"] > div,
-div[data-baseweb="textarea"] > div,
-div[data-baseweb="select"] > div {
-    background:#0f172a !important; border-color:#334155 !important; color:#f8fafc !important;
-}
-div[data-baseweb="input"] input, div[data-baseweb="textarea"] textarea,
-div[data-baseweb="select"] *, div[data-baseweb="select"] input {
-    color:#f8fafc !important; -webkit-text-fill-color:#f8fafc !important; caret-color:#f8fafc !important;
-}
-div[data-baseweb="input"] input::placeholder, div[data-baseweb="textarea"] textarea::placeholder {
-    color:#94a3b8 !important; -webkit-text-fill-color:#94a3b8 !important; opacity:1 !important;
-}
-[role="listbox"], [role="option"] { background:#111827 !important; }
-[role="listbox"] *, [role="option"] * { color:#f8fafc !important; -webkit-text-fill-color:#f8fafc !important; }
-[role="option"]:hover, [aria-selected="true"][role="option"] { background:#1e293b !important; }
-div[data-testid="stFormSubmitButton"] button {
-    background:#2563eb !important; color:#ffffff !important; border:0 !important;
-    border-radius:12px !important; font-weight:800 !important;
-}
-div[data-testid="stFormSubmitButton"] button p,
-div[data-testid="stFormSubmitButton"] button span {
-    color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;
-}
-button:disabled, div[data-testid="stFormSubmitButton"] button:disabled {
-    background:#1e293b !important; color:#64748b !important; opacity:1 !important;
-}
-button:disabled *, div[data-testid="stFormSubmitButton"] button:disabled * {
-    color:#64748b !important; -webkit-text-fill-color:#64748b !important;
-}
-.ai-suggestion-card {
-    background:#0f172a; border:1px dashed #475569; border-radius:14px; padding:14px 16px; margin:10px 0;
-}
-.content-verified { border-color:#22c55e !important; }
-.content-link-only { border-color:#f59e0b !important; }
-.content-tag-link {
-    display:inline-block; background:#13213a; border:1px solid #3b82f6; border-radius:999px;
-    padding:5px 10px; margin-right:6px; margin-top:6px; font-size:12px; font-weight:800;
-    color:#dbeafe !important; text-decoration:none;
-}
-.content-tag-link:hover { background:#1e3a5f; color:#ffffff !important; text-decoration:underline; }
-.content-source-note { color:#93c5fd !important; font-size:12px; line-height:1.55; margin-top:9px; }
-.theme-db-grid {
-    display:grid; grid-template-columns:minmax(340px, 43%) minmax(420px, 57%);
-    gap:22px; align-items:stretch;
-}
-.theme-db-main { min-width:0; }
-.theme-db-contents {
-    min-width:0; border-left:1px solid #334155; padding-left:20px;
-    display:flex; flex-direction:column; justify-content:center;
-}
-.theme-db-content-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:7px; }
-.theme-db-content-title { font-size:15px; font-weight:900; }
-.theme-db-content-meta { color:#94a3b8 !important; font-size:11px; white-space:nowrap; }
-.theme-db-content-empty {
-    background:#0f172a; border:1px dashed #475569; border-radius:10px; padding:13px 14px;
-    color:#94a3b8 !important; font-size:12px; line-height:1.45;
-}
-.content-more { color:#94a3b8 !important; font-size:12px; margin-top:8px; }
-.content-control-box {
-    background:#0b1220; border:1px solid #263449; border-radius:14px;
-    padding:14px 16px; margin:12px 0 18px;
-}
-.ai-suggestion-grid {
-    display:grid; grid-template-columns:minmax(320px, 42%) minmax(420px, 58%);
-    gap:18px; align-items:stretch;
-}
-.ai-suggestion-content { border-left:1px solid #334155; padding-left:18px; }
-
-/* Streamlit 위젯 다크 모드 강제 적용: 버전별 DOM 차이 대응 */
-[data-testid="stTextInput"] div[data-baseweb="input"],
-[data-testid="stTextInput"] div[data-baseweb="base-input"],
-[data-testid="stTextArea"] div[data-baseweb="textarea"],
-[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
-[data-testid="stSelectbox"] div[data-baseweb="select"] div {
-    background-color:#0f172a !important;
-    border-color:#334155 !important;
-}
-[data-testid="stTextInput"] input,
-[data-testid="stTextArea"] textarea,
-[data-testid="stSelectbox"] input,
-[data-testid="stSelectbox"] span,
-[data-testid="stSelectbox"] svg {
-    color:#f8fafc !important;
-    fill:#f8fafc !important;
-    -webkit-text-fill-color:#f8fafc !important;
-}
-[data-testid="stTextInput"] input::placeholder,
-[data-testid="stTextArea"] textarea::placeholder {
-    color:#94a3b8 !important;
-    -webkit-text-fill-color:#94a3b8 !important;
-    opacity:1 !important;
-}
-[data-testid="stExpander"] details,
-[data-testid="stExpander"] summary {
-    background:#0b1220 !important;
-    border-color:#263449 !important;
-    color:#f8fafc !important;
-}
-[data-testid="stExpander"] summary *,
-[data-testid="stExpander"] details * {
-    color:#f8fafc;
-}
-[data-testid="stExpander"] summary:hover { background:#111827 !important; }
-[data-testid="stForm"] {
-    background:#0b1220 !important;
-    border:1px solid #263449 !important;
-    border-radius:12px !important;
-    padding:12px 14px 14px !important;
-}
-[data-testid="stForm"] [data-testid="stTextInput"] input {
-    background:#0f172a !important;
-}
-
-
-/* 검색 위젯은 밝은 배경 + 검정 글씨로 명확하게 표시 */
-[data-testid="stTextInput"] div[data-baseweb="input"],
-[data-testid="stTextInput"] div[data-baseweb="base-input"],
-[data-testid="stTextArea"] div[data-baseweb="textarea"],
-[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
-    background:#f8fafc !important;
-    border-color:#cbd5e1 !important;
-}
-[data-testid="stTextInput"] input,
-[data-testid="stTextArea"] textarea,
-[data-testid="stSelectbox"] input,
-[data-testid="stSelectbox"] span {
-    color:#111827 !important;
-    -webkit-text-fill-color:#111827 !important;
-    caret-color:#111827 !important;
-}
-[data-testid="stTextInput"] input::placeholder,
-[data-testid="stTextArea"] textarea::placeholder {
-    color:#64748b !important;
-    -webkit-text-fill-color:#64748b !important;
-}
-[data-testid="stSelectbox"] svg { fill:#111827 !important; color:#111827 !important; }
-
-/* AI 테마 검색 입력창: 다크 배경 + 흰 글씨 */
-div[class*="st-key-theme_ai_search_input"] div[data-baseweb="input"],
-div[class*="st-key-theme_ai_search_input"] div[data-baseweb="base-input"],
-[data-testid="stForm"] div[class*="st-key-theme_ai_search_input"] div[data-baseweb="input"] {
-    background:#0f172a !important;
-    border-color:#64748b !important;
-}
-div[class*="st-key-theme_ai_search_input"] input,
-[data-testid="stForm"] div[class*="st-key-theme_ai_search_input"] input {
-    color:#ffffff !important;
-    -webkit-text-fill-color:#ffffff !important;
-    caret-color:#ffffff !important;
-}
-div[class*="st-key-theme_ai_search_input"] input::placeholder,
-[data-testid="stForm"] div[class*="st-key-theme_ai_search_input"] input::placeholder {
-    color:#94a3b8 !important;
-    -webkit-text-fill-color:#94a3b8 !important;
-    opacity:1 !important;
-}
-
-/* 콘텐츠 후보: 차분한 블루그레이 칩으로 가독성 강화 */
-.content-chip-wrap {
-    display:flex;
-    flex-wrap:wrap;
-    align-items:flex-start;
-    gap:7px 8px;
-}
-.theme-db-contents .content-tag-link,
-.ai-suggestion-content .content-tag-link {
-    display:inline-flex !important;
-    align-items:center;
-    width:auto !important;
-    max-width:100%;
-    background:#172033 !important;
-    border:1px solid #3b4b63 !important;
-    color:#dbe7f5 !important;
-    border-radius:999px !important;
-    padding:5px 10px !important;
-    margin:0 !important;
-    font-size:12px !important;
-    font-weight:600 !important;
-    line-height:1.25;
-    letter-spacing:-0.01em;
-    white-space:normal;
-    text-decoration:none !important;
-    box-shadow:none !important;
-}
-.theme-db-contents .content-tag-link:hover,
-.ai-suggestion-content .content-tag-link:hover {
-    background:#22324b !important;
-    border-color:#60a5fa !important;
-    color:#ffffff !important;
-    text-decoration:none !important;
-}
-
-
-.content-refresh-link {
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    background:#2563eb;
-    color:#ffffff !important;
-    text-decoration:none;
-    border-radius:10px;
-    padding:7px 10px;
-    font-size:12px;
-    font-weight:800;
-    white-space:nowrap;
-}
-.content-refresh-link:hover { background:#1d4ed8; color:#ffffff !important; }
-
-/* 테마별 카드 경계: 카드 전체에 확실한 블록감 부여 */
-div[class*="st-key-theme_card_"] {
-    position:relative !important;
-    background:linear-gradient(145deg,#101827 0%,#0d1422 100%) !important;
-    border:1px solid #344763 !important;
-    border-left:4px solid #3b82f6 !important;
-    border-radius:16px !important;
-    padding:16px 18px !important;
-    margin:0 0 16px 0 !important;
-    box-shadow:0 7px 22px rgba(0,0,0,.22) !important;
-    overflow:hidden !important;
-}
-div[class*="st-key-theme_card_"]::before {
-    content:"";
-    position:absolute;
-    left:0;
-    right:0;
-    top:0;
-    height:1px;
-    background:linear-gradient(90deg,rgba(96,165,250,.55),rgba(96,165,250,0));
-    pointer-events:none;
-}
-div[class*="st-key-theme_card_"] [data-testid="stVerticalBlockBorderWrapper"],
-div[class*="st-key-theme_card_"] > div[data-testid="stVerticalBlockBorderWrapper"] {
-    background:transparent !important;
-    border:0 !important;
-    border-radius:0 !important;
-    padding:0 !important;
-    box-shadow:none !important;
-}
-div[class*="st-key-theme_card_"] [data-testid="stVerticalBlock"] {
-    background:transparent !important;
-}
-
-@media (max-width:900px) {
-    .issue-card { flex-direction:column; }
-    .issue-media { width:100%; flex-basis:190px; }
-    .theme-db-grid,.ai-suggestion-grid { grid-template-columns:1fr; }
-    .theme-db-contents,.ai-suggestion-content { border-left:0; border-top:1px solid #334155; padding-left:0; padding-top:14px; }
-}
-</style>
-""", unsafe_allow_html=True)
+st.markdown(
+    "<style>" + Path(__file__).with_name("styles.css").read_text(encoding="utf-8") + "</style>",
+    unsafe_allow_html=True,
+)
 
 
 ISSUE_PATH = Path("issue_feed.csv")
@@ -1741,20 +1370,6 @@ def render_generation_status(meta, added_count, github_result):
     )
 
 
-def render_metric(title, number, subtitle=None):
-    sub_html = f'<div class="small">{subtitle}</div>' if subtitle else ""
-    st.markdown(
-        f'''
-        <div class="card">
-            <div class="small">{title}</div>
-            <div class="rank">{number}</div>
-            {sub_html}
-        </div>
-        ''',
-        unsafe_allow_html=True
-    )
-
-
 def youtube_video_id(url):
     value = safe_url(url)
     if not value:
@@ -1807,6 +1422,43 @@ def render_issue_media(issue):
         '<div class="issue-media"><div class="issue-placeholder">'
         f'<span>{source_group}</span><strong>대표 이미지 없음</strong>'
         '</div></div>'
+    )
+
+
+def editorial_issue_card_html(issue, index):
+    title = str(issue.get("issue_title", "")).strip()
+    related = str(issue.get("related_content", "")).strip()
+    if not related or len(related) < 3 or re.fullmatch(r"(?:제?\d+위|신규|상승|공개)", related):
+        related = title
+    source = str(issue.get("source_group", classify_source(issue.get("source", ""))))
+    image_url = get_issue_image_url(issue)
+    image_style = ""
+    if image_url:
+        # Encode CSS delimiters as well as escaping the surrounding HTML attribute.
+        image = html.escape(quote(image_url, safe=":/?=&%+#@,;"), quote=True)
+        image_style = f' style="background-image:url(\'{image}\')"'
+    source_url = safe_url(issue.get("source_url", ""))
+    opening = (
+        f'<a class="poster-link" href="{html.escape(source_url, quote=True)}" '
+        'target="_blank" rel="noopener noreferrer">'
+        if source_url else '<div class="poster-link">'
+    )
+    closing = '</a>' if source_url else '</div>'
+    score = int(issue.get("issue_score", 0))
+    tooltip = html.escape(score_tooltip(issue), quote=True)
+    return (
+        '<article class="editorial-card">'
+        f'{opening}<div class="editorial-poster tone-{(index - 1) % 4}">'
+        f'<div class="poster-image"{image_style}></div>'
+        '<div class="poster-shade"></div>'
+        f'<span class="poster-index">{index:02d} / THIS WEEK</span>'
+        f'<h3 class="poster-title">{html.escape(_compact_card_text(related, 50))}</h3>'
+        f'</div>{closing}<div class="editorial-meta">'
+        f'<span class="editorial-source">{html.escape(source)}</span>'
+        f'<span class="editorial-score" title="{tooltip}">이슈 점수 {score}</span></div>'
+        f'<p class="editorial-title">{html.escape(_compact_card_text(title, 65))}</p>'
+        f'<p class="editorial-description">{html.escape(_compact_card_text(issue.get("description", ""), 85))}</p>'
+        '</article>'
     )
 
 
@@ -2351,98 +2003,87 @@ elif st.session_state["page"] == "theme_db":
             github_config=github_config,
         )
 
-
-
 else:
-    st.markdown("<h1>🧠 B tv+ AI Theme Curator</h1>", unsafe_allow_html=True)
-    st.caption("최근 외부 콘텐츠 이슈에서 신규 테마를 만들고, 선택된 테마의 콘텐츠 후보를 키노라이츠 검색과 연결합니다.")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        render_metric(
-            "최근 이슈",
-            len(issues),
-            f"{issue_start_date} ~ {issue_end_date} 기준"
-        )
-
-        if st.button("🗂 이슈 전체 보기", use_container_width=True):
-            go_page("issue_db")
-            st.rerun()
-
-    with col2:
-        render_metric(
-            "테마 DB",
-            len(themes),
-            "전체 테마 풀"
-        )
-
-        if st.button("📚 테마 DB 전체 보기", use_container_width=True):
-            go_page("theme_db")
-            st.rerun()
-
-    st.markdown("---")
-
-    left, right = st.columns([1, 1])
-
-    with left:
-        st.subheader("최근 핵심 이슈")
-
-        if issues.empty:
-            st.warning("최근 기준 수집된 이슈가 없습니다. issue_feed.csv의 date 값을 확인하세요.")
-        else:
-            main_issues = build_core_issues(issues).head(8)
-
-            for _, issue in main_issues.iterrows():
-                render_issue_card(issue)
-
-    with right:
-        st.subheader("이번주 추천 테마")
-
-        openai_api_key = get_runtime_secret("OPENAI_API_KEY")
-        openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
-        github_config = get_github_writeback_config()
-        persistent_ready = github_writeback_configured(github_config)
-
-        c1, c2 = st.columns([1, 1])
-        with c1:
-            top_n = st.slider(
-                "최종 추천 테마 수",
-                min_value=5,
-                max_value=30,
-                value=10,
-                step=5,
-            )
-        with c2:
-            status_text = "연결됨" if openai_api_key else "미연결"
-            storage_text = "연결됨" if persistent_ready else "미설정"
+    with st.container(key="magazine_nav"):
+        brand, issues_nav, themes_nav = st.columns([5, 1.6, 1.8], gap="small")
+        with brand:
             st.markdown(
-                '<div class="card" style="padding:12px 16px">'
-                '<div class="small">LLM 생성 엔진</div>'
-                f'<div class="theme-name" style="font-size:17px">{html.escape(openai_model)}</div>'
-                f'<div class="small">API 키: {status_text} · 영구 저장: {storage_text}</div>'
-                '</div>',
+                '<div class="magazine-brand">B tv<span class="brand-plus">+</span>'
+                '<span class="brand-caption">THEME CURATOR</span></div>',
                 unsafe_allow_html=True,
             )
+        with issues_nav:
+            if st.button("이슈 전체 보기 ↗", use_container_width=True):
+                go_page("issue_db")
+                st.rerun()
+        with themes_nav:
+            if st.button("테마 라이브러리 ↗", use_container_width=True):
+                go_page("theme_db")
+                st.rerun()
 
-        with st.expander("신규 테마 생성 방식", expanded=False):
-            st.markdown(
-                """
-                1. 최근 핵심 이슈의 작품·사건·반응을 분석합니다.  
-                2. 콘텐츠 범위가 바로 보이는 신규 테마 후보를 생성합니다.  
-                3. 테마명 명확성, 여러 작품으로의 확장성, 이슈 연관성을 검사합니다.  
-                4. 기존 DB와 최근 추천 이력의 유사 테마를 걸러냅니다.  
-                5. 최종 테마를 선정해 테마 DB와 추천 이력에 저장합니다.
-                """
-            )
+    st.markdown(
+        '<section class="magazine-hero">'
+        '<div class="hero-copy"><div class="eyebrow">THE WEEKLY EDIT</div>'
+        '<h1>이슈를 읽고,<br>취향을 큐레이션하다.</h1>'
+        '<p class="hero-description">지금 주목받는 이야기에서 새로운 연결을 발견하세요.<br>'
+        '이번 주의 이슈가, 다음 큐레이션의 시작이 됩니다.</p>'
+        '<div class="hero-meta">'
+        f'<span>최근 이슈 <strong>{len(issues):,}</strong></span>'
+        f'<span>테마 컬렉션 <strong>{len(themes):,}</strong></span>'
+        f'<span>{html.escape(str(issue_start_date))} — {html.escape(str(issue_end_date))}</span>'
+        '</div></div>'
+        '<div class="hero-art" aria-hidden="true"><div class="orbit"></div>'
+        '<div class="orbit-inner"></div><span class="art-label">STORIES, CONNECTED.</span></div>'
+        '</section>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<div class="section-heading"><div class="eyebrow">IN THE SPOTLIGHT</div>'
+        '<h2>지금 주목할 이야기</h2>'
+        '<p>여러 출처의 반응을 모아 살펴본, 이번 주 핵심 이슈.</p></div>',
+        unsafe_allow_html=True,
+    )
+    if issues.empty:
+        st.info("최근 수집된 이슈가 없습니다. 이슈가 수집되면 이곳에서 확인할 수 있어요.")
+    else:
+        main_issues = build_core_issues(issues).head(4)
+        cards = "".join(
+            editorial_issue_card_html(issue, index)
+            for index, (_, issue) in enumerate(main_issues.iterrows(), start=1)
+        )
+        st.markdown(f'<div class="editorial-grid">{cards}</div>', unsafe_allow_html=True)
 
-        if not openai_api_key:
-            st.warning("OPENAI_API_KEY가 연결되지 않았습니다.")
-        if not persistent_ready:
-            st.warning("재배포 후에도 테마를 유지하려면 GitHub 영구 저장 Secret을 먼저 등록해야 합니다.")
+    st.markdown(
+        '<div class="section-heading generation-intro"><div class="eyebrow">THE CURATOR’S DESK</div>'
+        '<h2>이야기에서, 새로운 테마로.</h2>'
+        '<p>최근 이슈를 바탕으로 테마를 만들고, 어울리는 콘텐츠를 연결하세요.</p></div>',
+        unsafe_allow_html=True,
+    )
+    openai_api_key = get_runtime_secret("OPENAI_API_KEY")
+    openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
+    github_config = get_github_writeback_config()
+    persistent_ready = github_writeback_configured(github_config)
 
+    with st.container(key="generation_workspace"):
+        ready = bool(openai_api_key) and persistent_ready
+        status_class = " is-ready" if ready else ""
+        status_text = "새로운 테마를 만들 준비가 되었어요" if ready else "생성 연결 설정이 필요해요"
+        st.markdown(
+            f'<div class="engine-status"><span class="status-dot{status_class}"></span>'
+            f'{status_text}<span class="engine-model">{html.escape(openai_model)}</span></div>',
+            unsafe_allow_html=True,
+        )
+        with st.expander("생성 설정 · 추천 개수와 연결 상태", expanded=False):
+            top_n = st.slider("최종 추천 테마 수", min_value=5, max_value=30, value=10, step=5)
+            if not openai_api_key:
+                st.warning("OPENAI_API_KEY가 연결되지 않았습니다.")
+            if not persistent_ready:
+                st.warning("테마를 저장하려면 GitHub 영구 저장 Secret을 등록해 주세요.")
+            st.caption("최근 핵심 이슈 분석 → 신규 테마 생성 → 중복·품질 검수 → 테마 DB 저장")
         if st.button(
-            "✨ LLM으로 이번주 신규 테마 생성",
+            "새로운 테마 생성하기  ↗",
+            key="generate_weekly_themes",
+            type="primary",
             use_container_width=True,
             disabled=not bool(openai_api_key) or not persistent_ready,
         ):
@@ -2491,83 +2132,91 @@ else:
             except Exception as exc:
                 st.exception(exc)
 
-        recommendation_runs = load_recommendation_runs(THEME_HISTORY_PATH, themes)
-        if not recommendation_runs:
-            st.info("최근 핵심 이슈를 바탕으로 이번 주 큐레이션 테마를 생성합니다.")
+    recommendation_runs = load_recommendation_runs(THEME_HISTORY_PATH, themes)
+    if not recommendation_runs:
+        st.info("최근 핵심 이슈를 바탕으로 이번 주 큐레이션 테마를 생성합니다.")
+    else:
+        # 과거 목록은 노출하지 않고, 영구 저장된 가장 최근 추천만 자동 복원합니다.
+        selected_run = recommendation_runs[0]
+        recs = selected_run.get("recommendations", [])
+        meta = selected_run.get("meta", {})
+
+        if selected_run["run_id"] == st.session_state.get("last_generated_run_id"):
+            github_result = st.session_state.get("github_writeback_result", {"status": "restored"})
+            added_count = int(st.session_state.get("generation_added_count", meta.get("new_count", 0)))
         else:
-            # 과거 목록은 노출하지 않고, 영구 저장된 가장 최근 추천만 자동 복원합니다.
-            selected_run = recommendation_runs[0]
-            recs = selected_run.get("recommendations", [])
-            meta = selected_run.get("meta", {})
+            github_result = {"status": "restored"}
+            added_count = int(meta.get("new_count", 0))
 
-            if selected_run["run_id"] == st.session_state.get("last_generated_run_id"):
-                github_result = st.session_state.get("github_writeback_result", {"status": "restored"})
-                added_count = int(st.session_state.get("generation_added_count", meta.get("new_count", 0)))
-            else:
-                github_result = {"status": "restored"}
-                added_count = int(meta.get("new_count", 0))
+        render_generation_status(meta, added_count, github_result)
 
-            render_generation_status(meta, added_count, github_result)
+        if github_result.get("status") == "error":
+            st.warning(f"GitHub 영구 저장 실패: {github_result.get('error', '')}")
+        elif github_result.get("status") == "not_configured":
+            st.caption("영구 저장이 설정되지 않았습니다.")
 
-            if github_result.get("status") == "error":
-                st.warning(f"GitHub 영구 저장 실패: {github_result.get('error', '')}")
-            elif github_result.get("status") == "not_configured":
-                st.caption("영구 저장이 설정되지 않았습니다.")
+        if not recs:
+            st.warning("추천 결과가 없습니다.")
+        else:
+            recs = attach_content_candidates(recs, selected_run.get("run_id", ""))
+            content_frame = load_content_candidate_frame()
+            has_current_contents = (
+                not content_frame.empty
+                and "run_id" in content_frame.columns
+                and content_frame["run_id"].astype(str).eq(str(selected_run.get("run_id", ""))).any()
+            )
+            content_button_label = (
+                f"🎬 추천 테마 {len(recs)}개 콘텐츠 후보 다시 불러오기"
+                if has_current_contents else
+                f"🎬 추천 테마 {len(recs)}개 콘텐츠 후보 일괄 불러오기"
+            )
+            if st.button(content_button_label, use_container_width=True):
+                try:
+                    with st.spinner("전체 테마의 콘텐츠 제목을 생성하고 키노라이츠에서 확인하는 중입니다..."):
+                        _, _, content_meta = build_and_store_content_candidates(
+                            recs,
+                            scope_run_id=str(selected_run.get("run_id", "")),
+                            api_key=openai_api_key,
+                            model=openai_model,
+                            github_config=github_config,
+                            per_theme=16,
+                            persist=True,
+                            mirror_theme_db=True,
+                        )
+                        st.session_state["content_candidate_meta"] = content_meta
+                    st.rerun()
+                except ThemeGenerationError as exc:
+                    st.error(str(exc))
+                except Exception as exc:
+                    st.error(f"콘텐츠 후보 일괄 연결 실패: {exc}")
 
-            if not recs:
-                st.warning("추천 결과가 없습니다.")
-            else:
-                recs = attach_content_candidates(recs, selected_run.get("run_id", ""))
-                content_frame = load_content_candidate_frame()
-                has_current_contents = (
-                    not content_frame.empty
-                    and "run_id" in content_frame.columns
-                    and content_frame["run_id"].astype(str).eq(str(selected_run.get("run_id", ""))).any()
+            content_meta = st.session_state.get("content_candidate_meta", {})
+            if has_current_contents:
+                current_rows = content_frame[content_frame["run_id"].astype(str) == str(selected_run.get("run_id", ""))]
+                verified_count = int((current_rows.get("kinolights_status", pd.Series(dtype=str)).astype(str) == "verified").sum())
+                link_count = len(current_rows) - verified_count
+                st.caption(
+                    f"콘텐츠 후보 {len(current_rows)}개 · 키노라이츠 직접 확인 {verified_count}개 · "
+                    f"제목 검색 링크 {link_count}개"
                 )
-                content_button_label = (
-                    f"🎬 추천 테마 {len(recs)}개 콘텐츠 후보 다시 불러오기"
-                    if has_current_contents else
-                    f"🎬 추천 테마 {len(recs)}개 콘텐츠 후보 일괄 불러오기"
+            elif content_meta:
+                st.caption(
+                    f"키노라이츠 직접 확인 {content_meta.get('verified_count', 0)}개 · "
+                    f"제목 검색 링크 {content_meta.get('search_link_only_count', 0)}개"
                 )
-                if st.button(content_button_label, use_container_width=True):
-                    try:
-                        with st.spinner("전체 테마의 콘텐츠 제목을 생성하고 키노라이츠에서 확인하는 중입니다..."):
-                            _, _, content_meta = build_and_store_content_candidates(
-                                recs,
-                                scope_run_id=str(selected_run.get("run_id", "")),
-                                api_key=openai_api_key,
-                                model=openai_model,
-                                github_config=github_config,
-                                per_theme=16,
-                                persist=True,
-                                mirror_theme_db=True,
-                            )
-                            st.session_state["content_candidate_meta"] = content_meta
-                        st.rerun()
-                    except ThemeGenerationError as exc:
-                        st.error(str(exc))
-                    except Exception as exc:
-                        st.error(f"콘텐츠 후보 일괄 연결 실패: {exc}")
+            if content_meta.get("github_status") == "error":
+                st.warning(f"콘텐츠 후보 영구 저장 실패: {content_meta.get('github_error', '')}")
+            if has_current_contents:
+                st.caption("초록 테두리: 키노라이츠 결과 직접 확인 · 주황 테두리: 키노라이츠 제목 검색 링크")
 
-                content_meta = st.session_state.get("content_candidate_meta", {})
-                if has_current_contents:
-                    current_rows = content_frame[content_frame["run_id"].astype(str) == str(selected_run.get("run_id", ""))]
-                    verified_count = int((current_rows.get("kinolights_status", pd.Series(dtype=str)).astype(str) == "verified").sum())
-                    link_count = len(current_rows) - verified_count
-                    st.caption(
-                        f"콘텐츠 후보 {len(current_rows)}개 · 키노라이츠 직접 확인 {verified_count}개 · "
-                        f"제목 검색 링크 {link_count}개"
-                    )
-                elif content_meta:
-                    st.caption(
-                        f"키노라이츠 직접 확인 {content_meta.get('verified_count', 0)}개 · "
-                        f"제목 검색 링크 {content_meta.get('search_link_only_count', 0)}개"
-                    )
-                if content_meta.get("github_status") == "error":
-                    st.warning(f"콘텐츠 후보 영구 저장 실패: {content_meta.get('github_error', '')}")
-                if has_current_contents:
-                    st.caption("초록 테두리: 키노라이츠 결과 직접 확인 · 주황 테두리: 키노라이츠 제목 검색 링크")
+            for start in range(0, len(recs), 2):
+                columns = st.columns(2, gap="large")
+                for offset, rec in enumerate(recs[start:start + 2]):
+                    with columns[offset]:
+                        render_theme_card(start + offset + 1, rec)
 
-                for idx, rec in enumerate(recs, start=1):
-                    render_theme_card(idx, rec)
-
+    st.markdown(
+        '<footer class="magazine-footer"><span>B tv+ · THEME CURATOR</span>'
+        '<span>오늘의 이슈가 내일의 취향이 되도록.</span></footer>',
+        unsafe_allow_html=True,
+    )
