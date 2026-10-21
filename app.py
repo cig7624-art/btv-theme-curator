@@ -1672,7 +1672,8 @@ def render_collection_logic():
         chip_parts.append(
             f'<div class="weight-chip-wrap">'
             f'<input class="logic-modal-toggle" type="checkbox" id="{modal_id}">'
-            f'<span class="weight-chip">{html.escape(name)} {info["weight_pct"]}%</span>'
+            f'<label class="weight-chip" for="{modal_id}" title="수집 기준 자세히 보기">'
+            f'{html.escape(name)} {info["weight_pct"]}%</label>'
             '<div class="weight-tooltip">'
             f'{html.escape(info["tooltip"])}'
             f'<label class="weight-detail-link" for="{modal_id}">세부내용 보기 →</label>'
@@ -2024,9 +2025,8 @@ else:
     st.markdown(
         '<section class="magazine-hero">'
         '<div class="hero-copy"><div class="eyebrow">THE WEEKLY EDIT</div>'
-        '<h1>이슈를 읽고,<br>취향을 큐레이션하다.</h1>'
-        '<p class="hero-description">지금 주목받는 이야기에서 새로운 연결을 발견하세요.<br>'
-        '이번 주의 이슈가, 다음 큐레이션의 시작이 됩니다.</p>'
+        '<h1>이슈를 읽고, 취향을 큐레이션하다.</h1>'
+        '<p class="hero-description">이번 주의 이슈에서 새로운 테마를 발견하고, 어울리는 콘텐츠를 연결하세요.</p>'
         '<div class="hero-meta">'
         f'<span>최근 이슈 <strong>{len(issues):,}</strong></span>'
         f'<span>테마 컬렉션 <strong>{len(themes):,}</strong></span>'
@@ -2210,10 +2210,11 @@ else:
                 st.caption("초록 테두리: 키노라이츠 결과 직접 확인 · 주황 테두리: 키노라이츠 제목 검색 링크")
 
             for start in range(0, len(recs), 2):
-                columns = st.columns(2, gap="large")
-                for offset, rec in enumerate(recs[start:start + 2]):
-                    with columns[offset]:
-                        render_theme_card(start + offset + 1, rec)
+                with st.container(key=f"recommendation_row_{start}"):
+                    columns = st.columns(2, gap="small")
+                    for offset, rec in enumerate(recs[start:start + 2]):
+                        with columns[offset]:
+                            render_theme_card(start + offset + 1, rec)
 
     st.markdown(
         '<footer class="magazine-footer"><span>B tv+ · THEME CURATOR</span>'
