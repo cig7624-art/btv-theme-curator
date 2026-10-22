@@ -7,7 +7,7 @@ from test_theme_actions import app_fixture
 SNAPSHOT = {'schema_version':1,'updated_at':'2026-10-22T07:00:00Z','platforms':[
     {'id':'tving','status':'ok','checked_at':'2026-10-22T07:00:00Z','last_success_at':'2026-10-22T07:00:00Z',
      'promotions':[],'sections':[{'id':'integration-home','title':'수집 결과의 원래 목록', 'position':1,
-        'kind':'theme','works':[{'title':'연결된 작품','url':'https://www.tving.com/contents/P1','image_url':''}]}]}]}
+        'kind':'theme','works':[{'title':'연결된 작품','url':'https://www.tving.com/contents/P1','image_url':'https://image.tving.com/P1.jpg'}]}]}]}
 
 class OttAppIntegrationTests(unittest.TestCase):
     def setUp(self):

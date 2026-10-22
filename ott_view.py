@@ -10,6 +10,8 @@ from pathlib import Path
 from urllib.parse import quote, urlparse
 from zoneinfo import ZoneInfo
 
+from ott_editorial import EDITORIAL_CRITERIA, select_editorial_highlights
+
 
 OTT_SERVICES = (
     ("netflix", "NETFLIX", "https://www.netflix.com/kr/"),
@@ -286,27 +288,85 @@ def _empty_html(platform, *, include_message=True):
             + _link(_source_url(platform), '공식 홈에서 보기 ↗', 'ott-source-link') + '</div>')
 
 
+def _editorial_artwork(story, *, lead=False):
+    """Use actual artwork with a readable fallback; never fabricate a cover."""
+    works = _items(story.get("works"), 4)
+    images = []
+    seen = set()
+    if story.get("image_shape") == "banner":
+        works = [dict(title=story.get("headline"), image_url=story.get("image_url"))]
+    else:
+        works = [*works, dict(title=story.get("headline"), image_url=story.get("image_url"))]
+    for work in works:
+        url = _url(work.get("image_url"))
+        if not url or url in seen:
+            continue
+        seen.add(url)
+        css_url = quote(url, safe=":/?=&%+#@,;")
+        style = html.escape('background-image:url("' + css_url + '")', quote=True)
+        images.append('<span class="ott-feature-image" role="img" aria-label="'
+                      + _escape(work.get("title")) + '" style="' + style + '"></span>')
+        if len(images) == (3 if lead and story.get("image_shape") != "banner" else 1):
+            break
+    css = 'ott-feature-art' + (' ott-feature-collage' if len(images) > 1 else '')
+    return ('<div class="' + css + '"><span class="ott-feature-fallback" aria-hidden="true">'
+            + _escape(story.get("platform_name")) + '</span>' + ''.join(images) + '</div>')
+
+
+def _editorial_story(story, index):
+    layout = 'lead' if index == 0 else ('side' if index < 3 else 'brief')
+    brand = _text(story.get("platform_id"))
+    headline = _escape(story.get("headline"))
+    scope = '공개 홍보' if story.get('scope') == 'public_promotion' else ''
+    tags = ('<span class="ott-feature-platform">' + _escape(story.get("platform_name"))
+            + '</span><span class="ott-feature-kind">' + _escape(story.get("kind_label")) + '</span>')
+    if scope:
+        tags += '<span class="ott-feature-scope">' + scope + '</span>'
+    source = _url(story.get("source_url"))
+    heading = ('<a href="' + _escape(source) + '" target="_blank" rel="noopener noreferrer">'
+               + headline + '</a>') if source else headline
+    return ('<article class="ott-feature ott-feature-' + layout + ' ott-brand-' + _escape(brand)
+            + '" data-platform="' + _escape(brand) + '">'
+            + _editorial_artwork(story, lead=index == 0)
+            + '<div class="ott-feature-copy"><div class="ott-feature-meta">' + tags + '</div>'
+            + '<h3 class="ott-feature-headline">' + heading + '</h3>'
+            + '<p class="ott-feature-summary">' + _escape(story.get("summary")) + '</p>'
+            + _link(source, '원문에서 보기 ↗', 'ott-feature-open')
+            + '</div></article>')
+
+
+def _editorial_notes(stories):
+    criteria = ''.join('<li>' + _escape(item) + '</li>' for item in EDITORIAL_CRITERIA)
+    sources = []
+    for story in stories:
+        label = _text(story.get("platform_name")) + ' · ' + _text(story.get("source_title"))
+        date = _display_time(story.get("checked_at"))
+        sources.append('<li>' + (_link(story.get("source_url"), label) or _escape(label))
+                       + '<span>' + _escape(story.get("selection_reason"))
+                       + (' · ' + _escape(date) if date else '') + '</span></li>')
+    return ('<details class="ott-editorial-notes"><summary>편집 기준 · 출처</summary>'
+            '<ul class="ott-editorial-criteria">' + criteria + '</ul>'
+            '<p>공개 화면의 배치를 바탕으로 고른 소식입니다. 실제 시청 성과나 전체 시장의 순위를 뜻하지 않습니다. '
+            '해외 서버에서 확인해 국내 화면과 차이가 있을 수 있습니다.</p>'
+            '<ul class="ott-editorial-sources">' + ''.join(sources) + '</ul></details>')
+
+
 def ott_comparison_html(snapshot):
-    """Render only sourced rows; unavailable services never become zero counts."""
-    columns = []
-    for platform in snapshot_platforms(snapshot):
-        sections = _visible_lists(platform)
-        promotions = platform["promotions"] if platform.get("status") in {"ok", "promotion_only"} or _stale(platform) else []
-        promotion = _promotion_html(promotions[0], platform, compact=True) if promotions else ''
-        rows = ''.join(_section_html(section, platform, compact=True) for section in sections[:3])
-        if not rows and not promotion:
-            rows = _empty_html(platform)
-        elif sections:
-            scope = '공개 홍보 목록 ' if _promotion_only(platform) else '확인한 '
-            rows += '<p class="ott-column-foot">' + scope + str(len(sections)) + '개 영역 · 서비스 선택에서 더 보기</p>'
-        elif _promotion_only(platform):
-            rows = '<p class="ott-public-scope">공개 페이지에서 확인한 홍보작입니다.</p>'
-        columns.append('<section class="ott-compare-column ott-brand-' + platform["id"] + '">'
-                       '<header class="ott-column-heading"><h3 class="ott-platform-name">'
-                       + _escape(platform["name"]) + '</h3>'
-                       + _link(_source_url(platform), '공식 홈 ↗', 'ott-source-link') + '</header>'
-                       + _status_html(platform, compact=True) + promotion + rows + '</section>')
-    return '<div class="ott-compare-grid">' + ''.join(columns) + '</div>'
+    """An editorial digest of verified highlights, with no service quota."""
+    stories = select_editorial_highlights(snapshot, limit=6)
+    if not stories:
+        return ('<section class="ott-magazine ott-magazine-empty"><span class="ott-edit-kicker">THE OTT EDIT</span>'
+                '<h3>다음 이야기를 확인하고 있어요.</h3>'
+                '<p>확인된 주요 소식이 모이면 여기에 소개합니다. 서비스별 저장 자료는 위에서 볼 수 있어요.</p>'
+                '</section>')
+    checked = [_text(story.get('checked_at')) for story in stories if story.get('checked_at')]
+    # The oldest selected confirmation avoids presenting older stories as freshly observed.
+    date = _display_time(min(checked)) if checked else ''
+    folio = '<span>PUBLIC HOME · ' + _escape(date) + '</span>' if date else '<span>PUBLIC HOME</span>'
+    return ('<section class="ott-magazine"><div class="ott-edit-folio"><span>THE OTT EDIT</span>' + folio + '</div>'
+            '<div class="ott-feature-grid">' + ''.join(_editorial_story(story, index) for index, story in enumerate(stories))
+            + '</div><div class="ott-edit-bottom"><p>더 궁금한 OTT는 위에서 선택해 전체 목록을 살펴보세요.</p>'
+            + _editorial_notes(stories) + '</div></section>')
 
 
 def ott_platform_html(platform):
@@ -347,8 +407,12 @@ def render_ott_page(snapshot, *, on_refresh: Callable | None = None):
     styles = Path(__file__).with_name("ott_styles.css").read_text(encoding="utf-8")
     st.markdown('<style>' + styles + '</style>', unsafe_allow_html=True)
     with st.container(key="ott_now_section"):
-        st.markdown('<header class="ott-page-heading"><h2>OTT는 지금</h2><p>공개 홈의 홍보작과 콘텐츠 목록을 원래 제목·배치 순서로 비교합니다.</p></header>', unsafe_allow_html=True)
-        if on_refresh is not None and st.button("공개 홈 새로고침", key="refresh_ott_public_homes", help="공개 메인 홈을 확인합니다. 최근 확인 결과는 15분간 공유합니다."):
+        heading, action = st.columns([5, 1.5], vertical_alignment="bottom")
+        with heading:
+            st.markdown('<header class="ott-page-heading"><h2>OTT는 지금</h2><p>지금 앞세운 작품, 눈여겨볼 큐레이션. 주요 소식만 골라 한눈에.</p></header>', unsafe_allow_html=True)
+        with action:
+            refresh = on_refresh is not None and st.button("소식 새로고침", key="refresh_ott_public_homes", help="공개 메인 홈을 확인합니다. 최근 확인 결과는 15분간 공유합니다.", width="stretch")
+        if refresh:
             try:
                 with st.spinner("공개 홈을 확인하고 있습니다…"):
                     updated = on_refresh()
@@ -357,7 +421,7 @@ def render_ott_page(snapshot, *, on_refresh: Callable | None = None):
             except Exception:
                 _LOGGER.exception("Public OTT homepage refresh failed")
                 st.warning("이번에는 홈 자료를 갱신하지 못했습니다. 저장된 확인 자료를 보여드립니다.")
-        labels = {"all": "5사 비교", **{service_id: name for service_id, name, _ in OTT_SERVICES}}
+        labels = {"all": "주요 소식", **{service_id: name for service_id, name, _ in OTT_SERVICES}}
         with st.container(key="ott_platform_selector"):
             selected = st.segmented_control("OTT 선택", options=list(labels), format_func=labels.get,
                                             default="all", required=True, wrap=False,
@@ -368,6 +432,7 @@ def render_ott_page(snapshot, *, on_refresh: Callable | None = None):
             st.markdown(ott_platform_html(platform), unsafe_allow_html=True)
         else:
             st.markdown(ott_comparison_html(snapshot), unsafe_allow_html=True)
-        with st.expander("공개 홈 확인 기준"):
-            st.markdown("메인 배너와 공개 홈의 콘텐츠 목록을 확인합니다. 원래 제목과 작품 구성, 홈 위치, 확인 날짜를 함께 남기며 개인 시청 기록이나 맞춤 목록은 포함하지 않습니다.")
-            st.markdown("기획 테마·신작·순위를 구분해 홈 순서대로 보여줍니다. 일부 영역만 확인한 경우에는 확인한 범위를 표시합니다. 공개 홍보 페이지의 작품 목록도 함께 보여주며 콘텐츠 홈의 기획 테마와 구분합니다. 접속 실패는 테마가 없는 것으로 집계하지 않습니다.")
+        if selected and selected != "all":
+            with st.expander("공개 홈 확인 기준"):
+                st.markdown("메인 배너와 공개 홈의 콘텐츠 목록을 확인합니다. 원래 제목과 작품 구성, 홈 위치, 확인 날짜를 함께 남기며 개인 시청 기록이나 맞춤 목록은 포함하지 않습니다.")
+                st.markdown("개별 화면은 홈 순서대로 보여줍니다. 공개 홍보 자료와 콘텐츠 홈을 구분하며 접속 실패를 테마가 없는 것으로 집계하지 않습니다.")

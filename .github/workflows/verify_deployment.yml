@@ -1,0 +1,74 @@
+name: Verify deployed Streamlit release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - VERSION
+      - app.py
+      - ott_editorial.py
+      - ott_view.py
+      - ott_styles.css
+      - styles.css
+      - scripts/verify_deployment.py
+      - .github/workflows/verify_deployment.yml
+
+concurrency:
+  group: verify-production-streamlit-release
+  cancel-in-progress: true
+
+jobs:
+  verify-public-deployment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install browser verification tools
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Validate release verification rules
+        run: python -m unittest discover -s tests -p 'test_deployment_verification.py' -v
+      - name: Verify the actual public app release
+        id: verify
+        continue-on-error: true
+        run: python scripts/verify_deployment.py --timeout 480 --poll 30
+      - name: Preserve public deployment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-streamlit-deployment-verification
+          path: |
+            artifacts/deployment_validation.json
+            artifacts/deployment-screenshots/
+          retention-days: 3
+      - name: Record sanitized deployment result on main
+        if: ${{ always() && !cancelled() && github.ref == 'refs/heads/main' }}
+        run: |
+          if [ ! -f artifacts/deployment_validation.json ]; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- artifacts/deployment_validation.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'Record public Streamlit deployment verification [skip ci]'
+          git pull --rebase origin main
+          validation_version="$(python -c 'import json; print(json.load(open("artifacts/deployment_validation.json"))["expected_version"])')"
+          current_version="$(tr -d '[:space:]' < VERSION)"
+          if [ "$validation_version" != "$current_version" ]; then
+            echo 'A newer release superseded this check; evidence remains in CI artifacts.'
+            exit 0
+          fi
+          git push origin HEAD:main
+      - name: Require successful live verification
+        if: ${{ steps.verify.outcome != 'success' }}
+        run: exit 1
