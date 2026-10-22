@@ -1,5 +1,7 @@
 """Artwork must belong to the requested work, without changing its identity."""
 import copy
+from concurrent.futures import ThreadPoolExecutor
+from email.utils import formatdate
 import unittest
 from unittest.mock import Mock, patch
 
@@ -9,8 +11,12 @@ import kinolights_candidates as kino
 import poster_assets as posters
 
 
-def response(payload):
+def response(payload, *, status=200, headers=None):
     result = Mock()
+    result.status_code = status
+    result.headers = headers or {}
+    if status >= 400:
+        result.raise_for_status.side_effect = requests.HTTPError(str(status), response=result)
     result.json.return_value = payload
     return result
 
@@ -26,6 +32,60 @@ def movie(**changes):
 class PosterAssetTests(unittest.TestCase):
     def setUp(self):
         posters._cached_poster.cache_clear()
+        posters._WIKIPEDIA_HOSTS.clear()
+        self.sleep = self.enterContext(patch.object(posters.time, "sleep"))
+
+    def test_wikipedia_recovers_once_from_rate_limit_with_actual_artwork(self):
+        page = dict(title="더 글로리 (드라마)", extract="2022년 드라마", pageimage="더글로리_포스터.jpg",
+                    original={"source": "https://upload.wikimedia.org/actual-glory.jpg"})
+        with patch.object(posters.requests, "get", side_effect=[
+                response({}, status=429, headers={"Retry-After": "2"}),
+                response({"query": {"pages": {"1": page}}})]) as get:
+            result = posters._wikipedia_poster("더 글로리", "2022", "드라마")
+        self.assertEqual(result["poster_url"], page["original"]["source"])
+        self.assertEqual(get.call_count, 2)
+        self.assertAlmostEqual(self.sleep.call_args.args[0], 2, delta=.05)
+        self.assertIn("https://github.com/cig7624-art/btv-theme-curator", get.call_args.kwargs["headers"]["User-Agent"])
+        self.assertEqual(get.call_args.kwargs["timeout"], 6)
+
+    def test_wikipedia_503_honors_http_date_and_stops_after_one_retry(self):
+        with patch.object(posters.time, "time", return_value=1000), \
+             patch.object(posters.requests, "get", return_value=response(
+                 {}, status=503, headers={"Retry-After": formatdate(1002, usegmt=True)})) as get:
+            with self.assertRaises(requests.HTTPError):
+                posters._wikipedia_pages("en", ["Example"])
+        self.assertEqual(get.call_count, 2)
+        self.assertAlmostEqual(self.sleep.call_args.args[0], 2, delta=.05)
+
+    def test_long_retry_after_fails_without_waiting_or_repeated_requests(self):
+        with patch.object(posters.requests, "get", return_value=response(
+                {}, status=429, headers={"Retry-After": "120"})) as get:
+            with self.assertRaises(requests.HTTPError):
+                posters._wikipedia_pages("ko", ["더 글로리"])
+            with self.assertRaises(requests.exceptions.RetryError):
+                posters._wikipedia_pages("ko", ["다른 작품"])
+        self.assertEqual(get.call_count, 1)
+        self.sleep.assert_not_called()
+
+    def test_wikipedia_host_rate_limit_is_shared_by_workers_and_not_other_hosts(self):
+        clock = [100.0]
+        dispatched = []
+
+        def send(url, **kwargs):
+            dispatched.append((url, clock[0]))
+            return response({"query": {"pages": {}}})
+
+        def advance(delay):
+            clock[0] += delay
+
+        self.sleep.side_effect = advance
+        with patch.object(posters.time, "monotonic", side_effect=lambda: clock[0]), \
+             patch.object(posters.requests, "get", side_effect=send):
+            with ThreadPoolExecutor(max_workers=4) as pool:
+                list(pool.map(lambda _: posters._wikipedia_pages("ko", ["더 글로리"]), range(4)))
+            posters._wikipedia_pages("en", ["The Glory (TV series)"])
+        self.assertEqual([started for _, started in dispatched[:4]], [100, 100.5, 101, 101.5])
+        self.assertEqual(dispatched[-1][1], 101.5)
 
     def test_movie_provider_accepts_exact_title_year_and_actual_returned_artwork(self):
         returned = movie()
@@ -182,13 +242,43 @@ class PosterAssetTests(unittest.TestCase):
         self.assertEqual(result[0]["poster_url"], result[1]["poster_url"])
         self.assertEqual(result[2]["poster_url"], "")
 
-    def test_unavailable_providers_leave_blank_and_cache_failure_for_this_hour(self):
-        with patch.object(posters, "_itunes_poster", side_effect=requests.ConnectionError("offline")) as apple, \
+    def test_confirmed_empty_matches_are_cached_for_this_hour(self):
+        with patch.object(posters, "_itunes_poster", return_value={}) as apple, \
              patch.object(posters, "_wikipedia_poster", return_value={}) as wiki:
             self.assertEqual(posters._cached_poster("타짜", "2006", "영화", 123), {})
             self.assertEqual(posters._cached_poster("타짜", "2006", "영화", 123), {})
         self.assertEqual(apple.call_count, 1)
         self.assertEqual(wiki.call_count, 1)
+
+    def test_transient_provider_failures_are_not_cached_as_missing_artwork(self):
+        for error in [requests.ConnectionError("offline"), requests.Timeout("timeout"),
+                      requests.HTTPError("429", response=response({}, status=429)),
+                      requests.HTTPError("503", response=response({}, status=503))]:
+            with self.subTest(error=error), \
+                 patch.object(posters, "_itunes_poster", return_value={}) as apple, \
+                 patch.object(posters, "_wikipedia_poster", side_effect=error) as wiki:
+                for _ in range(2):
+                    with self.assertRaises(requests.RequestException):
+                        posters._cached_poster("타짜", "2006", "영화", 123)
+                self.assertEqual(apple.call_count, 2)
+                self.assertEqual(wiki.call_count, 2)
+
+    def test_infobox_timeout_remains_retryable_instead_of_becoming_an_empty_match(self):
+        page = dict(title="더 글로리 (드라마)", extract="2022년 드라마", pageimage="The_Glory.jpg")
+        with patch.object(posters.requests, "get", side_effect=[
+                response({"query": {"pages": {"1": page}}}), requests.Timeout("timeout")]):
+            with self.assertRaises(requests.Timeout):
+                posters._cached_poster("더 글로리", "2022", "드라마", 123)
+        self.assertEqual(posters._cached_poster.cache_info().currsize, 0)
+
+    def test_batch_leaves_failed_lookups_blank_and_can_retry_on_refresh(self):
+        item = dict(title="더 글로리", year="2022", content_type="드라마")
+        artwork = {"poster_url": "https://upload.wikimedia.org/actual-glory.jpg"}
+        with patch.object(posters, "_itunes_poster", return_value={}), \
+             patch.object(posters, "_wikipedia_poster", side_effect=[requests.Timeout("timeout"), artwork]) as wiki:
+            self.assertEqual(posters.enrich_poster_candidates([item])[0]["poster_url"], "")
+            self.assertEqual(posters.enrich_poster_candidates([item])[0]["poster_url"], artwork["poster_url"])
+        self.assertEqual(wiki.call_count, 2)
 
     def test_kinolights_nested_and_lazy_artwork_are_actual_urls_and_duplicate_prefers_artwork(self):
         mapped = kino._candidate_from_mapping(dict(title="타짜", poster={"url": "https://images.example.com/actual.jpg"}), "https://m.kinolights.com/search")

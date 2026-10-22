@@ -8,8 +8,10 @@ poster stays missing instead of being filled with unrelated artwork.
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from email.utils import parsedate_to_datetime
 from functools import lru_cache
 import re
+from threading import Lock
 import time
 import unicodedata
 from urllib.parse import quote, urlparse
@@ -17,9 +19,52 @@ from urllib.parse import quote, urlparse
 import requests
 
 
-REQUEST_TIMEOUT = 4
+REQUEST_TIMEOUT = 6
 _ITUNES_URL = "https://itunes.apple.com/search"
-_USER_AGENT = "BtvThemeCurator/1.0 (film-poster metadata lookup)"
+_USER_AGENT = "BtvThemeCurator/1.0 (https://github.com/cig7624-art/btv-theme-curator; public poster metadata)"
+_WIKIPEDIA_INTERVAL = .5
+_WIKIPEDIA_RETRY_WAIT = 3
+_WIKIPEDIA_HOSTS_LOCK = Lock()
+_WIKIPEDIA_HOSTS = {}
+
+
+def _retry_after(response):
+    """Return the server's delay, with a short default for missing headers."""
+    value = _text(response.headers.get("Retry-After"))
+    try:
+        return max(0, float(value))
+    except ValueError:
+        try:
+            return max(0, parsedate_to_datetime(value).timestamp() - time.time())
+        except (TypeError, ValueError, OverflowError):
+            return 1
+
+
+def _wikipedia_get(language, params):
+    host = f"{language}.wikipedia.org"
+    with _WIKIPEDIA_HOSTS_LOCK:
+        state = _WIKIPEDIA_HOSTS.setdefault(host, {"lock": Lock(), "next": 0})
+    for attempt in range(2):
+        # Hold the host lock through the request so four artwork workers cannot
+        # burst requests at Wikipedia. Other providers/hosts stay independent.
+        with state["lock"]:
+            delay = max(0, state["next"] - time.monotonic())
+            if delay > _WIKIPEDIA_RETRY_WAIT:
+                raise requests.exceptions.RetryError("Wikipedia Retry-After exceeds the bounded wait")
+            if delay:
+                time.sleep(delay)
+            state["next"] = time.monotonic() + _WIKIPEDIA_INTERVAL
+            response = requests.get(
+                f"https://{host}/w/api.php", params=params,
+                headers={"User-Agent": _USER_AGENT}, timeout=REQUEST_TIMEOUT,
+            )
+            if response.status_code in {429, 503}:
+                retry_delay = _retry_after(response)
+                state["next"] = max(state["next"], time.monotonic() + retry_delay)
+                if attempt == 0 and retry_delay <= _WIKIPEDIA_RETRY_WAIT:
+                    continue
+            response.raise_for_status()
+            return response
 
 
 def _text(value):
@@ -98,11 +143,7 @@ def _wikipedia_pages(language, titles, *, english_links=False):
     }
     if english_links:
         params.update(lllang="en", lllimit=1)
-    response = requests.get(
-        f"https://{language}.wikipedia.org/w/api.php", params=params,
-        headers={"User-Agent": _USER_AGENT}, timeout=REQUEST_TIMEOUT,
-    )
-    response.raise_for_status()
+    response = _wikipedia_get(language, params)
     payload = response.json()
     pages = payload.get("query", {}).get("pages", {}) if isinstance(payload, dict) else {}
     return list(pages.values()) if isinstance(pages, dict) else []
@@ -159,11 +200,7 @@ def _infobox_poster(language, page):
         params["pageid"] = page["pageid"]
     else:
         params["page"] = _text(page.get("title"))
-    response = requests.get(
-        f"https://{language}.wikipedia.org/w/api.php", params=params,
-        headers={"User-Agent": _USER_AGENT}, timeout=REQUEST_TIMEOUT,
-    )
-    response.raise_for_status()
+    response = _wikipedia_get(language, params)
     payload = response.json()
     parsed = payload.get("parse", {}) if isinstance(payload, dict) else {}
     if not isinstance(parsed, dict):
@@ -209,7 +246,7 @@ def _wikipedia_artwork(language, page):
     if not (poster and re.search(r"poster|포스터", _text(page.get("pageimage")), re.I)):
         try:
             poster = _infobox_poster(language, page)
-        except (requests.RequestException, ValueError, TypeError, KeyError):
+        except (ValueError, TypeError, KeyError):
             poster = ""
     if not poster:
         return {}
@@ -257,13 +294,20 @@ def _wikipedia_poster(title, year, content_type):
 
 @lru_cache(maxsize=2048)
 def _cached_poster(title, year, content_type, hour_bucket):
+    unavailable = None
     for provider in (_itunes_poster, _wikipedia_poster):
         try:
             poster = provider(title, year, content_type)
             if poster:
                 return poster
-        except (requests.RequestException, ValueError, TypeError, KeyError):
+        except requests.RequestException as error:
+            unavailable = error
+        except (ValueError, TypeError, KeyError):
             continue
+    # lru_cache does not cache raised exceptions. An outage/rate limit must not
+    # turn into an hour-long "no artwork" result; a confirmed empty match can.
+    if unavailable is not None:
+        raise unavailable
     return {}
 
 
@@ -271,8 +315,9 @@ def enrich_poster_candidates(contents, *, max_workers=4, limit=40):
     """Return copies with genuine posters, using at most ``limit`` unique lookups.
 
     Existing valid artwork and all candidate identity/status fields are preserved.
-    Both successful and empty lookups are cached for the current hour. Explicit
-    refresh can fill older Kinolights-cache entries whose poster fields are blank.
+    Successful and confirmed empty lookups are cached for the current hour.
+    Transient provider failures remain retryable on the next explicit refresh,
+    which can fill older Kinolights-cache entries whose poster fields are blank.
     """
     output = [dict(item) for item in contents if isinstance(item, dict)]
     pending = {}
