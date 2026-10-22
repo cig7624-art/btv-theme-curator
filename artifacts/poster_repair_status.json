@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "applied_at": "2026-10-22T04:23:30.063514+00:00",
+  "mode": "write",
+  "source_run_id": "20261022-114213-3b59418b",
+  "latest_run_id": "20261022-114213-3b59418b",
+  "checked_unique": 27,
+  "found_unique": 1,
+  "updated_rows": 8,
+  "visible_candidates": 40,
+  "before_visible_with_poster": 9,
+  "visible_with_poster": 11
+}
