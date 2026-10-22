@@ -13,10 +13,42 @@ import unicodedata
 from urllib.parse import urlparse
 
 import pandas as pd
+import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from poster_assets import enrich_poster_candidates
+
+
+def lookup_diagnostics():
+    """Record public provider reachability so empty lookups can be investigated."""
+    probes = [
+        ("ko_wikipedia_api", "https://ko.wikipedia.org/w/api.php", {"action": "query", "format": "json", "titles": "더 글로리", "prop": "pageimages|pageprops|extracts|categories|langlinks", "piprop": "original|name", "pilicense": "any", "exintro": 1, "explaintext": 1, "exsentences": 3, "cllimit": 50, "lllang": "en", "lllimit": 1}),
+        ("en_wikipedia_api", "https://en.wikipedia.org/w/api.php", {"action": "query", "format": "json", "titles": "The Glory", "prop": "pageimages|extracts", "piprop": "original|name", "pilicense": "any", "exintro": 1, "explaintext": 1}),
+        ("ko_wikipedia_article", "https://ko.wikipedia.org/wiki/더_글로리", None),
+        ("en_wikipedia_article", "https://en.wikipedia.org/wiki/The_Glory", None),
+        ("tvmaze", "https://api.tvmaze.com/search/shows", {"q": "The Glory"}),
+    ]
+    output = {}
+    for name, url, params in probes:
+        try:
+            response = requests.get(url, params=params, headers={"User-Agent": "BtvThemeCurator/1.0 (https://github.com/cig7624-art/btv-theme-curator; public poster metadata)"}, timeout=8)
+            result = {"status": response.status_code, "bytes": len(response.content), "content_type": response.headers.get("content-type", "")}
+            try:
+                payload = response.json()
+                if isinstance(payload, dict):
+                    result["api_error"] = payload.get("error")
+                    result["api_warnings"] = payload.get("warnings")
+                    result["pages"] = list(payload.get("query", {}).get("pages", {}).values())
+                elif isinstance(payload, list):
+                    result["matches"] = len(payload)
+            except ValueError:
+                if response.status_code != 200:
+                    result["message"] = re.sub(r"\s+", " ", response.text)[:300]
+            output[name] = result
+        except requests.RequestException as error:
+            output[name] = {"error": type(error).__name__}
+    return output
 
 
 def _text(value):
@@ -174,6 +206,8 @@ def apply_updates(manifest, root=ROOT, *, write=False):
               "visible_candidates": len(after),
               "before_visible_with_poster": sum(_url(value) for value in before["poster_url"]),
               "visible_with_poster": sum(_url(value) for value in after["poster_url"])}
+    if "provider_diagnostics" in manifest:
+        report["provider_diagnostics"] = manifest["provider_diagnostics"]
     if write:
         if updated:
             _atomic_write(root / "theme_content_candidates.csv", lambda path: enriched.to_csv(path, sep="|", index=False, encoding="utf-8-sig"))
@@ -189,10 +223,13 @@ def main():
     mode.add_argument("--apply", type=Path, help="Apply a previously collected manifest to the latest saved candidates")
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--limit", type=int, default=40)
+    parser.add_argument("--diagnose", action="store_true", help="Include public provider responses in the repair report")
     parser.add_argument("--write", action="store_true", help="Write poster-only changes and an audit report; default apply is dry run")
     args = parser.parse_args()
     if args.collect:
         manifest = collect_updates(args.root, limit=args.limit)
+        if args.diagnose:
+            manifest["provider_diagnostics"] = lookup_diagnostics()
         _atomic_write(args.collect, lambda path: path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"))
         print(json.dumps({key: value for key, value in manifest.items() if key != "updates"}, ensure_ascii=False, indent=2))
     else:
