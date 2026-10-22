@@ -26,7 +26,7 @@ def main():
     else:
         result = collect_public_homes(previous, args.platform)
     save_snapshot(result, args.output)
-    print(json.dumps({"updated_at": result["updated_at"], "platforms": [{"id": p["id"], "status": p["status"], "freshness": p["freshness"], "sections": len(p["sections"]) if p["status"] == "ok" else None, "promotions": len(p["promotions"]), "error_code": p["error_code"]} for p in result["platforms"]]}, ensure_ascii=False, indent=2))
+    print(json.dumps({"updated_at": result["updated_at"], "platforms": [{"id": p["id"], "status": p["status"], "freshness": p["freshness"], "sections": len(p["sections"]) if p["status"] == "ok" else None, "promotions": len(p["promotions"]), "official_updates": len(p.get("official_updates", [])), "error_code": p["error_code"]} for p in result["platforms"]]}, ensure_ascii=False, indent=2))
     if args.require_home and not any(p["status"] == "ok" and p["freshness"] == "current" and p["sections"] for p in result["platforms"]):
         raise SystemExit(1)
 

@@ -50,7 +50,7 @@ class OttViewTests(unittest.TestCase):
         self.assertNotIn('open', notes.attrs)
         self.assertIn('원문 1번째', notes.get_text())
         self.assertNotIn('selection_score', str(soup))
-        self.assertNotIn('쿠팡플레이', soup.get_text())
+        self.assertFalse(soup.select('.ott-feature[data-platform="coupang"]'))
 
     def test_detail_keeps_original_order_types_and_more_rows_accessible(self):
         data = platform(sections=[section(8), section(1, kind="new"), section(2, kind="ranking"), *[section(i) for i in range(3, 8)]])

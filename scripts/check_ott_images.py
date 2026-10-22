@@ -26,7 +26,7 @@ def check(item):
 def image_jobs(snapshot, *, all_images=False):
     jobs, seen = [], set()
     for platform in snapshot.get('platforms', []):
-        candidates=list(platform.get('promotions',[]))
+        candidates=list(platform.get('promotions',[])) + list(platform.get('official_updates', []))
         for row in platform.get('sections',[])+platform.get('public_lists',[]):
             candidates.extend(row.get('works',[]))
         selected=0

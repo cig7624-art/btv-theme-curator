@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-22T11:47:35+00:00",
-  "observed_environment": "github_actions_global",
+  "updated_at": "2026-10-22T16:05:16+00:00",
+  "observed_environment": "runtime",
   "country_verified": false,
   "locale_requested": "ko-KR",
   "platforms": [
@@ -649,7 +649,7 @@
       "id": "coupang",
       "name": "쿠팡플레이",
       "url": "https://www.coupangplay.com/",
-      "observed_environment": "github_actions_global",
+      "observed_environment": "runtime",
       "country_verified": false,
       "locale_requested": "ko-KR",
       "source_url": "https://www.coupangplay.com/",
@@ -657,7 +657,7 @@
       "status": "unavailable",
       "last_success_status": "",
       "freshness": "none",
-      "checked_at": "2026-10-22T11:47:35+00:00",
+      "checked_at": "2026-10-22T16:05:16+00:00",
       "last_success_at": "",
       "complete": false,
       "promotions": [],
@@ -666,6 +666,36 @@
       "access_mode": "unconfirmed",
       "section_count": null,
       "http_status": 403,
+      "official_updates": [
+        {
+          "video_id": "p7y7I-NAKKA",
+          "title": "퇴사한 김원훈 그리고 장기하 [직장인들 시즌3] 9화 예고편",
+          "work_title": "직장인들 시즌3",
+          "url": "https://www.youtube.com/watch?v=p7y7I-NAKKA",
+          "image_url": "https://i.ytimg.com/vi/p7y7I-NAKKA/hqdefault.jpg",
+          "published_at": "2026-10-21",
+          "position": 1,
+          "source_position": "9658",
+          "update_kind": "trailer"
+        },
+        {
+          "video_id": "URotrGSSHf0",
+          "title": "한 달간 서로 다른 사람과 찐하게 연애한다고요? [너 말고 다른 연애] 9화 예고",
+          "work_title": "너 말고 다른 연애",
+          "url": "https://www.youtube.com/watch?v=URotrGSSHf0",
+          "image_url": "https://i.ytimg.com/vi/URotrGSSHf0/hqdefault.jpg",
+          "published_at": "2026-10-16",
+          "position": 2,
+          "source_position": "9663",
+          "update_kind": "trailer"
+        }
+      ],
+      "official_updates_scope": "official_channel",
+      "official_updates_source_url": "https://www.youtube.com/channel/UCjn-VbcIkAeXQKCmLJV8YwQ",
+      "official_updates_source_method": "verified_watchlist",
+      "official_updates_checked_at": "2026-10-22T16:05:16+00:00",
+      "official_updates_last_success_at": "2026-10-22T01:19:06+00:00",
+      "official_updates_freshness": "current",
       "capture_scope": "",
       "page_title": "",
       "public_lists": []
