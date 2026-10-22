@@ -1,10 +1,61 @@
 """A pushed revision or anonymous auth redirect is not a verified deployment."""
 import unittest
+from types import SimpleNamespace
+from unittest.mock import Mock
 
-from scripts.verify_deployment import access_problem, exact_version, no_horizontal_overflow, normalized_version
+from scripts.verify_deployment import (
+    VerificationIssue, _load_version, access_problem, exact_version, has_app_exception,
+    no_horizontal_overflow, normalized_version, resolve_app_frame,
+)
+
+
+def fake_frame(*, version=None, app=False, exception=False):
+    frame = Mock()
+    frame.url = "https://public-app.streamlit.app/~/+/"
+    def locator(selector):
+        found = Mock()
+        found.count.return_value = int((selector == ".magazine-footer[data-version]" and version is not None)
+                                       or (selector == '.stApp, [data-testid="stApp"]' and app)
+                                       or (selector == '[data-testid="stException"]' and exception))
+        found.inner_text.return_value = "Public app"
+        found.last.get_attribute.return_value = version
+        return found
+    frame.locator.side_effect = locator
+    return frame
 
 
 class DeploymentVerificationTests(unittest.TestCase):
+    def test_actual_release_is_found_in_nested_public_iframe_not_wrapper(self):
+        wrapper, intermediate, app = fake_frame(), fake_frame(), fake_frame(version="1.1.0", app=True)
+        page = Mock(frames=[wrapper, intermediate, app])
+        self.assertIs(resolve_app_frame(page), app)
+        self.assertIs(resolve_app_frame(Mock(frames=[app])), app)
+
+    def test_rendered_legacy_frame_and_nested_exception_are_not_wrapper_only(self):
+        wrapper, app = fake_frame(), fake_frame(app=True, exception=True)
+        page = Mock(frames=[wrapper, app])
+        self.assertIs(resolve_app_frame(page), app)
+        self.assertTrue(has_app_exception(page))
+
+    def test_iframe_version_is_returned_and_old_version_remains_pending(self):
+        for version in ("1.1.0", "1.0.0"):
+            with self.subTest(version=version):
+                wrapper, app = fake_frame(), fake_frame(version=version, app=True)
+                page = Mock(frames=[wrapper, app])
+                page.url = "https://public-app.streamlit.app/"
+                page.goto.return_value.status = 200
+                page.get_by_role.return_value.count.return_value = 0
+                report = {"tests": {}}
+                args = SimpleNamespace(url=page.url, expected_version="1.1.0")
+                if version == "1.1.0":
+                    self.assertIs(_load_version(page, args, report, "desktop"), app)
+                    self.assertEqual(report["frame_state"], "matched_release")
+                else:
+                    with self.assertRaisesRegex(VerificationIssue, "expected_release_not_ready"):
+                        _load_version(page, args, report, "desktop")
+                    self.assertEqual(report["frame_state"], "outdated_release")
+                self.assertEqual(report["observed_version"], version)
+
     def test_release_marker_must_match_the_complete_expected_version(self):
         self.assertTrue(exact_version("1.1.0", "1.1.0"))
         self.assertTrue(exact_version(" v1.1.0\n", "1.1.0"))

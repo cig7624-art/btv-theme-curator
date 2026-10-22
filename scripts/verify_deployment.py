@@ -57,16 +57,48 @@ class VerificationIssue(RuntimeError):
         super().__init__(code)
 
 
+def resolve_app_frame(page):
+    """Find the real app in a direct page or public Cloud wrapper's frames."""
+    fallback = None
+    for frame in page.frames:
+        try:
+            if frame.locator(".magazine-footer[data-version]").count():
+                return frame
+            if fallback is None and frame.locator('.stApp, [data-testid="stApp"]').count():
+                fallback = frame
+        except Exception:
+            # A frame may detach while the anonymous Cloud wrapper loads.
+            continue
+    return fallback
+
+
+def has_app_exception(page):
+    for frame in page.frames:
+        try:
+            if frame.locator('[data-testid="stException"]').count():
+                return True
+        except Exception:
+            continue
+    return False
+
+
 def _access_check(page, status=None):
     # Inspect only known access messages. Never persist HTML, auth URLs, cookies,
     # account information, exception text, or request/response headers.
-    body = page.locator("body").inner_text(timeout=5000).lower()
-    private = any(message in body for message in (
-        "this app is private", "you do not have access to this app",
-        "sign in to view this app", "log in to view this app"))
-    problem = access_problem(page.url, status, private)
+    problem = access_problem(page.url, status)
     if problem:
         raise VerificationIssue(problem, blocked=True)
+    for frame in page.frames:
+        try:
+            body = frame.locator("body").inner_text(timeout=1000).lower()
+        except Exception:
+            continue
+        private = any(message in body for message in (
+            "this app is private", "you do not have access to this app",
+            "sign in to view this app", "log in to view this app"))
+        problem = access_problem(frame.url, private_message=private)
+        if problem:
+            raise VerificationIssue(problem, blocked=True)
 
 
 def _load_version(page, args, report, label):
@@ -75,36 +107,46 @@ def _load_version(page, args, report, label):
     wake = page.get_by_role("button", name=re.compile(r"^(?:yes, get this app back up!?|wake up)$", re.I))
     if wake.count():
         wake.first.click()
-    try:
-        page.locator(".magazine-footer[data-version]").wait_for(state="attached", timeout=20000)
-    except Exception:
-        _access_check(page)
-        if page.locator('[data-testid="stException"]').count():
+    marker_deadline = time.monotonic() + 20
+    frame = None
+    while time.monotonic() < marker_deadline:
+        frame = resolve_app_frame(page)
+        if frame and frame.locator(".magazine-footer[data-version]").count():
+            break
+        if has_app_exception(page):
             raise VerificationIssue("startup_exception", retry=True)
-        raise VerificationIssue("release_marker_not_ready", retry=True)
-    observed = normalized_version(page.locator(".magazine-footer[data-version]").last.get_attribute("data-version"))
+        page.wait_for_timeout(250)
+    else:
+        _access_check(page)
+        legacy = frame is not None and frame.locator(".magazine-footer").count()
+        report["frame_state"] = "legacy_release" if legacy else "app_loading" if frame else "wrapper_only"
+        raise VerificationIssue("legacy_release_running" if legacy else "release_marker_not_ready" if frame else "app_frame_not_ready", retry=True)
+    observed = normalized_version(frame.locator(".magazine-footer[data-version]").last.get_attribute("data-version"))
     report["observed_version"] = observed
     report["tests"][f"{label}_version"] = exact_version(observed, args.expected_version)
+    report["frame_state"] = "matched_release" if report["tests"][f"{label}_version"] else "outdated_release"
     if not report["tests"][f"{label}_version"]:
         raise VerificationIssue("expected_release_not_ready", retry=True)
+    return frame
 
 
-def _check_editorial(page, report, label, screenshots):
-    page.get_by_role("tab", name="OTT는 지금", exact=True).click(timeout=15000)
+def _check_editorial(frame, report, label, screenshots):
+    page = frame.page
+    frame.get_by_role("tab", name="OTT는 지금", exact=True).click(timeout=15000)
     try:
-        page.locator(".ott-magazine").first.wait_for(state="visible", timeout=20000)
+        frame.locator(".ott-magazine").first.wait_for(state="visible", timeout=20000)
         report["tests"][f"{label}_ott_magazine"] = True
     except Exception:
         raise VerificationIssue("ott_magazine_missing")
     try:
-        page.locator(".ott-magazine .ott-feature").first.wait_for(state="visible", timeout=15000)
+        frame.locator(".ott-magazine .ott-feature").first.wait_for(state="visible", timeout=15000)
         report["tests"][f"{label}_ott_feature"] = True
     except Exception:
         raise VerificationIssue("ott_feature_missing")
-    report["tests"][f"{label}_no_exception"] = not page.locator('[data-testid="stException"]').count()
+    report["tests"][f"{label}_no_exception"] = not has_app_exception(page)
     if not report["tests"][f"{label}_no_exception"]:
         raise VerificationIssue("app_exception")
-    dimensions = page.evaluate("""() => {
+    dimensions = frame.evaluate("""() => {
       const main = document.querySelector('[data-testid="stMain"]');
       return {viewport: innerWidth, document_scroll: document.documentElement.scrollWidth,
               main_width: main ? main.clientWidth : innerWidth,
@@ -113,7 +155,7 @@ def _check_editorial(page, report, label, screenshots):
     report["tests"][f"{label}_no_horizontal_overflow"] = no_horizontal_overflow(dimensions)
     if not report["tests"][f"{label}_no_horizontal_overflow"]:
         raise VerificationIssue("horizontal_overflow")
-    loaded = page.evaluate(r"""async () => {
+    loaded = frame.evaluate(r"""async () => {
       const artworks = Array.from(document.querySelectorAll('.ott-magazine .ott-feature-art')).slice(0, 6);
       return await Promise.all(artworks.map(artwork => new Promise(resolve => {
         const element = artwork.querySelector('.ott-feature-image') || artwork.querySelector('img');
@@ -144,7 +186,7 @@ def _check_editorial(page, report, label, screenshots):
     if not all(loaded):
         report["warnings"].append(f"{label}_some_artwork_unavailable")
     screenshots.mkdir(parents=True, exist_ok=True)
-    page.locator(".ott-magazine").first.scroll_into_view_if_needed()
+    frame.locator(".ott-magazine").first.scroll_into_view_if_needed()
     page.screenshot(path=str(screenshots / f"{label}.png"), full_page=False)
 
 
@@ -180,8 +222,8 @@ def verify(args):
                                                           is_mobile=label == "mobile", has_touch=label == "mobile")
                             try:
                                 page = context.new_page()
-                                _load_version(page, args, report, label)
-                                _check_editorial(page, report, label, args.screenshots_dir)
+                                frame = _load_version(page, args, report, label)
+                                _check_editorial(frame, report, label, args.screenshots_dir)
                             finally:
                                 context.close()
                         report["status"] = "passed"
