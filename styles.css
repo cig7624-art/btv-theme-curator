@@ -33,6 +33,36 @@
 [data-testid="stMarkdownContainer"] :is(p, li) { font-size: 14px; line-height: 1.65; }
 [data-testid="stCaptionContainer"] p { color: var(--muted); font-size: 12px; line-height: 1.7; }
 [data-testid="stMarkdownContainer"] a { color: var(--accent); }
+/* Native overlays live outside the app containers, so theme their portals too. */
+[data-testid="stPopoverBody"],
+[data-testid="stTooltipContent"],
+[data-baseweb="popover"] [role="dialog"],
+[data-baseweb="select"] [role="listbox"] {
+    background: var(--surface) !important;
+    color: var(--ink) !important;
+    border-color: var(--line) !important;
+    color-scheme: dark;
+}
+[data-testid="stPopoverBody"] { border: 1px solid var(--line); box-shadow: 0 12px 32px #0005; }
+[data-testid="stTooltipContent"] { border: 1px solid #505347; box-shadow: 0 6px 18px #0004; }
+:is([data-testid="stPopoverBody"], [data-testid="stTooltipContent"])
+    :is([data-testid="stMarkdownContainer"], [data-testid="stWidgetLabel"], [data-testid="stCaptionContainer"], [role="group"]) {
+    color: var(--ink) !important;
+}
+[data-testid="stPopoverBody"] [data-testid="stCaptionContainer"] { opacity: 1 !important; }
+[data-testid="stPopoverBody"] [data-testid="stCaptionContainer"] p { color: #c3c3b9 !important; }
+[data-testid="stTooltipContent"] [data-testid="stMarkdownContainer"] p { color: var(--ink) !important; }
+[data-testid="stPopoverBody"] [data-testid="stSlider"] :is(output, [role="slider"]) { color: var(--ink) !important; }
+/* Gold actions need dark labels, including nested Markdown and tooltip clones. */
+button[kind="primary"]:not(:disabled),
+button[kind="primary"]:not(:disabled) :is(div, p, span) { color: #29241d !important; }
+button[kind="primary"][data-testid]:disabled,
+button[kind="primary"][data-testid]:disabled:hover {
+    background: #30332f !important;
+    border-color: #41443c !important;
+    color: #b6b8b0 !important;
+}
+button[kind="primary"]:disabled :is(div, p, span) { color: #b6b8b0 !important; }
 [data-testid="stMarkdownContainer"] hr { border-color: var(--line); margin: 1rem 0; }
 [data-testid="stMetricLabel"] { color: var(--muted); }
 [data-testid="stMetricValue"] { color: var(--ink); font-size: 26px; font-weight: 600; }

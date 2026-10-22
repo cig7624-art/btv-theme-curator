@@ -1017,6 +1017,8 @@ def build_and_store_content_candidates(
         max_workers=10,
         allow_browser_fallback=False,
     )
+    if not any(validated.values()):
+        raise ThemeGenerationError("연결할 추천 작품을 받지 못했습니다. 콘텐츠를 다시 불러와 주세요.")
     # Fetch art only during an explicit content load, for the four visible
     # candidates per theme. Ordinary page loads never perform poster searches.
     visible_candidates = [
@@ -1057,6 +1059,29 @@ def build_and_store_content_candidates(
         "github_error": github_result.get("error", ""),
     }
 
+
+
+def fill_weekly_content_candidates(recommendations, *, run_id, api_key, model, github_config):
+    """Fill one saved run, retaining its themes when content providers fail."""
+    st.session_state["content_candidate_run_id"] = str(run_id)
+    st.session_state.pop("content_candidate_error", None)
+    st.session_state.pop("content_candidate_meta", None)
+    try:
+        _, _, content_meta = build_and_store_content_candidates(
+            recommendations,
+            scope_run_id=str(run_id),
+            api_key=api_key,
+            model=model,
+            github_config=github_config,
+            per_theme=16,
+            persist=True,
+            mirror_theme_db=True,
+        )
+        st.session_state["content_candidate_meta"] = content_meta
+        return True
+    except Exception as exc:
+        st.session_state["content_candidate_error"] = str(exc)
+        return False
 
 
 def source_status_label(value):
@@ -1886,7 +1911,7 @@ else:
                         generate_clicked = st.button(
                             "테마 생성하기", key="generate_weekly_themes", type="primary",
                             use_container_width=True, disabled=not ready,
-                            help="최근 이슈를 바탕으로 새로운 추천 테마를 만듭니다.",
+                            help="최근 이슈로 테마를 만들고 추천 작품과 포스터까지 함께 채웁니다.",
                         )
                     with content_action:
                         content_clicked = st.button(
@@ -1904,11 +1929,11 @@ else:
                                 st.warning("생성한 테마를 저장하려면 GitHub 연결 설정이 필요합니다.")
                             if issues.empty:
                                 st.info("선정 가능한 최근 이슈가 없습니다. 이슈 수집 상태를 확인해 주세요.")
-                            st.caption("테마를 만든 뒤 콘텐츠 후보를 불러오면 추천 작품과 포스터를 함께 볼 수 있습니다.")
+                            st.caption("테마를 생성하면 추천 작품과 포스터도 함께 준비합니다. 콘텐츠 버튼으로 작품 후보만 다시 불러올 수 있습니다.")
 
         if generate_clicked:
             try:
-                with st.spinner("최근 이슈를 분석해 신규 테마를 생성하고 저장하는 중입니다..."):
+                with st.spinner("최근 이슈로 테마를 만들고 저장하는 중입니다..."):
                     issue_records = build_llm_issue_records(issues, max_issues=12)
                     recent_history = load_recommendation_history(THEME_HISTORY_PATH, days=56)
                     recs, run_meta = generate_weekly_themes(
@@ -1946,30 +1971,29 @@ else:
                     st.session_state["updated_theme_csv"] = updated_themes.to_csv(
                         sep="|", index=False, encoding="utf-8-sig"
                     ).encode("utf-8-sig")
+                with st.spinner("테마에 맞는 추천 작품과 포스터를 채우는 중입니다..."):
+                    fill_weekly_content_candidates(
+                        recs,
+                        run_id=str(run_meta.get("run_id", "")),
+                        api_key=openai_api_key,
+                        model=openai_model,
+                        github_config=github_config,
+                    )
                 st.rerun()
             except ThemeGenerationError as exc:
                 st.error(str(exc))
             except Exception as exc:
                 st.exception(exc)
         if content_clicked:
-            try:
-                with st.spinner("전체 테마의 콘텐츠 제목을 생성하고 키노라이츠에서 확인하는 중입니다..."):
-                    _, _, content_meta = build_and_store_content_candidates(
-                        recs,
-                        scope_run_id=str(selected_run.get("run_id", "")),
-                        api_key=openai_api_key,
-                        model=openai_model,
-                        github_config=github_config,
-                        per_theme=16,
-                        persist=True,
-                        mirror_theme_db=True,
-                    )
-                    st.session_state["content_candidate_meta"] = content_meta
-                st.rerun()
-            except ThemeGenerationError as exc:
-                st.error(str(exc))
-            except Exception as exc:
-                st.error(f"콘텐츠 후보 일괄 연결 실패: {exc}")
+            with st.spinner("추천 작품과 포스터를 다시 채우는 중입니다..."):
+                fill_weekly_content_candidates(
+                    recs,
+                    run_id=str(selected_run.get("run_id", "")),
+                    api_key=openai_api_key,
+                    model=openai_model,
+                    github_config=github_config,
+                )
+            st.rerun()
 
         if not recs:
             st.info("테마 생성하기를 누르면 최근 이슈에 맞는 추천 테마가 이곳에 표시됩니다.")
@@ -1982,11 +2006,17 @@ else:
                 added_count = int(meta.get("new_count", 0))
             if github_result.get("status") == "error":
                 st.warning(f"테마 저장 실패: {github_result.get('error', '')}")
-            content_meta = st.session_state.get("content_candidate_meta", {})
+            current_content_run = st.session_state.get("content_candidate_run_id") == str(selected_run.get("run_id", ""))
+            content_meta = st.session_state.get("content_candidate_meta", {}) if current_content_run else {}
+            content_error = st.session_state.get("content_candidate_error", "") if current_content_run else ""
+            if content_error:
+                st.warning("추천 작품을 채우지 못했어요. 테마는 저장되어 있습니다. 콘텐츠 버튼으로 다시 시도해 주세요.")
             if content_meta.get("github_status") == "error":
                 st.warning(f"콘텐츠 후보 저장 실패: {content_meta.get('github_error', '')}")
             with st.expander("생성 기록", expanded=False):
                 render_generation_status(meta, added_count, github_result)
+                if content_error:
+                    st.caption(f"콘텐츠 연결 오류: {content_error}")
                 if has_current_contents:
                     verified_count = int(current_rows["kinolights_status"].astype(str).eq("verified").sum())
                     poster_count = int(current_rows["poster_url"].astype(str).str.startswith(("https://", "http://")).sum())
