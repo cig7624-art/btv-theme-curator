@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-22T16:08:50+00:00",
+  "updated_at": "2026-10-22T16:17:49+00:00",
   "observed_environment": "github_actions_global",
   "country_verified": false,
   "locale_requested": "ko-KR",
@@ -17,8 +17,8 @@
       "locale_requested": "ko-KR",
       "last_success_status": "promotion_only",
       "freshness": "current",
-      "checked_at": "2026-10-22T16:08:50+00:00",
-      "last_success_at": "2026-10-22T16:08:50+00:00",
+      "checked_at": "2026-10-22T16:17:49+00:00",
+      "last_success_at": "2026-10-22T16:17:49+00:00",
       "complete": false,
       "capture_scope": "공개 홍보 화면의 목록 · 확인한 항목 최대 8개",
       "promotions": [],
@@ -96,8 +96,8 @@
       "locale_requested": "ko-KR",
       "last_success_status": "ok",
       "freshness": "current",
-      "checked_at": "2026-10-22T16:08:50+00:00",
-      "last_success_at": "2026-10-22T16:08:50+00:00",
+      "checked_at": "2026-10-22T16:17:49+00:00",
+      "last_success_at": "2026-10-22T16:17:49+00:00",
       "complete": false,
       "capture_scope": "공개 홈에서 확인한 콘텐츠 영역 최대 10개 · 영역별 작품 최대 8편",
       "promotions": [
@@ -174,12 +174,12 @@
             {
               "title": "우주를 줄게",
               "url": "https://www.tving.com/contents/P001782227",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1140/ko/20260205/0803/P001782227.jpg"
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1110/ko/20260205/0803/P001782227.jpg"
             },
             {
               "title": "친애하는 X",
               "url": "https://www.tving.com/contents/P001776344",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1160/ko/20251105/0521/P001776344.jpg"
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1110/ko/20251027/0505/P001776344.jpg"
             }
           ],
           "works_complete": false,
@@ -196,9 +196,9 @@
           "url": "",
           "works": [
             {
-              "title": "JTBC",
-              "url": "https://www.tving.com/live/C01582",
-              "image_url": "https://stillshot.tving.com/thumbnail_current/C01582_640x360.jpg"
+              "title": "YTN",
+              "url": "https://www.tving.com/live/C00593",
+              "image_url": "https://stillshot.tving.com/thumbnail_current/C00593_640x360.jpg"
             },
             {
               "title": "tvN",
@@ -206,14 +206,9 @@
               "image_url": "https://stillshot.tving.com/thumbnail_current/C00551_640x360.jpg"
             },
             {
-              "title": "YTN",
-              "url": "https://www.tving.com/live/C00593",
-              "image_url": "https://stillshot.tving.com/thumbnail_current/C00593_640x360.jpg"
-            },
-            {
-              "title": "JTBC2",
-              "url": "https://www.tving.com/live/C15741",
-              "image_url": "https://stillshot.tving.com/thumbnail_current/C15741_640x360.jpg"
+              "title": "JTBC",
+              "url": "https://www.tving.com/live/C01582",
+              "image_url": "https://stillshot.tving.com/thumbnail_current/C01582_640x360.jpg"
             },
             {
               "title": "투니버스",
@@ -224,6 +219,11 @@
               "title": "OCN",
               "url": "https://www.tving.com/live/C07381",
               "image_url": "https://stillshot.tving.com/thumbnail_current/C07381_640x360.jpg"
+            },
+            {
+              "title": "JTBC2",
+              "url": "https://www.tving.com/live/C15741",
+              "image_url": "https://stillshot.tving.com/thumbnail_current/C15741_640x360.jpg"
             },
             {
               "title": "KBS 1박 2일",
@@ -539,14 +539,14 @@
           "url": "",
           "works": [
             {
-              "title": "먼작귀 몰아보기",
-              "url": "https://www.tving.com/contents/P001780494",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20251219/0831/P001780494.jpg"
-            },
-            {
               "title": "명탐정 코난 24기 (더빙)",
               "url": "https://www.tving.com/contents/P001784913",
               "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260410/1640/P001784913.jpg"
+            },
+            {
+              "title": "먼작귀 몰아보기",
+              "url": "https://www.tving.com/contents/P001780494",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20251219/0831/P001780494.jpg"
             },
             {
               "title": "짱구는못말려 26",
@@ -569,14 +569,14 @@
               "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261013/1234/P001792742.jpg"
             },
             {
-              "title": "강철의 연금술사 BROTHERHOOD (자막)",
-              "url": "https://www.tving.com/contents/P001788398",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260619/0605/P001788398.jpg"
-            },
-            {
               "title": "전생 귀족, 감정 스킬로 성공하다 3기",
               "url": "https://www.tving.com/contents/P001792736",
               "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261005/1825/P001792736.jpg"
+            },
+            {
+              "title": "강철의 연금술사 BROTHERHOOD (자막)",
+              "url": "https://www.tving.com/contents/P001788398",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260619/0605/P001788398.jpg"
             }
           ],
           "works_complete": false,
@@ -657,7 +657,7 @@
       "status": "unavailable",
       "last_success_status": "",
       "freshness": "none",
-      "checked_at": "2026-10-22T16:08:50+00:00",
+      "checked_at": "2026-10-22T16:17:49+00:00",
       "last_success_at": "",
       "complete": false,
       "promotions": [],
@@ -688,35 +688,13 @@
           "position": 2,
           "source_position": "9",
           "update_kind": "trailer"
-        },
-        {
-          "video_id": "BtZBNVV9VEo",
-          "title": "일진 참교육하는 서강준 [너 말고 다른 연애 5화]",
-          "work_title": "너 말고 다른 연애 5화",
-          "url": "https://www.youtube.com/watch?v=BtZBNVV9VEo",
-          "image_url": "https://i.ytimg.com/vi/BtZBNVV9VEo/hqdefault.jpg",
-          "published_at": "2026-10-09T03:00:27Z",
-          "position": 3,
-          "source_position": "19",
-          "update_kind": "clip"
-        },
-        {
-          "video_id": "ScnBqlQ2zhQ",
-          "title": "회사 밖에서 만나는 오빠 동생 사이?! [너 말고 다른 연애] 5화 예고",
-          "work_title": "너 말고 다른 연애",
-          "url": "https://www.youtube.com/watch?v=ScnBqlQ2zhQ",
-          "image_url": "https://i.ytimg.com/vi/ScnBqlQ2zhQ/hqdefault.jpg",
-          "published_at": "2026-10-02T14:00:14Z",
-          "position": 4,
-          "source_position": "31",
-          "update_kind": "clip"
         }
       ],
       "official_updates_scope": "official_channel",
       "official_updates_source_url": "https://www.youtube.com/channel/UCjn-VbcIkAeXQKCmLJV8YwQ",
       "official_updates_source_method": "youtube_api",
-      "official_updates_checked_at": "2026-10-22T16:08:50+00:00",
-      "official_updates_last_success_at": "2026-10-22T16:08:50+00:00",
+      "official_updates_checked_at": "2026-10-22T16:17:49+00:00",
+      "official_updates_last_success_at": "2026-10-22T16:17:49+00:00",
       "official_updates_freshness": "current",
       "capture_scope": "",
       "page_title": "",
@@ -734,8 +712,8 @@
       "locale_requested": "ko-KR",
       "last_success_status": "promotion_only",
       "freshness": "current",
-      "checked_at": "2026-10-22T16:08:50+00:00",
-      "last_success_at": "2026-10-22T16:08:50+00:00",
+      "checked_at": "2026-10-22T16:17:49+00:00",
+      "last_success_at": "2026-10-22T16:17:49+00:00",
       "complete": false,
       "capture_scope": "공개 홍보 화면의 목록 · 확인한 항목 최대 8개",
       "promotions": [
@@ -903,8 +881,8 @@
       "locale_requested": "ko-KR",
       "last_success_status": "ok",
       "freshness": "current",
-      "checked_at": "2026-10-22T16:08:50+00:00",
-      "last_success_at": "2026-10-22T16:08:50+00:00",
+      "checked_at": "2026-10-22T16:17:49+00:00",
+      "last_success_at": "2026-10-22T16:17:49+00:00",
       "complete": false,
       "capture_scope": "공개 홈에서 확인한 콘텐츠 영역 최대 10개 · 영역별 작품 최대 8편",
       "promotions": [
@@ -948,56 +926,15 @@
         {
           "id": "6f24a6e3d6aee03a",
           "title": "믿고 보는 웨이브 에디터 추천작",
-          "description": "주요 Line-up이나 화제작들을 웨이브에서 만나보세요",
+          "description": "",
           "position": 1,
           "kind": "theme",
           "url": "",
-          "works": [
-            {
-              "title": "호프 (2026)",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202610/1792387184496600171.jpg"
-            },
-            {
-              "title": "닥터 X 시즌1",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202403/1710745030197497086.jpg"
-            },
-            {
-              "title": "뭔데뭔데! 이게 무슨 난리고 (놀면 뭐하니? 스핀오프)",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202610/1791446864272303511.jpg"
-            },
-            {
-              "title": "포식자들: 사이버 레커, 전쟁의 기록",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202610/1791770230919682488.jpg"
-            },
-            {
-              "title": "신인감독 김연경2",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202609/1790043838213320101.jpg"
-            },
-            {
-              "title": "더 커뮤니티 2: 보이지 않는 손",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202609/1790589623704552386.jpg"
-            },
-            {
-              "title": "너 말고 다른 연애",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202608/1787115172268724308.jpg"
-            },
-            {
-              "title": "인턴 (2026)",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202610/1792387234882027860.jpg"
-            }
-          ],
+          "works": [],
           "works_complete": false,
           "items_kind": "works",
           "placement": "",
-          "works_status": "observed"
+          "works_status": "not_loaded"
         },
         {
           "id": "c70e2b94d99c0723",
@@ -1007,11 +944,6 @@
           "kind": "ranking",
           "url": "",
           "works": [
-            {
-              "title": "미스트롯 포유",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202605/1778647705427704539.jpg"
-            },
             {
               "title": "이혼숙려캠프",
               "url": "",
@@ -1046,6 +978,11 @@
               "title": "라디오스타",
               "url": "",
               "image_url": "https://image.wavve.com/meta/image/202311/1700742608486397915.jpg"
+            },
+            {
+              "title": "나 혼자 산다",
+              "url": "",
+              "image_url": "https://image.wavve.com/meta/image/202512/1765516375305815397.jpg"
             }
           ],
           "works_complete": false,

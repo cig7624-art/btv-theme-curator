@@ -1,8 +1,8 @@
 {
-  "checked_at": "2026-10-22T16:09:37+00:00",
+  "checked_at": "2026-10-22T16:18:28+00:00",
   "scope": "all_saved_public_image_urls",
-  "sampled": 172,
-  "reachable": 172,
+  "sampled": 168,
+  "reachable": 168,
   "results": [
     {
       "platform": "netflix",
@@ -158,7 +158,7 @@
     },
     {
       "platform": "tving",
-      "title": "JTBC",
+      "title": "YTN",
       "image_host": "stillshot.tving.com",
       "ok": true,
       "status": 200,
@@ -174,15 +174,7 @@
     },
     {
       "platform": "tving",
-      "title": "YTN",
-      "image_host": "stillshot.tving.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "tving",
-      "title": "JTBC2",
+      "title": "JTBC",
       "image_host": "stillshot.tving.com",
       "ok": true,
       "status": 200,
@@ -199,6 +191,14 @@
     {
       "platform": "tving",
       "title": "OCN",
+      "image_host": "stillshot.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "tving",
+      "title": "JTBC2",
       "image_host": "stillshot.tving.com",
       "ok": true,
       "status": 200,
@@ -550,7 +550,7 @@
     },
     {
       "platform": "tving",
-      "title": "먼작귀 몰아보기",
+      "title": "명탐정 코난 24기 (더빙)",
       "image_host": "image.tving.com",
       "ok": true,
       "status": 200,
@@ -558,7 +558,7 @@
     },
     {
       "platform": "tving",
-      "title": "명탐정 코난 24기 (더빙)",
+      "title": "먼작귀 몰아보기",
       "image_host": "image.tving.com",
       "ok": true,
       "status": 200,
@@ -598,7 +598,7 @@
     },
     {
       "platform": "tving",
-      "title": "강철의 연금술사 BROTHERHOOD (자막)",
+      "title": "전생 귀족, 감정 스킬로 성공하다 3기",
       "image_host": "image.tving.com",
       "ok": true,
       "status": 200,
@@ -606,7 +606,7 @@
     },
     {
       "platform": "tving",
-      "title": "전생 귀족, 감정 스킬로 성공하다 3기",
+      "title": "강철의 연금술사 BROTHERHOOD (자막)",
       "image_host": "image.tving.com",
       "ok": true,
       "status": 200,
@@ -687,22 +687,6 @@
     {
       "platform": "coupang",
       "title": "한 달간 서로 다른 사람과 찐하게 연애한다고요? [너 말고 다른 연애] 9화 예고",
-      "image_host": "i.ytimg.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "coupang",
-      "title": "일진 참교육하는 서강준 [너 말고 다른 연애 5화]",
-      "image_host": "i.ytimg.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "coupang",
-      "title": "회사 밖에서 만나는 오빠 동생 사이?! [너 말고 다른 연애] 5화 예고",
       "image_host": "i.ytimg.com",
       "ok": true,
       "status": 200,
@@ -918,78 +902,6 @@
     },
     {
       "platform": "wavve",
-      "title": "호프 (2026)",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "닥터 X 시즌1",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "뭔데뭔데! 이게 무슨 난리고 (놀면 뭐하니? 스핀오프)",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "포식자들: 사이버 레커, 전쟁의 기록",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "신인감독 김연경2",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "더 커뮤니티 2: 보이지 않는 손",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "너 말고 다른 연애",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "인턴 (2026)",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "미스트롯 포유",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
       "title": "이혼숙려캠프",
       "image_host": "image.wavve.com",
       "ok": true,
@@ -1046,6 +958,14 @@
     },
     {
       "platform": "wavve",
+      "title": "나 혼자 산다",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
       "title": "비광",
       "image_host": "image.wavve.com",
       "ok": true,
@@ -1055,6 +975,14 @@
     {
       "platform": "wavve",
       "title": "전설의 수사",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "포식자들: 사이버 레커, 전쟁의 기록",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1142,7 +1070,39 @@
     },
     {
       "platform": "wavve",
+      "title": "뭔데뭔데! 이게 무슨 난리고 (놀면 뭐하니? 스핀오프)",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
       "title": "밥값 하는 남자들",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "신인감독 김연경2",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "인턴 (2026)",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "호프 (2026)",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1254,7 +1214,7 @@
     },
     {
       "platform": "wavve",
-      "title": "나 혼자 산다",
+      "title": "너 말고 다른 연애",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1327,6 +1287,14 @@
     {
       "platform": "wavve",
       "title": "유부녀 킬러",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "닥터 X 시즌1",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
