@@ -83,28 +83,7 @@
       "adEngine": {
         "client": {
           "baseUrl": "",
-          "endpoints": {
-            "setTokenPost": {
-              "headers": {
-                "Content-Type": "application/x-www-form-urlencoded"
-              },
-              "href": "",
-              "method": "POST",
-              "templated": false,
-              "timeout": 15,
-              "ttl": 0
-            },
-            "setTokenRedirectPost": {
-              "headers": {
-                "Content-Type": "application/x-www-form-urlencoded"
-              },
-              "href": "",
-              "method": "POST",
-              "templated": false,
-              "timeout": 15,
-              "ttl": 0
-            }
-          }
+          "endpoints": {}
         },
         "disabled": true,
         "extras": {
@@ -225,17 +204,6 @@
               "timeout": 15,
               "ttl": 0
             },
-            "createPayPalBraintreeClientToken": {
-              "headers": {
-                "Accept": "application/json",
-                "Content-Type": "application/json; charset=utf-8"
-              },
-              "href": "https://disney.api.edge.bamgrid.com/upv2/paypal/clientToken",
-              "method": "POST",
-              "templated": false,
-              "timeout": 15,
-              "ttl": 0
-            },
             "createPayPalBraintreePaymentMethod": {
               "headers": {
                 "Accept": "application/json",
@@ -318,16 +286,6 @@
                 "Accept": "application/json"
               },
               "href": "https://disney.api.edge.bamgrid.com/template/comcast/consent/post",
-              "method": "GET",
-              "templated": false,
-              "timeout": 15,
-              "ttl": 0
-            },
-            "getDdcJwtToken": {
-              "headers": {
-                "Accept": "application/json"
-              },
-              "href": "https://disney.api.edge.bamgrid.com/commerceutilities/ddcjwt",
               "method": "GET",
               "templated": false,
               "timeout": 15,
@@ -2190,27 +2148,6 @@
               "timeout": 15,
               "ttl": 0
             },
-            "getGuideListings": {
-              "headers": {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-              },
-              "href": "https://disney.api.edge.bamgrid.com/explore/{version}/guide/listings",
-              "method": "POST",
-              "templated": true,
-              "timeout": 15,
-              "ttl": 0
-            },
-            "getGuideViews": {
-              "headers": {
-                "Accept": "application/json"
-              },
-              "href": "https://disney.api.edge.bamgrid.com/explore/{version}/guide/views",
-              "method": "GET",
-              "templated": true,
-              "timeout": 15,
-              "ttl": 0
-            },
             "getHydration": {
               "headers": {
                 "Accept": "application/json",
@@ -2380,37 +2317,6 @@
               },
               "href": "https://disney.api.edge.bamgrid.com/bundles/incoming/{providerId}",
               "method": "POST",
-              "templated": true,
-              "timeout": 15,
-              "ttl": 0
-            },
-            "activateToken": {
-              "headers": {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-              },
-              "href": "https://disney.api.edge.bamgrid.com/providers/{providerId}/activations",
-              "method": "POST",
-              "templated": true,
-              "timeout": 15,
-              "ttl": 0
-            },
-            "generateActivationToken": {
-              "headers": {
-                "Accept": "application/json"
-              },
-              "href": "https://disney.api.edge.bamgrid.com/content-providers/{contentProvider}/activation-token",
-              "method": "GET",
-              "templated": true,
-              "timeout": 15,
-              "ttl": 0
-            },
-            "getActivationToken": {
-              "headers": {
-                "Accept": "application/json"
-              },
-              "href": "https://disney.api.edge.bamgrid.com/bundles/outgoing/{providerId}",
-              "method": "GET",
               "templated": true,
               "timeout": 15,
               "ttl": 0
@@ -3314,17 +3220,6 @@
               "timeout": 15,
               "ttl": 0
             },
-            "paypalClientToken": {
-              "headers": {
-                "Accept": "application/json; charset=utf-8",
-                "Content-Type": "application/json"
-              },
-              "href": "https://disney.api.edge.bamgrid.com/execution/{version}/payments/paypal/client-token",
-              "method": "PUT",
-              "templated": true,
-              "timeout": 15,
-              "ttl": 0
-            },
             "paypalCreatePaymentMethod": {
               "headers": {
                 "Accept": "application/json; charset=utf-8",
@@ -4041,14 +3936,6 @@
               "timeout": 15,
               "ttl": 0
             },
-            "playbackCookie": {
-              "headers": {},
-              "href": "https://disney.playback.edge.bamgrid.com/playback/cookie",
-              "method": "GET",
-              "templated": false,
-              "timeout": 15,
-              "ttl": 0
-            },
             "spriteSheetThumbnail": {
               "headers": {},
               "href": "",
@@ -4072,13 +3959,9 @@
             "fallbackLimit": 5,
             "isEnabled": true
           },
-          "cookieEnabled": false,
           "isContentAccessRestricted": true,
           "mediaQualityDefault": "regular",
           "playbackEncryptionDefault": "ctr",
-          "playbackSession": {
-            "streamSampleInterval": 30
-          },
           "playbackSnapshotEvents": {
             "minimumBatchSize": 10
           },

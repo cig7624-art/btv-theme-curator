@@ -414,7 +414,7 @@
     "content_type": "application/javascript"
   },
   {
-    "url": "https://apis.wavve.com/pooqzone?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/pooqzone?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 550,
     "resource_type": "xhr",
     "content_type": "application/json; charset=UTF-8"
@@ -834,91 +834,91 @@
     "content_type": "application/javascript"
   },
   {
-    "url": "https://apis.wavve.com/ip?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/ip?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json; charset=UTF-8"
   },
   {
-    "url": "https://apis.wavve.com/guid/issue?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/guid/issue?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json; charset=UTF-8"
   },
   {
-    "url": "https://apis.wavve.com/knock?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/knock?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://haystack.wavve.com/apis/v1/events?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=none&drm=wm&client_version=7.2.80",
+    "url": "https://haystack.wavve.com/apis/v1/events?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/notices?limit=5&offset=0&orderby=new&type=all&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/notices?limit=5&offset=0&orderby=new&type=all&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/home?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/home?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN60&broadcastid=BN60&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN60&uiparent=GN51-BN60&uirank=1&uitype=banner_text&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=08670792-cde6-11f1-a5bf-9254ff4da63e&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN60&broadcastid=BN60&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN60&uiparent=GN51-BN60&uirank=1&uitype=banner_text&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100435&catalogType=manualband&limit=20&manualbandId=100435&mtype=ppv&offset=0&orderby=default&uicode=EN100435&uiparent=GN51-EN100435&uirank=36&uitype=band_highlight&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=08670792-cde6-11f1-a5bf-9254ff4da63e&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100435&catalogType=manualband&limit=20&manualbandId=100435&mtype=ppv&offset=0&orderby=default&uicode=EN100435&uiparent=GN51-EN100435&uirank=36&uitype=band_highlight&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN74&broadcastid=BN74&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN74&uiparent=GN51-BN74&uirank=4&uitype=banner_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=08670792-cde6-11f1-a5bf-9254ff4da63e&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN74&broadcastid=BN74&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN74&uiparent=GN51-BN74&uirank=4&uitype=banner_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100933&catalogType=manualband&limit=20&manualbandId=100933&offset=0&orderby=default&uicode=EN100933&uiparent=GN51-EN100933&uirank=28&uitype=band_highlight&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=08670792-cde6-11f1-a5bf-9254ff4da63e&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100933&catalogType=manualband&limit=20&manualbandId=100933&offset=0&orderby=default&uicode=EN100933&uiparent=GN51-EN100933&uirank=28&uitype=band_highlight&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/uiservice/banner/multi/layerpopup?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=08670792-cde6-11f1-a5bf-9254ff4da63e&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/uiservice/banner/multi/layerpopup?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN87&broadcastid=BN87&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN87&uiparent=GN51-BN87&uirank=16&uitype=banner_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=08670792-cde6-11f1-a5bf-9254ff4da63e&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN87&broadcastid=BN87&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN87&uiparent=GN51-BN87&uirank=16&uitype=banner_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN400&catalogType=manualband&limit=20&manualbandId=400&offset=0&orderby=default&uicode=EN400&uiparent=GN51-EN400&uirank=11&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=08670792-cde6-11f1-a5bf-9254ff4da63e&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN400&catalogType=manualband&limit=20&manualbandId=400&offset=0&orderby=default&uicode=EN400&uiparent=GN51-EN400&uirank=11&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100880&catalogType=manualband&limit=20&manualbandId=100880&offset=0&orderby=default&uicode=EN100880&uiparent=GN51-EN100880&uirank=12&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=08670792-cde6-11f1-a5bf-9254ff4da63e&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100880&catalogType=manualband&limit=20&manualbandId=100880&offset=0&orderby=default&uicode=EN100880&uiparent=GN51-EN100880&uirank=12&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://ams-apis.wavve.com/ams/v1/public/outstream?broadcastid=BN200&limit=20&offset=0&orderby=default&service=wavve&uicode=BN200&uiparent=GN51-BN200&uirank=10&uitype=banner_outstream&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=08670792-cde6-11f1-a5bf-9254ff4da63e&drm=wm&client_version=7.2.80",
+    "url": "https://ams-apis.wavve.com/ams/v1/public/outstream?broadcastid=BN200&limit=20&offset=0&orderby=default&service=wavve&uicode=BN200&uiparent=GN51-BN200&uirank=10&uitype=banner_outstream&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 404,
     "resource_type": "xhr",
     "content_type": "application/json"

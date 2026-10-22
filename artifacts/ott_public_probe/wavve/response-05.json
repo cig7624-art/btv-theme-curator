@@ -1,5 +1,5 @@
 {
-  "source_url": "https://apis.wavve.com/notices?limit=5&offset=0&orderby=new&type=all&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=none&drm=wm&client_version=7.2.80",
+  "source_url": "https://apis.wavve.com/notices?limit=5&offset=0&orderby=new&type=all&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
   "data": {
     "isnextpagegroup": "y",
     "pagecount": "2901",

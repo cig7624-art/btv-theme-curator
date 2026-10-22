@@ -30,16 +30,24 @@ SERVICES = (
     {"id": "wavve", "url": "https://www.wavve.com/", "domains": ("wavve.com", "pooq.co.kr")},
 )
 MAX_HTML = 2_000_000
-MAX_JSON = 250_000
-MAX_JSON_FILES = 6
+MAX_JSON = 900_000
+MAX_JSON_FILES = 18
 MAX_NETWORK = 180
 REDACT_KEYS = {
     "accesstoken", "refreshtoken", "idtoken", "token", "authorization", "apikey",
     "cookie", "setcookie", "session", "sessionid", "trackingid", "anonymousid",
     "visitorid", "deviceid", "accountid", "userid", "profileid", "password",
-    "credential", "credentials", "email", "ipaddress", "clientip", "tracking",
+    "credential", "credentials", "email", "ip", "ipaddress", "clientip", "remoteip",
+    "userip", "ipv", "guid", "securetoken", "tracking",
 }
 TRACKING_QUERY = {"gclid", "fbclid", "dclid", "msclkid", "_ga", "_gl"}
+
+
+def sensitive_key(key) -> bool:
+    normalized = re.sub(r"[^a-z]", "", str(key).lower())
+    return normalized in REDACT_KEYS or any(
+        part in normalized for part in ("token", "session", "cookie", "tracking", "signature", "guid", "ipaddress")
+    )
 
 
 def safe_url(value: str) -> str:
@@ -47,36 +55,44 @@ def safe_url(value: str) -> str:
         u = urlsplit(str(value))
         if u.scheme not in {"http", "https"} or not u.hostname or u.username or u.password:
             return ""
-        query = []
-        for key, val in parse_qsl(u.query, keep_blank_values=True):
-            normalized = re.sub(r"[^a-z]", "", key.lower())
-            if normalized in REDACT_KEYS or key.lower().startswith("utm_") or key.lower() in TRACKING_QUERY:
-                continue
-            if any(term in normalized for term in ("token", "session", "cookie", "tracking", "signature")):
-                continue
-            query.append((key, val))
+        query = [(key, val) for key, val in parse_qsl(u.query, keep_blank_values=True)
+                 if not sensitive_key(key) and not key.lower().startswith("utm_") and key.lower() not in TRACKING_QUERY]
         return urlunsplit((u.scheme, u.netloc, u.path, urlencode(query), ""))[:2500]
     except (TypeError, ValueError):
         return ""
+
+
+# Scrub serialized state and textual excerpts as well as structured objects.
+ASSIGNMENT_SECRET = re.compile(
+    r"([\"']?(?:[a-z_-]*(?:token|session|cookie|tracking|guid|ipaddress)[a-z_-]*|ip)[\"']?\s*[:=]\s*)([\"'])(.*?)\2",
+    re.I,
+)
+EMBEDDED_URL = re.compile(r"https?://[^\s<>\"')]+")
+
+
+def redact_text(value: str, depth=0) -> str:
+    stripped = value.strip()
+    if depth < 32 and stripped.startswith(("{", "[")):
+        try:
+            decoded = json.loads(stripped)
+            if isinstance(decoded, (dict, list)):
+                return json.dumps(redact(decoded, depth + 1), ensure_ascii=False, separators=(",", ":"))
+        except (TypeError, ValueError):
+            pass
+    cleaned = ASSIGNMENT_SECRET.sub(lambda match: match.group(1) + match.group(2) + "[redacted]" + match.group(2), value)
+    cleaned = EMBEDDED_URL.sub(lambda match: safe_url(match.group(0)), cleaned)
+    return cleaned
 
 
 def redact(value, depth=0):
     if depth > 32:
         return None
     if isinstance(value, dict):
-        out = {}
-        for key, item in value.items():
-            normalized = re.sub(r"[^a-z]", "", str(key).lower())
-            if normalized in REDACT_KEYS or any(part in normalized for part in ("accesstoken", "refreshtoken", "sessionid", "anonymousid", "trackingid")):
-                continue
-            out[str(key)] = redact(item, depth + 1)
-        return out
+        return {str(key): redact(item, depth + 1) for key, item in value.items() if not sensitive_key(key)}
     if isinstance(value, list):
         return [redact(item, depth + 1) for item in value[:1200]]
     if isinstance(value, str):
-        if value.startswith(("http://", "https://")):
-            return safe_url(value)
-        return value[:20_000]
+        return redact_text(value[:20_000], depth)
     return value
 
 
@@ -95,11 +111,18 @@ def clean_html(raw: str) -> tuple[str, str, str]:
         node.decompose()
     for node in soup.find_all(True):
         for attr in list(node.attrs):
-            if attr.lower().startswith("on") or any(word in attr.lower() for word in ("tracking", "session", "cookie", "token")):
+            if attr.lower().startswith("on") or sensitive_key(attr):
                 del node.attrs[attr]
+            elif isinstance(node.attrs[attr], str):
+                node.attrs[attr] = redact_text(node.attrs[attr])
         for attr in ("href", "src", "poster", "data-src"):
             if isinstance(node.get(attr), str) and node[attr].startswith(("http://", "https://")):
                 node[attr] = safe_url(node[attr])
+    # Text nodes can contain escaped JSON state or URL query strings too.
+    for node in list(soup.find_all(string=True)):
+        cleaned_text = redact_text(str(node))
+        if cleaned_text != str(node):
+            node.replace_with(cleaned_text)
     text = soup.get_text(" ", strip=True)[:30_000]
     cleaned = str(soup)
     if len(cleaned.encode("utf-8")) > MAX_HTML:
@@ -107,9 +130,16 @@ def clean_html(raw: str) -> tuple[str, str, str]:
     return cleaned, title, text
 
 
-def observation(text: str, status=None, url="") -> str:
-    lowered = text.lower()
-    if status in {401, 403, 429} or any(t in lowered for t in ("access denied", "verify you are human", "checking your browser", "captcha", "request blocked")):
+def observation(text: str, status=None, url="", title="") -> str:
+    lowered = text.lower().strip()
+    heading = title.lower().strip()
+    if status in {401, 403, 429}:
+        return "blocked_or_challenge"
+    challenge_terms = ("access denied", "verify you are human", "checking your browser", "request blocked", "just a moment")
+    # A reCAPTCHA legal notice in a normal marketing footer is not a challenge.
+    if any(term in heading for term in challenge_terms) or (len(lowered) < 1600 and any(term in lowered for term in challenge_terms)):
+        return "blocked_or_challenge"
+    if len(lowered) < 1600 and (("captcha" in heading) or re.search(r"(?:enter|complete|solve|verify).{0,35}captcha|captcha.{0,35}(?:required|verification)|보안\s*문자를?\s*(?:입력|확인)", lowered)):
         return "blocked_or_challenge"
     if any(t in lowered for t in ("not available in your region", "not available in your country", "not available in this location", "해당 국가", "서비스 지역이 아닙니다", "not yet available")):
         return "region_restricted"
@@ -141,7 +171,7 @@ def capture_http(service, folder):
                 stream.write(cleaned)
             result.update(url=safe_url(response.url), status=response.status_code,
                           content_type=response.headers.get("Content-Type", "")[:150], title=title,
-                          text_excerpt=text[:3000], result=observation(text, response.status_code, response.url),
+                          text_excerpt=text[:3000], result=observation(text, response.status_code, response.url, title),
                           truncated=length >= MAX_HTML)
     except requests.RequestException as exc:
         result["error_type"] = type(exc).__name__
@@ -172,7 +202,10 @@ def capture_browser(service, folder, browser, deadline):
             if len(network) < MAX_NETWORK:
                 network.append({"url": safe_url(response.url), "status": response.status, "resource_type": kind, "content_type": content_type[:100]})
             size = response.headers.get("content-length", "")
-            if kind in {"xhr", "fetch"} and "json" in content_type and response.ok and len(json_responses) < 18:
+            if kind in {"xhr", "fetch"} and "json" in content_type and response.ok and len(json_responses) < 40 and (
+                (service["id"] == "wavve" and urlsplit(response.url).path in {"/v1/home", "/v1/catalog"})
+                or (service["id"] != "wavve" and re.search(r"home|catalog|collection|banner", urlsplit(response.url).path, re.I))
+            ):
                 if not size.isdigit() or int(size) <= MAX_JSON:
                     json_responses.append(response)
         except Exception:
@@ -183,10 +216,10 @@ def capture_browser(service, folder, browser, deadline):
         remaining_ms = max(1000, int((deadline - time.monotonic()) * 1000))
         nav = page.goto(service["url"], wait_until="domcontentloaded", timeout=min(25_000, remaining_ms))
         result["status"] = nav.status if nav else None
-        for _ in range(3):
+        for _ in range(8):
             if time.monotonic() + 1 > deadline:
                 break
-            page.wait_for_timeout(700)
+            page.wait_for_timeout(550)
             page.evaluate("window.scrollBy(0, Math.min(innerHeight, 700))")
         page.evaluate("window.scrollTo(0,0)")
         raw = page.content()
@@ -194,7 +227,7 @@ def capture_browser(service, folder, browser, deadline):
         with gzip.open(folder / "browser.html.gz", "wt", encoding="utf-8") as stream:
             stream.write(cleaned)
         result.update(url=safe_url(page.url), title=title, text_excerpt=text[:8000],
-                      result=observation(text, result["status"], page.url))
+                      result=observation(text, result["status"], page.url, title))
         if time.monotonic() < deadline:
             page.screenshot(path=str(folder / "viewport.jpg"), full_page=False, type="jpeg", quality=60, timeout=4000)
         saved = []
