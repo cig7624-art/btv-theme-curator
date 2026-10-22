@@ -2038,7 +2038,7 @@ else:
                 render_theme_card(index, rec, assessed_issues)
 
     st.markdown(
-        '<footer class="magazine-footer"><span>B tv+ · THEME CURATOR</span>'
+        '<footer class="magazine-footer" data-release="drag-compact-534c76e"><span>B tv+ · THEME CURATOR</span>'
         '<span>오늘의 이슈가 내일의 취향이 되도록.</span></footer>',
         unsafe_allow_html=True,
     )
