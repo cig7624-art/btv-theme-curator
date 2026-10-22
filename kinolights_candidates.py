@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Iterable
-from urllib.parse import quote, urljoin
+from urllib.parse import quote, urljoin, urlparse
 
 import pandas as pd
 import requests
@@ -99,6 +99,26 @@ def _cached(query: str, requested_title: str) -> dict[str, Any] | None:
     return rows.iloc[-1].to_dict()
 
 
+def _image_url(value: Any, base_url: str) -> str:
+    """Read actual nested/lazy artwork fields without turning objects into URLs."""
+    if isinstance(value, dict):
+        for key in ("url", "src", "original", "posterUrl", "imageUrl"):
+            result = _image_url(value.get(key), base_url)
+            if result:
+                return result
+        return ""
+    if isinstance(value, list):
+        return next((result for item in value if (result := _image_url(item, base_url))), "")
+    if not isinstance(value, str) or not value.strip():
+        return ""
+    result = urljoin(base_url, value.strip())
+    try:
+        parsed = urlparse(result)
+        return result if parsed.scheme in {"http", "https"} and parsed.hostname and not parsed.username and not parsed.password else ""
+    except ValueError:
+        return ""
+
+
 def _candidate_from_mapping(node: dict[str, Any], base_url: str) -> dict[str, Any] | None:
     title = ""
     for key in ["titleKr", "title_kr", "title", "nameKr", "name_kr", "name"]:
@@ -115,12 +135,10 @@ def _candidate_from_mapping(node: dict[str, Any], base_url: str) -> dict[str, An
         url = urljoin(base_url, url)
     elif content_id:
         url = f"https://m.kinolights.com/title/{quote(content_id)}"
-    poster = _clean(
+    poster = _image_url(
         node.get("posterUrl") or node.get("poster_url") or node.get("poster")
-        or node.get("imageUrl") or node.get("image_url") or node.get("image")
+        or node.get("imageUrl") or node.get("image_url") or node.get("image"), base_url,
     )
-    if poster:
-        poster = urljoin(base_url, poster)
     metadata = " ".join(_clean(node.get(key)) for key in ["type", "contentType", "openYear", "year", "releaseYear"])
     return {
         "title": title,
@@ -179,13 +197,13 @@ def _parse_html(html_text: str, base_url: str) -> list[dict[str, Any]]:
             "content_type": _type(text),
             "year": _year(text),
             "source_url": urljoin(base_url, href),
-            "poster_url": urljoin(base_url, _clean(img.get("src"))) if img and img.get("src") else "",
+            "poster_url": _image_url(img.get("data-src") or img.get("data-original") or img.get("src"), base_url) if img else "",
         })
 
     unique: dict[str, dict[str, Any]] = {}
     for row in rows:
         key = f"{_norm(row.get('title'))}:{row.get('year','')}"
-        if key and key not in unique:
+        if key and (key not in unique or (not unique[key].get("poster_url") and row.get("poster_url"))):
             unique[key] = row
     return list(unique.values())
 
@@ -311,7 +329,10 @@ def verify_title_on_kinolights(
             "content_type": best.get("content_type") or requested_type,
             "year": best.get("year") or requested_year,
             "source_url": best.get("source_url") or _search_url(title),
-            "poster_url": best.get("poster_url", ""),
+            # A loose title match can be a search reference, but cannot safely
+            # supply artwork for another work or a different year's remake.
+            "poster_url": best.get("poster_url", "") if _norm(best.get("title")) == _norm(title)
+                          and (not requested_year or best.get("year") == requested_year) else "",
             "status": "verified",
             "matched_score": round(min(best_score, 1.0), 3),
             "fetched_at": fetched_at,
