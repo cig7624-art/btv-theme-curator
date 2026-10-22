@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "expected_version": "1.2.0",
+  "observed_version": "1.2.0",
+  "started_at": "2026-10-22T23:51:18.668674+00:00",
+  "finished_at": "2026-10-22T23:53:05.664944+00:00",
+  "tests": {
+    "desktop_version": true,
+    "desktop_empty_director": true,
+    "mobile_version": true,
+    "mobile_empty_director": true,
+    "free_prompt_three_drafts": true,
+    "second_title_only_preserved_others": true,
+    "content_exclusion_preserved_metadata": true,
+    "undo_restored_previous_drafts": true,
+    "mobile_drafts_no_overflow": true,
+    "no_app_exception": true,
+    "adoption_not_invoked": true
+  },
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "drafts": 3,
+    "contents_per_draft": [
+      6,
+      6,
+      6
+    ],
+    "poster_loading": [
+      {
+        "checked": 6,
+        "loaded": 6
+      },
+      {
+        "checked": 6,
+        "loaded": 6
+      },
+      {
+        "checked": 6,
+        "loaded": 6
+      }
+    ],
+    "submitted_requests": 4
+  },
+  "source_commit": "5159c63e8a0a46cf079e9952837a5e681993e145",
+  "frame_state": "matched_release"
+}
