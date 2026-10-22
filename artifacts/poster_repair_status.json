@@ -1,13 +1,161 @@
 {
   "schema_version": 1,
-  "applied_at": "2026-10-22T04:23:30.063514+00:00",
+  "applied_at": "2026-10-22T04:27:33.475114+00:00",
   "mode": "write",
   "source_run_id": "20261022-114213-3b59418b",
   "latest_run_id": "20261022-114213-3b59418b",
-  "checked_unique": 27,
-  "found_unique": 1,
-  "updated_rows": 8,
+  "checked_unique": 26,
+  "found_unique": 0,
+  "updated_rows": 0,
   "visible_candidates": 40,
-  "before_visible_with_poster": 9,
-  "visible_with_poster": 11
+  "before_visible_with_poster": 11,
+  "visible_with_poster": 11,
+  "provider_diagnostics": {
+    "ko_wikipedia_api": {
+      "status": 200,
+      "bytes": 3550,
+      "content_type": "application/json; charset=utf-8",
+      "api_error": null,
+      "api_warnings": null,
+      "pages": [
+        {
+          "pageid": 3288789,
+          "ns": 0,
+          "title": "더 글로리",
+          "original": {
+            "source": "https://upload.wikimedia.org/wikipedia/commons/f/f3/20221220_The_Glory_%28%EB%8D%94_%EA%B8%80%EB%A1%9C%EB%A6%AC%29_Cast_members%2C_Writer_%26_Director.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+            "width": 1796,
+            "height": 958
+          },
+          "pageimage": "20221220_The_Glory_(더_글로리)_Cast_members,_Writer_&_Director.jpg",
+          "pageprops": {
+            "page_image_free": "20221220_The_Glory_(더_글로리)_Cast_members,_Writer_&_Director.jpg",
+            "wikibase_item": "Q113197148"
+          },
+          "extract": "《더 글로리》 (영어: The Glory)는 넷플릭스에서 2022년 12월 30일부터 방영된 대한민국의 드라마로 학교폭력에 대한 복수를 다룬 복수극, 피카레스크, 범죄극, 스릴러물이다. 송혜교, 이도현, 임지연, 염혜란, 박성훈, 정성일이 앙상블 캐스팅을 마무리한다. 1부는 2022년 12월 30일 넷플릭스에서 공개됐고,2부는 2023년 3월 10일 공개됐다.",
+          "categories": [
+            {
+              "ns": 14,
+              "title": "분류:2020년대 대한민국의 텔레비전 프로그램"
+            },
+            {
+              "ns": 14,
+              "title": "분류:2022년 시작한 대한민국의 텔레비전 프로그램"
+            },
+            {
+              "ns": 14,
+              "title": "분류:2022년 텔레비전 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:2023년 종료한 대한민국의 텔레비전 프로그램"
+            },
+            {
+              "ns": 14,
+              "title": "분류:2023년 텔레비전 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:CS1 - 영어 인용 (en)"
+            },
+            {
+              "ns": 14,
+              "title": "분류:김은숙 시나리오 작품"
+            },
+            {
+              "ns": 14,
+              "title": "분류:넷플릭스 오리지널 프로그램"
+            },
+            {
+              "ns": 14,
+              "title": "분류:대한민국의 텔레비전 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:백상예술대상 TV부문 작품상"
+            },
+            {
+              "ns": 14,
+              "title": "분류:백상예술대상 틀"
+            },
+            {
+              "ns": 14,
+              "title": "분류:복수를 소재로 한 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:영어 표기를 포함한 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P18을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P373을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:집단 따돌림을 소재로 한 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:한국어 텔레비전 프로그램"
+            },
+            {
+              "ns": 14,
+              "title": "분류:해결되지 않은 속성이 있는 문서"
+            }
+          ],
+          "langlinks": [
+            {
+              "lang": "en",
+              "*": "The Glory (TV series)"
+            }
+          ]
+        }
+      ]
+    },
+    "en_wikipedia_api": {
+      "status": 200,
+      "bytes": 465,
+      "content_type": "application/json; charset=utf-8",
+      "api_error": null,
+      "api_warnings": null,
+      "pages": [
+        {
+          "pageid": 11084602,
+          "ns": 0,
+          "title": "The Glory",
+          "original": {
+            "source": "https://upload.wikimedia.org/wikipedia/en/9/9f/The_Glory_%28Herman_Wouk_novel_-_cover_art%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+            "width": 263,
+            "height": 396
+          },
+          "pageimage": "The_Glory_(Herman_Wouk_novel_-_cover_art).jpg",
+          "extract": "The Glory (1994) is the sequel to The Hope written by American author Herman Wouk."
+        }
+      ]
+    },
+    "ko_wikipedia_article": {
+      "status": 200,
+      "bytes": 229154,
+      "content_type": "text/html; charset=UTF-8"
+    },
+    "en_wikipedia_article": {
+      "status": 200,
+      "bytes": 89061,
+      "content_type": "text/html; charset=UTF-8"
+    },
+    "tvmaze": {
+      "status": 200,
+      "bytes": 15065,
+      "content_type": "application/json; charset=UTF-8",
+      "matches": 10
+    }
+  }
 }
