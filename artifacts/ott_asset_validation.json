@@ -1,0 +1,72 @@
+{
+  "checked_at": "2026-10-22T10:45:19+00:00",
+  "scope": "sample_of_saved_public_image_urls",
+  "sampled": 8,
+  "reachable": 8,
+  "results": [
+    {
+      "platform": "netflix",
+      "title": "사이버펑크: 엣지러너",
+      "image_host": "occ-0-3012-3996.1.nflxso.net",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/webp"
+    },
+    {
+      "platform": "netflix",
+      "title": "원피스",
+      "image_host": "occ-0-3012-3996.1.nflxso.net",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/webp"
+    },
+    {
+      "platform": "tving",
+      "title": "신인감독 김연경2",
+      "image_host": "image.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "tving",
+      "title": "식스센스: B사이드",
+      "image_host": "image.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "disney",
+      "title": "메이드 인 코리아 시즌2",
+      "image_host": "disney.images.edge.bamgrid.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/webp"
+    },
+    {
+      "platform": "disney",
+      "title": "토이 스토리 5",
+      "image_host": "disney.images.edge.bamgrid.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/webp"
+    },
+    {
+      "platform": "wavve",
+      "title": "tvn_유퀴즈",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "영플_인턴 (2026)",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    }
+  ]
+}
