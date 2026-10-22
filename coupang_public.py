@@ -12,6 +12,7 @@ from datetime import datetime, timezone, timedelta
 import os
 from pathlib import Path
 import re
+import unicodedata
 from urllib.parse import parse_qs, urlsplit
 import xml.etree.ElementTree as ET
 
@@ -36,7 +37,7 @@ _NS = {"a": "http://www.w3.org/2005/Atom", "yt": "http://www.youtube.com/xml/sch
 
 
 def _text(value, limit=300):
-    return re.sub(r"\s+", " ", str(value or "")).strip()[:limit]
+    return unicodedata.normalize('NFC', re.sub(r"\s+", " ", str(value or "")).strip())[:limit]
 
 
 def _date(value):
@@ -91,6 +92,7 @@ def _work_title(title, related=""):
     matches = re.findall(r"\[([^\[\]]{1,100})\]|〈([^〈〉]{1,100})〉|《([^《》]{1,100})》", title)
     for parts in matches:
         candidate = _text(next(part for part in parts if part), 100)
+        candidate = re.sub(r'\s*(?:제?\s*\d+\s*[화회]|EP\.?\s*\d+)\s*$', '', candidate, flags=re.I).strip()
         if not _GENERIC.fullmatch(candidate) and not re.fullmatch(r"\d+화|시즌\s*\d+|EP\.?\s*\d+", candidate, re.I):
             return candidate
     # Only explicit title/separator/trailer formatting supplies another title.

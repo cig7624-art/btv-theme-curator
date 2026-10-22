@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
+import unicodedata
 
 import requests
 
@@ -25,6 +26,16 @@ def unavailable(*args, **kwargs):
 
 
 class CoupangPublicTests(unittest.TestCase):
+    def test_unicode_variants_and_episode_brackets_are_one_actual_work(self):
+        self.cache([cached(video_id=OTHER, url='https://www.youtube.com/watch?v=' + OTHER,
+                           title='[너 말고 다른 연애] 9화 예고', related_content='너 말고 다른 연애'),
+                    cached(video_id='nlNRrVC9bQw', url='https://www.youtube.com/watch?v=nlNRrVC9bQw',
+                           title=unicodedata.normalize('NFD', '[너 말고 다른 연애] 5화 예고'), related_content=''),
+                    cached(title='[너 말고 다른 연애 5화] 하이라이트', related_content='')])
+        result = self.collect()
+        self.assertEqual(len(result['updates']), 1)
+        self.assertEqual(result['updates'][0]['work_title'], '너 말고 다른 연애')
+
     def setUp(self):
         self.temp = TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
