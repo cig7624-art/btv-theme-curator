@@ -1,32 +1,34 @@
 {
   "schema_version": 1,
-  "status": "failed",
-  "expected_version": "1.1.2",
-  "observed_version": "1.1.2",
-  "started_at": "2026-10-22T16:17:44.858182+00:00",
-  "finished_at": "2026-10-22T16:18:13.765593+00:00",
+  "status": "passed",
+  "expected_version": "1.2.0",
+  "observed_version": "1.2.0",
+  "started_at": "2026-10-22T23:50:14.366021+00:00",
+  "finished_at": "2026-10-22T23:51:23.554544+00:00",
   "attempts": 1,
   "tests": {
     "desktop_version": true,
+    "desktop_four_tabs": true,
+    "desktop_director_screen": true,
     "desktop_ott_magazine": true,
     "desktop_ott_feature": true,
     "desktop_no_exception": true,
     "desktop_no_horizontal_overflow": true,
     "desktop_lead_artwork": true,
-    "desktop_coupang_content": false,
-    "desktop_coupang_artwork": false,
-    "mobile_version": false,
-    "mobile_ott_magazine": false,
-    "mobile_ott_feature": false,
-    "mobile_no_exception": false,
-    "mobile_no_horizontal_overflow": false,
-    "mobile_lead_artwork": false,
-    "mobile_coupang_content": false,
-    "mobile_coupang_artwork": false
+    "desktop_coupang_content": true,
+    "desktop_coupang_artwork": true,
+    "mobile_version": true,
+    "mobile_four_tabs": true,
+    "mobile_director_screen": true,
+    "mobile_ott_magazine": true,
+    "mobile_ott_feature": true,
+    "mobile_no_exception": true,
+    "mobile_no_horizontal_overflow": true,
+    "mobile_lead_artwork": true,
+    "mobile_coupang_content": true,
+    "mobile_coupang_artwork": true
   },
-  "errors": [
-    "coupang_content_missing"
-  ],
+  "errors": [],
   "warnings": [],
   "artwork": {
     "desktop": {
@@ -34,8 +36,14 @@
       "loaded": 6,
       "unavailable": 0,
       "lead_loaded": true
+    },
+    "mobile": {
+      "checked": 6,
+      "loaded": 6,
+      "unavailable": 0,
+      "lead_loaded": true
     }
   },
-  "source_commit": "e8591d8b3266e8b986fe661293d44135c61741b7",
+  "source_commit": "53991f5ea18c11fa78a04e55661353d81ce409df",
   "frame_state": "matched_release"
 }
