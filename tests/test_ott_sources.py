@@ -22,6 +22,7 @@ class SourceRegressionTests(unittest.TestCase):
         self.assertEqual(result['status'],'ok')
         self.assertEqual([s['title'] for s in result['sections'][:4]],['첫 화는 티빙이 쏩니다! 1화 무료 보기','실시간 인기 LIVE','고민 끝! 티빙 추천 LIVE 채널','오늘의 티빙 TOP 20'])
         self.assertEqual([s['position'] for s in result['sections']],list(range(1,11)))
+        self.assertEqual(result['sections'][0]['kind'],'free')
         self.assertEqual(result['sections'][1]['kind'],'live')
         self.assertEqual(result['sections'][4]['kind'],'promotion')
         self.assertEqual(result['sections'][5]['kind'],'shorts')

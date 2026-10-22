@@ -1,7 +1,7 @@
 """Collect visible, unauthenticated OTT home pages without inventing collections.
 
-The extractor only accepts a home heading and linked title artwork in the same
-DOM region. Search results, marketing JSON-LD, arbitrary hydration JSON and
+The extractor accepts a home heading and its title artwork, an explicit official
+CollectionPage, or matched public home layout/catalog responses. Search results, marketing JSON-LD, arbitrary hydration JSON and
 personal rows are deliberately not used as substitutes for a public home.
 """
 
@@ -140,6 +140,14 @@ def classify_section(title):
         return "ranking"
     if re.search(r"신작|새로|새로운|신규|공개\s*예정|NEW|recently|coming soon", title, re.I):
         return "new"
+    if re.search(r"오직|오리지널|originals?|독점", title, re.I):
+        return "originals"
+    if re.search(r"요일별|오늘의 편성|편성표", title):
+        return "calendar"
+    if re.search(r"포인트샵|개별구매", title):
+        return "rental"
+    if re.search(r"무료.*보기|무료 공개", title):
+        return "free"
     if re.fullmatch(r"(?:영화|드라마|예능|애니메이션|액션|코미디|로맨스|스릴러|다큐멘터리|키즈|공포)(?:\s*(?:영화|드라마|추천))?", title):
         return "genre"
     return "theme"
@@ -448,7 +456,7 @@ def _clean_snapshot(data):
                     if isinstance(work, dict) and _text(work.get("title")):
                         target = _official_url(work.get("url"), spec) if items_kind == "collections" else _content_url(work.get("url"), spec)
                         works.append({"title": _text(work["title"], 180), "url": target if work.get("url") else "", "image_url": safe_http_url(work.get("image_url"))})
-                entry[field].append({"id": _text(row.get("id"), 80), "title": _text(row["title"], 200), "description": _text(row.get("description")), "position": position(row, len(entry[field])+1), "kind": row.get("kind") if row.get("kind") in {"theme", "new", "ranking", "genre", "live", "clips", "shorts", "promotion", "collection", "other"} else "other", "url": _official_url(row.get("url"), spec) if row.get("url") else "", "works": works, "works_complete": False, "items_kind": items_kind, "placement": _text(row.get("placement"), 100), "works_status": _text(row.get("works_status"), 40)})
+                entry[field].append({"id": _text(row.get("id"), 80), "title": _text(row["title"], 200), "description": _text(row.get("description")), "position": position(row, len(entry[field])+1), "kind": row.get("kind") if row.get("kind") in {"theme", "new", "ranking", "genre", "live", "clips", "shorts", "promotion", "collection", "originals", "calendar", "rental", "free", "other"} else "other", "url": _official_url(row.get("url"), spec) if row.get("url") else "", "works": works, "works_complete": False, "items_kind": items_kind, "placement": _text(row.get("placement"), 100), "works_status": _text(row.get("works_status"), 40)})
         entry["section_count"] = len(entry["sections"]) if entry["status"] == "ok" else None
         valid.append(entry)
     return {"schema_version": 1, "updated_at": _text(data.get("updated_at"), 80), "observed_environment": _text(data.get("observed_environment"), 80) or "unknown", "country_verified": data.get("country_verified") is True, "locale_requested": _text(data.get("locale_requested"), 20), "platforms": valid}

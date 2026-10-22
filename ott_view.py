@@ -21,6 +21,7 @@ OTT_SERVICES = (
 KIND_LABELS = {
     "theme": "기획 테마", "new": "신작", "ranking": "순위",
     "genre": "장르", "live": "라이브", "shorts": "쇼츠", "clips": "클립",
+    "originals": "독점·오리지널", "calendar": "요일별", "rental": "개별구매", "free": "무료 공개",
     "promotion": "작품 소개", "collection": "컬렉션 바로가기", "other": "홈 목록",
 }
 _LOGGER = logging.getLogger(__name__)

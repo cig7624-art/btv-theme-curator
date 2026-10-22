@@ -39,7 +39,7 @@ python scripts/collect_ott.py --browser --require-home
 
 ## 공개 자료 실측 검증
 
-`scripts/probe_ott_public.py`와 `Verify public OTT homes` 작업은 개발 브랜치에서 공식 홈의 실제 HTTP·브라우저 응답과 공개 요청 구조를 조사합니다. 제한된 HTML·JSON 근거와 관측 환경을 남기고, 인증 정보·계정·브라우저 저장소를 수집하지 않습니다. 개인정보가 들어갈 수 있는 추적 필드는 제거합니다. 화면 이미지는 단기 Actions artifact에만 둡니다.
+`scripts/probe_ott_public.py`와 `Verify public OTT homes` 작업은 개발 브랜치에서 공식 홈의 실제 HTTP·브라우저 응답과 공개 요청 구조를 조사합니다. 상세 조사 실행 시 제한된 HTML·JSON 근거와 관측 환경을 단기 artifact에 남기고, 인증 정보·계정·브라우저 저장소를 수집하지 않습니다. 개인정보가 들어갈 수 있는 추적 필드는 제거합니다. 화면 이미지는 단기 Actions artifact에만 둡니다.
 
 작업 환경의 proxy CONNECT 403은 사이트의 로그인 요구로 판정하지 않습니다. 수집 코드의 fixture 검증과 실제 서비스에서 현재 목록을 확보한 결과를 구분해 확인해야 합니다. 결과가 제한적이면 성공한 플랫폼과 확보 범위를 명시하고, 접근하지 못한 홈을 추정해 채우지 않습니다.
 
@@ -53,6 +53,8 @@ python scripts/collect_ott.py --browser --require-home
 | TVING | 메인 배너 5개, 콘텐츠 영역 10개와 작품·이미지 | 공개 화면의 편성, 시청 성과를 뜻하지 않음 |
 | 쿠팡플레이 | 지역 제한 안내 또는 접속 제한 | 홈 목록 미확보, 0개로 집계하지 않음 |
 | Disney+ | 한국어 공개 메인의 배너 5개, TOP 10과 컬렉션 바로가기 | 가입 홍보 화면이며 컬렉션의 내부 작품은 미확인 |
-| wavve | 공개 메인 배너 4개, 홈 영역 10개 | 첫 두 영역의 작품은 미확보, 나머지는 실제 받은 목록만 표시 |
+| wavve | 공개 메인 배너 4개, 홈 영역 10개 | 상위 10개 영역의 실제 작품 확인, 홈 전체를 확보한 것은 아님 |
 
-`tests/fixtures/ott/`는 이 실제 자료를 축약한 회귀 검증용 원문입니다. TVING 로고 오인, Netflix 배경 이미지 카드, Disney+ 지역 이동과 컬렉션 링크, wavve 홈과 카탈로그 연결 및 미확보 영역을 검증합니다.
+`tests/fixtures/ott/`는 이 실제 자료를 축약한 회귀 검증용 원문입니다. TVING 로고 오인, Netflix 배경 이미지 카드, Disney+ 지역 이동과 컬렉션 링크, wavve 홈과 카탈로그 연결 및 부분 확보 표본의 정직한 표시를 검증합니다. 최신 실제 수집에서는 wavve 첫 두 영역의 작품도 확인했습니다.
+
+개발 검증은 실제 수집 뒤 `scripts/check_ott_images.py`로 서비스당 최대 2개 공개 이미지의 응답 형식도 확인합니다. 비교 결과는 `artifacts/ott_asset_validation.json`에 기록하며 이미지를 복제해 저장하지 않습니다.

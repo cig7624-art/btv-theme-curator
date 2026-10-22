@@ -143,7 +143,7 @@
           "title": "첫 화는 티빙이 쏩니다! 1화 무료 보기",
           "description": "",
           "position": 1,
-          "kind": "theme",
+          "kind": "free",
           "url": "",
           "works": [
             {
@@ -427,7 +427,7 @@
           "title": "티빙 추천 포인트샵 영화",
           "description": "",
           "position": 7,
-          "kind": "theme",
+          "kind": "rental",
           "url": "",
           "works": [
             {
@@ -999,7 +999,7 @@
           "title": "오직 웨이브에서",
           "description": "모든것은 다.웨이브다. 오리지널도 역시 웨이브다.",
           "position": 3,
-          "kind": "theme",
+          "kind": "originals",
           "url": "",
           "works": [
             {
@@ -1180,7 +1180,7 @@
           "title": "요일별 콘텐츠",
           "description": "",
           "position": 7,
-          "kind": "theme",
+          "kind": "calendar",
           "url": "",
           "works": [
             {

@@ -2,11 +2,17 @@ name: Verify public OTT homes
 
 on:
   workflow_dispatch:
+    inputs:
+      capture_evidence:
+        description: 'Capture detailed public DOM/API evidence for source debugging'
+        type: boolean
+        default: false
   push:
     branches: [codex/ott-public-home]
     paths:
       - scripts/probe_ott_public.py
       - scripts/collect_ott.py
+      - scripts/check_ott_images.py
       - ott_collection.py
       - ott_public_sources.py
       - ott_source_adapters.py
@@ -35,10 +41,14 @@ jobs:
           pip install requests beautifulsoup4 playwright
           python -m playwright install --with-deps chromium
       - name: Inspect public homepage documents
+        if: ${{ inputs.capture_evidence == true || hashFiles('scripts/collect_ott.py') == '' }}
         run: python scripts/probe_ott_public.py
       - name: Exercise public homepage collector
         if: ${{ hashFiles('scripts/collect_ott.py') != '' }}
         run: python scripts/collect_ott.py --browser --require-home --output ott_home_snapshot.json
+      - name: Verify a sample of saved public artwork
+        if: ${{ hashFiles('ott_home_snapshot.json') != '' }}
+        run: python scripts/check_ott_images.py
       - name: Upload public evidence including screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -47,20 +57,18 @@ jobs:
           path: |
             artifacts/ott_public_probe/
             ott_home_snapshot.json
+            artifacts/ott_asset_validation.json
           retention-days: 7
       - name: Record public evidence on the development branch
         if: ${{ always() && github.ref == 'refs/heads/codex/ott-public-home' }}
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          for image in Path('artifacts/ott_public_probe').rglob('*.jpg'):
-              image.unlink()
-          for image in Path('artifacts/ott_public_probe').rglob('*.png'):
-              image.unlink()
-          PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- artifacts/ott_public_probe
+          for output in artifacts/ott_public_probe/summary.json artifacts/ott_asset_validation.json; do
+            if [ -f "$output" ]; then
+              git add -- "$output"
+            fi
+          done
           if [ -f ott_home_snapshot.json ]; then
             git add -- ott_home_snapshot.json
           fi
