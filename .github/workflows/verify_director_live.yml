@@ -1,0 +1,93 @@
+name: Verify real AI Director conversation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/ai-director]
+    paths:
+      - VERSION
+      - scripts/verify_director_live.py
+      - .github/workflows/verify_director_live.yml
+
+concurrency:
+  group: verify-director-live-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-draft-conversation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Require the Director release and discard stale evidence
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          Path('artifacts/director_live_validation.json').unlink(missing_ok=True)
+          version = Path('VERSION').read_text().strip()
+          match = re.fullmatch(r'(\d+)\.(\d+)\.(\d+)(?:[-+].*)?', version)
+          if not match or tuple(map(int, match.groups())) < (1, 2, 0):
+              raise SystemExit('AI Director release 1.2.0 or later is required')
+          PY
+      - name: Install lightweight browser driver
+        run: python -m pip install playwright
+      - name: Prefer the runner's preinstalled Chrome
+        run: |
+          director_browser="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -n "$director_browser" ]; then
+            echo "DIRECTOR_CHROMIUM_PATH=$director_browser" >> "$GITHUB_ENV"
+          else
+            python -m playwright install --with-deps chromium
+          fi
+      - name: Validate read-only live verification rules
+        run: python -m unittest discover -s tests -p 'test_director_live_verification.py' -v
+      - name: Exercise genuine AI drafts without adopting them
+        id: verify
+        continue-on-error: true
+        run: |
+          if [ -n "${DIRECTOR_CHROMIUM_PATH:-}" ]; then
+            python scripts/verify_director_live.py --executable "$DIRECTOR_CHROMIUM_PATH"
+          else
+            python scripts/verify_director_live.py
+          fi
+      - name: Preserve sanitized counts and checks
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-director-live-validation
+          path: artifacts/director_live_validation.json
+          retention-days: 7
+      - name: Record sanitized result on the current branch
+        if: ${{ always() && !cancelled() && startsWith(github.ref, 'refs/heads/') }}
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          if [ ! -f artifacts/director_live_validation.json ]; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- artifacts/director_live_validation.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'Record real AI Director draft validation [skip ci]'
+          git pull --rebase origin "$TARGET_BRANCH"
+          checked_version="$(python -c 'import json; print(json.load(open("artifacts/director_live_validation.json"))["expected_version"])')"
+          current_version="$(tr -d '[:space:]' < VERSION)"
+          if [ "$checked_version" != "$current_version" ]; then
+            echo 'A newer release superseded this verification.'
+            exit 0
+          fi
+          git push origin HEAD:"$TARGET_BRANCH"
+      - name: Require a real passing conversation
+        if: ${{ steps.verify.outcome != 'success' }}
+        run: exit 1
