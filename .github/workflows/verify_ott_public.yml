@@ -1,0 +1,71 @@
+name: Verify public OTT homes
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/ott-public-home]
+    paths:
+      - scripts/probe_ott_public.py
+      - scripts/collect_ott.py
+      - ott_collection.py
+      - ott_public_sources.py
+      - .github/workflows/verify_ott_public.yml
+
+concurrency:
+  group: verify-public-ott-homes-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-public-homes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install collection packages
+        run: |
+          pip install requests beautifulsoup4 playwright
+          python -m playwright install --with-deps chromium
+      - name: Inspect public homepage documents
+        run: python scripts/probe_ott_public.py
+      - name: Exercise public homepage collector
+        if: ${{ hashFiles('scripts/collect_ott.py') != '' }}
+        run: python scripts/collect_ott.py --browser --output ott_home_snapshot.json
+      - name: Upload public evidence including screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-ott-home-evidence
+          path: |
+            artifacts/ott_public_probe/
+            ott_home_snapshot.json
+          retention-days: 7
+      - name: Record public evidence on the development branch
+        if: ${{ always() && github.ref == 'refs/heads/codex/ott-public-home' }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for image in Path('artifacts/ott_public_probe').rglob('*.jpg'):
+              image.unlink()
+          for image in Path('artifacts/ott_public_probe').rglob('*.png'):
+              image.unlink()
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- artifacts/ott_public_probe
+          if [ -f ott_home_snapshot.json ]; then
+            git add -- ott_home_snapshot.json
+          fi
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'Record public OTT home verification [skip ci]'
+          git pull --rebase origin codex/ott-public-home
+          git push origin HEAD:codex/ott-public-home
