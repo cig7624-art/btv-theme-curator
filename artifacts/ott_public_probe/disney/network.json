@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://www.disneyplus.com/ko-kr",
+    "status": 200,
+    "resource_type": "document",
+    "content_type": "text/html; charset=utf-8"
+  },
+  {
+    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.disneyplus.com/",
+    "status": 200,
+    "resource_type": "document",
+    "content_type": "text/html; charset=utf-8"
+  },
+  {
+    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/65257_1825202492.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/64885_1825202492.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/65319_1825172608.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/65226_747628217.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/65350_1825232252.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/64854_1825202523.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://disney.api.edge.bamgrid.com/graph/v1/device/graphql",
+    "status": 200,
+    "resource_type": "fetch",
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://disney.api.edge.bamgrid.com/graph/v1/device/graphql",
+    "status": 200,
+    "resource_type": "fetch",
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://disney.api.edge.bamgrid.com/graph/v1/device/graphql",
+    "status": 200,
+    "resource_type": "fetch",
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://client-sdk-configs.bamgrid.com/bam-sdk/v7.0/disney-svod-3d9324fc/browser/v35.6/linux/chrome/prod.json",
+    "status": 200,
+    "resource_type": "xhr",
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://disney.api.edge.bamgrid.com/graph/v1/device/graphql?op=registerDevice",
+    "status": 200,
+    "resource_type": "xhr",
+    "content_type": "application/json"
+  }
+]

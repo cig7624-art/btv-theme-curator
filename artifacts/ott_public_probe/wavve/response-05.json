@@ -1,0 +1,50 @@
+{
+  "source_url": "https://apis.wavve.com/notices?limit=5&offset=0&orderby=new&type=all&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=none&drm=wm&client_version=7.2.80",
+  "data": {
+    "isnextpagegroup": "y",
+    "pagecount": "2901",
+    "count": "5",
+    "list": [
+      {
+        "noticeid": "4577",
+        "noticetypetext": "서비스공지",
+        "noticetitle": "[안내] <골프 - AI 스트리밍> 기능 오픈 안내",
+        "regdate": "2026-09-30",
+        "istop": "y",
+        "isNew": "n"
+      },
+      {
+        "noticeid": "4565",
+        "noticetypetext": "서비스공지",
+        "noticetitle": "[안내] '멀티뷰', '채팅', <웨이브 필드캠> 오픈 안내",
+        "regdate": "2026-09-09",
+        "istop": "y",
+        "isNew": "n"
+      },
+      {
+        "noticeid": "4516",
+        "noticetypetext": "서비스공지",
+        "noticetitle": "[안내] '듣폼' 스페셜관 오픈 및 오디오 모드 개편 안내",
+        "regdate": "2026-07-31",
+        "istop": "y",
+        "isNew": "n"
+      },
+      {
+        "noticeid": "4369",
+        "noticetypetext": "서비스공지",
+        "noticetitle": "[안내] 2026 KLPGA, KPGA 골프 투어 라이브 및 골프 전용관 오픈 안내",
+        "regdate": "2026-03-10",
+        "istop": "y",
+        "isNew": "n"
+      },
+      {
+        "noticeid": "4586",
+        "noticetypetext": "서비스공지",
+        "noticetitle": "[작업공지] 10/22 KT 휴대폰 본인확인 서비스 긴급 시스템 작업 안내",
+        "regdate": "2026-10-21",
+        "istop": "n",
+        "isNew": "n"
+      }
+    ]
+  }
+}

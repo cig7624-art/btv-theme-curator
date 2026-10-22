@@ -1,0 +1,9 @@
+{
+  "url": "https://www.wavve.com/",
+  "status": 200,
+  "result": "public_document_received",
+  "content_type": "text/html",
+  "title": "Wavve(ì¨ì´ë¸)",
+  "text_excerpt": "{\"@context\":\"http://schema.org\",\"@type\":\"Person\",\"name\":\"wavve\",\"url\":\"https://www.wavve.com\",\"sameAs\":[\"https://www.instagram.com/wavve.official/?hl=ko\",\"https://www.facebook.com/wavve.official/\",\"https://www.youtube.com/channel/UCym5538xAEEppbridXozfgw\",\"https://twitter.com/wavve_official\",\"https://apps.apple.com/kr/app/wavve-%EC%9B%A8%EC%9D%B4%EB%B8%8C/id987782077\",\"https://play.google.com/store/apps/details?id=kr.co.captv.pooqV2&hl=ko&gl=US\"]} Wavve(ì¨ì´ë¸)",
+  "truncated": false
+}

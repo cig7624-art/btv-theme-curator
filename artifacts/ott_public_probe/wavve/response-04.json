@@ -1,0 +1,8 @@
+{
+  "source_url": "https://haystack.wavve.com/apis/v1/events?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&guid=none&drm=wm&client_version=7.2.80",
+  "data": {
+    "code": 200,
+    "message": null,
+    "data": null
+  }
+}
