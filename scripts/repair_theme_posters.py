@@ -24,7 +24,10 @@ def lookup_diagnostics():
     """Record public provider reachability so empty lookups can be investigated."""
     probes = [
         ("ko_wikipedia_api", "https://ko.wikipedia.org/w/api.php", {"action": "query", "format": "json", "titles": "더 글로리", "prop": "pageimages|pageprops|extracts|categories|langlinks", "piprop": "original|name", "pilicense": "any", "exintro": 1, "explaintext": 1, "exsentences": 3, "cllimit": 50, "lllang": "en", "lllimit": 1}),
-        ("en_wikipedia_api", "https://en.wikipedia.org/w/api.php", {"action": "query", "format": "json", "titles": "The Glory", "prop": "pageimages|extracts", "piprop": "original|name", "pilicense": "any", "exintro": 1, "explaintext": 1}),
+        ("en_wikipedia_api", "https://en.wikipedia.org/w/api.php", {"action": "query", "format": "json", "redirects": 1, "titles": "The Glory (TV series)", "prop": "pageimages|pageprops|extracts|categories", "piprop": "original|name", "pilicense": "any", "exintro": 1, "explaintext": 1, "exsentences": 3, "cllimit": 50}),
+        ("ko_wikipedia_batch", "https://ko.wikipedia.org/w/api.php", {"action": "query", "format": "json", "redirects": 1, "titles": "더 글로리 (드라마)|더 글로리 (텔레비전 프로그램)|더 글로리", "prop": "pageimages|pageprops|extracts|categories|langlinks", "piprop": "original|name", "pilicense": "any", "exintro": 1, "explaintext": 1, "exsentences": 3, "cllimit": 50, "lllang": "en", "lllimit": 1}),
+        ("ko_wikipedia_infobox", "https://ko.wikipedia.org/w/api.php", {"action": "parse", "format": "json", "page": "더 글로리", "prop": "text", "disableeditsection": 1}),
+        ("en_wikipedia_infobox", "https://en.wikipedia.org/w/api.php", {"action": "parse", "format": "json", "page": "The Glory (TV series)", "prop": "text", "disableeditsection": 1}),
         ("ko_wikipedia_article", "https://ko.wikipedia.org/wiki/더_글로리", None),
         ("en_wikipedia_article", "https://en.wikipedia.org/wiki/The_Glory", None),
         ("tvmaze", "https://api.tvmaze.com/search/shows", {"q": "The Glory"}),
@@ -40,6 +43,13 @@ def lookup_diagnostics():
                     result["api_error"] = payload.get("error")
                     result["api_warnings"] = payload.get("warnings")
                     result["pages"] = list(payload.get("query", {}).get("pages", {}).values())
+                    if "parse" in payload:
+                        from bs4 import BeautifulSoup
+                        parsed = payload["parse"]
+                        soup = BeautifulSoup(parsed.get("text", {}).get("*", ""), "html.parser")
+                        result["parsed_title"] = parsed.get("title")
+                        result["infoboxes"] = len(soup.select("table.infobox"))
+                        result["infobox_images"] = [{**{key: image.get(key) for key in ("src", "alt", "width", "height")}, "caption": image.find_parent("td").get_text(" ", strip=True)[:200]} for image in soup.select("table.infobox img")[:4] if image.find_parent("td") is not None]
                 elif isinstance(payload, list):
                     result["matches"] = len(payload)
             except ValueError:
@@ -48,6 +58,11 @@ def lookup_diagnostics():
             output[name] = result
         except requests.RequestException as error:
             output[name] = {"error": type(error).__name__}
+    try:
+        from poster_assets import _wikipedia_poster
+        output["actual_resolver"] = _wikipedia_poster("더 글로리", "2022", "드라마")
+    except Exception as error:
+        output["actual_resolver"] = {"error": type(error).__name__, "message": str(error)[:300]}
     return output
 
 
