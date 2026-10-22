@@ -121,6 +121,58 @@ class PosterAssetTests(unittest.TestCase):
             self.assertEqual(posters._wikipedia_poster("타짜", "2008", "영화"), {})
             self.assertEqual(posters._wikipedia_poster("타짜", "2008", "드라마")["poster_url"], page["original"]["source"])
 
+    def test_tv_lookup_includes_the_requested_year_qualifier(self):
+        page = dict(title="그녀는 예뻤다 (2015년 드라마)", extract="2015년 대한민국 드라마이다.",
+                    pageimage="She_Was_Pretty_poster.jpg", original={"source": "https://upload.wikimedia.org/pretty-poster.jpg"})
+        with patch.object(posters.requests, "get", return_value=response({"query": {"pages": {"1": page}}})) as get:
+            self.assertEqual(posters._wikipedia_poster("그녀는 예뻤다", "2015", "드라마")["poster_url"], page["original"]["source"])
+        get.assert_called_once()
+        self.assertIn("그녀는 예뻤다 (2015년 드라마)", get.call_args.kwargs["params"]["titles"].split("|"))
+
+    def test_one_title_search_recovers_only_exact_canonical_spelling(self):
+        title = "닥터X:외과의다이몬미치코"
+        page = dict(title="닥터-X: 외과의·다이몬 미치코", extract="2012년 일본의 드라마이다.",
+                    categories=[{"title": "분류:2012년 시작한 일본 텔레비전 드라마"}],
+                    pageimage="Doctor_X_poster.jpg", original={"source": "https://upload.wikimedia.org/doctorx-poster.jpg"})
+        with patch.object(posters.requests, "get", side_effect=[
+                response({"query": {"pages": {"-1": {"title": title, "missing": ""}}}}),
+                response({"query": {"pages": {"123": page}}})]) as get:
+            result = posters._wikipedia_poster(title, "2012", "드라마")
+        self.assertEqual(result["poster_url"], page["original"]["source"])
+        self.assertEqual(get.call_count, 2)
+        params = get.call_args.kwargs["params"]
+        self.assertEqual(params["generator"], "search")
+        self.assertEqual(params["gsrsearch"], f'intitle:"{title}"')
+        self.assertEqual(params["gsrlimit"], 5)
+        self.assertNotIn("titles", params)
+
+    def test_title_search_rejects_wrong_year_media_similar_title_and_ambiguous_work(self):
+        base = dict(title="하얀 거탑 (2007년 드라마)", extract="2007년 텔레비전 드라마이다.",
+                    pageimage="White_Tower_poster.jpg", original={"source": "https://upload.wikimedia.org/tower-poster.jpg"})
+        alternatives = [dict(base, title="다른 거탑 (2007년 드라마)"),
+                        dict(base, title="하얀 거탑 (2003년 드라마)", extract="2003년 드라마"),
+                        dict(base, title="하얀 거탑 (2007년 영화)", extract="2007년 영화")]
+        for page in alternatives:
+            with self.subTest(page=page), patch.object(posters.requests, "get", side_effect=[
+                    response({"query": {"pages": {}}}), response({"query": {"pages": {"1": page}}})]) as get:
+                self.assertEqual(posters._wikipedia_poster("하얀거탑", "2007", "드라마"), {})
+                self.assertEqual(get.call_count, 2)
+        with patch.object(posters.requests, "get", side_effect=[
+                response({"query": {"pages": {}}}),
+                response({"query": {"pages": {"1": base, "2": dict(base, title="하얀 거탑 (2003년 드라마)")}}})]) as get:
+            self.assertEqual(posters._wikipedia_poster("하얀거탑", "", "드라마"), {})
+        self.assertEqual(get.call_count, 2)
+
+    def test_title_search_abstains_for_distinct_verified_pages_even_with_the_same_year(self):
+        first = dict(pageid=1, title="하얀 거탑 (2007년 드라마)", extract="2007년 드라마",
+                     pageimage="White_Tower_poster.jpg", original={"source": "https://upload.wikimedia.org/first-poster.jpg"})
+        second = dict(first, pageid=2, title="하얀 거탑 (2007년 텔레비전 드라마)")
+        with patch.object(posters.requests, "get", side_effect=[
+                response({"query": {"pages": {}}}),
+                response({"query": {"pages": {"1": first, "2": second}}})]) as get:
+            self.assertEqual(posters._wikipedia_poster("하얀거탑", "2007", "드라마"), {})
+        self.assertEqual(get.call_count, 2)
+
     def test_wikipedia_abstains_when_missing_year_leaves_multiple_films(self):
         first = dict(title="타짜 (2006년 영화)", extract="2006년 영화", pageimage="타짜_포스터.jpg",
                      original={"source": "https://upload.wikimedia.org/first-poster.jpg"})
@@ -174,6 +226,25 @@ class PosterAssetTests(unittest.TestCase):
         self.assertEqual(result["poster_url"], "https://upload.wikimedia.org/art/The_Glory.png")
         self.assertEqual(result["poster_source_url"], "https://en.wikipedia.org/wiki/The_Glory")
         self.assertEqual(get.call_args_list[2].kwargs["params"]["titles"], "The Glory")
+        self.assertEqual(get.call_args_list[0].kwargs["params"]["lllang"], "en")
+        self.assertEqual(get.call_args_list[0].kwargs["params"]["lllimit"], 10)
+
+    def test_novel_identity_and_adaptation_categories_cannot_supply_tv_artwork(self):
+        novel = dict(title="재혼 황후", extract="《재혼 황후》는 알파타르트가 연재한 로맨스 판타지 웹소설이다. 웹툰으로도 연재하고 있다.",
+                     categories=[{"title": "분류:대한민국의 텔레비전 애니메이션"}, {"title": "분류:네이버 웹툰"}])
+        self.assertFalse(posters._verified_wikipedia_page(novel, ["재혼 황후"], "", True))
+        for qualifier in ["novel", "book", "comic", "webtoon", "소설", "웹툰", "만화"]:
+            with self.subTest(qualifier=qualifier):
+                english = dict(title=f"The Remarried Empress ({qualifier})", extract="A South Korean web novel series.",
+                               categories=[{"title": "Category:Upcoming anime television series"}])
+                self.assertFalse(posters._verified_wikipedia_page(english, ["The Remarried Empress"], "", True))
+        for label in ["분류:드라마화된 소설", "Category:Television novels", "Category:South Korean novels adapted into television series"]:
+            with self.subTest(label=label):
+                page = dict(title="재혼 황후", extract="An original story.", categories=[{"title": label}])
+                self.assertFalse(posters._verified_wikipedia_page(page, ["재혼 황후"], "", True))
+        television = dict(title="재혼 황후 (드라마)", extract="2026년 대한민국의 판타지 드라마이다.",
+                          categories=[{"title": "분류:대한민국의 웹 소설을 바탕으로 한 텔레비전 드라마"}])
+        self.assertTrue(posters._verified_wikipedia_page(television, ["재혼 황후"], "2026", True))
 
     def test_infobox_rejects_cast_photo_logo_and_unrelated_article(self):
         page = dict(title="더 글로리", extract="2022년 드라마", categories=[{"title": "분류:드라마"}])
@@ -219,7 +290,8 @@ class PosterAssetTests(unittest.TestCase):
         for title, year, kind, page in pages:
             with self.subTest(title=title), patch.object(posters.requests, "get", return_value=response({"query": {"pages": {"1": page}}})) as get:
                 self.assertEqual(posters._wikipedia_poster(title, year, kind), {})
-                self.assertEqual(get.call_count, 1)
+                self.assertEqual(get.call_count, 2)
+                self.assertEqual(get.call_args.kwargs["params"]["generator"], "search")
 
     def test_batch_preserves_existing_artwork_identity_and_status_without_mutating_input(self):
         items = [dict(title="기생충", year="2019", poster_url="https://image.example.com/actual.jpg", kinolights_status="verified"),

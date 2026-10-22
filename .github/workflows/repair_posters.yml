@@ -29,7 +29,7 @@ jobs:
       - name: Validate poster repair
         run: python -m unittest discover -s tests -v
       - name: Look up existing titles without generating new recommendations
-        run: python scripts/repair_theme_posters.py --collect /tmp/theme-poster-updates.json --diagnose
+        run: python scripts/repair_theme_posters.py --collect /tmp/theme-poster-updates.json
       - name: Refresh saved recommendations before applying poster-only changes
         run: git pull --ff-only origin main
       - name: Apply matching missing artwork

@@ -134,7 +134,7 @@ def _itunes_poster(title, year, content_type):
     return matches[0][1] if matches else {}
 
 
-def _wikipedia_pages(language, titles, *, english_links=False):
+def _wikipedia_pages(language, titles, *, english_links=False, search=False):
     params = {
         "action": "query", "format": "json", "redirects": 1, "titles": "|".join(titles),
         "prop": "pageimages|pageprops|extracts|categories" + ("|langlinks" if english_links else ""),
@@ -142,7 +142,16 @@ def _wikipedia_pages(language, titles, *, english_links=False):
         "explaintext": 1, "exsentences": 3, "cllimit": 50,
     }
     if english_links:
-        params.update(lllang="en", lllimit=1)
+        # lllimit applies to the whole batch, not each page. Disambiguation or
+        # missing-title alternatives must not consume the media page's link.
+        params.update(lllang="en", lllimit=10)
+    if search:
+        # Search finds canonical spelling/qualifiers only. Its returned pages
+        # still have to pass the exact normalized title, year and media checks.
+        query = _text(titles[0]).replace('"', " ")
+        params.pop("titles")
+        params.update(generator="search", gsrsearch=f'intitle:"{query}"',
+                      gsrwhat="title", gsrnamespace=0, gsrlimit=5)
     response = _wikipedia_get(language, params)
     payload = response.json()
     pages = payload.get("query", {}).get("pages", {}) if isinstance(payload, dict) else {}
@@ -158,6 +167,14 @@ def _verified_wikipedia_page(page, requested_titles, year, tv):
         return False
     qualifier = re.search(r"\(([^()]*)\)$", page_title)
     qualifier = qualifier.group(1) if qualifier else ""
+    nonmedia = r"소설|웹툰|만화|\b(?:novels?|books?|comics?|webtoons?|manga|manhwa)\b"
+    if re.search(nonmedia, qualifier, re.I):
+        return False
+    # A novel article can also carry categories for its planned TV adaptation.
+    # The original work's explicit lead identity must not become TV artwork.
+    lead = _text(page.get("extract")).split(".", 1)[0]
+    if re.search(r"(?:소설|웹툰|만화)(?:\s*시리즈)?(?:이다|이며|이고|다)(?:\s|$)", lead):
+        return False
     article_year = _year(qualifier)
     if year and article_year and article_year != year:
         return False
@@ -165,9 +182,13 @@ def _verified_wikipedia_page(page, requested_titles, year, tv):
     title_film = bool(re.search(r"영화|\bfilm\b", qualifier, re.I))
     if (title_tv and not tv) or (title_film and tv):
         return False
-    categories = " ".join(_text(item.get("title")) for item in page.get("categories", []) if isinstance(item, dict))
+    category_labels = [_text(item.get("title")) for item in page.get("categories", []) if isinstance(item, dict)]
+    categories = " ".join(category_labels)
+    media_categories = " ".join(label for label in category_labels
+                                if not re.search(r"(?:소설|웹툰|만화|novels?|books?|comics?|webtoons?|manga|manhwa)\s*$", label, re.I)
+                                and not re.search(r"\b(?:novels?|books?|comics?|webtoons?)\b.*\badapted (?:into|for)\b", label, re.I))
     kind_pattern = r"드라마|텔레비전|television|TV series" if tv else r"영화|\bfilms?\b"
-    if not re.search(kind_pattern, " ".join((qualifier, categories)), re.I):
+    if not re.search(kind_pattern, " ".join((qualifier, media_categories)), re.I):
         return False
     release_years = set()
     for category in page.get("categories", []):
@@ -259,12 +280,21 @@ def _wikipedia_poster(title, year, content_type):
     language = "ko" if korean else "en"
     tv = _is_tv(content_type)
     if korean:
-        suffixes = (["드라마", "텔레비전 프로그램"] if tv else ([f"{year}년 영화"] if year else []) + ["영화"])
+        suffixes = ((([f"{year}년 드라마"] if year else []) + ["드라마", "텔레비전 프로그램"])
+                    if tv else ([f"{year}년 영화"] if year else []) + ["영화"])
     else:
         suffixes = (["TV series", "television series"] if tv else ([f"{year} film"] if year else []) + ["film"])
     titles = [f"{title} ({suffix})" for suffix in suffixes] + [title]
     pages = [page for page in _wikipedia_pages(language, titles, english_links=korean)
              if _verified_wikipedia_page(page, [title], year, tv)]
+    if not pages:
+        # One bounded search request repairs spacing/punctuation and documented
+        # qualifiers. Missing artwork on an already verified page is not a
+        # reason to broaden the work's identity or keep searching.
+        pages = [page for page in _wikipedia_pages(language, [title], english_links=korean, search=True)
+                 if _verified_wikipedia_page(page, [title], year, tv)]
+        if len({(_text(page.get("pageid")), _text(page.get("title"))) for page in pages}) > 1:
+            return {}
     if not year and len({_text(page.get("title")) for page in pages}) > 1:
         return {}
     for page in pages:
