@@ -12,6 +12,7 @@ on:
       - ott_styles.css
       - styles.css
       - scripts/verify_deployment.py
+      - tests/test_deployment_verification.py
       - .github/workflows/verify_deployment.yml
 
 concurrency:

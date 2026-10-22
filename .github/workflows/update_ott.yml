@@ -8,6 +8,7 @@ on:
   push:
     branches: [main]
     paths:
+      - VERSION
       - ott_collection.py
       - ott_source_adapters.py
       - scripts/collect_ott.py
