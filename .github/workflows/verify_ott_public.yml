@@ -16,6 +16,7 @@ on:
       - ott_collection.py
       - ott_public_sources.py
       - ott_source_adapters.py
+      - coupang_public.py
       - .github/workflows/verify_ott_public.yml
 
 concurrency:
@@ -37,15 +38,28 @@ jobs:
           python-version: '3.11'
           cache: pip
       - name: Install collection packages
+        run: python -m pip install requests beautifulsoup4 playwright
+      - name: Use the hosted runner's existing browser when available
         run: |
-          pip install requests beautifulsoup4 playwright
-          python -m playwright install --with-deps chromium
+          collection_browser="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -n "$collection_browser" ]; then
+            echo "OTT_COLLECTION_CHROMIUM_PATH=$collection_browser" >> "$GITHUB_ENV"
+          else
+            python -m playwright install --with-deps chromium
+          fi
       - name: Inspect public homepage documents
         if: ${{ inputs.capture_evidence == true || hashFiles('scripts/collect_ott.py') == '' }}
         run: python scripts/probe_ott_public.py
       - name: Exercise public homepage collector
         if: ${{ hashFiles('scripts/collect_ott.py') != '' }}
-        run: python scripts/collect_ott.py --browser --require-home --output ott_home_snapshot.json
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          if [ -n "${OTT_COLLECTION_CHROMIUM_PATH:-}" ]; then
+            python scripts/collect_ott.py --browser --require-home --output ott_home_snapshot.json --chromium-path "$OTT_COLLECTION_CHROMIUM_PATH"
+          else
+            python scripts/collect_ott.py --browser --require-home --output ott_home_snapshot.json
+          fi
       - name: Verify all saved public artwork
         if: ${{ hashFiles('ott_home_snapshot.json') != '' }}
         run: python scripts/check_ott_images.py --all

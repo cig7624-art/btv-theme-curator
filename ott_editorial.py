@@ -17,6 +17,7 @@ EDITORIAL_CRITERIA = (
     "최근 96시간 안에 확인한 공개 홈·홍보 목록에서 이미지가 있는 항목만 고릅니다.",
     "메인 배너와 홈 상단의 기획·무료 공개·오리지널·신작을 우선합니다.",
     "같은 작품·기획의 반복을 줄이고 서비스당 최대 2건으로 묶습니다. 모든 OTT를 채우지는 않습니다.",
+    "홈을 확인하기 어려운 쿠팡플레이는 검증된 공식 채널의 예고·공개 소식을 별도로 고릅니다.",
     "홈 배치를 요약한 편집 선정이며 조회수·시청률이나 실제 화제성 순위가 아닙니다.",
 )
 SERVICES = {
@@ -183,6 +184,38 @@ def _duplicates(candidate, selected):
     return False
 
 
+def _official_update_candidates(snapshot, now, max_age_hours):
+    """Public channel announcements retain their own source and publish date."""
+    for platform in _rows(snapshot.get("platforms")):
+        if platform.get("id") != "coupang" or platform.get("official_updates_freshness") != "current":
+            continue
+        observed = platform.get("official_updates_last_success_at")
+        when = _date(observed)
+        if when is None or not -6 <= (now - when).total_seconds() / 3600 <= max_age_hours:
+            continue
+        for row in _rows(platform.get("official_updates")):
+            kind = row.get("update_kind")
+            published = _date(row.get("published_at"))
+            title, work_title = _text(row.get("title"), 220), _text(row.get("work_title"), 180)
+            image, source = _image(row.get("image_url")), safe_http_url(row.get("url"))
+            if kind not in {"trailer", "announcement", "clip"} or not all((title, work_title, image, source, published)):
+                continue
+            days = (now - published).total_seconds() / 86400
+            if not -1 <= days <= 21:
+                continue
+            label = {"trailer": "공식 예고편", "announcement": "공개 소식", "clip": "공식 공개 영상"}[kind]
+            yield {"id": "coupang:official:" + _text(row.get("video_id")),
+                   "platform_id": "coupang", "platform_name": SERVICES['coupang'][0],
+                   "headline": work_title, "summary": title, "kind": "official_" + kind,
+                   "kind_label": label, "image_url": image, "image_shape": "banner",
+                   "works": [{"title": work_title, "url": source, "image_url": image}],
+                   "source_title": title, "source_url": source, "home_url": SERVICES['coupang'][1],
+                   "position": _position(row.get("position"), 1), "placement": "공식 채널 소식",
+                   "checked_at": str(observed), "published_at": row.get('published_at'), "scope": "official_channel",
+                   "selection_reason": label + " · 작품별 선정 · " + published.strftime('%Y.%m.%d') + " 공개",
+                   "selection_score": {"trailer": 104, "announcement": 96, "clip": 82}[kind] - min(max(days, 0), 14)}
+
+
 def select_editorial_highlights(snapshot, limit=6, *, now=None, max_age_hours=96):
     """Return at most ``limit`` actual highlights; no service quota or padding.
 
@@ -195,7 +228,7 @@ def select_editorial_highlights(snapshot, limit=6, *, now=None, max_age_hours=96
     now = now or datetime.now(timezone.utc)
     if now.tzinfo is None:
         now = now.replace(tzinfo=timezone.utc)
-    candidates = list(_candidates(snapshot, now, max_age_hours))
+    candidates = [*_candidates(snapshot, now, max_age_hours), *_official_update_candidates(snapshot, now, max_age_hours)]
     selected, provider_counts, kind_counts = [], Counter(), Counter()
     while candidates and len(selected) < min(limit, 6):
         candidates = [row for row in candidates if provider_counts[row["platform_id"]] < 2

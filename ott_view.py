@@ -98,6 +98,7 @@ def _platform(raw, fallback):
     result["promotions"] = _ordered(result.get("promotions"), 20)
     result["sections"] = _ordered(result.get("sections"), 100)
     result["public_lists"] = _ordered(result.get("public_lists"), 100)
+    result["official_updates"] = _ordered(result.get("official_updates"), 5) if service_id == 'coupang' else []
     return result
 
 
@@ -136,6 +137,10 @@ def _promotion_only(platform):
 
 def platform_status(platform):
     """Human-readable status without interpreting failed access as zero themes."""
+    if platform.get('official_updates') and platform.get('status') == 'unavailable':
+        if platform.get('official_updates_freshness') == 'stale':
+            return "이전 공식 채널 소식", "마지막으로 확인한 공식 예고편과 공개 소식입니다."
+        return "공식 채널 소식", "공개된 공식 예고편과 작품 소식입니다. 홈 편성과 구분해 보여드립니다."
     if _stale(platform):
         return "이전 확인 자료", "최근 화면을 확인하지 못해 마지막으로 확인한 자료를 보여드립니다."
     if platform.get("status") == "promotion_only":
@@ -148,6 +153,8 @@ def platform_status(platform):
 
 
 def _date_label(platform):
+    if platform.get('official_updates') and platform.get('status') == 'unavailable':
+        return (_display_time(platform.get('official_updates_last_success_at')) + ' 확인').strip()
     when = platform.get("last_success_at") or platform.get("checked_at")
     formatted = _display_time(when)
     if not formatted:
@@ -317,7 +324,7 @@ def _editorial_story(story, index):
     layout = 'lead' if index == 0 else ('side' if index < 3 else 'brief')
     brand = _text(story.get("platform_id"))
     headline = _escape(story.get("headline"))
-    scope = '공개 홍보' if story.get('scope') == 'public_promotion' else ''
+    scope = {'public_promotion': '공개 홍보', 'official_channel': '공식 채널'}.get(story.get('scope'), '')
     tags = ('<span class="ott-feature-platform">' + _escape(story.get("platform_name"))
             + '</span><span class="ott-feature-kind">' + _escape(story.get("kind_label")) + '</span>')
     if scope:
@@ -346,7 +353,7 @@ def _editorial_notes(stories):
                        + (' · ' + _escape(date) if date else '') + '</span></li>')
     return ('<details class="ott-editorial-notes"><summary>편집 기준 · 출처</summary>'
             '<ul class="ott-editorial-criteria">' + criteria + '</ul>'
-            '<p>공개 화면의 배치를 바탕으로 고른 소식입니다. 실제 시청 성과나 전체 시장의 순위를 뜻하지 않습니다. '
+            '<p>공개 홈과 공식 채널에서 고른 소식입니다. 실제 시청 성과나 전체 시장의 순위를 뜻하지 않습니다. '
             '해외 서버에서 확인해 국내 화면과 차이가 있을 수 있습니다.</p>'
             '<ul class="ott-editorial-sources">' + ''.join(sources) + '</ul></details>')
 
@@ -362,11 +369,33 @@ def ott_comparison_html(snapshot):
     checked = [_text(story.get('checked_at')) for story in stories if story.get('checked_at')]
     # The oldest selected confirmation avoids presenting older stories as freshly observed.
     date = _display_time(min(checked)) if checked else ''
-    folio = '<span>PUBLIC HOME · ' + _escape(date) + '</span>' if date else '<span>PUBLIC HOME</span>'
+    folio = '<span>PUBLIC SOURCES · ' + _escape(date) + '</span>' if date else '<span>PUBLIC SOURCES</span>'
     return ('<section class="ott-magazine"><div class="ott-edit-folio"><span>THE OTT EDIT</span>' + folio + '</div>'
             '<div class="ott-feature-grid">' + ''.join(_editorial_story(story, index) for index, story in enumerate(stories))
             + '</div><div class="ott-edit-bottom"><p>더 궁금한 OTT는 위에서 선택해 전체 목록을 살펴보세요.</p>'
             + _editorial_notes(stories) + '</div></section>')
+
+
+def _official_updates_html(platform):
+    articles = []
+    for update in platform.get('official_updates', []):
+        kind = {'trailer': '공식 예고편', 'announcement': '공개 소식', 'clip': '공식 공개 영상'}.get(update.get('update_kind'), '공식 공개 영상')
+        published = _display_time(update.get('published_at'))
+        published = published[:10] if published else ''
+        label = kind + (' · ' + published + ' 공개' if published else '')
+        evidence = ('<details class="ott-evidence"><summary>출처 확인</summary><dl>'
+                    '<div><dt>원래 제목</dt><dd>' + _escape(update.get('title')) + '</dd></div>'
+                    '<div><dt>선정 범위</dt><dd>쿠팡플레이 공식 채널의 예고·공개 소식에서 작품별로 선정</dd></div>'
+                    '<div><dt>자료 시각</dt><dd>' + _escape(_date_label(platform)) + '</dd></div>'
+                    '<div><dt>공개 홈</dt><dd>홈 편성은 확인하지 못해 공식 채널 소식을 보여드립니다.</dd></div>'
+                    '</dl>' + _link(update.get('url'), '공식 영상 원문 ↗', 'ott-source-link') + '</details>')
+        articles.append('<article class="ott-official-update"><p class="ott-small-label">' + _escape(label) + '</p>'
+                        + _artwork(update, banner=True) + evidence + '</article>')
+    if not articles:
+        return ''
+    return ('<section class="ott-official-updates"><div class="ott-rows-heading"><h3>공식 채널 소식</h3>'
+            '<span>작품별 예고·공개 영상</span></div><div class="ott-promotion-rail" aria-label="쿠팡플레이 공식 채널 소식">'
+            + ''.join(articles) + '</div></section>')
 
 
 def ott_platform_html(platform):
@@ -378,6 +407,7 @@ def ott_platform_html(platform):
                '<h3 class="ott-platform-name">' + _escape(platform["name"]) + '</h3>'
                + _link(_source_url(platform), '공식 홈 열기 ↗', 'ott-source-link') + '</header>')
     content = _status_html(platform)
+    content += _official_updates_html(platform)
     if promotions:
         content += '<div class="ott-promotion-rail" aria-label="메인 홍보작">' + ''.join(_promotion_html(promotion, platform) for promotion in promotions[:5]) + '</div>'
     if sections:
@@ -389,7 +419,7 @@ def ott_platform_html(platform):
             content += ('<details class="ott-more-sections"><summary>추가 ' + str(len(sections) - 6)
                         + '개 영역 보기</summary><div class="ott-section-grid">'
                         + ''.join(_section_html(section, platform) for section in sections[6:]) + '</div></details>')
-    elif not promotions and not _promotion_only(platform):
+    elif not promotions and not _promotion_only(platform) and not platform.get('official_updates'):
         content += _empty_html(platform, include_message=False)
     if _promotion_only(platform):
         content += '<div class="ott-scope-note"><strong>공개 홍보 페이지에서 확인한 자료입니다.</strong><p>공개된 홍보작과 작품 목록을 보여드립니다. 콘텐츠 홈의 기획 테마와 구분해 집계합니다.</p></div>'

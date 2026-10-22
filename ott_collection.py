@@ -353,12 +353,12 @@ def _unavailable(platform, checked_at, error_code):
             "promotions": [], "sections": [], "error_code": error_code, "access_mode": "unconfirmed", "section_count": None}
 
 
-def collect_public_homes(previous=None, platform_ids=None, *, fetcher=None, use_browser=False, browser=None, now=None):
+def collect_public_homes(previous=None, platform_ids=None, *, fetcher=None, use_browser=False, browser=None, now=None, official_updates_fetcher=None):
     """Refresh independently; failed attempts keep clearly dated previous material."""
     checked_at = now or utc_now_iso()
     if use_browser and browser is None and fetcher is None:
         with PublicBrowser() as active_browser:
-            return collect_public_homes(previous, platform_ids, fetcher=active_browser, now=checked_at)
+            return collect_public_homes(previous, platform_ids, fetcher=active_browser, now=checked_at, official_updates_fetcher=official_updates_fetcher)
     old = {p["id"]: p for p in _clean_snapshot(previous).get("platforms", [])}
     wanted = set(platform_ids) if platform_ids else {p["id"] for p in PLATFORMS}
     chosen_fetcher = fetcher or browser or _http_fetch
@@ -405,6 +405,34 @@ def collect_public_homes(previous=None, platform_ids=None, *, fetcher=None, use_
             code = "network_error" if "Timeout" in type(exc).__name__ or "net::ERR_" in str(exc) else "parse_error"
             entry = _unavailable(platform, checked_at, code)
         previous_entry = old.get(platform["id"], {})
+        if platform["id"] == "coupang":
+            updates = None
+            # An injected HTML fetcher stays offline unless an updates fetcher
+            # is explicitly supplied. Real HTTP/browser collection can refresh
+            # the already verified official public video source independently.
+            if entry["status"] == "unavailable" and (official_updates_fetcher or fetcher is None or isinstance(chosen_fetcher, PublicBrowser)):
+                try:
+                    if official_updates_fetcher:
+                        updates = official_updates_fetcher(now=checked_at)
+                    else:
+                        from coupang_public import collect_coupang_updates
+                        updates = collect_coupang_updates(api_key=os.getenv("YOUTUBE_API_KEY"), now=checked_at)
+                except Exception:
+                    updates = None
+            if isinstance(updates, dict) and updates.get("updates"):
+                entry.update(official_updates=updates["updates"],
+                             official_updates_scope="official_channel",
+                             official_updates_source_url=updates.get("source_url", ""),
+                             official_updates_source_method=updates.get("source_method", ""),
+                             official_updates_checked_at=checked_at,
+                             official_updates_last_success_at=updates.get("observed_at", ""),
+                             official_updates_freshness="current")
+            elif entry['status'] == 'unavailable' and previous_entry.get("official_updates"):
+                for key in ("official_updates", "official_updates_scope", "official_updates_source_url", "official_updates_source_method", "official_updates_last_success_at"):
+                    if key in previous_entry:
+                        entry[key] = previous_entry[key]
+                entry["official_updates_checked_at"] = checked_at
+                entry["official_updates_freshness"] = "stale"
         if entry["status"] == "unavailable" and previous_entry.get("last_success_at"):
             for key in ("promotions", "sections", "public_lists", "last_success_at", "last_success_status", "source_url", "capture_scope", "page_title", "evidence_file", "observed_environment", "country_verified", "locale_requested"):
                 if key in previous_entry:
@@ -460,6 +488,34 @@ def _clean_snapshot(data):
                         works.append({"title": _text(work["title"], 180), "url": target if work.get("url") else "", "image_url": safe_http_url(work.get("image_url"))})
                 entry[field].append({"id": _text(row.get("id"), 80), "title": _text(row["title"], 200), "description": _text(row.get("description")), "position": position(row, len(entry[field])+1), "kind": row.get("kind") if row.get("kind") in {"theme", "new", "ranking", "genre", "live", "clips", "shorts", "promotion", "collection", "originals", "calendar", "rental", "free", "other"} else "other", "url": _official_url(row.get("url"), spec) if row.get("url") else "", "works": works, "works_complete": False, "items_kind": items_kind, "placement": _text(row.get("placement"), 100), "works_status": _text(row.get("works_status"), 40)})
         entry["section_count"] = len(entry["sections"]) if entry["status"] == "ok" else None
+        if spec["id"] == "coupang":
+            from coupang_public import OFFICIAL_CHANNEL_URL
+            entry["official_updates"] = []
+            entry["official_updates_source_url"] = OFFICIAL_CHANNEL_URL
+            entry["official_updates_scope"] = "official_channel"
+            for key in ("official_updates_checked_at", "official_updates_last_success_at"):
+                entry[key] = _text(raw.get(key), 80)
+            entry["official_updates_freshness"] = raw.get("official_updates_freshness") if raw.get("official_updates_freshness") in {"current", "stale"} else "none"
+            entry["official_updates_source_method"] = raw.get("official_updates_source_method") if raw.get("official_updates_source_method") in {"youtube_api", "youtube_rss", "verified_watchlist"} else ""
+            for item in raw.get("official_updates", [])[:5] if isinstance(raw.get("official_updates"), list) else []:
+                if not isinstance(item, dict):
+                    continue
+                video_id = _text(item.get("video_id"), 20)
+                target = safe_http_url(item.get("url"))
+                image_url = safe_http_url(item.get("image_url"))
+                parts = urlsplit(target)
+                if (not re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id)
+                        or parts.hostname not in {"www.youtube.com", "youtube.com"} or parts.path != "/watch"
+                        or parse_qs(parts.query).get("v") != [video_id]
+                        or urlsplit(image_url).hostname != "i.ytimg.com"
+                        or not _text(item.get("title")) or not _text(item.get("work_title"))):
+                    continue
+                entry["official_updates"].append({"video_id": video_id, "title": _text(item["title"], 220),
+                    "work_title": _text(item["work_title"], 180), "url": "https://www.youtube.com/watch?v=" + video_id,
+                    "image_url": image_url, "published_at": _text(item.get("published_at"), 80),
+                    "position": position(item, len(entry["official_updates"]) + 1),
+                    "source_position": _text(item.get("source_position"), 10),
+                    "update_kind": item.get("update_kind") if item.get("update_kind") in {"trailer", "announcement", "clip"} else "clip"})
         valid.append(entry)
     return {"schema_version": 1, "updated_at": _text(data.get("updated_at"), 80), "observed_environment": _text(data.get("observed_environment"), 80) or "unknown", "country_verified": data.get("country_verified") is True, "locale_requested": _text(data.get("locale_requested"), 20), "platforms": valid}
 

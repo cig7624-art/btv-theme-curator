@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork")
+CHECKS = ("version", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork")
 
 
 def normalized_version(value):
@@ -185,6 +185,29 @@ def _check_editorial(frame, report, label, screenshots):
         raise VerificationIssue("lead_artwork_unavailable")
     if not all(loaded):
         report["warnings"].append(f"{label}_some_artwork_unavailable")
+    frame.get_by_role('radio', name='쿠팡플레이', exact=True).click()
+    try:
+        frame.locator('.ott-official-updates .ott-art-image, .ott-platform-detail .ott-home-section .ott-art-image').first.wait_for(state='attached', timeout=15000)
+        report['tests'][f'{label}_coupang_content'] = True
+    except Exception:
+        raise VerificationIssue('coupang_content_missing')
+    coupang_loaded = frame.evaluate(r'''async () => {
+      const element = document.querySelector('.ott-official-updates .ott-art-image, .ott-platform-detail .ott-home-section .ott-art-image');
+      const match = element && getComputedStyle(element).backgroundImage.match(/^url\((["']?)(.*?)\1\)$/);
+      if (!match) return false;
+      return await new Promise(resolve => {
+        const image = new Image();
+        const timer = setTimeout(() => resolve(false), 8000);
+        image.onload = () => {clearTimeout(timer); resolve(image.naturalWidth > 0);};
+        image.onerror = () => {clearTimeout(timer); resolve(false);};
+        image.src = match[2];
+      });
+    }''')
+    report['tests'][f'{label}_coupang_artwork'] = coupang_loaded
+    if not coupang_loaded:
+        raise VerificationIssue('coupang_artwork_unavailable')
+    frame.get_by_role('radio', name='주요 소식', exact=True).click()
+    frame.locator('.ott-magazine').wait_for(state='visible')
     screenshots.mkdir(parents=True, exist_ok=True)
     frame.locator(".ott-magazine").first.scroll_into_view_if_needed()
     page.screenshot(path=str(screenshots / f"{label}.png"), full_page=False)

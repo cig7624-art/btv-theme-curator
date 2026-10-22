@@ -1,13 +1,13 @@
 {
-  "checked_at": "2026-10-22T11:08:22+00:00",
+  "checked_at": "2026-10-22T16:18:28+00:00",
   "scope": "all_saved_public_image_urls",
-  "sampled": 165,
-  "reachable": 165,
+  "sampled": 168,
+  "reachable": 168,
   "results": [
     {
       "platform": "netflix",
       "title": "사이버펑크: 엣지러너",
-      "image_host": "occ-0-3012-116.1.nflxso.net",
+      "image_host": "occ-0-3012-2433.1.nflxso.net",
       "ok": true,
       "status": 200,
       "content_type": "image/webp"
@@ -15,7 +15,7 @@
     {
       "platform": "netflix",
       "title": "원피스",
-      "image_host": "occ-0-3012-116.1.nflxso.net",
+      "image_host": "occ-0-3012-2433.1.nflxso.net",
       "ok": true,
       "status": 200,
       "content_type": "image/webp"
@@ -23,7 +23,7 @@
     {
       "platform": "netflix",
       "title": "닥터X: 하얀 마피아의 시대",
-      "image_host": "occ-0-3012-116.1.nflxso.net",
+      "image_host": "occ-0-3012-2433.1.nflxso.net",
       "ok": true,
       "status": 200,
       "content_type": "image/webp"
@@ -31,7 +31,7 @@
     {
       "platform": "netflix",
       "title": "대환장 기안장",
-      "image_host": "occ-0-3012-116.1.nflxso.net",
+      "image_host": "occ-0-3012-2433.1.nflxso.net",
       "ok": true,
       "status": 200,
       "content_type": "image/webp"
@@ -39,7 +39,7 @@
     {
       "platform": "netflix",
       "title": "스캔들",
-      "image_host": "occ-0-3012-116.1.nflxso.net",
+      "image_host": "occ-0-3012-2433.1.nflxso.net",
       "ok": true,
       "status": 200,
       "content_type": "image/webp"
@@ -47,7 +47,7 @@
     {
       "platform": "netflix",
       "title": "나를 충전해줘",
-      "image_host": "occ-0-3012-116.1.nflxso.net",
+      "image_host": "occ-0-3012-2433.1.nflxso.net",
       "ok": true,
       "status": 200,
       "content_type": "image/webp"
@@ -55,7 +55,7 @@
     {
       "platform": "netflix",
       "title": "참교육",
-      "image_host": "occ-0-3012-116.1.nflxso.net",
+      "image_host": "occ-0-3012-2433.1.nflxso.net",
       "ok": true,
       "status": 200,
       "content_type": "image/webp"
@@ -158,30 +158,6 @@
     },
     {
       "platform": "tving",
-      "title": "2026-2027 KCC 프로농구",
-      "image_host": "stillshot.tving.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "tving",
-      "title": "KBS2",
-      "image_host": "stillshot.tving.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "tving",
-      "title": "MBC",
-      "image_host": "stillshot.tving.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "tving",
       "title": "YTN",
       "image_host": "stillshot.tving.com",
       "ok": true,
@@ -190,7 +166,7 @@
     },
     {
       "platform": "tving",
-      "title": "MBC 뉴스",
+      "title": "tvN",
       "image_host": "stillshot.tving.com",
       "ok": true,
       "status": 200,
@@ -198,7 +174,7 @@
     },
     {
       "platform": "tving",
-      "title": "ANIBOX",
+      "title": "JTBC",
       "image_host": "stillshot.tving.com",
       "ok": true,
       "status": 200,
@@ -206,7 +182,7 @@
     },
     {
       "platform": "tving",
-      "title": "MBC 무한도전",
+      "title": "투니버스",
       "image_host": "stillshot.tving.com",
       "ok": true,
       "status": 200,
@@ -214,7 +190,31 @@
     },
     {
       "platform": "tving",
-      "title": "SBS No.1 뉴스라이브",
+      "title": "OCN",
+      "image_host": "stillshot.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "tving",
+      "title": "JTBC2",
+      "image_host": "stillshot.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "tving",
+      "title": "KBS 1박 2일",
+      "image_host": "stillshot.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "tving",
+      "title": "MBC",
       "image_host": "stillshot.tving.com",
       "ok": true,
       "status": 200,
@@ -358,7 +358,47 @@
     },
     {
       "platform": "tving",
-      "title": "손민수 하고 싶은 티셔츠 모음",
+      "title": "갑자기 분위기 공포",
+      "image_host": "image.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/webp"
+    },
+    {
+      "platform": "tving",
+      "title": "웬만해선 그들을 막을 수 없다",
+      "image_host": "image.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/webp"
+    },
+    {
+      "platform": "tving",
+      "title": "절묘한 타이밍에 발생한 사고(?) #나의유죄인간",
+      "image_host": "image.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/webp"
+    },
+    {
+      "platform": "tving",
+      "title": "미대 오빠가 알려주는 인생",
+      "image_host": "image.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/webp"
+    },
+    {
+      "platform": "tving",
+      "title": "몰래 외박한 날 특",
+      "image_host": "image.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/webp"
+    },
+    {
+      "platform": "tving",
+      "title": "경기 시작부터 꿀잼😁",
       "image_host": "image.tving.com",
       "ok": true,
       "status": 200,
@@ -374,47 +414,7 @@
     },
     {
       "platform": "tving",
-      "title": "바다가 추는 Like Jennie 인규가 만든 Smoke",
-      "image_host": "image.tving.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/webp"
-    },
-    {
-      "platform": "tving",
-      "title": "몸 날려서 임시완 구한 설인아😲 #나의유죄인간",
-      "image_host": "image.tving.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/webp"
-    },
-    {
-      "platform": "tving",
-      "title": "잘생긴 얼굴에 똥이라니😨 #나의유죄인간",
-      "image_host": "image.tving.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/webp"
-    },
-    {
-      "platform": "tving",
-      "title": "수행비서 역할 제대로 하는 설인아 모먼트👊 #나의유죄인간",
-      "image_host": "image.tving.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/webp"
-    },
-    {
-      "platform": "tving",
-      "title": "망붕렌즈 낀 지락 소녀들",
-      "image_host": "image.tving.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/webp"
-    },
-    {
-      "platform": "tving",
-      "title": "환상의 콤비",
+      "title": "망한 소개팅에 반드시 있는 캐릭터들",
       "image_host": "image.tving.com",
       "ok": true,
       "status": 200,
@@ -558,7 +558,7 @@
     },
     {
       "platform": "tving",
-      "title": "짱구는못말려 26",
+      "title": "먼작귀 몰아보기",
       "image_host": "image.tving.com",
       "ok": true,
       "status": 200,
@@ -566,7 +566,7 @@
     },
     {
       "platform": "tving",
-      "title": "먼작귀 몰아보기",
+      "title": "짱구는못말려 26",
       "image_host": "image.tving.com",
       "ok": true,
       "status": 200,
@@ -598,7 +598,7 @@
     },
     {
       "platform": "tving",
-      "title": "꿈빛파티시엘",
+      "title": "전생 귀족, 감정 스킬로 성공하다 3기",
       "image_host": "image.tving.com",
       "ok": true,
       "status": 200,
@@ -672,6 +672,22 @@
       "platform": "tving",
       "title": "2026 MAMA AWARDS CHAPTER 1",
       "image_host": "image.tving.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "coupang",
+      "title": "퇴사한 김원훈 그리고 장기하 [직장인들 시즌3] 9화 예고편",
+      "image_host": "i.ytimg.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "coupang",
+      "title": "한 달간 서로 다른 사람과 찐하게 연애한다고요? [너 말고 다른 연애] 9화 예고",
+      "image_host": "i.ytimg.com",
       "ok": true,
       "status": 200,
       "content_type": "image/jpeg"
@@ -846,7 +862,31 @@
     },
     {
       "platform": "wavve",
-      "title": "방송_벌거벗은 한국사3 (tvN)",
+      "title": "Only_각설탕 소리",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "영플_호프 (2026)_1",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "방송_도시여자대피소",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "일드_새우도 도미를 낚고 싶다",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -862,87 +902,7 @@
     },
     {
       "platform": "wavve",
-      "title": "일드_닥터 X 시즌1",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "영플_스파이더맨: 브랜드 뉴 데이_3",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "닥터 X 시즌1",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "뭔데뭔데! 이게 무슨 난리고 (놀면 뭐하니? 스핀오프)",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "포식자들: 사이버 레커, 전쟁의 기록",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "호프 (2026)",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "신인감독 김연경2",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "벌거벗은 한국사3",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "더 커뮤니티 2: 보이지 않는 손",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "용감한 형사들 5",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "벌거벗은 한국사",
+      "title": "이혼숙려캠프",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -958,6 +918,14 @@
     },
     {
       "platform": "wavve",
+      "title": "실화탐사대",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
       "title": "가족관계증명서",
       "image_host": "image.wavve.com",
       "ok": true,
@@ -966,7 +934,7 @@
     },
     {
       "platform": "wavve",
-      "title": "라디오스타",
+      "title": "엄마가 미쳤어요",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -982,7 +950,7 @@
     },
     {
       "platform": "wavve",
-      "title": "개와 늑대의 시간",
+      "title": "라디오스타",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -998,7 +966,7 @@
     },
     {
       "platform": "wavve",
-      "title": "전설의 사내",
+      "title": "비광",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1014,15 +982,7 @@
     },
     {
       "platform": "wavve",
-      "title": "비광",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "여름방학",
+      "title": "포식자들: 사이버 레커, 전쟁의 기록",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1038,14 +998,6 @@
     },
     {
       "platform": "wavve",
-      "title": "베팅 온 팩트",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
       "title": "각설탕 소리",
       "image_host": "image.wavve.com",
       "ok": true,
@@ -1054,7 +1006,23 @@
     },
     {
       "platform": "wavve",
-      "title": "하절기",
+      "title": "레벨업 프로젝트 시즌6",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "여름방학",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "베팅 온 팩트",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1078,14 +1046,6 @@
     },
     {
       "platform": "wavve",
-      "title": "작골",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
       "title": "지구마불 세계여행 시즌 3",
       "image_host": "image.wavve.com",
       "ok": true,
@@ -1094,7 +1054,7 @@
     },
     {
       "platform": "wavve",
-      "title": "밥값 하는 남자들",
+      "title": "작골",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1110,7 +1070,23 @@
     },
     {
       "platform": "wavve",
-      "title": "2026 세계공영방송 서울총회 특집 송캠프: 바다 건너 아리랑",
+      "title": "뭔데뭔데! 이게 무슨 난리고 (놀면 뭐하니? 스핀오프)",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "밥값 하는 남자들",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "신인감독 김연경2",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1119,6 +1095,22 @@
     {
       "platform": "wavve",
       "title": "인턴 (2026)",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "호프 (2026)",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "스파이더맨: 브랜드 뉴 데이",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1150,14 +1142,6 @@
     },
     {
       "platform": "wavve",
-      "title": "스파이더맨: 브랜드 뉴 데이",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
       "title": "3670",
       "image_host": "image.wavve.com",
       "ok": true,
@@ -1174,7 +1158,7 @@
     },
     {
       "platform": "wavve",
-      "title": "이혼숙려캠프",
+      "title": "백수 이세돌",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1182,7 +1166,7 @@
     },
     {
       "platform": "wavve",
-      "title": "미스트롯 포유",
+      "title": "전현무계획 시즌4",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1190,7 +1174,7 @@
     },
     {
       "platform": "wavve",
-      "title": "신상 출시 편스토랑",
+      "title": "나 혼자 산다",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1198,7 +1182,7 @@
     },
     {
       "platform": "wavve",
-      "title": "구해줘! 홈즈",
+      "title": "용감한 형사들 5",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1206,7 +1190,7 @@
     },
     {
       "platform": "wavve",
-      "title": "엄마가 미쳤어요",
+      "title": "호빵맨",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1214,7 +1198,7 @@
     },
     {
       "platform": "wavve",
-      "title": "가족관계증명서",
+      "title": "더 시즌즈",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1222,15 +1206,7 @@
     },
     {
       "platform": "wavve",
-      "title": "서인영의 유행꼰대",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "엄마가 미쳤어요",
+      "title": "닥터 X",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1239,22 +1215,6 @@
     {
       "platform": "wavve",
       "title": "너 말고 다른 연애",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "스모킹 건",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "심야괴담회",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1271,14 +1231,6 @@
     {
       "platform": "wavve",
       "title": "결이 다른 전쟁사",
-      "image_host": "image.wavve.com",
-      "ok": true,
-      "status": 200,
-      "content_type": "image/jpeg"
-    },
-    {
-      "platform": "wavve",
-      "title": "각설탕 소리",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
@@ -1319,6 +1271,78 @@
     {
       "platform": "wavve",
       "title": "라이어",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "옆자리, 프란체스카",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "유부녀 킬러",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "닥터 X 시즌1",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "김과장",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "리갈하이",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "레버리지: 리뎀션",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "닥터로이어",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "머니볼",
+      "image_host": "image.wavve.com",
+      "ok": true,
+      "status": 200,
+      "content_type": "image/jpeg"
+    },
+    {
+      "platform": "wavve",
+      "title": "특별근로감독관 조장풍",
       "image_host": "image.wavve.com",
       "ok": true,
       "status": 200,
