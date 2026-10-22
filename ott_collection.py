@@ -230,6 +230,8 @@ def parse_public_home(html_text, platform, *, source_url="", checked_at="", publ
     sections = adapted["sections"] if adapted else _home_regions(main, platform, source_url)
     promotions = adapted["promotions"] if adapted else _promotions(main, platform, source_url)
     public_lists = adapted.get("public_lists", []) if adapted else []
+    sections = [row for row in sections if not PERSONAL_RE.search(row.get("title", ""))]
+    public_lists = [row for row in public_lists if not PERSONAL_RE.search(row.get("title", ""))]
     for section in sections:
         if section.get("kind") in {"theme", "other"}:
             section["kind"] = classify_section(section["title"])

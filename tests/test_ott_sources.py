@@ -27,6 +27,17 @@ class SourceRegressionTests(unittest.TestCase):
         self.assertEqual(result['sections'][4]['kind'],'promotion')
         self.assertEqual(result['sections'][5]['kind'],'shorts')
 
+    def test_explicit_personal_row_is_excluded_without_renumbering_home(self):
+        soup=BeautifulSoup((FIXTURES/'tving-home.html').read_text(),'html.parser')
+        script=soup.select_one('script[type="application/ld+json"]')
+        payload=json.loads(script.get_text())
+        group=payload['mainEntity']['itemListElement'][1]
+        group['name']=group['item']['name']='시청 기록 기반 추천'
+        script.string=json.dumps(payload,ensure_ascii=False)
+        result=parse_public_home(str(soup),PLATFORMS[1],checked_at=NOW)
+        self.assertNotIn('시청 기록 기반 추천',[row['title'] for row in result['sections']])
+        self.assertEqual(result['sections'][0]['position'],2)
+
     def test_tving_banner_uses_matched_official_title_and_art_not_undefined_logo(self):
         first=parsed('tving')['promotions'][0]
         self.assertEqual(first['title'],'신인감독 김연경2')
