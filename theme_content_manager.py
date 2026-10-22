@@ -7,6 +7,8 @@ from typing import Any
 
 import pandas as pd
 
+from data_storage_lock import with_data_write_lock
+
 CONTENT_COLUMNS = [
     "run_id", "theme_key", "theme_id", "theme_name", "rank", "title",
     "content_type", "year", "reason", "source_url", "poster_url",
@@ -40,7 +42,8 @@ def ensure_content_schema(frame: pd.DataFrame | None) -> pd.DataFrame:
     for column in CONTENT_COLUMNS:
         if column not in df.columns:
             df[column] = ""
-    return df[CONTENT_COLUMNS].fillna("")
+    extras = [column for column in df.columns if column not in CONTENT_COLUMNS]
+    return df[[*CONTENT_COLUMNS, *extras]].fillna("")
 
 
 def load_content_frame(path: Path) -> pd.DataFrame:
@@ -52,6 +55,7 @@ def load_content_frame(path: Path) -> pd.DataFrame:
         return ensure_content_schema(None)
 
 
+@with_data_write_lock
 def upsert_content_frame(path: Path, new_rows: pd.DataFrame) -> pd.DataFrame:
     incoming = ensure_content_schema(new_rows)
     current = load_content_frame(path)
@@ -141,7 +145,7 @@ def content_map_for_scope(frame: pd.DataFrame, run_id: str) -> dict[str, list[di
         key = _clean(row.get("theme_key"))
         if not key:
             continue
-        result.setdefault(key, []).append({column: _clean(row.get(column)) for column in CONTENT_COLUMNS})
+        result.setdefault(key, []).append({column: _clean(row.get(column)) for column in scoped.columns if column != '_rank_num'})
     return result
 
 

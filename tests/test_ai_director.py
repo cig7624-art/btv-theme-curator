@@ -1,0 +1,217 @@
+"""Real-model plans may only change the requested draft and requested fields."""
+from copy import deepcopy
+import json
+from types import SimpleNamespace
+import unittest
+from unittest.mock import Mock, patch
+
+import pandas as pd
+
+from ai_director import new_director_session, run_director_turn, restore_director_version
+from content_pipeline import resolve_director_contents
+from llm_theme_generator import DirectorPlan, ThemeGenerationError, generate_director_plan
+
+
+def catalog():
+    return pd.DataFrame([{"content_id": f"C{i}", "title": f"실제 작품 {i}", "type": "드라마", "year": "2020", "genre": "스릴러", "tags": "복수,반전"} for i in range(1, 12)])
+
+
+def suggestions(start=1):
+    return [{"content_id": f"C{i}", "title": f"실제 작품 {i}", "content_type": "드라마", "year": "2020", "reason": "복수의 선택이 관계를 바꾸는 작품"} for i in range(start, start + 5)]
+
+
+def proposal(name="복수의 대가를 치르는 주인공", start=1, **changes):
+    return {"theme_name": name, "copy": "되돌아갈 수 없는 선택", "rationale": "복수의 선택과 결과를 비교하는 기획",
+            "genre": "드라마/스릴러", "mood": "자극적/긴장", "keywords": ["복수", "관계"],
+            "content_search_terms": ["복수 드라마"], "creation_angle": "인물형", "source_issue_keys": [],
+            "contents": suggestions(start), **changes}
+
+
+def create_plan(count=3):
+    return DirectorPlan.model_validate({"action": "create", "message": f"{count}개 초안을 만들었어요.",
+                        "themes": [proposal(f"복수를 선택한 주인공 {index}") for index in range(1, count + 1)], "edits": []})
+
+
+def edit_plan(draft_id, scope="title", **changes):
+    return DirectorPlan.model_validate({"action": "revise", "message": "선택한 항목을 수정했어요.",
+                        "themes": [], "edits": [{"target_draft_id": draft_id, "scope": scope, **changes}]})
+
+
+def client(plan):
+    value = Mock()
+    value.responses.parse.return_value = SimpleNamespace(output_parsed=plan,
+                        usage=SimpleNamespace(input_tokens=100, output_tokens=50))
+    return value
+
+
+def resolver(items, local_contents, **kwargs):
+    return resolve_director_contents(items, local_contents, enrich_posters=False, **kwargs)
+
+
+class AiDirectorTests(unittest.TestCase):
+    def setUp(self):
+        self.themes = pd.DataFrame(columns=["theme_id", "theme_name", "copy", "trigger_keywords", "genre", "mood"])
+        self.catalog = catalog()
+
+    def turn(self, state, request, plan, **changes):
+        return run_director_turn(state, request, themes=self.themes, contents=self.catalog, issue_records=[],
+                                 api_key="", client=client(plan), content_resolver=resolver, **changes)
+
+    def initial(self):
+        return self.turn(new_director_session(), "복수극 테마 3개 만들어줘.", create_plan())
+
+    def test_free_prompt_creates_real_catalog_drafts_without_issues_or_any_storage(self):
+        state = new_director_session()
+        sdk = client(create_plan())
+        with patch('llm_theme_generator.persist_recommendations_locally') as persist, patch('llm_theme_generator.persist_files_to_github') as remote:
+            result = run_director_turn(state, "한국 영화와 드라마를 섞은 복수극 테마 3개 만들어줘.",
+                        themes=self.themes, contents=self.catalog, issue_records=[], api_key="", client=sdk, content_resolver=resolver)
+        self.assertEqual(state['drafts'], [])
+        self.assertEqual(len(result['drafts']), 3)
+        self.assertEqual(len(result['versions']), 1)
+        self.assertTrue(all(len(row['contents']) == 5 for row in result['drafts']))
+        self.assertTrue(all(item['availability_status'] == 'not_checked' for row in result['drafts'] for item in row['contents']))
+        payload = json.loads(sdk.responses.parse.call_args.kwargs['input'][-1]['content'])
+        self.assertEqual(payload['actual_content_catalog'][0]['content_id'], 'C1')
+        self.assertIn('한국 영화', payload['request'])
+        self.assertEqual(payload['recent_issues'], [])
+        persist.assert_not_called(); remote.assert_not_called()
+
+    def test_second_theme_title_only_preserves_every_other_user_field_and_other_drafts(self):
+        state = self.initial()
+        before = deepcopy(state)
+        target = state['drafts'][1]['draft_id']
+        plan = edit_plan(target, scope='all', theme_name='칼끝에서 다시 태어난 관계', copy='잘못 바꾸려는 카피',
+                         contents=suggestions(6), genre='코미디')
+        with patch('content_pipeline.resolve_director_contents', side_effect=AssertionError('title edit must not rematch')):
+            result = self.turn(state, '2번 테마가 좋은데 더 감각적인 제목으로 바꿔줘.', plan)
+        expected = deepcopy(before['drafts'][1]); expected['theme_name'] = '칼끝에서 다시 태어난 관계'; expected['duplicate_matches'] = []
+        self.assertEqual(result['drafts'][1], expected)
+        self.assertEqual(result['drafts'][0], before['drafts'][0])
+        self.assertEqual(result['drafts'][2], before['drafts'][2])
+        self.assertEqual(state, before)
+
+    def test_content_only_replacement_preserves_name_copy_rationale_and_other_drafts(self):
+        state = self.initial(); target = state['drafts'][1]['draft_id']
+        plan = edit_plan(target, 'all', theme_name='변경되면 안 되는 제목', copy='바꾸면 안 됨',
+                         contents=suggestions(6), excluded_titles=['실제 작품 6'])
+        result = self.turn(state, '이 작품은 제외하고 다른 작품을 추천해줘.', plan,
+                           target_draft_id=target, edit_scope='contents')
+        self.assertEqual(result['drafts'][1]['theme_name'], state['drafts'][1]['theme_name'])
+        self.assertEqual(result['drafts'][1]['copy'], state['drafts'][1]['copy'])
+        self.assertEqual(result['drafts'][1]['rationale'], state['drafts'][1]['rationale'])
+        self.assertNotIn('실제 작품 6', [row['title'] for row in result['drafts'][1]['contents']])
+        self.assertEqual(result['drafts'][0], state['drafts'][0])
+
+    def test_selected_target_cannot_be_replaced_by_another_model_target(self):
+        state = self.initial(); before = deepcopy(state)
+        with self.assertRaisesRegex(ThemeGenerationError, '다른 초안'):
+            self.turn(state, '2번 테마명만 수정해줘.', edit_plan(state['drafts'][0]['draft_id'], theme_name='잘못된 대상'))
+        self.assertEqual(state, before)
+
+    def test_narrow_edit_without_selected_target_cannot_replace_all_existing_drafts(self):
+        state = self.initial(); before = deepcopy(state)
+        with self.assertRaisesRegex(ThemeGenerationError, '수정 범위'):
+            self.turn(state, '테마명만 더 감각적으로 바꿔줘.', create_plan(1))
+        self.assertEqual(state, before)
+
+    def test_empty_model_exclusions_do_not_lift_previous_bans_on_later_turn(self):
+        state = self.initial(); target = state['drafts'][1]['draft_id']
+        first = self.turn(state, '2번 테마에서 실제 작품 6은 제외하고 작품만 교체해줘.',
+                          edit_plan(target, 'contents', contents=suggestions(6), excluded_titles=['실제 작품 6']))
+        result = self.turn(first, '2번 테마 추천 작품만 다시 바꿔줘.',
+                           edit_plan(target, 'contents', contents=suggestions(6), excluded_titles=[]))
+        self.assertEqual(result['drafts'][1]['excluded_titles'], ['실제 작품 6'])
+        self.assertNotIn('실제 작품 6', [row['title'] for row in result['drafts'][1]['contents']])
+        self.assertEqual(result['drafts'][0], state['drafts'][0])
+
+    def test_explicit_reinclude_lifts_only_the_named_ban(self):
+        state = self.initial(); target = state['drafts'][0]['draft_id']
+        state['drafts'][0]['excluded_titles'] = ['실제 작품 6', '실제 작품 7']
+        result = self.turn(state, '1번 테마에 실제 작품 6은 다시 포함해줘.',
+                           edit_plan(target, 'contents', contents=suggestions(6), excluded_titles=[],
+                                     reincluded_titles=['실제 작품 6', '실제 작품 7']))
+        self.assertEqual(result['drafts'][0]['excluded_titles'], ['실제 작품 7'])
+        self.assertIn('실제 작품 6', [row['title'] for row in result['drafts'][0]['contents']])
+        self.assertNotIn('실제 작품 7', [row['title'] for row in result['drafts'][0]['contents']])
+
+    def test_explicit_extra_theme_appends_even_when_model_says_replace(self):
+        state = self.initial(); before = deepcopy(state)
+        plan = DirectorPlan.model_validate({'action':'create','message':'한 개 추가했어요.', 'creation_mode':'replace',
+                                           'themes':[proposal('일상을 되찾는 복수의 선택')]})
+        result = self.turn(state, '기존 테마는 유지하고 하나 더 만들어줘.', plan)
+        self.assertEqual(len(result['drafts']), 4)
+        self.assertEqual(result['drafts'][:3], before['drafts'])
+        self.assertEqual(state, before)
+
+    def test_style_scope_changes_genre_mood_and_keeps_contents_and_text(self):
+        state = self.initial(); target = state['drafts'][0]['draft_id']
+        result = self.turn(state, '장르와 분위기를 변경해줘.', edit_plan(target, 'all', genre='미스터리', mood='서늘함',
+                           theme_name='바꾸면 안 됨', contents=suggestions(6)), target_draft_id=target, edit_scope='style')
+        self.assertEqual(result['drafts'][0]['genre'], '미스터리')
+        self.assertEqual(result['drafts'][0]['mood'], '서늘함')
+        self.assertEqual(result['drafts'][0]['theme_name'], state['drafts'][0]['theme_name'])
+        self.assertEqual(result['drafts'][0]['contents'], state['drafts'][0]['contents'])
+
+    def test_undo_and_selected_theme_restore_are_deterministic_and_do_not_call_model(self):
+        first = self.initial(); target = first['drafts'][1]['draft_id']
+        second = self.turn(first, '2번 테마명만 바꿔줘.', edit_plan(target, theme_name='복수의 새로운 이름'))
+        with patch('ai_director.generate_director_plan', side_effect=AssertionError('undo must be local')):
+            undone = run_director_turn(second, '이전 버전으로 되돌려줘', themes=self.themes, contents=self.catalog)
+        self.assertEqual(undone['drafts'], first['drafts'])
+        self.assertEqual(undone['current_version_id'], first['current_version_id'])
+        self.assertEqual(undone['last_usage']['api_call_count'], 0)
+        restored = restore_director_version(second, first['current_version_id'], target_draft_id=target)
+        self.assertEqual(restored['drafts'][1], first['drafts'][1])
+        self.assertEqual(restored['drafts'][0], second['drafts'][0])
+        self.assertEqual(len(restored['versions']), 3)
+        with patch('ai_director.generate_director_plan', side_effect=AssertionError('undo must be local')):
+            scoped = run_director_turn(second, '2번 테마 앞선 버전으로 되돌려줘', themes=self.themes, contents=self.catalog)
+        self.assertEqual(scoped['drafts'][1], first['drafts'][1])
+        self.assertEqual(scoped['drafts'][0], second['drafts'][0])
+
+    def test_next_turn_contains_prior_conversation_and_current_draft_state(self):
+        state = self.initial(); target = state['drafts'][1]['draft_id']; sdk = client(edit_plan(target, theme_name='관계를 끝내는 복수'))
+        result = run_director_turn(state, '2번 제목만 바꿔줘.', themes=self.themes, contents=self.catalog,
+                                  api_key='', client=sdk, content_resolver=resolver)
+        inputs = sdk.responses.parse.call_args.kwargs['input']
+        self.assertEqual(inputs[1]['content'], state['messages'][0]['content'])
+        payload = json.loads(inputs[-1]['content'])
+        self.assertEqual(payload['current_drafts'][1]['draft_id'], target)
+        self.assertEqual(len(result['messages']), 4)
+
+    def test_existing_database_duplicate_is_reported_without_replacing_or_writing_it(self):
+        self.themes = pd.DataFrame([{'theme_id':'T1', 'theme_name':'복수를 선택한 주인공 1'}])
+        result = self.turn(new_director_session(), '복수 테마 1개 만들어줘.', create_plan(1))
+        duplicate = result['drafts'][0]['duplicate_matches'][0]
+        self.assertEqual(duplicate['theme_id'], 'T1')
+        self.assertTrue(duplicate['exact'])
+        self.assertEqual(self.themes.iloc[0]['theme_id'], 'T1')
+
+    def test_unknown_content_is_not_filled_with_invented_titles_and_unknown_issue_keys_drop(self):
+        raw = proposal(source_issue_keys=['invented'], contents=[{'title':'DB에 없는 가상 작품','content_type':'드라마','year':'2020','reason':'상상'}])
+        p = DirectorPlan.model_validate({'action':'create','message':'초안','themes':[raw]})
+        result = self.turn(new_director_session(), '테마 1개 만들어줘.', p)
+        draft = result['drafts'][0]
+        self.assertEqual(draft['contents'], [])
+        self.assertIn('0편', draft['content_warning'])
+        self.assertEqual(draft['source_issue_keys'], [])
+        self.assertEqual(draft['source_issue'], '')
+
+    def test_api_failure_is_sanitized_and_leaves_session_unchanged(self):
+        state = self.initial(); before = deepcopy(state); sdk = Mock()
+        sdk.responses.parse.side_effect = RuntimeError('https://secret.example/?key=DO_NOT_LOG')
+        with self.assertRaises(ThemeGenerationError) as caught:
+            run_director_turn(state, '다른 테마를 만들어줘.', themes=self.themes, contents=self.catalog, client=sdk)
+        self.assertNotIn('DO_NOT_LOG', str(caught.exception))
+        self.assertEqual(state, before)
+
+    def test_missing_api_key_has_no_demo_or_fixed_response(self):
+        with patch('llm_theme_generator.OpenAI') as sdk, self.assertRaises(ThemeGenerationError):
+            generate_director_plan(
+                request='테마를 만들어줘.',messages=[],drafts=[],themes=self.themes,contents=self.catalog,issue_records=[],api_key='',model='configured-model')
+        sdk.assert_not_called()
+
+
+if __name__ == '__main__':
+    unittest.main()
