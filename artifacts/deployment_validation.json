@@ -1,29 +1,41 @@
 {
   "schema_version": 1,
-  "status": "failed",
+  "status": "passed",
   "expected_version": "1.1.0",
-  "observed_version": null,
-  "started_at": "2026-10-22T11:54:25.640856+00:00",
-  "finished_at": "2026-10-22T12:02:32.144829+00:00",
-  "attempts": 10,
+  "observed_version": "1.1.0",
+  "started_at": "2026-10-22T12:09:38.976105+00:00",
+  "finished_at": "2026-10-22T12:10:11.083176+00:00",
+  "attempts": 1,
   "tests": {
-    "desktop_version": false,
-    "desktop_ott_magazine": false,
-    "desktop_ott_feature": false,
-    "desktop_no_exception": false,
-    "desktop_no_horizontal_overflow": false,
-    "desktop_lead_artwork": false,
-    "mobile_version": false,
-    "mobile_ott_magazine": false,
-    "mobile_ott_feature": false,
-    "mobile_no_exception": false,
-    "mobile_no_horizontal_overflow": false,
-    "mobile_lead_artwork": false
+    "desktop_version": true,
+    "desktop_ott_magazine": true,
+    "desktop_ott_feature": true,
+    "desktop_no_exception": true,
+    "desktop_no_horizontal_overflow": true,
+    "desktop_lead_artwork": true,
+    "mobile_version": true,
+    "mobile_ott_magazine": true,
+    "mobile_ott_feature": true,
+    "mobile_no_exception": true,
+    "mobile_no_horizontal_overflow": true,
+    "mobile_lead_artwork": true
   },
-  "errors": [
-    "release_marker_not_ready"
-  ],
+  "errors": [],
   "warnings": [],
-  "artwork": {},
-  "source_commit": "eb93cae93d9ef824f7cd0a41589ad138b9e361f6"
+  "artwork": {
+    "desktop": {
+      "checked": 6,
+      "loaded": 6,
+      "unavailable": 0,
+      "lead_loaded": true
+    },
+    "mobile": {
+      "checked": 6,
+      "loaded": 6,
+      "unavailable": 0,
+      "lead_loaded": true
+    }
+  },
+  "source_commit": "c7830fc15e48d27e18617e43b27ab7436e95f9c1",
+  "frame_state": "matched_release"
 }
