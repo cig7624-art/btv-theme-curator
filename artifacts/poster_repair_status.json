@@ -1,26 +1,20 @@
 {
   "schema_version": 1,
-  "applied_at": "2026-10-22T04:45:32.048035+00:00",
+  "applied_at": "2026-10-22T04:48:15.151405+00:00",
   "mode": "write",
   "source_run_id": "20261022-114213-3b59418b",
   "latest_run_id": "20261022-114213-3b59418b",
-  "checked_unique": 7,
-  "found_unique": 3,
-  "updated_rows": 12,
+  "checked_unique": 4,
+  "found_unique": 1,
+  "updated_rows": 3,
   "visible_candidates": 40,
-  "before_visible_with_poster": 33,
-  "visible_with_poster": 36,
+  "before_visible_with_poster": 36,
+  "visible_with_poster": 37,
   "unresolved": [
     {
       "title": "피지컬: 100",
       "year": "2023",
       "content_type": "예능",
-      "poster_url": ""
-    },
-    {
-      "title": "그녀는 예뻤다",
-      "year": "2015",
-      "content_type": "드라마",
       "poster_url": ""
     },
     {
