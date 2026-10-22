@@ -151,7 +151,7 @@ def _wikipedia_pages(language, titles, *, english_links=False, search=False):
         query = _text(titles[0]).replace('"', " ")
         params.pop("titles")
         params.update(generator="search", gsrsearch=f'intitle:"{query}"',
-                      gsrwhat="title", gsrnamespace=0, gsrlimit=5)
+                      gsrnamespace=0, gsrlimit=5)
     response = _wikipedia_get(language, params)
     payload = response.json()
     pages = payload.get("query", {}).get("pages", {}) if isinstance(payload, dict) else {}
