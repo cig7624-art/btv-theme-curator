@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork")
+CHECKS = ("version", "four_tabs", "director_screen", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork")
 
 
 def normalized_version(value):
@@ -132,6 +132,18 @@ def _load_version(page, args, report, label):
 
 def _check_editorial(frame, report, label, screenshots):
     page = frame.page
+    tab_names = frame.get_by_role("tab").all_text_contents()
+    report["tests"][f"{label}_four_tabs"] = [name.strip() for name in tab_names] == ["지금 주목할 이야기", "추천 테마", "OTT는 지금", "AI 디렉터"]
+    if not report["tests"][f"{label}_four_tabs"]:
+        raise VerificationIssue("four_tabs_missing", retry=True)
+    frame.get_by_role("tab", name="AI 디렉터", exact=True).click()
+    try:
+        frame.locator(".director-heading").wait_for(state="visible", timeout=20000)
+        report["tests"][f"{label}_director_screen"] = frame.get_by_placeholder("만들고 싶은 테마나 고치고 싶은 부분을 알려주세요.").count() == 1
+    except Exception:
+        raise VerificationIssue("director_screen_missing", retry=True)
+    if not report["tests"][f"{label}_director_screen"]:
+        raise VerificationIssue("director_composer_missing")
     frame.get_by_role("tab", name="OTT는 지금", exact=True).click(timeout=15000)
     try:
         frame.locator(".ott-magazine").first.wait_for(state="visible", timeout=20000)
@@ -190,7 +202,7 @@ def _check_editorial(frame, report, label, screenshots):
         frame.locator('.ott-official-updates .ott-art-image, .ott-platform-detail .ott-home-section .ott-art-image').first.wait_for(state='attached', timeout=15000)
         report['tests'][f'{label}_coupang_content'] = True
     except Exception:
-        raise VerificationIssue('coupang_content_missing')
+        raise VerificationIssue('coupang_content_missing', retry=True)
     coupang_loaded = frame.evaluate(r'''async () => {
       const element = document.querySelector('.ott-official-updates .ott-art-image, .ott-platform-detail .ott-home-section .ott-art-image');
       const match = element && getComputedStyle(element).backgroundImage.match(/^url\((["']?)(.*?)\1\)$/);

@@ -48,12 +48,13 @@ def _session(session):
     return deepcopy(session)
 
 
-def _version(state, label, *, kind="revise", restored_from=None):
+def _version(state, label, *, kind="revise", restored_from=None, restored_target_draft_id=None):
     state["version_sequence"] = int(state.get("version_sequence", 0)) + 1
     version_id = f"v{state['version_sequence']:04d}"
     state["versions"].append({"version_id": version_id, "label": _clean_short_text(label, 100),
         "kind": kind, "created_at": _now(), "parent_version_id": state.get("current_version_id"),
-        "restored_from": restored_from, "drafts": deepcopy(state["drafts"])})
+        "restored_from": restored_from, "restored_target_draft_id": restored_target_draft_id,
+        "drafts": deepcopy(state["drafts"])})
     state["versions"] = state["versions"][-MAX_VERSIONS:]
     state["current_version_id"] = version_id
     return state
@@ -209,7 +210,8 @@ def restore_director_version(session, version_id, *, target_draft_id=None):
         if original is None or current is None:
             raise ThemeGenerationError("선택한 버전에 이 테마의 이전 초안이 없습니다.")
         state["drafts"] = [deepcopy(original) if row.get("draft_id") == target_draft_id else row for row in state["drafts"]]
-        _version(state, "선택한 테마의 이전 버전 복원", kind="restore", restored_from=version_id)
+        _version(state, "선택한 테마의 이전 버전 복원", kind="restore", restored_from=version_id,
+                 restored_target_draft_id=target_draft_id)
     else:
         state["drafts"] = deepcopy(version["drafts"])
         state["current_version_id"] = version_id
@@ -221,8 +223,14 @@ def restore_director_version(session, version_id, *, target_draft_id=None):
 def _undo_version(state, target_draft_id=None):
     by_id = {row["version_id"]: row for row in state["versions"]}
     current = by_id.get(state.get("current_version_id"))
-    while current and current.get("parent_version_id"):
-        prior = by_id.get(current["parent_version_id"])
+    while current:
+        # A per-theme restore keeps other themes at the current global version.
+        # Continue that theme's history from its restored snapshot, rather than
+        # treating the discarded edit as the next "previous" version.
+        if target_draft_id and current.get("restored_target_draft_id") == target_draft_id:
+            current = by_id.get(current.get("restored_from"))
+            continue
+        prior = by_id.get(current.get("parent_version_id"))
         if prior is None:
             break
         if not target_draft_id:

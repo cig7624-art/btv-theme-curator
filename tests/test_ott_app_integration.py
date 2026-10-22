@@ -1,11 +1,15 @@
 """The new navigation must preserve existing actions and avoid implicit crawls."""
 from unittest.mock import patch, MagicMock
+from datetime import datetime, timezone
 import unittest
 import streamlit as st
 from test_theme_actions import app_fixture
 
-SNAPSHOT = {'schema_version':1,'updated_at':'2026-10-22T07:00:00Z','platforms':[
-    {'id':'tving','status':'ok','checked_at':'2026-10-22T07:00:00Z','last_success_at':'2026-10-22T07:00:00Z',
+NOW = datetime.now(timezone.utc).isoformat()
+TABS = ['지금 주목할 이야기','추천 테마','OTT는 지금','AI 디렉터']
+
+SNAPSHOT = {'schema_version':1,'updated_at':NOW,'platforms':[
+    {'id':'tving','status':'ok','checked_at':NOW,'last_success_at':NOW,
      'promotions':[],'sections':[{'id':'integration-home','title':'수집 결과의 원래 목록', 'position':1,
         'kind':'theme','works':[{'title':'연결된 작품','url':'https://www.tving.com/contents/P1','image_url':'https://image.tving.com/P1.jpg'}]}]}]}
 
@@ -16,8 +20,12 @@ class OttAppIntegrationTests(unittest.TestCase):
     def test_order_and_reruns_do_not_request_public_sites(self):
         with patch('ott_collection.collect_public_homes') as collect, patch('ott_collection.load_snapshot',return_value=SNAPSHOT), app_fixture() as state:
             app=state['app']
-            self.assertEqual([tab.label for tab in app.tabs],['지금 주목할 이야기','추천 테마','OTT는 지금'])
+            self.assertEqual([tab.label for tab in app.tabs],TABS)
             self.assertFalse(app.exception)
+            app.session_state['home_sections']='OTT는 지금'
+            app.run()
+            self.assertFalse(app.exception)
+            app.session_state['home_sections']='AI 디렉터'
             app.run()
             self.assertFalse(app.exception)
             collect.assert_not_called()
@@ -47,5 +55,5 @@ class OttAppIntegrationTests(unittest.TestCase):
             back.click().run()
             self.assertFalse(app.exception)
             self.assertEqual(app.session_state['page'],'home')
-            self.assertEqual([t.label for t in app.tabs],['지금 주목할 이야기','추천 테마','OTT는 지금'])
+            self.assertEqual([t.label for t in app.tabs],TABS)
             collect.assert_not_called()

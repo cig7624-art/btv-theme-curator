@@ -170,6 +170,40 @@ class AiDirectorTests(unittest.TestCase):
         self.assertEqual(scoped['drafts'][1], first['drafts'][1])
         self.assertEqual(scoped['drafts'][0], second['drafts'][0])
 
+    def test_repeated_theme_undo_walks_back_without_redoing_and_preserves_other_themes(self):
+        first = self.initial(); target = first['drafts'][1]['draft_id']
+        second = self.turn(first, '2번 제목만 바꿔줘.', edit_plan(target, theme_name='복수의 두 번째 이름'))
+        third = self.turn(second, '2번 제목만 바꿔줘.', edit_plan(target, theme_name='복수의 세 번째 이름'))
+        other = first['drafts'][0]['draft_id']
+        latest = self.turn(third, '1번 카피만 바꿔줘.', edit_plan(other, 'copy', copy='다른 테마의 새 카피'))
+        before = deepcopy(latest)
+        with patch('ai_director.generate_director_plan', side_effect=AssertionError('undo must be local')):
+            once = run_director_turn(latest, '2번 이전 버전으로 되돌려줘', themes=self.themes, contents=self.catalog)
+            twice = run_director_turn(once, '2번 이전 버전으로 되돌려줘', themes=self.themes, contents=self.catalog)
+            with self.assertRaisesRegex(ThemeGenerationError, '더 이전'):
+                run_director_turn(twice, '2번 이전 버전으로 되돌려줘', themes=self.themes, contents=self.catalog)
+        self.assertEqual(once['drafts'][1], second['drafts'][1])
+        self.assertEqual(twice['drafts'][1], first['drafts'][1])
+        for restored in (once, twice):
+            self.assertEqual(restored['drafts'][0], latest['drafts'][0])
+            self.assertEqual(restored['drafts'][2], latest['drafts'][2])
+            self.assertEqual(restored['last_usage']['api_call_count'], 0)
+        self.assertEqual(latest, before)
+
+    def test_theme_undo_after_restored_branch_does_not_revisit_abandoned_edits(self):
+        first = self.initial(); target = first['drafts'][1]['draft_id']
+        second = self.turn(first, '2번 제목만 바꿔줘.', edit_plan(target, theme_name='복수의 두 번째 이름'))
+        abandoned = self.turn(second, '2번 제목만 바꿔줘.', edit_plan(target, theme_name='버린 분기의 이름'))
+        restored = restore_director_version(abandoned, second['current_version_id'], target_draft_id=target)
+        branch = self.turn(restored, '2번 제목만 바꿔줘.', edit_plan(target, theme_name='새 분기의 이름'))
+        with patch('ai_director.generate_director_plan', side_effect=AssertionError('undo must be local')):
+            once = run_director_turn(branch, '2번 이전 버전으로 되돌려줘', themes=self.themes, contents=self.catalog)
+            twice = run_director_turn(once, '2번 이전 버전으로 되돌려줘', themes=self.themes, contents=self.catalog)
+        self.assertEqual(once['drafts'][1], second['drafts'][1])
+        self.assertEqual(twice['drafts'][1], first['drafts'][1])
+        self.assertEqual(twice['drafts'][0], branch['drafts'][0])
+        self.assertEqual(twice['drafts'][2], branch['drafts'][2])
+
     def test_next_turn_contains_prior_conversation_and_current_draft_state(self):
         state = self.initial(); target = state['drafts'][1]['draft_id']; sdk = client(edit_plan(target, theme_name='관계를 끝내는 복수'))
         result = run_director_turn(state, '2번 제목만 바꿔줘.', themes=self.themes, contents=self.catalog,

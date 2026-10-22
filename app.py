@@ -1995,7 +1995,7 @@ else:
         )
 
     st.markdown(
-        f'<footer class="magazine-footer" data-release="ott-daily-v1" data-version="{html.escape(APP_VERSION, quote=True)}">'
+        f'<footer class="magazine-footer" data-release="ai-director-v1" data-version="{html.escape(APP_VERSION, quote=True)}">'
         f'<span>B tv+ · THEME CURATOR · v{html.escape(APP_VERSION)}</span>'
         '<span>오늘의 이슈가 내일의 취향이 되도록.</span></footer>',
         unsafe_allow_html=True,
