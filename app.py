@@ -27,6 +27,7 @@ from llm_theme_generator import (
 from kinolights_candidates import content_rows_to_frame, validate_content_suggestions
 from poster_assets import enrich_poster_candidates
 from theme_editorial import theme_card_html
+from issue_carousel import CAROUSEL_SCRIPT, issue_carousel_html
 from issue_quality import assess_issues, build_ranked_issues
 # Independent video/news signals and related articles share the same evidence.
 from issue_presentation import present_issue
@@ -1868,12 +1869,15 @@ else:
         if issues.empty:
             st.info("최근 수집된 이슈가 없습니다. 이슈가 수집되면 이곳에서 확인할 수 있어요.")
         else:
-            main_issues = build_core_issues(issues).head(4)
+            main_issues = build_core_issues(issues).head(10)
             cards = "".join(
                 editorial_issue_card_html(issue, index)
                 for index, (_, issue) in enumerate(main_issues.iterrows(), start=1)
             )
-            st.markdown(f'<div class="editorial-grid">{cards}</div>', unsafe_allow_html=True)
+            st.markdown(issue_carousel_html(cards), unsafe_allow_html=True)
+            # The script is fixed application code; article text never enters it.
+            with st.container(key="issue_carousel_script"):
+                st.html(CAROUSEL_SCRIPT, unsafe_allow_javascript=True)
 
             news_issues = build_core_issues(issues[issues["source_group"] == "온라인 화제·뉴스"], news_pool=issues)
             if not news_issues.empty:

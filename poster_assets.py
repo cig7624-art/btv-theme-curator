@@ -89,6 +89,134 @@ def _itunes_poster(title, year, content_type):
     return matches[0][1] if matches else {}
 
 
+def _wikipedia_pages(language, titles, *, english_links=False):
+    params = {
+        "action": "query", "format": "json", "redirects": 1, "titles": "|".join(titles),
+        "prop": "pageimages|pageprops|extracts|categories" + ("|langlinks" if english_links else ""),
+        "piprop": "original|name", "pilicense": "any", "exintro": 1,
+        "explaintext": 1, "exsentences": 3, "cllimit": 50,
+    }
+    if english_links:
+        params.update(lllang="en", lllimit=1)
+    response = requests.get(
+        f"https://{language}.wikipedia.org/w/api.php", params=params,
+        headers={"User-Agent": _USER_AGENT}, timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
+    payload = response.json()
+    pages = payload.get("query", {}).get("pages", {}) if isinstance(payload, dict) else {}
+    return list(pages.values()) if isinstance(pages, dict) else []
+
+
+def _verified_wikipedia_page(page, requested_titles, year, tv):
+    if not isinstance(page, dict) or "missing" in page or "disambiguation" in page.get("pageprops", {}):
+        return False
+    page_title = _text(page.get("title"))
+    base_title = re.sub(r"\s*\([^()]+\)$", "", page_title)
+    if _key(base_title) not in {_key(re.sub(r"\s*\([^()]+\)$", "", title)) for title in requested_titles}:
+        return False
+    qualifier = re.search(r"\(([^()]*)\)$", page_title)
+    qualifier = qualifier.group(1) if qualifier else ""
+    article_year = _year(qualifier)
+    if year and article_year and article_year != year:
+        return False
+    title_tv = bool(re.search(r"드라마|텔레비전|television|TV series", qualifier, re.I))
+    title_film = bool(re.search(r"영화|\bfilm\b", qualifier, re.I))
+    if (title_tv and not tv) or (title_film and tv):
+        return False
+    categories = " ".join(_text(item.get("title")) for item in page.get("categories", []) if isinstance(item, dict))
+    kind_pattern = r"드라마|텔레비전|television|TV series" if tv else r"영화|\bfilms?\b"
+    if not re.search(kind_pattern, " ".join((qualifier, categories)), re.I):
+        return False
+    release_years = set()
+    for category in page.get("categories", []):
+        label = _text(category.get("title")) if isinstance(category, dict) else ""
+        category_year = re.match(r"^(?:Category|분류):\s*((?:19|20)\d{2})(.*)$", label, re.I)
+        if not category_year:
+            continue
+        tail = category_year.group(2)
+        release_category = (bool(re.search(r"television series debuts|TV series debuts|년에?\s*(?:시작한|방영을\s*시작한)", tail, re.I))
+                            or bool(re.fullmatch(r"년\s*(?:드라마|텔레비전\s*드라마)", tail))) if tv else bool(re.search(r"(?:\bfilms?|영화)\s*$", tail, re.I))
+        if release_category:
+            release_years.add(category_year.group(1))
+    # A sequel/next season's year in the intro cannot override an explicitly
+    # classified release or first-broadcast year for this article's work.
+    if year and release_years and year not in release_years:
+        return False
+    # Premiere/release categories can establish the year when a short intro
+    # omits it. A year mentioned in an actor biography cannot establish identity.
+    if year and not re.search(rf"\b{re.escape(year)}(?:년|\b)", " ".join((_text(page.get("extract")), categories))):
+        return False
+    return True
+
+
+def _infobox_poster(language, page):
+    """Read the verified media article's actual artwork slot, not a filename guess."""
+    from bs4 import BeautifulSoup
+
+    params = {"action": "parse", "format": "json", "prop": "text", "disableeditsection": 1}
+    if isinstance(page.get("pageid"), int) and page["pageid"] > 0:
+        params["pageid"] = page["pageid"]
+    else:
+        params["page"] = _text(page.get("title"))
+    response = requests.get(
+        f"https://{language}.wikipedia.org/w/api.php", params=params,
+        headers={"User-Agent": _USER_AGENT}, timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
+    payload = response.json()
+    parsed = payload.get("parse", {}) if isinstance(payload, dict) else {}
+    if not isinstance(parsed, dict):
+        return ""
+    if parsed.get("title") and _key(parsed["title"]) != _key(page.get("title")):
+        return ""
+    markup = parsed.get("text", {})
+    markup = markup.get("*", "") if isinstance(markup, dict) else markup
+    if not isinstance(markup, str) or not markup:
+        return ""
+    soup = BeautifulSoup(markup, "html.parser")
+    box = soup.select_one("table.infobox")
+    if box is None:
+        return ""
+    # The main artwork cell is distinct from cast photos and unrelated images
+    # elsewhere in the article. Korean infoboxes often use a colspan cell.
+    images = box.select(".infobox-image img") or box.select("tr td[colspan] img")
+    for image in images[:2]:
+        slot = image.find_parent("td")
+        caption = slot.get_text(" ", strip=True) if slot is not None else ""
+        caption += " " + " ".join(item.get_text(" ", strip=True) for item in box.select(".infobox-caption"))
+        hint = " ".join((_text(image.get("alt")), _text(image.get("src")), caption))
+        if re.search(r"logo|로고|cast photo|출연진|배우.{0,5}사진|인물.{0,5}사진|headshot|portrait|signature|book cover|원작.{0,5}표지", hint, re.I):
+            continue
+        try:
+            width, height = float(image.get("width", 0)), float(image.get("height", 0))
+            portrait = width > 0 and height > 0 and .45 <= width / height <= .85
+        except (TypeError, ValueError):
+            portrait = False
+        explicit_poster = bool(re.search(r"poster|포스터|promotional", hint, re.I))
+        if not portrait and not explicit_poster:
+            continue
+        raw = _text(image.get("src"))
+        poster = _url("https:" + raw if raw.startswith("//") else raw, domains=("wikimedia.org", "wikipedia.org"))
+        if poster:
+            return poster
+    return ""
+
+
+def _wikipedia_artwork(language, page):
+    original = page.get("original", {})
+    poster = _url(original.get("source") if isinstance(original, dict) else "", domains=("wikimedia.org", "wikipedia.org"))
+    if not (poster and re.search(r"poster|포스터", _text(page.get("pageimage")), re.I)):
+        try:
+            poster = _infobox_poster(language, page)
+        except (requests.RequestException, ValueError, TypeError, KeyError):
+            poster = ""
+    if not poster:
+        return {}
+    return {"poster_url": poster, "poster_source": "위키백과",
+            "poster_source_url": f"https://{language}.wikipedia.org/wiki/" + quote(_text(page.get("title")).replace(" ", "_"))}
+
+
 def _wikipedia_poster(title, year, content_type):
     korean = bool(re.search(r"[가-힣]", title))
     language = "ko" if korean else "en"
@@ -98,57 +226,33 @@ def _wikipedia_poster(title, year, content_type):
     else:
         suffixes = (["TV series", "television series"] if tv else ([f"{year} film"] if year else []) + ["film"])
     titles = [f"{title} ({suffix})" for suffix in suffixes] + [title]
-    response = requests.get(
-        f"https://{language}.wikipedia.org/w/api.php",
-        params={"action": "query", "format": "json", "redirects": 1, "titles": "|".join(titles),
-                "prop": "pageimages|pageprops|extracts|categories", "piprop": "original|name", "pilicense": "any",
-                "exintro": 1, "explaintext": 1, "exsentences": 2, "cllimit": 30},
-        headers={"User-Agent": _USER_AGENT}, timeout=REQUEST_TIMEOUT,
-    )
-    response.raise_for_status()
-    payload = response.json()
-    pages = payload.get("query", {}).get("pages", {}) if isinstance(payload, dict) else {}
-    if not isinstance(pages, dict):
+    pages = [page for page in _wikipedia_pages(language, titles, english_links=korean)
+             if _verified_wikipedia_page(page, [title], year, tv)]
+    if not year and len({_text(page.get("title")) for page in pages}) > 1:
         return {}
-    matches = []
-    for page in pages.values():
-        if not isinstance(page, dict) or "missing" in page or "disambiguation" in page.get("pageprops", {}):
-            continue
-        page_title = _text(page.get("title"))
-        base_title = re.sub(r"\s*\([^()]+\)$", "", page_title)
-        if _key(base_title) != _key(title):
-            continue
-        extract = _text(page.get("extract"))
-        categories = " ".join(_text(item.get("title")) for item in page.get("categories", []) if isinstance(item, dict))
-        qualifier = re.search(r"\(([^()]*)\)$", page_title)
-        qualifier = qualifier.group(1) if qualifier else ""
-        article_year = _year(qualifier)
-        if year and article_year and article_year != year:
-            continue
-        title_tv = bool(re.search(r"드라마|텔레비전|television|TV series", qualifier, re.I))
-        title_film = bool(re.search(r"영화|\bfilm\b", qualifier, re.I))
-        if (title_tv and not tv) or (title_film and tv):
-            continue
-        # The intro can mention a film adapted into a TV show (or the reverse).
-        # Use article identity/categories, not an incidental intro mention.
-        evidence = " ".join((qualifier, categories))
-        kind_pattern = r"드라마|텔레비전|television|TV series" if tv else r"영화|\bfilms?\b"
-        if not re.search(kind_pattern, evidence, re.I):
-            continue
-        if year and not re.search(rf"\b{re.escape(year)}(?:년|\b)", extract):
-            continue
-        # An article's page image can also be a cast photo or logo. Require a
-        # filename that explicitly identifies a poster rather than assuming it.
-        if not re.search(r"poster|포스터", _text(page.get("pageimage")), re.I):
-            continue
-        original = page.get("original", {})
-        poster = _url(original.get("source") if isinstance(original, dict) else "", domains=("wikimedia.org", "wikipedia.org"))
-        if poster:
-            matches.append({"poster_url": poster, "poster_source": "위키백과",
-                            "poster_source_url": f"https://{language}.wikipedia.org/wiki/" + quote(page_title.replace(" ", "_"))})
-    if not year and len({item["poster_source_url"] for item in matches}) > 1:
+    for page in pages:
+        artwork = _wikipedia_artwork(language, page)
+        if artwork:
+            return artwork
+    if not korean:
         return {}
-    return matches[0] if matches else {}
+    # A Korean article's declared language link is an identity bridge. Do not
+    # translate or guess English titles, which can map to a different work.
+    english_titles = list(dict.fromkeys(
+        _text(link.get("*")) for page in pages for link in page.get("langlinks", [])
+        if isinstance(link, dict) and link.get("lang") == "en" and _text(link.get("*")) and "|" not in _text(link.get("*"))
+    ))
+    if not english_titles:
+        return {}
+    english = [page for page in _wikipedia_pages("en", english_titles)
+               if _verified_wikipedia_page(page, english_titles, year, tv)]
+    if len({_text(page.get("title")) for page in english}) > 1:
+        return {}
+    for page in english:
+        artwork = _wikipedia_artwork("en", page)
+        if artwork:
+            return artwork
+    return {}
 
 
 @lru_cache(maxsize=2048)

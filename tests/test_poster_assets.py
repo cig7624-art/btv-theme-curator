@@ -85,6 +85,82 @@ class PosterAssetTests(unittest.TestCase):
             with self.subTest(changes=changes), patch.object(posters.requests, "get", return_value=response({"query": {"pages": {"1": dict(base, **changes)}}})):
                 self.assertEqual(posters._wikipedia_poster("타짜", "2006", "영화"), {})
 
+    def test_verified_media_infobox_supplies_actual_artwork_without_poster_filename(self):
+        page = dict(pageid=100, title="더 글로리", extract="2022년 대한민국 드라마이다.",
+                    categories=[{"title": "분류:대한민국의 드라마"}], pageimage="The_Glory.jpg")
+        markup = '<table class="infobox"><tr><td class="infobox-image"><img src="//upload.wikimedia.org/art/The_Glory.jpg" width="250" height="370"></td></tr></table>'
+        with patch.object(posters.requests, "get", side_effect=[
+                response({"query": {"pages": {"100": page}}}),
+                response({"parse": {"title": "더 글로리", "text": {"*": markup}}})]) as get:
+            result = posters._wikipedia_poster("더 글로리", "2022", "드라마")
+        self.assertEqual(result["poster_url"], "https://upload.wikimedia.org/art/The_Glory.jpg")
+        self.assertIn("ko.wikipedia.org/wiki/", result["poster_source_url"])
+        self.assertEqual(get.call_args_list[1].kwargs["params"]["pageid"], 100)
+
+    def test_korean_article_follows_declared_english_identity_for_the_glory(self):
+        korean = dict(pageid=100, title="더 글로리", extract="대한민국 드라마이다.",
+                      categories=[{"title": "분류:2022년 드라마"}],
+                      langlinks=[{"lang": "en", "*": "The Glory"}])
+        english = dict(pageid=200, title="The Glory", extract="A South Korean television series.",
+                       categories=[{"title": "Category:2022 South Korean television series debuts"}],
+                       pageimage="The_Glory.png")
+        markup = '<table class="infobox"><tr><td class="infobox-image"><img src="https://upload.wikimedia.org/art/The_Glory.png" width="220" height="330"><div>Promotional artwork</div></td></tr></table>'
+        with patch.object(posters.requests, "get", side_effect=[
+                response({"query": {"pages": {"100": korean}}}),
+                response({"parse": {"title": "더 글로리", "text": {"*": "<p>No infobox art</p>"}}}),
+                response({"query": {"pages": {"200": english}}}),
+                response({"parse": {"title": "The Glory", "text": {"*": markup}}})]) as get:
+            result = posters._wikipedia_poster("더 글로리", "2022", "드라마")
+        self.assertEqual(result["poster_url"], "https://upload.wikimedia.org/art/The_Glory.png")
+        self.assertEqual(result["poster_source_url"], "https://en.wikipedia.org/wiki/The_Glory")
+        self.assertEqual(get.call_args_list[2].kwargs["params"]["titles"], "The Glory")
+
+    def test_infobox_rejects_cast_photo_logo_and_unrelated_article(self):
+        page = dict(title="더 글로리", extract="2022년 드라마", categories=[{"title": "분류:드라마"}])
+        samples = [
+            ('더 글로리', '<table class="infobox"><td class="infobox-image"><img src="https://upload.wikimedia.org/cast.jpg" width="200" height="300">Cast photo</td></table>'),
+            ('더 글로리', '<table class="infobox"><td class="infobox-image"><img src="https://upload.wikimedia.org/logo.png" width="200" height="300">Official logo</td></table>'),
+            ('다른 드라마', '<table class="infobox"><td class="infobox-image"><img src="https://upload.wikimedia.org/actual.jpg" width="200" height="300">Promotional poster</td></table>'),
+        ]
+        for parsed_title, markup in samples:
+            with self.subTest(title=parsed_title, markup=markup), patch.object(posters.requests, "get", side_effect=[
+                    response({"query": {"pages": {"100": page}}}),
+                    response({"parse": {"title": parsed_title, "text": {"*": markup}}})]):
+                self.assertEqual(posters._wikipedia_poster("더 글로리", "2022", "드라마"), {})
+
+    def test_english_link_must_retain_requested_year_and_media_kind(self):
+        korean = dict(title="더 글로리", extract="2022년 드라마", categories=[{"title": "분류:드라마"}],
+                      langlinks=[{"lang": "en", "*": "The Glory"}])
+        for english in [dict(title="The Glory (2020 film)", extract="2020 film"),
+                        dict(title="The Glory", extract="A 2023 television series", categories=[{"title": "Category:2023 television series debuts"}])]:
+            with self.subTest(page=english), patch.object(posters.requests, "get", side_effect=[
+                    response({"query": {"pages": {"1": korean}}}),
+                    response({"parse": {"text": {"*": ""}}}),
+                    response({"query": {"pages": {"2": english}}})]) as get:
+                self.assertEqual(posters._wikipedia_poster("더 글로리", "2022", "드라마"), {})
+                self.assertEqual(get.call_count, 3)
+
+    def test_missing_english_identity_does_not_guess_a_translation(self):
+        page = dict(title="더 글로리", extract="2022년 드라마", categories=[{"title": "분류:드라마"}])
+        with patch.object(posters.requests, "get", side_effect=[response({"query": {"pages": {"1": page}}}),
+                                                               response({"parse": {"text": {"*": ""}}})]) as get:
+            self.assertEqual(posters._wikipedia_poster("더 글로리", "2022", "드라마"), {})
+        self.assertEqual(get.call_count, 2)
+
+    def test_release_category_rejects_incidental_sequel_or_later_season_year(self):
+        pages = [
+            ("타짜", "2014", "영화", dict(title="타짜 (영화)", extract="타짜는 2006년 영화이다. 2014년 속편이 개봉했다.",
+                                      categories=[{"title": "분류:2006년 영화"}], pageimage="타짜_포스터.jpg",
+                                      original={"source": "https://upload.wikimedia.org/tazza2006.jpg"})),
+            ("Example", "2021", "드라마", dict(title="Example (TV series)", extract="The series premiered in 2020. Its next season aired in 2021.",
+                                             categories=[{"title": "Category:2020 television series debuts"}], pageimage="Example_poster.jpg",
+                                             original={"source": "https://upload.wikimedia.org/example2020.jpg"})),
+        ]
+        for title, year, kind, page in pages:
+            with self.subTest(title=title), patch.object(posters.requests, "get", return_value=response({"query": {"pages": {"1": page}}})) as get:
+                self.assertEqual(posters._wikipedia_poster(title, year, kind), {})
+                self.assertEqual(get.call_count, 1)
+
     def test_batch_preserves_existing_artwork_identity_and_status_without_mutating_input(self):
         items = [dict(title="기생충", year="2019", poster_url="https://image.example.com/actual.jpg", kinolights_status="verified"),
                  dict(title="타짜", year="2006", source_url="https://m.kinolights.com/search?q=타짜", kinolights_status="search_link_only")]
