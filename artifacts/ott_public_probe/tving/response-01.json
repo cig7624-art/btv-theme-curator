@@ -1,6 +1,9 @@
 {
-  "source_url": "https://www.tving.com/gn88X/Jmw-/ooGq/2F3h/Jvl/LtOr2SuXtYEmXtYa/cGcuVDAD/ICB6NV0C/D0A",
+  "source_url": "https://gw.tving.com/ad/display-ads/banner?inventoryCode=DA_BANNER&contentSeg=context%3Dmain&screenCode=CSSD0100&osCode=CSOD0900&country=KOR&lmt=1&deviceWidth=1920&deviceHeight=1080&platformType=WEB&testMode=false&orientation=l",
   "data": {
-    "success": true
+    "code": "10110",
+    "message": "Target Pick의 해당하지 않는 영역 입니다.",
+    "detailMessage": "Target Pick의 해당하지 않는 영역 입니다.",
+    "data": null
   }
 }

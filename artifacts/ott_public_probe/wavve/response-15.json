@@ -1,0 +1,395 @@
+{
+  "source_url": "https://apis.wavve.com/v1/catalog?broadcastid=VN425&catalogType=generalband-related&category=vod&contentType=main&hideOrder=Y&limit=20&offset=0&orderby=new&referId=K22_AG2026-0017&relatedMeta=content&uicode=VN425&uiparent=GN51-VN425&uirank=26&uitype=band_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+  "data": {
+    "code": 200,
+    "message": null,
+    "data": {
+      "description": "연관 자동 밴드",
+      "version": "1.0",
+      "type": "catalog",
+      "count": "6",
+      "pagecount": "6",
+      "top_context": {
+        "manualband_id": "",
+        "manual_band_type": "",
+        "title": "",
+        "title1": "",
+        "title2": "",
+        "subtitle": "",
+        "subtitle1": "",
+        "subtitle2": "",
+        "bg_image": "",
+        "bg_image_mobile": "",
+        "bg_image_pc": "",
+        "bg_color": "",
+        "logo_image": "",
+        "qmeta_title": "",
+        "replace_title": "",
+        "like_status": "",
+        "count": "6",
+        "pagecount": "6",
+        "weekday": "",
+        "is_recommended": false,
+        "tag": {
+          "ad": ""
+        }
+      },
+      "context_list": [
+        {
+          "index": "0",
+          "context_type": "vod",
+          "context_id": "K22_LS-20261013024505-01-000.1",
+          "program": {
+            "refer_id": "PRG_K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "order_title": "",
+            "category": "vod",
+            "synopsis": "여자 셋이 모이면, 재밌다─\n현생은 잠시 밖에 두고 들어오세요.\n도시 여자들의 고민과 웃음이 안전하게 보관되는 곳\n여기는 <도시여자대피소>",
+            "actors": "고아성, 찰스엔터, 김민경",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": "https://image.wavve.com/meta/image/202610/1791966519638174724.jpg"
+          },
+          "content": {
+            "refer_id": "K22_LS-20261013024505-01-000.1",
+            "title": "무한 공감하고 웃다가 갑자기 울음터진 도시 여자들의 딸 공감 토크",
+            "order_title": "6",
+            "clip_type": "",
+            "title_with_order": "2026-07-05(일)",
+            "subtitle": "2026-07-05(일)",
+            "content_image": "https://image.wavve.com/meta/image/202610/1791876012333322668.png",
+            "original_release_date": "2026-07-05",
+            "original_release_year": "2026",
+            "release_weekday": "일",
+            "play_time": "3405"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": ""
+          },
+          "additional_information": {
+            "landing_type": "vod",
+            "play_url": "",
+            "info_url": "contentid=K22_LS-20261013024505-01-000.1",
+            "rank": ""
+          }
+        },
+        {
+          "index": "1",
+          "context_type": "vod",
+          "context_id": "K22_LS-20261013024445-01-000.1",
+          "program": {
+            "refer_id": "PRG_K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "order_title": "",
+            "category": "vod",
+            "synopsis": "여자 셋이 모이면, 재밌다─\n현생은 잠시 밖에 두고 들어오세요.\n도시 여자들의 고민과 웃음이 안전하게 보관되는 곳\n여기는 <도시여자대피소>",
+            "actors": "고아성, 찰스엔터, 김민경",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": "https://image.wavve.com/meta/image/202610/1791966519638174724.jpg"
+          },
+          "content": {
+            "refer_id": "K22_LS-20261013024445-01-000.1",
+            "title": "실패를 웃어넘길 줄 아는 도시 여자들의 흑역사 치유 토크",
+            "order_title": "5",
+            "clip_type": "",
+            "title_with_order": "2026-06-28(일)",
+            "subtitle": "2026-06-28(일)",
+            "content_image": "https://image.wavve.com/meta/image/202610/1791876011186966304.png",
+            "original_release_date": "2026-06-28",
+            "original_release_year": "2026",
+            "release_weekday": "일",
+            "play_time": "4915"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": ""
+          },
+          "additional_information": {
+            "landing_type": "vod",
+            "play_url": "",
+            "info_url": "contentid=K22_LS-20261013024445-01-000.1",
+            "rank": ""
+          }
+        },
+        {
+          "index": "2",
+          "context_type": "vod",
+          "context_id": "K22_LS-20261013024414-01-000.1",
+          "program": {
+            "refer_id": "PRG_K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "order_title": "",
+            "category": "vod",
+            "synopsis": "여자 셋이 모이면, 재밌다─\n현생은 잠시 밖에 두고 들어오세요.\n도시 여자들의 고민과 웃음이 안전하게 보관되는 곳\n여기는 <도시여자대피소>",
+            "actors": "고아성, 찰스엔터, 김민경",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": "https://image.wavve.com/meta/image/202610/1791966519638174724.jpg"
+          },
+          "content": {
+            "refer_id": "K22_LS-20261013024414-01-000.1",
+            "title": "요즘 추구미 컷 높다…! 클린걸, 퍼스널 체형, OO코어… 추구미 따라가다 다리 찢어져 본 여자들의 수다",
+            "order_title": "4",
+            "clip_type": "",
+            "title_with_order": "2026-06-21(일)",
+            "subtitle": "2026-06-21(일)",
+            "content_image": "https://image.wavve.com/meta/image/202610/1791876010050384574.png",
+            "original_release_date": "2026-06-21",
+            "original_release_year": "2026",
+            "release_weekday": "일",
+            "play_time": "3338"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": ""
+          },
+          "additional_information": {
+            "landing_type": "vod",
+            "play_url": "",
+            "info_url": "contentid=K22_LS-20261013024414-01-000.1",
+            "rank": ""
+          }
+        },
+        {
+          "index": "3",
+          "context_type": "vod",
+          "context_id": "K22_LS-20261013024352-01-000.1",
+          "program": {
+            "refer_id": "PRG_K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "order_title": "",
+            "category": "vod",
+            "synopsis": "여자 셋이 모이면, 재밌다─\n현생은 잠시 밖에 두고 들어오세요.\n도시 여자들의 고민과 웃음이 안전하게 보관되는 곳\n여기는 <도시여자대피소>",
+            "actors": "고아성, 찰스엔터, 김민경",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": "https://image.wavve.com/meta/image/202610/1791966519638174724.jpg"
+          },
+          "content": {
+            "refer_id": "K22_LS-20261013024352-01-000.1",
+            "title": "여성이 혼자 살아가기 위해 필요한 돈은 얼마? 버지니아 울프의 100년 묵은 질문에 대한 네 여성의 답변",
+            "order_title": "3",
+            "clip_type": "",
+            "title_with_order": "2026-06-14(일)",
+            "subtitle": "2026-06-14(일)",
+            "content_image": "https://image.wavve.com/meta/image/202610/1791876008887608221.png",
+            "original_release_date": "2026-06-14",
+            "original_release_year": "2026",
+            "release_weekday": "일",
+            "play_time": "3507"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": ""
+          },
+          "additional_information": {
+            "landing_type": "vod",
+            "play_url": "",
+            "info_url": "contentid=K22_LS-20261013024352-01-000.1",
+            "rank": ""
+          }
+        },
+        {
+          "index": "4",
+          "context_type": "vod",
+          "context_id": "K22_LS-20261013024303-01-000.1",
+          "program": {
+            "refer_id": "PRG_K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "order_title": "",
+            "category": "vod",
+            "synopsis": "여자 셋이 모이면, 재밌다─\n현생은 잠시 밖에 두고 들어오세요.\n도시 여자들의 고민과 웃음이 안전하게 보관되는 곳\n여기는 <도시여자대피소>",
+            "actors": "고아성, 찰스엔터, 김민경",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": "https://image.wavve.com/meta/image/202610/1791966519638174724.jpg"
+          },
+          "content": {
+            "refer_id": "K22_LS-20261013024303-01-000.1",
+            "title": "한때 사랑했던 그녀가 축의금 때문에 멀어진 건에 대하여",
+            "order_title": "2",
+            "clip_type": "",
+            "title_with_order": "2026-06-07(일)",
+            "subtitle": "2026-06-07(일)",
+            "content_image": "https://image.wavve.com/meta/image/202610/1791876007854910999.png",
+            "original_release_date": "2026-06-07",
+            "original_release_year": "2026",
+            "release_weekday": "일",
+            "play_time": "4028"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": ""
+          },
+          "additional_information": {
+            "landing_type": "vod",
+            "play_url": "",
+            "info_url": "contentid=K22_LS-20261013024303-01-000.1",
+            "rank": ""
+          }
+        },
+        {
+          "index": "5",
+          "context_type": "vod",
+          "context_id": "K22_LS-20261013024221-01-000.1",
+          "program": {
+            "refer_id": "PRG_K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "K22_AG2026-0017",
+            "title": "도시여자대피소",
+            "order_title": "",
+            "category": "vod",
+            "synopsis": "여자 셋이 모이면, 재밌다─\n현생은 잠시 밖에 두고 들어오세요.\n도시 여자들의 고민과 웃음이 안전하게 보관되는 곳\n여기는 <도시여자대피소>",
+            "actors": "고아성, 찰스엔터, 김민경",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966498685253459.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791966487211165718.jpg",
+            "square_image": "https://image.wavve.com/meta/image/202610/1791966519638174724.jpg"
+          },
+          "content": {
+            "refer_id": "K22_LS-20261013024221-01-000.1",
+            "title": "어떤 결혼은 혼자서도 한다… 무한 공감과 소신 발언이 공존하는 도시 여자들의 덕질 토크",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "2026-05-31(일)",
+            "subtitle": "2026-05-31(일)",
+            "content_image": "https://image.wavve.com/meta/image/202610/1791876006751198080.png",
+            "original_release_date": "2026-05-31",
+            "original_release_year": "2026",
+            "release_weekday": "일",
+            "play_time": "3959"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": ""
+          },
+          "additional_information": {
+            "landing_type": "vod",
+            "play_url": "",
+            "info_url": "contentid=K22_LS-20261013024221-01-000.1",
+            "rank": ""
+          }
+        }
+      ]
+    }
+  }
+}

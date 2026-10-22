@@ -6,12 +6,6 @@
     "content_type": "text/html; charset=utf-8"
   },
   {
-    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
     "url": "https://www.disneyplus.com/",
     "status": 200,
     "resource_type": "document",
@@ -36,25 +30,19 @@
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/65319_1825172608.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
     "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/65226_747628217.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/65350_1825232252.js",
+    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/64854_1825202523.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/64854_1825202523.js",
+    "url": "https://www.disneyplus.com/assets/223f398bc06b041b30e602d739e0249cb0012294a4a/e/65319_1825172608.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"

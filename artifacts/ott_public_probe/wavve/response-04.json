@@ -1,8 +1,57 @@
 {
-  "source_url": "https://haystack.wavve.com/apis/v1/events?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+  "source_url": "https://apis.wavve.com/v1/catalog?bannerCode=BN87&broadcastid=BN87&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN87&uiparent=GN51-BN87&uirank=16&uitype=banner_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
   "data": {
     "code": 200,
     "message": null,
-    "data": null
+    "data": {
+      "description": "배너",
+      "version": "1.0",
+      "type": "catalog",
+      "count": "",
+      "pagecount": "",
+      "top_context": {
+        "manualband_id": "",
+        "manual_band_type": "",
+        "title": "",
+        "title1": "",
+        "title2": "",
+        "subtitle": "",
+        "subtitle1": "",
+        "subtitle2": "",
+        "bg_image": "",
+        "bg_image_mobile": "",
+        "bg_image_pc": "",
+        "bg_color": "",
+        "logo_image": "",
+        "qmeta_title": "",
+        "replace_title": "",
+        "like_status": "",
+        "count": "",
+        "pagecount": "",
+        "weekday": "",
+        "is_recommended": false,
+        "tag": {
+          "ad": ""
+        }
+      },
+      "context_list": [
+        {
+          "index": "0",
+          "context_type": "banner",
+          "context_id": "11624",
+          "banner": {
+            "name": "<신인감독 김연경2> 띠배너",
+            "comment": "",
+            "portrait_background": "https://image.wavve.com/operation/image/banner/202610/1791880730239536338.jpg",
+            "landscape_background": "https://image.wavve.com/operation/image/banner/202610/1791880733017329530.jpg",
+            "portrait_layer": "",
+            "landscape_layer": "",
+            "landscape_large_layer": "",
+            "url": "http://www.wavve.com/player/vod?programid=M_T70735G&landing=season",
+            "bg_color": "#000000"
+          }
+        }
+      ]
+    }
   }
 }

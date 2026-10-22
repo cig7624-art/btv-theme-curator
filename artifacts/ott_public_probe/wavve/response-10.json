@@ -1,0 +1,1461 @@
+{
+  "source_url": "https://apis.wavve.com/v1/catalog?broadcastid=EN20309&catalogType=manualband&limit=20&manualbandId=20309&offset=0&orderby=default&uicode=EN20309&uiparent=GN51-EN20309&uirank=15&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+  "data": {
+    "code": 200,
+    "message": null,
+    "data": {
+      "description": "수동 밴드",
+      "version": "1.0",
+      "type": "catalog",
+      "count": "20",
+      "pagecount": "67",
+      "top_context": {
+        "manualband_id": "20309",
+        "manual_band_type": "normal",
+        "title": "새로 올라온 영화",
+        "title1": "Wavve 영화관",
+        "title2": "신작 업데이트",
+        "subtitle": "Wavve 영화관은\n24시간 상영 중!",
+        "subtitle1": "Wavve 영화관은",
+        "subtitle2": "24시간 상영 중!",
+        "bg_image": "",
+        "bg_image_mobile": "",
+        "bg_image_pc": "",
+        "bg_color": "#ffffff",
+        "logo_image": "",
+        "qmeta_title": "",
+        "replace_title": "",
+        "like_status": "n",
+        "count": "20",
+        "pagecount": "67",
+        "weekday": "",
+        "is_recommended": false,
+        "tag": {
+          "ad": ""
+        }
+      },
+      "context_list": [
+        {
+          "index": "0",
+          "context_type": "movie",
+          "context_id": "GMV_SL01_SL000000001",
+          "program": {
+            "refer_id": "SMV_SL01_SL000000001",
+            "title": "호프 (2026)",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1792387184496600171.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1792387177241475026.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_SL01_SL000000001",
+            "title": "호프 (2026)",
+            "order_title": "1",
+            "category": "movie",
+            "synopsis": "지원해 줄 인력들은 산불을 끄러 갔고, 이젠 통신도 두절됐다. 호포 출장소의 '범석'과 '성애'는 노인들뿐인 마을을 지키기 위해 사투를 벌이고, 놈을 쫓아 산으로 향했던 청년들과 '성기'는 되려 놈들의 사냥감이 되어 버린다. 무지가 빚어낸 불행의 씨앗은 입장의 차이를 거쳐 온 우주의 비극이 되고야 만다.",
+            "actors": "황정민, 조인성, 정호연, 테일러 러셀, 카메론 브리튼, 알리시아 비칸데르, 마이클 패스벤더, 이상희, 음문석, 임현식",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1792387184496600171.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1792387177241475026.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_SL01_SL000000001",
+            "title": "호프 (2026)",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "호프 (2026)",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202610/1792387177241475026.jpg",
+            "original_release_date": "2026-07-15",
+            "original_release_year": "2026",
+            "release_weekday": "수",
+            "play_time": "9390"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202610/1792387184496600171.jpg",
+            "name": "",
+            "title1": "호프 (2026)",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_SL01_SL000000001"
+          },
+          "tag": {
+            "won": "won",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "new",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_SL01_SL000000001",
+            "rank": ""
+          }
+        },
+        {
+          "index": "1",
+          "context_type": "movie",
+          "context_id": "GMV_CD01_WR0000011798",
+          "program": {
+            "refer_id": "",
+            "title": "인턴 (2026)",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1792387234882027860.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1792387228780889851.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CD01_WR0000011798",
+            "title": "인턴 (2026)",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "\"다시 출근합니다.\" 창업 3년 만에 100억 원대 매출을 달성하며 브랜드 'WOO22'(우투투)를 패션 업계의 다크호스로 성장시킨 젊은 CEO '선우'. 성공을 향해 쉼 없이 달려온 열정 과부하 상태의 그녀 앞에 막내로 입사한 실버 인턴 '기호'가 나타난다. 경력 37년 사회생활 만렙의 베테랑이지만, 낯선 디지털 업무 환경과 자유분방한 문화에 좀처럼 적응하지 못하던 기호. 그러나 특유의 성실함과 인간미 넘치는 소통이 선우의 마음을 움직이고 모든 점에서 전혀 다른 두 사람은 서로에게 없는 시선과 경험을 나누며 쉼 없이 달리던 일상에 뜻밖의 온기를 더하는데...",
+            "actors": "최민식, 한소희, 김준한, 류혜영, 김금순",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1792387234882027860.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1792387228780889851.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CD01_WR0000011798",
+            "title": "인턴 (2026)",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "인턴 (2026)",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202610/1792387228780889851.jpg",
+            "original_release_date": "2026-09-16",
+            "original_release_year": "2026",
+            "release_weekday": "수",
+            "play_time": "7952"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202610/1792387234882027860.jpg",
+            "name": "",
+            "title1": "인턴 (2026)",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CD01_WR0000011798"
+          },
+          "tag": {
+            "won": "won",
+            "event": "event",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CD01_WR0000011798",
+            "rank": ""
+          }
+        },
+        {
+          "index": "2",
+          "context_type": "movie",
+          "context_id": "MV_CD01_WR0000011797",
+          "program": {
+            "refer_id": "",
+            "title": "프랙티컬 매직: 새로운 챕터",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791866593147037893.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791866586796665488.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CD01_WR0000011797",
+            "title": "프랙티컬 매직: 새로운 챕터",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "\"운명도, 저주도, 마녀들을 막을 수 없다! 사랑하면 파멸한다는 가문의 저주에 맞서는 오웬스 자매들의 이야기\" 마법의 능력과 저주를 타고난 오웬스 가문의 자매. '샐리'와 '질리언'은 다사다난했던 지난 과거를 묻고 살아가고 있다. 한편, 자신의 혈통과 저주를 모른 채 평범한 삶을 살던 샐리의 딸 '카일리'는 갑작스러운 사고를 당한 남자친구 때문에 혼란스러운 마음을 자매인 '안토니아'에게 털어놓는다. 결국 가문의 비밀은 새로운 세대에게까지 전해지게 되고, 사랑을 쟁취하기 위해 다시 한번 운명에 맞서게 된 오웬스 자매들. 과연 이번엔 저주를 완벽히 끝낼 수 있을까?",
+            "actors": "산드라 블록, 니콜 키드먼, 스톡카드 채닝, 다이앤 위스트, 조이 킹, 메이지 윌리암스",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791866593147037893.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791866586796665488.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CD01_WR0000011797",
+            "title": "프랙티컬 매직: 새로운 챕터",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "프랙티컬 매직: 새로운 챕터",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202610/1791866586796665488.jpg",
+            "original_release_date": "2026-09-10",
+            "original_release_year": "2026",
+            "release_weekday": "목",
+            "play_time": "7782"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202610/1791866593147037893.jpg",
+            "name": "",
+            "title1": "프랙티컬 매직: 새로운 챕터",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CD01_WR0000011797"
+          },
+          "tag": {
+            "won": "won",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CD01_WR0000011797",
+            "rank": ""
+          }
+        },
+        {
+          "index": "3",
+          "context_type": "movie",
+          "context_id": "MV_CF01_SY0000011883",
+          "program": {
+            "refer_id": "SMV_CF01_SY0000011239",
+            "title": "스파이더맨",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1790928834322558469.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1790928828120948725.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CF01_SY0000011883",
+            "title": "스파이더맨: 브랜드 뉴 데이",
+            "order_title": "12",
+            "category": "movie",
+            "synopsis": "\"세상 모두에게 잊힌 피터 파커. 그의 정체를 기억하는 역대급 빌런의 등장! 가장 통제할 수 없는 대결이 시작된다!\" 4년 전 소중한 사람들을 지키기 위해 모두의 기억에서 사라진 '피터 파커'. 친절한 이웃 '스파이더맨'으로서 뉴욕을 지키며 고독한 삶을 살아가던 피터는 어느 날, 예상치 못한 DNA 변이로 인해 통제 불가능한 힘에 사로잡히고 그의 진짜 정체를 알고 있는 적까지 마주하게 된다. 타인의 의식을 조종하는 정체불명의 존재로 인해 모두가 피터를 노리는 적이 될 수 있는 혼란 속에서 피터는 다시 위협에 빠진 'MJ'와 모두를 지키기 위해 '스파이더맨'으로 그들 앞에 서게 되는데... \"'스파이더맨'의 새로운 날을 확인하라!\"",
+            "actors": "톰 홀랜드, 젠데이아 콜먼, 세이디 싱크, 제이콥 배덜런, 존 번탈",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1790928834322558469.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1790928828120948725.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CF01_SY0000011883",
+            "title": "(자막) 스파이더맨: 브랜드 뉴 데이",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "스파이더맨: 브랜드 뉴 데이",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202610/1790928828120948725.jpg",
+            "original_release_date": "2026-07-27",
+            "original_release_year": "2026",
+            "release_weekday": "월",
+            "play_time": "8688"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202610/1790928834322558469.jpg",
+            "name": "",
+            "title1": "스파이더맨: 브랜드 뉴 데이",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CF01_SY0000011883"
+          },
+          "tag": {
+            "won": "won",
+            "event": "event",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CF01_SY0000011883",
+            "rank": ""
+          }
+        },
+        {
+          "index": "4",
+          "context_type": "movie",
+          "context_id": "MV_CK01_TCO000013208",
+          "program": {
+            "refer_id": "",
+            "title": "3670",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202510/1761551203501870976.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202510/1761551197336804956.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CK01_TCO000013208",
+            "title": "3670",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "\"종로 3가, 6번 출구, 7시. 여기서부터 시작이야.\" 자유를 찾아 북에서 온 ‘철준’에게는 탈북자 친구들에게도 말할 수 없는 비밀이 있다. 어디에서도 속하지 못한 채 혼자만의 외로움을 견디던 철준은 우연히 만난 동갑내기 ‘영준’의 도움으로 이제껏 알지 못했던 세계와 마주한다. 영준은 철준의 친구가 되어주고 철준 역시 조금씩 마음을 열어간다. 하지만 인기남 ‘현택’의 등장과 함께 철준과 영준의 마음에 묘한 파장이 일어나며 두 사람의 관계는 예상치 못한 방향으로 가는데... \"너를 통해 우리가 될 수 있었던 시간들\"",
+            "actors": "조유현, 김현목, 조대희, 배한솔",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202510/1761551203501870976.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202510/1761551197336804956.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CK01_TCO000013208",
+            "title": "3670",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "3670",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202510/1761551197336804956.jpg",
+            "original_release_date": "2025-09-03",
+            "original_release_year": "2025",
+            "release_weekday": "수",
+            "play_time": "7442"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202510/1761551203501870976.jpg",
+            "name": "",
+            "title1": "3670",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CK01_TCO000013208"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CK01_TCO000013208",
+            "rank": ""
+          }
+        },
+        {
+          "index": "5",
+          "context_type": "movie",
+          "context_id": "MV_CW01_CW0000011677",
+          "program": {
+            "refer_id": "",
+            "title": "쇼타씨의 마지막 출장",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202606/1781502615960955635.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202606/1781502611306963337.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CW01_CW0000011677",
+            "title": "쇼타씨의 마지막 출장",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "한국으로 마지막 출장을 앞두고 있는 강철맨 CEO ‘쇼타’. 헤어진 연인의 마음을 돌리려고 그녀의 고향 에노시마로 여행 온 한국 청년 ‘대성’. 두 사람은 우연히 라멘 가게에서 만나게 되고 쇼타의 '사직서'와 대성의 '편지'가 바뀌게 되면서 예상치 못한 인연이 시작된다. 그리고 쇼타와 대성은 상대의 전하지 못했던 마음을 대신 전하며 서로의 삶 속으로 들어가게 되는데... 출장과 여행으로 인생을 만나게 되는 두 남자의 이야기가 시작된다!",
+            "actors": "진영, 오타니 료헤이, 시라카와 카즈코, 우치다 치카, 요코카와 료토",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202606/1781502615960955635.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202606/1781502611306963337.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CW01_CW0000011677",
+            "title": "쇼타씨의 마지막 출장",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "쇼타씨의 마지막 출장",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202606/1781502611306963337.jpg",
+            "original_release_date": "2026-05-27",
+            "original_release_year": "2026",
+            "release_weekday": "수",
+            "play_time": "7335"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202606/1781502615960955635.jpg",
+            "name": "",
+            "title1": "쇼타씨의 마지막 출장",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CW01_CW0000011677"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CW01_CW0000011677",
+            "rank": ""
+          }
+        },
+        {
+          "index": "6",
+          "context_type": "movie",
+          "context_id": "MV_C901_SG0000200966",
+          "program": {
+            "refer_id": "",
+            "title": "더 드라마",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791870448644985871.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791870444019875058.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_C901_SG0000200966",
+            "title": "더 드라마",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "\"왜 나쁜 짓 한 번 안 한 사람처럼 그래?\" 결혼식을 일주일 앞둔 행복한 커플 '엠마'와 '찰리'. 우연히 알게 된 상대방의 비밀로 인해 단단했던 믿음이 흔들린다. 첫 만남부터 서로를 완벽히 안다고 생각했던 두 사람, 작은 균열은 걷잡을 수 없이 커진 채 모두의 모습을 비추고...",
+            "actors": "젠데이아 콜먼, 로버트 패틴슨, 알라나 하임",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791870448644985871.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791870444019875058.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_C901_SG0000200966",
+            "title": "더 드라마",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "더 드라마",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202610/1791870444019875058.jpg",
+            "original_release_date": "2026-04-03",
+            "original_release_year": "2026",
+            "release_weekday": "금",
+            "play_time": "6350"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202610/1791870448644985871.jpg",
+            "name": "",
+            "title1": "더 드라마",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_C901_SG0000200966"
+          },
+          "tag": {
+            "won": "won",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_C901_SG0000200966",
+            "rank": ""
+          }
+        },
+        {
+          "index": "7",
+          "context_type": "movie",
+          "context_id": "MV_EM01_EM000000369",
+          "program": {
+            "refer_id": "",
+            "title": "가족여행",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791444310102497437.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791444303284504177.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_EM01_EM000000369",
+            "title": "가족여행",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "목적지는 하나, 속마음은 다섯! \"진짜 가족여행 같은 건 없어!\" 무늬만 영화감독인 남편, 뱀파이어 코스프레에 진심인 딸, 베트남 참전용사 시아버지, 그리고 치매에 걸린 시어머니까지. 이 문제적 가족의 생계를 책임지며 모두를 돌보던 며느리 '영주'는 보호센터로부터 더 이상 시어머니 '순임'을 맡을 수 없다는 통보를 받는다. 순임의 생일을 기념하고자 부산으로 떠난 즉흥 가족 여행. 급하게 빌린 낡은 승합차가 위태롭게 고속도로를 달릴수록 감춰졌던 여행의 진짜 목적과 비밀들이 하나씩 드러나기 시작하는데...",
+            "actors": "이휘향, 서영희, 김정태, 남경읍, 홍정민",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791444310102497437.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791444303284504177.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_EM01_EM000000369",
+            "title": "가족여행",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "가족여행",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202610/1791444303284504177.jpg",
+            "original_release_date": "2026-01-01",
+            "original_release_year": "2026",
+            "release_weekday": "목",
+            "play_time": "6514"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202610/1791444310102497437.jpg",
+            "name": "",
+            "title1": "가족여행",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_EM01_EM000000369"
+          },
+          "tag": {
+            "won": "won",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_EM01_EM000000369",
+            "rank": ""
+          }
+        },
+        {
+          "index": "8",
+          "context_type": "movie",
+          "context_id": "MV_CX01_CX0000011228",
+          "program": {
+            "refer_id": "",
+            "title": "아비정전: 리마스터링",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791873434315377210.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791873425186062376.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CX01_CX0000011228",
+            "title": "아비정전: 리마스터링",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "어디에도 머물지 못하는 매혹적인 청년 '아비'. 버림받은 상처를 가슴에 품은 채, 바람처럼 떠도는 그의 삶과 엇갈린 인연들이 남긴 흔들리는 계절. \"영원히 마모되지 않을 우리 모두의 찬란한 순간.\"",
+            "actors": "장국영, 장만옥, 유덕화, 장학우, 양조위",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1791873434315377210.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1791873425186062376.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CX01_CX0000011228",
+            "title": "아비정전: 리마스터링",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "아비정전: 리마스터링",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202610/1791873425186062376.jpg",
+            "original_release_date": "1990-12-15",
+            "original_release_year": "1990",
+            "release_weekday": "토",
+            "play_time": "5695"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202610/1791873434315377210.jpg",
+            "name": "",
+            "title1": "아비정전: 리마스터링",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CX01_CX0000011228"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CX01_CX0000011228",
+            "rank": ""
+          }
+        },
+        {
+          "index": "9",
+          "context_type": "movie",
+          "context_id": "MV_BM01_BM000000007",
+          "program": {
+            "refer_id": "",
+            "title": "백룸",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202608/1787899358182076226.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202608/1787899348142428834.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_BM01_BM000000007",
+            "title": "백룸",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "시작은 호기심이었다 그곳은 대체 무엇인가? 낯설지만 익숙한 세계 출구도 입구도 찾을 수 없다. 당신도 입장하시겠습니까?",
+            "actors": "치웨텔 에지오포, 레나테 레인스베, 마크 듀플래스, 핀 베넷, 애번 조지아",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202608/1787899358182076226.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202608/1787899348142428834.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_BM01_BM000000007",
+            "title": "백룸",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "백룸",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202608/1787899348142428834.jpg",
+            "original_release_date": "2026-05-07",
+            "original_release_year": "2026",
+            "release_weekday": "목",
+            "play_time": "6634"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202608/1787899358182076226.jpg",
+            "name": "",
+            "title1": "백룸",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_BM01_BM000000007"
+          },
+          "tag": {
+            "won": "won",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_BM01_BM000000007",
+            "rank": ""
+          }
+        },
+        {
+          "index": "10",
+          "context_type": "movie",
+          "context_id": "MV_CF01_SY0000011887",
+          "program": {
+            "refer_id": "",
+            "title": "인시디어스: 그들이 넘어왔다",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1790928783330217650.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1790928778079883233.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CF01_SY0000011887",
+            "title": "인시디어스: 그들이 넘어왔다",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "죽은 자들의 영역 '더 먼 곳'을 넘나들 수 있는 능력을 갖춘 '젬마'. 아무것도 모른 채 평범한 일상을 살던 젬마와 딸 '마야'의 주변에 어느 날부터 섬뜩한 악령의 환영들이 들이닥친다. 집과 일터를 가리지 않고 출몰하는 기괴한 악령들로 인해 위험에 처했던 젬마는 영매사 '엘리스'를 만나고 자신이 '더 먼 곳'의 악령들을 현실로 불러들이는 '운반자'라는 사실을 알게 된다. 악령들은 젬마를 통로 삼아 진짜 목적을 드러내기 시작하고 '더 먼 곳'과 현실의 경계는 점점 무너지는데... \"끝내 현실로 넘어온 공포의 실체! 악의 문이 열리고, 모든 것이 뒤집힌다!\"",
+            "actors": "어밀리아 이브, 브랜든 페레아, 메이지 리차드슨-셀러스, 샘 스프루엘, 아일랜드 오스틴",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202610/1790928783330217650.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202610/1790928778079883233.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CF01_SY0000011887",
+            "title": "인시디어스: 그들이 넘어왔다",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "인시디어스: 그들이 넘어왔다",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202610/1790928778079883233.jpg",
+            "original_release_date": "2026-08-20",
+            "original_release_year": "2026",
+            "release_weekday": "목",
+            "play_time": "6355"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202610/1790928783330217650.jpg",
+            "name": "",
+            "title1": "인시디어스: 그들이 넘어왔다",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CF01_SY0000011887"
+          },
+          "tag": {
+            "won": "won",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CF01_SY0000011887",
+            "rank": ""
+          }
+        },
+        {
+          "index": "11",
+          "context_type": "movie",
+          "context_id": "MV_CK01_TCO000013397",
+          "program": {
+            "refer_id": "",
+            "title": "권왕: 깨어난 전설",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202608/1786000876465233732.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202608/1786000871833012636.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CK01_TCO000013397",
+            "title": "권왕: 깨어난 전설",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "뜻밖에 혼수상태에 빠진 10대 소년 '쉬쩌민'은 의식이 환상의 무협 세계로 옮겨져 고대 무술 계승을 둘러싼 싸움에 휘말리게 된다. 고대 무협의 배신자 '훠룽'은 수년간 수호자인 귀보와 '구운'을 추적해 왔지만, 비법을 손에 넣지 못했다. 쉬쩌민이 고대 무술을 계승했다는 사실을 알게 된 훠룽은 더욱 분노하여 쉬쩌민을 죽이고 비법을 되찾으려 한다. 최후의 결전이 임박했다... 현실 세계에서 쉬쩌민의 어머니는 이야기를 들려주며 아들의 생존 의지를 북돋우려 애쓰고, 뜻밖에도 시너지 효과를 낸다.",
+            "actors": "장계총, 양천우, 주가이, 여안안, 마사혜",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202608/1786000876465233732.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202608/1786000871833012636.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CK01_TCO000013397",
+            "title": "권왕: 깨어난 전설",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "권왕: 깨어난 전설",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202608/1786000871833012636.jpg",
+            "original_release_date": "2024-10-26",
+            "original_release_year": "2024",
+            "release_weekday": "토",
+            "play_time": "5012"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202608/1786000876465233732.jpg",
+            "name": "",
+            "title1": "권왕: 깨어난 전설",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CK01_TCO000013397"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CK01_TCO000013397",
+            "rank": ""
+          }
+        },
+        {
+          "index": "12",
+          "context_type": "movie",
+          "context_id": "MV_ST01_ST000000896",
+          "program": {
+            "refer_id": "",
+            "title": "신사: 악귀의 속삭임",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202607/1783323783912137007.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202607/1783323779271347331.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_ST01_ST000000896",
+            "title": "신사: 악귀의 속삭임",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "고베의 산속에 자리한 폐신사에서, 한일 문화교류 프로젝트에 참가했던 대학생들이 실종되고 매니저 '유미'는 기이한 공포에 휘말리게 된다. 한국에서 알 수 없는 악몽에 시달리고 있는 박수무당 '명진'은 대학 후배 유미의 전화를 받고 고베로 향하고, 사건을 파헤치기 위해 폐신사로 향하는데...",
+            "actors": "김재중, 공성하, 고윤준, 키노 하나",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202607/1783323783912137007.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202607/1783323779271347331.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_ST01_ST000000896",
+            "title": "신사: 악귀의 속삭임",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "신사: 악귀의 속삭임",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202607/1783323779271347331.jpg",
+            "original_release_date": "2026-06-17",
+            "original_release_year": "2026",
+            "release_weekday": "수",
+            "play_time": "5770"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202607/1783323783912137007.jpg",
+            "name": "",
+            "title1": "신사: 악귀의 속삭임",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_ST01_ST000000896"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_ST01_ST000000896",
+            "rank": ""
+          }
+        },
+        {
+          "index": "13",
+          "context_type": "movie",
+          "context_id": "MV_CK01_TCO000013184",
+          "program": {
+            "refer_id": "",
+            "title": "앱솔루션 (2024)",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202508/1755578476053147077.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202508/1755578467896908902.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CK01_TCO000013184",
+            "title": "앱솔루션 (2024)",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "한 조직에서 30년 가까이 충성한 한 남성이 기억을 점차 잃어가고, 자신의 삶을 돌아보게 된다는 내용의 극영화",
+            "actors": "리암 니슨, 론 펄만, 프랭키 쇼, 욜론다 로스, 대니얼 디머",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202508/1755578476053147077.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202508/1755578467896908902.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CK01_TCO000013184",
+            "title": "앱솔루션 (2024)",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "앱솔루션 (2024)",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202508/1755578467896908902.jpg",
+            "original_release_date": "2024-11-01",
+            "original_release_year": "2024",
+            "release_weekday": "금",
+            "play_time": "6746"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202508/1755578476053147077.jpg",
+            "name": "",
+            "title1": "앱솔루션 (2024)",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CK01_TCO000013184"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CK01_TCO000013184",
+            "rank": ""
+          }
+        },
+        {
+          "index": "14",
+          "context_type": "movie",
+          "context_id": "MV_CK01_TCO000013222",
+          "program": {
+            "refer_id": "",
+            "title": "최후의 검객",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202511/1763018164918929697.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202511/1763018150128249762.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CK01_TCO000013222",
+            "title": "최후의 검객",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "반란군에 의해 황궁이 포위되자 측근 무사와 모습을 바꾸고 도망친 '주숙문'이 수차례 죽음의 문턱을 넘나들면서 복수를 준비해 황궁으로 돌아가는 내용의 극영화",
+            "actors": "두혁형, 후균박, 장빈빈, 요위위",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202511/1763018164918929697.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202511/1763018150128249762.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CK01_TCO000013222",
+            "title": "최후의 검객",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "최후의 검객",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202511/1763018150128249762.jpg",
+            "original_release_date": "2024-06-01",
+            "original_release_year": "2024",
+            "release_weekday": "토",
+            "play_time": "5111"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202511/1763018164918929697.jpg",
+            "name": "",
+            "title1": "최후의 검객",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CK01_TCO000013222"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CK01_TCO000013222",
+            "rank": ""
+          }
+        },
+        {
+          "index": "15",
+          "context_type": "movie",
+          "context_id": "MV_CK01_TCO000013396",
+          "program": {
+            "refer_id": "",
+            "title": "아수라: 피의 복수",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202608/1786000839463669562.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202608/1786000834657956064.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CK01_TCO000013396",
+            "title": "아수라: 피의 복수",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "1990년대 마카오에서, 중국 본토 출신 권투 선수 '쭌페이'는 형제들을 이끌고 세상을 정복하기 위해 나섰다. 그는 부유한 사업가 '황차오진'의 오른팔이 되어 황금의 도시 마카오에서 승승장구한다. 쭌페이가 자신의 미래가 밝다고 생각했을 바로 그때, 명성과 부를 좇는 미모의 여사장 '쑤샤오'가 더 큰 이익을 노리기 시작하고, 겉으로는 무관해 보였던 황차오진 역시 점차 본색을 드러낸다. 쭌페이는 배신과 음모가 겹겹이 얽히는 전례 없는 시련에 직면하게 된다. 음모, 배신, 권력 다툼이 뒤얽힌 가운데, 쭌페이는 생사를 건 미스터리에 휘말리고, 감정과 도덕 사이에서 갈등한다. \"과연 어떻게 동생들을 위한 피의 길을 개척해 나갈 것인가?\"",
+            "actors": "선텅, 장우기, 고첩, 채문정, 곡철명",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202608/1786000839463669562.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202608/1786000834657956064.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CK01_TCO000013396",
+            "title": "아수라: 피의 복수",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "아수라: 피의 복수",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202608/1786000834657956064.jpg",
+            "original_release_date": "2024-08-23",
+            "original_release_year": "2024",
+            "release_weekday": "금",
+            "play_time": "6792"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202608/1786000839463669562.jpg",
+            "name": "",
+            "title1": "아수라: 피의 복수",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CK01_TCO000013396"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CK01_TCO000013396",
+            "rank": ""
+          }
+        },
+        {
+          "index": "16",
+          "context_type": "movie",
+          "context_id": "MV_NS01_NS000000119",
+          "program": {
+            "refer_id": "",
+            "title": "야근사건",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202607/1783412356869095839.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202607/1783412347025578234.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_NS01_NS000000119",
+            "title": "야근사건",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "\"편의점의 섬뜩한 진실과 마주한다!\" 외딴 도로변에 홀로 불을 밝히고 있는 심야 편의점. 고요한 정적을 깨고 야간 근무를 서게 된 주인공 앞에 현실과 환상을 넘나드는, 기이하고 불길한 사건들이 연이어 발생한다. 웅성거리는 소음, 꺼지지 않는 경고음, 그리고 폐쇄회로 화면에 포착된 인간이 아닌 존재의 움직임. 숨 막히는 공간적 압박감 속에서 살아남기 위한 처절한 사투가 시작된다. \"온몸을 얼어붙게 할 미스터리 서바이벌 스릴러가 시작된다!\"",
+            "actors": "미나미 코토나, 타케자이 테루노스케, 세키 텟타, 타나카 슌스케, 고즈 타케오",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202607/1783412356869095839.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202607/1783412347025578234.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_NS01_NS000000119",
+            "title": "야근사건",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "야근사건",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202607/1783412347025578234.jpg",
+            "original_release_date": "2026-02-20",
+            "original_release_year": "2026",
+            "release_weekday": "금",
+            "play_time": "5021"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202607/1783412356869095839.jpg",
+            "name": "",
+            "title1": "야근사건",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_NS01_NS000000119"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_NS01_NS000000119",
+            "rank": ""
+          }
+        },
+        {
+          "index": "17",
+          "context_type": "movie",
+          "context_id": "MV_ST01_ST000000898",
+          "program": {
+            "refer_id": "",
+            "title": "비서가 된 재벌상속녀",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202607/1784612903853034922.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202607/1784612893607499935.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_ST01_ST000000898",
+            "title": "비서가 된 재벌상속녀",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "진정한 사랑과 성공을 향한 고군분투를 핵심 테마로 하여, 재벌 상속녀가 신분을 숨기고 진실한 사랑을 찾는 과정과, 능력 있는 청년 사업가가 대기업의 횡포와 내부 배신을 딛고 성공을 쟁취하는 이야기. 세계 최대 바이오 그룹 '신테라'의 외동딸 '김홍지'. 누구나 부러워할 배경을 가졌지만, 그녀는 진짜 사랑을 꿈꾼다. 아버지의 병세 악화와 강제된 결혼에 지친 그녀는 정체를 숨기고 평범한 아르바이트생으로 위장 출근한다. 그리고 그녀가 만난 남자, '박현우'. 희귀병 신약 개발에 인생을 건 청년 CEO. 재벌도, 배경도 없지만, 뚝심과 실력 하나로 회사를 이끄는 인물이다. 하지만 회사는 자금난, 전 연인의 배신, 그리고 내부 배신자까지 겹치며 벼랑 끝에 서 있다. 홍지는 현우 회사에 비서로 들어가며 가까워지고, 현우는 홍지를 의지하며 점점 마음을 열지만, 두 사람 사이에는 \"1000억 투자\"라는 어마어마한 이해관계와 숨겨진 정체라는 치명적인 비밀이 존재한다. 이 드라마는 진정한 관계에 대한 질문을 던지는 로맨스다. \"신분과 이해관계를 넘어, 누군가를 있는 그대로 받아들일 수 있을까? 그리고 성공과 사랑, 그 두 마리 토끼를 함께 잡을 수 있을까?\"",
+            "actors": "정라엘, 문정기, 안이서, 권도형, 현우성",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202607/1784612903853034922.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202607/1784612893607499935.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_ST01_ST000000898",
+            "title": "비서가 된 재벌상속녀",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "비서가 된 재벌상속녀",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202607/1784612893607499935.jpg",
+            "original_release_date": "2026-01-01",
+            "original_release_year": "2026",
+            "release_weekday": "목",
+            "play_time": "6685"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202607/1784612903853034922.jpg",
+            "name": "",
+            "title1": "비서가 된 재벌상속녀",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_ST01_ST000000898"
+          },
+          "tag": {
+            "won": "",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_ST01_ST000000898",
+            "rank": ""
+          }
+        },
+        {
+          "index": "18",
+          "context_type": "movie",
+          "context_id": "MV_CW01_CW0000011692",
+          "program": {
+            "refer_id": "SMV_CW01_CW0000011635",
+            "title": "오케이 마담",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202609/1790041965658404118.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202609/1790041960675474304.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CW01_CW0000011692",
+            "title": "오케이 마담 2",
+            "order_title": "2",
+            "category": "movie",
+            "synopsis": "사춘기 딸과의 전쟁, 허세 충만 백수 남편, 꽈배기집 폐업 위기까지. 지긋지긋한 현생을 견뎌오던 '미영'에게 초호화 크루즈 결혼식 초대장이 도착한다. \"우리, 진짜 여행 가자!\" 화려한 크루즈 여행을 만끽하던 것도 잠시. 범죄 조직의 리더 '안야'의 등장에 수백 명이 탑승한 크루즈는 순식간에 사상 초유의 납치 사건 현장이 되어버린다. 도망칠 곳 없는 푸른 바다 한복판, 다시 한번 각성한 전직 레전드 요원 미영은 이제 가족을 구하고 세상을 지켜야 할 위험한 작전에 뛰어든다!",
+            "actors": "엄정화, 박성웅, 이상윤, 배정남, 박진주, 려운, 최수영",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202609/1790041965658404118.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202609/1790041960675474304.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CW01_CW0000011692",
+            "title": "오케이 마담 2",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "오케이 마담 2",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202609/1790041960675474304.jpg",
+            "original_release_date": "2026-08-12",
+            "original_release_year": "2026",
+            "release_weekday": "수",
+            "play_time": "6516"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202609/1790041965658404118.jpg",
+            "name": "",
+            "title1": "오케이 마담 2",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CW01_CW0000011692"
+          },
+          "tag": {
+            "won": "won",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CW01_CW0000011692",
+            "rank": ""
+          }
+        },
+        {
+          "index": "19",
+          "context_type": "movie",
+          "context_id": "MV_CG01_NU0000011972",
+          "program": {
+            "refer_id": "",
+            "title": "옵세션",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202609/1790577353108978605.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202609/1790577344627631098.jpg",
+            "square_image": ""
+          },
+          "series": {
+            "refer_id": "GMV_CG01_NU0000011972",
+            "title": "옵세션",
+            "order_title": "",
+            "category": "movie",
+            "synopsis": "\"너무 너무 너무 너무 사랑해 사랑해 사랑해 사랑해\" '니키'를 짝사랑하던 '베어'는 골동품 상점에서 구입한 '원 위시 윌로우'에 니키가 자신을 가장 사랑하게 해달라고 소원을 빈다. 그날 밤, 두 사람은 연인이 되지만 벗어날 수 없는 끔찍한 일과 마주하게 되는데... [원 위시 윌로우 주의 사항] 1. 단 하나의 소원만 빌 수 있음 2. 한 번 빈 소원은 취소도 변경도 할 수 없음 3. 소원의 효력을 사라지게 하고 싶다면?",
+            "actors": "마이클 존스턴, 인디 네버레티, 쿠퍼 톰린슨, 메간 롤리스, 앤디 리치터",
+            "vertical_logo_y_image": "https://image.wavve.com/meta/image/202609/1790577353108978605.jpg",
+            "horizontal_logo_y_image": "https://image.wavve.com/meta/image/202609/1790577344627631098.jpg",
+            "square_image": ""
+          },
+          "content": {
+            "refer_id": "MV_CG01_NU0000011972",
+            "title": "옵세션",
+            "order_title": "1",
+            "clip_type": "",
+            "title_with_order": "옵세션",
+            "subtitle": "",
+            "content_image": "https://image.wavve.com/meta/image/202609/1790577344627631098.jpg",
+            "original_release_date": "2026-03-14",
+            "original_release_year": "2026",
+            "release_weekday": "토",
+            "play_time": "6542"
+          },
+          "manualband": {
+            "image": "https://image.wavve.com/meta/image/202609/1790577353108978605.jpg",
+            "name": "",
+            "title1": "옵세션",
+            "title2": "",
+            "title3": "",
+            "subtitle": "",
+            "is_coming_soon": "",
+            "autoplay_release_date": "",
+            "autoplay_description": "",
+            "favorite_id": "GMV_CG01_NU0000011972"
+          },
+          "tag": {
+            "won": "won",
+            "event": "",
+            "qvod": "",
+            "brand": "",
+            "update": "",
+            "free": "",
+            "new": "",
+            "audible": ""
+          },
+          "personal": {
+            "targetage": "",
+            "remain_minute": "",
+            "viewratio": "",
+            "viewdate": "",
+            "like_status": "n"
+          },
+          "additional_information": {
+            "landing_type": "movie",
+            "play_url": "",
+            "info_url": "movieid=MV_CG01_NU0000011972",
+            "rank": ""
+          }
+        }
+      ]
+    }
+  }
+}

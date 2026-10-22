@@ -1,4 +1,105 @@
 {
-  "source_url": "https://apis.wavve.com/guid/issue?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
-  "data": {}
+  "source_url": "https://apis.wavve.com/v1/catalog?bannerCode=BN60&broadcastid=BN60&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN60&uiparent=GN51-BN60&uirank=1&uitype=banner_text&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+  "data": {
+    "code": 200,
+    "message": null,
+    "data": {
+      "description": "배너",
+      "version": "1.0",
+      "type": "catalog",
+      "count": "",
+      "pagecount": "",
+      "top_context": {
+        "manualband_id": "",
+        "manual_band_type": "",
+        "title": "",
+        "title1": "",
+        "title2": "",
+        "subtitle": "",
+        "subtitle1": "",
+        "subtitle2": "",
+        "bg_image": "",
+        "bg_image_mobile": "",
+        "bg_image_pc": "",
+        "bg_color": "",
+        "logo_image": "",
+        "qmeta_title": "",
+        "replace_title": "",
+        "like_status": "",
+        "count": "",
+        "pagecount": "",
+        "weekday": "",
+        "is_recommended": false,
+        "tag": {
+          "ad": ""
+        }
+      },
+      "context_list": [
+        {
+          "index": "0",
+          "context_type": "banner",
+          "context_id": "10768",
+          "banner": {
+            "name": "tvn_유퀴즈",
+            "comment": "",
+            "portrait_background": "https://image.wavve.com/operation/image/banner/202601/1768208585158323900.jpg",
+            "landscape_background": "https://image.wavve.com/operation/image/banner/202601/1768208589767001643.jpg",
+            "portrait_layer": "https://image.wavve.com/operation/image/banner/202610/1792388113529960555.png",
+            "landscape_layer": "https://image.wavve.com/operation/image/banner/202610/1792388113594203982.png",
+            "landscape_large_layer": "https://image.wavve.com/operation/image/banner/202610/1792388113575027113.png",
+            "url": "http://www.wavve.com/player/vod?programid=C3519_C35000000069&landing=season",
+            "bg_color": ""
+          }
+        },
+        {
+          "index": "1",
+          "context_type": "banner",
+          "context_id": "11635",
+          "banner": {
+            "name": "영플_인턴 (2026)",
+            "comment": "",
+            "portrait_background": "https://image.wavve.com/operation/image/banner/202610/1792400042698093806.jpg",
+            "landscape_background": "https://image.wavve.com/operation/image/banner/202610/1792400047538423257.jpg",
+            "portrait_layer": "https://image.wavve.com/operation/image/banner/202610/1792400131808483443.png",
+            "landscape_layer": "https://image.wavve.com/operation/image/banner/202610/1792400131827148473.png",
+            "landscape_large_layer": "https://image.wavve.com/operation/image/banner/202610/1792400131824582826.png",
+            "url": "http://www.wavve.com/player/movie?movieid=MV_CD01_WR0000011798&landing=season",
+            "bg_color": ""
+          }
+        },
+        {
+          "index": "2",
+          "context_type": "banner",
+          "context_id": "11591",
+          "banner": {
+            "name": "일드_닥터 X 시즌1",
+            "comment": "",
+            "portrait_background": "https://image.wavve.com/operation/image/banner/202610/1790917122760548907.jpg",
+            "landscape_background": "https://image.wavve.com/operation/image/banner/202610/1790917128578713173.jpg",
+            "portrait_layer": "https://image.wavve.com/operation/image/banner/202610/1790917745293192049.png",
+            "landscape_layer": "https://image.wavve.com/operation/image/banner/202610/1790917745311718990.png",
+            "landscape_large_layer": "https://image.wavve.com/operation/image/banner/202610/1790917745305931354.png",
+            "url": "http://www.wavve.com/player/vod?programid=C3601_C36000000008&landing=season",
+            "bg_color": ""
+          }
+        },
+        {
+          "index": "3",
+          "context_type": "banner",
+          "context_id": "11587",
+          "banner": {
+            "name": "영플_스파이더맨: 브랜드 뉴 데이_3",
+            "comment": "",
+            "portrait_background": "https://image.wavve.com/operation/image/banner/202610/1790845036258062597.jpg",
+            "landscape_background": "https://image.wavve.com/operation/image/banner/202610/1790845041602410799.jpg",
+            "portrait_layer": "https://image.wavve.com/operation/image/banner/202610/1791333281026426663.png",
+            "landscape_layer": "https://image.wavve.com/operation/image/banner/202610/1791333281215035683.png",
+            "landscape_large_layer": "https://image.wavve.com/operation/image/banner/202610/1791333281143514172.png",
+            "url": "http://www.wavve.com/player/movie?movieid=MV_CF01_SY0000011883&landing=season",
+            "bg_color": ""
+          }
+        }
+      ]
+    }
+  }
 }

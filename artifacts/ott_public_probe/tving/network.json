@@ -18,31 +18,7 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/prg7GHDEF909ATC6zkvXn/_ssgManifest.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/8366-352755a045ab9440.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/1971-065aa2fad73d8dfd.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/js/localstorage-polyfill.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/6548-1e5fea5a527a6e62.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/1028-3d6d20ec5f806131.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -54,25 +30,7 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/1483-6d74f9bb1163aae1.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/webpack-039ebe852cf1be74.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/1028-3d6d20ec5f806131.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/8959-98884a526e349989.js",
+    "url": "https://www.tving.com/mono/_next/static/prg7GHDEF909ATC6zkvXn/_ssgManifest.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -90,13 +48,31 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/5307-284e1cefbf415d55.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/webpack-039ebe852cf1be74.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/pages/index-8f119858324240cc.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/6548-1e5fea5a527a6e62.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/8366-352755a045ab9440.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/8959-98884a526e349989.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/1971-065aa2fad73d8dfd.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -108,7 +84,13 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/main-6189bca2dd7dd432.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/5307-284e1cefbf415d55.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/1483-6d74f9bb1163aae1.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -120,7 +102,25 @@
     "content_type": "text/javascript"
   },
   {
+    "url": "https://www.tving.com/js/localstorage-polyfill.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
     "url": "https://www.tving.com/mono/_next/static/chunks/7982-0af0944f61f2fb2a.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/pages/index-8f119858324240cc.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/main-6189bca2dd7dd432.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -132,13 +132,13 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/9485-26b2a5e205430ba9.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/framework-b2ce3efe3e433831.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/framework-b2ce3efe3e433831.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/9485-26b2a5e205430ba9.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -156,13 +156,7 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/487.54b9d22b6ed01126.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/9107-fd81a369e27b48ba.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/9195-df36cc288008bf80.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -174,7 +168,7 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/3605.4fb56bd3688645dd.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/5093-c9c8cd0b3fcdd5fb.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -186,13 +180,19 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/5093-c9c8cd0b3fcdd5fb.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/9107-fd81a369e27b48ba.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/9195-df36cc288008bf80.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/487.54b9d22b6ed01126.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/3605.4fb56bd3688645dd.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -204,19 +204,7 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/6105.c20d3d0c9b94036d.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
     "url": "https://www.tving.com/mono/_next/static/chunks/585.f38f2888ab88d256.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/9626.8f778ec40eab4bde.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -234,22 +222,34 @@
     "content_type": "text/javascript"
   },
   {
+    "url": "https://www.tving.com/mono/_next/static/chunks/6105.c20d3d0c9b94036d.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/9626.8f778ec40eab4bde.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
     "url": "https://www.tving.com/mono/_next/static/chunks/f8998ae8.dee7e2f9f4888812.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
   },
   {
-    "url": "https://image.tving.com/ntgs/bands/liveRanking/gradient.svg",
-    "status": 200,
-    "resource_type": "fetch",
-    "content_type": "image/svg+xml"
-  },
-  {
     "url": "https://www.tving.com/gn88X/Jmw-/ooGq/2F3h/Jvl/LtOr2SuXtYEmXtYa/cGcuVDAD/ICB6NV0C/D0A",
     "status": 201,
     "resource_type": "xhr",
     "content_type": "application/json"
+  },
+  {
+    "url": "https://image.tving.com/ntgs/bands/liveRanking/gradient.svg",
+    "status": 200,
+    "resource_type": "fetch",
+    "content_type": "image/svg+xml"
   },
   {
     "url": "https://gw.tving.com/bff/web/v3/boot/popup/module?screenCode=CSSD0100&osCode=CSOD0900",
@@ -276,6 +276,18 @@
     "content_type": "application/json"
   },
   {
+    "url": "https://gw.tving.com/bff/web/v3/boot/popup/module?screenCode=CSSD0100&osCode=CSOD0900",
+    "status": 404,
+    "resource_type": "xhr",
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://www.tving.com/gn88X/Jmw-/ooGq/2F3h/Jvl/LtOr2SuXtYEmXtYa/cGcuVDAD/ICB6NV0C/D0A",
+    "status": 201,
+    "resource_type": "xhr",
+    "content_type": "application/json"
+  },
+  {
     "url": "https://www.tving.com/mono/_next/static/css/25a076000fe6c39c.css",
     "status": 200,
     "resource_type": "fetch",
@@ -294,7 +306,31 @@
     "content_type": "text/javascript"
   },
   {
+    "url": "https://www.tving.com/mono/_next/static/chunks/5601-0d8488f7fd2bbb6f.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
     "url": "https://www.tving.com/mono/_next/static/chunks/5093-c9c8cd0b3fcdd5fb.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/2870-2500eca2a72d0b4c.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/pages/contents/%5BmediaCode%5D-c67f71a0d0bb7185.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/6467-4663081e00c3bb11.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -306,10 +342,22 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/pages/contents/%5BmediaCode%5D-c67f71a0d0bb7185.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/9396-8b7a8a9a620ad537.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/css/5a5961f1867115be.css",
+    "status": 200,
+    "resource_type": "fetch",
+    "content_type": "text/css"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/css/f30bdc3b4792b648.css",
+    "status": 200,
+    "resource_type": "fetch",
+    "content_type": "text/css"
   },
   {
     "url": "https://www.tving.com/mono/_next/static/chunks/9892-de2a5952a9a44f9b.js",
@@ -330,7 +378,43 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/5601-0d8488f7fd2bbb6f.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/9122-1e7492ab3f0f416c.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/8115-1e907c4f733639ce.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/css/548998ee8bfbcb99.css",
+    "status": 200,
+    "resource_type": "fetch",
+    "content_type": "text/css"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/css/9d10d1f5ef414a9f.css",
+    "status": 200,
+    "resource_type": "fetch",
+    "content_type": "text/css"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/7439-d36aa26693526140.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/7483-92baeb5ae5604005.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/1069-c437aa395dc2d026.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -342,13 +426,13 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/pages/sports/%5BsportsType%5D/%5B%5B...sportsTab%5D%5D-3e93836ce7fbd9e7.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/2774-70ea22f49f13be49.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/7823-016e3a31983b54f9.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/pages/sports/%5BsportsType%5D/%5B%5B...sportsTab%5D%5D-3e93836ce7fbd9e7.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -360,7 +444,19 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/2774-70ea22f49f13be49.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/pages/entertainment-01bbb076cb6fa877.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/pages/sports-327910384724f8ff.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/pages/movie-c11eb867aca217e4.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -372,7 +468,7 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/pages/sports-327910384724f8ff.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/pages/news-acfa55c15835e27c.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -390,73 +486,7 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/pages/my-c66abe8dcf19fcce.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/6467-4663081e00c3bb11.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/2870-2500eca2a72d0b4c.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/pages/more/curation/%5Bkey%5D-5742ba5263b0e943.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/9122-1e7492ab3f0f416c.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/9396-8b7a8a9a620ad537.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/8115-1e907c4f733639ce.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/7483-92baeb5ae5604005.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/pages/movie-c11eb867aca217e4.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/1069-c437aa395dc2d026.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/pages/entertainment-01bbb076cb6fa877.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/chunks/pages/news-acfa55c15835e27c.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/7823-016e3a31983b54f9.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
@@ -468,46 +498,40 @@
     "content_type": "text/javascript"
   },
   {
-    "url": "https://www.tving.com/mono/_next/static/chunks/7439-d36aa26693526140.js",
+    "url": "https://www.tving.com/mono/_next/static/chunks/pages/more/curation/%5Bkey%5D-5742ba5263b0e943.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "text/javascript"
-  },
-  {
-    "url": "https://www.tving.com/gn88X/Jmw-/ooGq/2F3h/Jvl/LtOr2SuXtYEmXtYa/cGcuVDAD/ICB6NV0C/D0A",
-    "status": 201,
-    "resource_type": "xhr",
-    "content_type": "application/json"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/css/5a5961f1867115be.css",
-    "status": 200,
-    "resource_type": "fetch",
-    "content_type": "text/css"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/css/f30bdc3b4792b648.css",
-    "status": 200,
-    "resource_type": "fetch",
-    "content_type": "text/css"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/css/9d10d1f5ef414a9f.css",
-    "status": 200,
-    "resource_type": "fetch",
-    "content_type": "text/css"
-  },
-  {
-    "url": "https://www.tving.com/mono/_next/static/css/548998ee8bfbcb99.css",
-    "status": 200,
-    "resource_type": "fetch",
-    "content_type": "text/css"
   },
   {
     "url": "https://www.tving.com/mono/_next/static/css/07d6489eba145e60.css",
     "status": 200,
     "resource_type": "fetch",
     "content_type": "text/css"
+  },
+  {
+    "url": "https://www.tving.com/mono/_next/static/chunks/pages/my-c66abe8dcf19fcce.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://gw.tving.com/bff/web/v3/boot/popup/module?screenCode=CSSD0100&osCode=CSOD0900",
+    "status": 404,
+    "resource_type": "xhr",
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://gw.tving.com/bff/web/v3/boot/popup/module?screenCode=CSSD0100&osCode=CSOD0900",
+    "status": 404,
+    "resource_type": "xhr",
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://gw.tving.com/bff/web/v3/boot/popup/module?screenCode=CSSD0100&osCode=CSOD0900",
+    "status": 404,
+    "resource_type": "xhr",
+    "content_type": "application/json"
   },
   {
     "url": "https://gw.tving.com/bff/web/v3/boot/popup/module?screenCode=CSSD0100&osCode=CSOD0900",
