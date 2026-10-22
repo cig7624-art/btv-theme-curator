@@ -2,6 +2,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
+from tempfile import TemporaryDirectory
 
 spec = importlib.util.spec_from_file_location('ott_probe', Path(__file__).resolve().parents[1] / 'scripts/probe_ott_public.py')
 probe = importlib.util.module_from_spec(spec)
@@ -30,3 +31,11 @@ class ProbeTests(unittest.TestCase):
         cleaned, _, _ = probe.clean_html('<main><script>window.token="secret-test"</script><div style="background-image:url(https://images.example.com/poster.jpg?v=1)">작품</div></main>')
         self.assertNotIn('secret-test', cleaned)
         self.assertIn('poster.jpg?v=1)', cleaned)
+
+    def test_failed_probe_cannot_reuse_previous_capture_but_keeps_other_files(self):
+        with TemporaryDirectory() as temp:
+            folder = Path(temp)
+            for name in ['http.html.gz', 'browser.json', 'response-01.json', 'notes.md']:
+                (folder/name).write_text('old')
+            probe.prepare_capture_folder(folder)
+            self.assertEqual([p.name for p in folder.iterdir()], ['notes.md'])

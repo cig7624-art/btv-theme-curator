@@ -1,0 +1,109 @@
+/* Public OTT homepage comparison. All content selectors stay inside ott-* classes. */
+.ott-page-heading { margin: 0 0 12px; }
+[data-testid="stMarkdownContainer"] .ott-page-heading h2 { margin: 0; padding: 0; font-size: 24px; }
+[data-testid="stMarkdownContainer"] .ott-page-heading p { margin: 7px 0 0; color: var(--muted, #aaa99f); font-size: 12px; }
+.st-key-ott_now_section { min-width: 0; }
+.st-key-ott_platform_selector { min-width: 0; overflow-x: auto; padding-bottom: 5px; scrollbar-width: thin; overscroll-behavior-x: contain; }
+.st-key-ott_platform_selector [data-testid="stButtonGroup"] { width: max-content; min-width: 0; }
+.st-key-ott_platform_selector [role="radiogroup"] { flex-wrap: nowrap; }
+.st-key-ott_platform_selector button { min-height: 42px; white-space: nowrap; }
+.ott-compare-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.ott-compare-column { border: 1px solid var(--line, #343734); background: var(--surface-deep, #111314); border-radius: 7px; min-width: 0; overflow: hidden; }
+.ott-brand-netflix { --ott-brand: #ed7776; }
+.ott-brand-tving { --ott-brand: #f98b90; }
+.ott-brand-coupang { --ott-brand: #88b8f0; }
+.ott-brand-disney { --ott-brand: #a1c5ed; }
+.ott-brand-wavve { --ott-brand: #a9a6f5; }
+.ott-column-heading, .ott-platform-heading { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-width: 0; }
+.ott-column-heading { padding: 13px 11px 7px; }
+[data-testid="stMarkdownContainer"] .ott-platform-name { color: var(--ott-brand, var(--ink, #f3eee5)); font-size: 18px; padding: 0; margin: 0; line-height: 1.4; overflow-wrap: anywhere; }
+[data-testid="stMarkdownContainer"] .ott-source-link { font-size: 11px; color: var(--accent, #e7bd86); min-height: 32px; display: inline-flex; align-items: center; text-decoration: none; overflow-wrap: anywhere; }
+.ott-column-heading .ott-source-link { font-size: 10px; flex-shrink: 0; }
+.ott-status { display: flex; flex-wrap: wrap; gap: 5px 9px; align-items: baseline; min-width: 0; margin: 0 0 14px; }
+.ott-compare-column > .ott-status { margin: 0; padding: 0 11px 10px; }
+.ott-status-badge { font-size: 10px; color: var(--muted, #aaa99f); border: 1px solid #42443d; padding: 2px 5px; border-radius: 4px; line-height: 1.6; }
+.ott-status-stale .ott-status-badge { color: var(--accent, #e7bd86); border-color: #736145; }
+.ott-date { color: var(--muted, #aaa99f); font-size: 10px; line-height: 1.65; }
+[data-testid="stMarkdownContainer"] .ott-status-note { flex: 1 0 100%; margin: 1px 0 0; padding: 0; font-size: 11px; line-height: 1.7; color: var(--muted, #aaa99f); overflow-wrap: anywhere; }
+.ott-promotion { min-width: 0; }
+.ott-compare-column > .ott-promotion { padding: 10px 11px; border-top: 1px solid var(--line, #343734); }
+[data-testid="stMarkdownContainer"] .ott-small-label { margin: 0 0 6px; color: var(--muted, #aaa99f); font-size: 10px; line-height: 1.6; }
+.ott-art-tile { display: block; min-width: 0; color: var(--ink, #f3eee5); text-decoration: none; }
+[data-testid="stMarkdownContainer"] a.ott-art-tile { color: var(--ink, #f3eee5); text-decoration: none; }
+.ott-poster-art, .ott-banner-art { display: block; position: relative; isolation: isolate; width: 100%; overflow: hidden; border: 1px solid #424a3d; border-radius: 5px; background: #263028; }
+.ott-poster-art { aspect-ratio: 2 / 3; }
+.ott-banner-art { aspect-ratio: 16 / 9; }
+.ott-art-fallback { display: flex; align-items: flex-end; height: 100%; padding: 9px; color: #d9d2bd; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; background: linear-gradient(145deg, #333e31, #1d2722); }
+.ott-art-fallback::before { content: ''; position: absolute; top: 33%; left: 12px; width: 20px; height: 2px; background: #b99b72; }
+.ott-art-image { position: absolute; inset: 0; background-size: cover; background-position: center; pointer-events: none; }
+.ott-banner-art .ott-art-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, #080b09ed, #080b0910 75%); }
+.ott-banner-title { position: absolute; z-index: 1; left: 10px; right: 10px; bottom: 9px; color: #fff8e9; font-size: 17px; line-height: 1.45; font-weight: 650; text-shadow: 0 2px 4px #0008; overflow-wrap: anywhere; }
+.ott-banner-art:has(.ott-banner-title) .ott-art-fallback { color: transparent; }
+.ott-work-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
+.ott-home-section .ott-work-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ott-work-title { display: block; margin: 5px 0 0; font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+.ott-compact-section .ott-work-title { font-size: 10px; }
+.ott-compact-section .ott-art-fallback { font-size: 9px; padding: 6px; }
+.ott-section-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 8px; color: var(--muted, #aaa99f); font-size: 10px; line-height: 1.6; }
+.ott-section-meta > span:last-child { color: var(--accent, #e7bd86); }
+.ott-compact-section { padding: 13px 11px 10px; min-width: 0; border-top: 1px solid var(--line, #343734); }
+[data-testid="stMarkdownContainer"] .ott-section-title { color: var(--ink, #f3eee5); margin: 6px 0 0; padding: 0; font-size: 17px; line-height: 1.55; letter-spacing: -.35px; overflow-wrap: anywhere; }
+[data-testid="stMarkdownContainer"] .ott-compact-section .ott-section-title { font-size: 14px; }
+[data-testid="stMarkdownContainer"] .ott-original-description { color: var(--muted, #aaa99f); margin: 7px 0 0; padding: 0; font-size: 12px; line-height: 1.75; overflow-wrap: anywhere; }
+[data-testid="stMarkdownContainer"] .ott-compact-section .ott-original-description { font-size: 11px; }
+.ott-evidence { min-width: 0; margin-top: 8px; }
+.ott-evidence summary, .ott-work-list summary, .ott-more-sections > summary { display: flex; align-items: center; min-height: 32px; color: var(--accent, #e7bd86); font-size: 11px; cursor: pointer; list-style: none; }
+.ott-evidence summary::-webkit-details-marker, .ott-work-list summary::-webkit-details-marker, .ott-more-sections > summary::-webkit-details-marker { display: none; }
+.ott-evidence summary::after, .ott-work-list summary::after, .ott-more-sections > summary::after { content: '+'; margin-left: 6px; }
+.ott-evidence[open] summary::after, .ott-work-list[open] summary::after, .ott-more-sections[open] > summary::after { content: '−'; }
+.ott-evidence[open] { padding-top: 3px; }
+.ott-evidence dl { margin: 1px 0 5px; padding: 0; }
+.ott-evidence dl > div { padding: 7px 0; border-top: 1px solid var(--line, #343734); min-width: 0; }
+.ott-evidence dt { font-size: 10px; line-height: 1.6; color: var(--muted, #aaa99f); margin: 0 0 2px; }
+.ott-evidence dd { font-size: 11px; line-height: 1.7; color: var(--ink, #f3eee5); margin: 0; overflow-wrap: anywhere; }
+.ott-source-links { display: flex; flex-wrap: wrap; gap: 3px 10px; }
+[data-testid="stMarkdownContainer"] .ott-column-foot { color: var(--accent, #e7bd86); border-top: 1px solid var(--line, #343734); margin: 0; padding: 10px 11px; font-size: 10px; line-height: 1.7; }
+.ott-empty { padding: 16px 11px; min-width: 0; }
+[data-testid="stMarkdownContainer"] .ott-empty p, [data-testid="stMarkdownContainer"] .ott-public-scope { font-size: 12px; line-height: 1.8; color: var(--muted, #aaa99f); margin: 0 0 9px; overflow-wrap: anywhere; }
+[data-testid="stMarkdownContainer"] .ott-public-scope { padding: 12px 11px; border-top: 1px solid var(--line, #343734); }
+.ott-platform-heading { margin: 4px 0 12px; }
+[data-testid="stMarkdownContainer"] .ott-platform-heading .ott-platform-name { font-size: 25px; }
+.ott-promotion-rail { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 24px) / 3); gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: thin; padding-bottom: 5px; margin-bottom: 21px; }
+.ott-promotion-rail > * { scroll-snap-align: start; }
+.ott-platform-detail .ott-banner-title { font-size: 21px; }
+.ott-rows-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 7px 12px; margin: 12px 0; }
+[data-testid="stMarkdownContainer"] .ott-rows-heading h3 { font-size: 19px; margin: 0; padding: 0; }
+.ott-rows-heading > span { font-size: 11px; color: var(--muted, #aaa99f); }
+.ott-section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 14px; }
+.ott-home-section { min-width: 0; border: 1px solid var(--line, #343734); border-radius: 7px; background: var(--surface-deep, #111314); padding: 15px; }
+.ott-work-list { margin-top: 7px; }
+.ott-work-list ul { margin: 4px 0 0; padding-left: 18px; }
+[data-testid="stMarkdownContainer"] .ott-work-list li { font-size: 12px; line-height: 1.8; margin-bottom: 5px; overflow-wrap: anywhere; }
+.ott-more-sections { margin-top: 13px; border-top: 1px solid var(--line, #343734); }
+.ott-more-sections > summary { min-height: 42px; font-size: 12px; }
+.ott-scope-note { padding: 14px; background: var(--surface-deep, #111314); border: 1px solid var(--line, #343734); border-radius: 7px; margin-top: 10px; }
+.ott-scope-note strong { color: var(--ink, #f3eee5); font-size: 13px; }
+[data-testid="stMarkdownContainer"] .ott-scope-note p { color: var(--muted, #aaa99f); font-size: 12px; line-height: 1.75; margin: 5px 0 0; }
+@media (max-width: 1000px) {
+  .ott-compare-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .ott-compare-grid, .ott-section-grid { grid-template-columns: minmax(0, 1fr); }
+  .ott-compare-grid { gap: 14px; }
+  .ott-compare-column > .ott-promotion { padding: 12px; }
+  .ott-compare-column .ott-banner-art { max-height: 190px; aspect-ratio: 16 / 8; }
+  .ott-column-heading { padding: 14px 12px 8px; }
+  .ott-compare-column > .ott-status { padding-left: 12px; padding-right: 12px; }
+  .ott-compact-section { padding: 13px 12px 10px; }
+  .ott-compact-section .ott-poster-art { max-height: 145px; }
+  .ott-home-section { padding: 13px; }
+  .ott-home-section .ott-work-grid { gap: 6px; }
+  [data-testid="stMarkdownContainer"] .ott-compact-section .ott-section-title { font-size: 16px; }
+  [data-testid="stMarkdownContainer"] .ott-compact-section .ott-original-description { font-size: 12px; }
+  .ott-promotion-rail { grid-auto-columns: 88%; gap: 10px; margin-bottom: 16px; }
+  .ott-platform-detail .ott-banner-title { font-size: 20px; }
+  .ott-source-link, [data-testid="stMarkdownContainer"] .ott-source-link, .ott-evidence summary, .ott-work-list summary, .ott-more-sections > summary { min-height: 44px; }
+  .ott-work-title, .ott-compact-section .ott-work-title { font-size: 11px; }
+  .st-key-ott_platform_selector button { min-height: 44px; }
+  .ott-status-note { font-size: 12px; }
+}

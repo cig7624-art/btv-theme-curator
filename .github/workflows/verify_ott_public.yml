@@ -9,6 +9,7 @@ on:
       - scripts/collect_ott.py
       - ott_collection.py
       - ott_public_sources.py
+      - ott_source_adapters.py
       - .github/workflows/verify_ott_public.yml
 
 concurrency:
@@ -37,7 +38,7 @@ jobs:
         run: python scripts/probe_ott_public.py
       - name: Exercise public homepage collector
         if: ${{ hashFiles('scripts/collect_ott.py') != '' }}
-        run: python scripts/collect_ott.py --browser --output ott_home_snapshot.json
+        run: python scripts/collect_ott.py --browser --require-home --output ott_home_snapshot.json
       - name: Upload public evidence including screenshots
         if: always()
         uses: actions/upload-artifact@v4

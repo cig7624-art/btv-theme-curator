@@ -569,3 +569,27 @@ label.weight-chip { cursor: pointer; }
     .st-key-spotlight_heading .section-heading:has(.section-title-row) p { margin-left: 0; }
     .st-key-curation_actions .stButton button :is(p, span) { font-size: 11px; }
 }
+
+/* Each major area gets the full page; the three tabs stay on one mobile row. */
+.st-key-home_sections [role="tablist"] {
+    gap: 8px; height: auto; padding: 0 0 9px;
+    border-bottom: 1px solid var(--line);
+}
+.st-key-home_sections [role="tab"] {
+    min-height: 44px; height: auto; padding: 8px 18px;
+    border: 1px solid transparent; border-radius: 6px;
+    color: var(--muted); white-space: nowrap;
+}
+.st-key-home_sections [role="tab"] p { font-size: 13px; font-weight: 600; color: inherit; }
+.st-key-home_sections [role="tab"][aria-selected="true"] {
+    color: var(--accent); background: #e7bd8612; border-color: #8a7759;
+}
+.st-key-home_sections [data-baseweb="tab-highlight"] { background-color: var(--accent); }
+.st-key-home_sections [role="tabpanel"] { padding-top: 16px; }
+@media (max-width: 600px) {
+    .st-key-home_sections [role="tablist"] { gap: 3px; }
+    .st-key-home_sections [role="tab"] { padding: 8px 9px; }
+    .st-key-home_sections [role="tab"] p { font-size: 11px; }
+}
+
+.st-key-home_sections .react-aria-SelectionIndicator { background: var(--accent) !important; }

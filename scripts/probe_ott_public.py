@@ -263,6 +263,15 @@ def capture_browser(service, folder, browser, deadline):
     return result
 
 
+def prepare_capture_folder(folder):
+    """Discard this probe's old outputs so a failure cannot reuse stale HTML."""
+    folder.mkdir(parents=True, exist_ok=True)
+    generated = {"http.json", "browser.json", "network.json", "http.html.gz", "browser.html.gz", "viewport.jpg"}
+    for path in folder.iterdir():
+        if path.is_file() and (path.name in generated or re.fullmatch(r"response-\d+\.json", path.name)):
+            path.unlink()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default="artifacts/ott_public_probe")
@@ -288,7 +297,7 @@ def main():
             if args.platform and service["id"] not in args.platform:
                 continue
             folder = root / service["id"]
-            folder.mkdir(parents=True, exist_ok=True)
+            prepare_capture_folder(folder)
             deadline = time.monotonic() + 40
             record = {"id": service["id"], "http": capture_http(service, folder)}
             if browser and time.monotonic() < deadline:

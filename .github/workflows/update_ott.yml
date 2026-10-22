@@ -1,0 +1,63 @@
+name: Collect public OTT homes
+
+on:
+  schedule:
+    # 월·수·금 오전 10시 KST
+    - cron: '0 1 * * 1,3,5'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ott_collection.py
+      - ott_source_adapters.py
+      - scripts/collect_ott.py
+      - .github/workflows/update_ott.yml
+
+concurrency:
+  group: collect-public-ott-home
+  cancel-in-progress: false
+
+jobs:
+  collect-public-homes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install public collection packages
+        run: |
+          pip install requests beautifulsoup4 playwright
+          python -m playwright install --with-deps chromium
+      - name: Validate extraction and failure preservation
+        run: |
+          python -m unittest discover -s tests -p 'test_ott_collection.py' -v
+          python -m unittest discover -s tests -p 'test_ott_sources.py' -v
+      - name: Collect public home pages without signing in
+        run: python scripts/collect_ott.py --browser --require-home
+      - name: Save verification output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-ott-home-snapshot
+          path: ott_home_snapshot.json
+          retention-days: 7
+      - name: Preserve the observed snapshot on main
+        if: ${{ always() && github.ref == 'refs/heads/main' }}
+        run: |
+          if [ ! -f ott_home_snapshot.json ]; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- ott_home_snapshot.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'Update public OTT home observations'
+          git pull --rebase origin main
+          git push origin HEAD:main
