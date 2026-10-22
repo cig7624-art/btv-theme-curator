@@ -1,4 +1,4 @@
-"""Check a small sample of saved public artwork URLs without saving images."""
+"""Check a sample or all distinct saved public artwork URLs without saving images."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json

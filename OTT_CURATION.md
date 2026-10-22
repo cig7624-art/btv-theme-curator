@@ -57,4 +57,4 @@ python scripts/collect_ott.py --browser --require-home
 
 `tests/fixtures/ott/`는 이 실제 자료를 축약한 회귀 검증용 원문입니다. TVING 로고 오인, Netflix 배경 이미지 카드, Disney+ 지역 이동과 컬렉션 링크, wavve 홈과 카탈로그 연결 및 부분 확보 표본의 정직한 표시를 검증합니다. 최신 실제 수집에서는 wavve 첫 두 영역의 작품도 확인했습니다.
 
-개발 검증은 실제 수집 뒤 `scripts/check_ott_images.py`로 서비스당 최대 2개 공개 이미지의 응답 형식도 확인합니다. 비교 결과는 `artifacts/ott_asset_validation.json`에 기록하며 이미지를 복제해 저장하지 않습니다.
+개발 검증은 실제 수집 뒤 `python scripts/check_ott_images.py --all`로 저장된 공개 이미지 주소 전체를 중복 제거해 검사합니다. 기본 실행은 서비스당 최대 2개 표본 검사입니다. 2026-10-22 20:08 KST 검사에서는 165개 주소가 모두 정상 이미지로 응답했습니다. 결과는 `artifacts/ott_asset_validation.json`에 기록하며 이미지를 복제해 저장하지 않습니다. 이 검사는 현재 저장된 주소의 응답을 확인하며, 전체 작품이나 이후의 이미지 유효성을 보장하지는 않습니다.
