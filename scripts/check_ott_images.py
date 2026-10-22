@@ -23,25 +23,33 @@ def check(item):
     return result
 
 
+def image_jobs(snapshot, *, all_images=False):
+    jobs, seen = [], set()
+    for platform in snapshot.get('platforms', []):
+        candidates=list(platform.get('promotions',[]))
+        for row in platform.get('sections',[])+platform.get('public_lists',[]):
+            candidates.extend(row.get('works',[]))
+        selected=0
+        for work in candidates:
+            asset=safe_http_url(work.get('image_url'))
+            if not asset or asset in seen:
+                continue
+            seen.add(asset);selected+=1;jobs.append((platform['id'],work))
+            if not all_images and selected==2:
+                break
+    return jobs
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--snapshot', default='ott_home_snapshot.json')
     parser.add_argument('--output', default='artifacts/ott_asset_validation.json')
+    parser.add_argument('--all', action='store_true', dest='all_images', help='Check every unique image URL in the saved snapshot')
     args=parser.parse_args()
-    jobs=[]
-    for platform in load_snapshot(args.snapshot)['platforms']:
-        candidates=list(platform.get('promotions',[]))
-        for row in platform.get('sections',[])+platform.get('public_lists',[]):
-            candidates.extend(row.get('works',[]))
-        selected=[]
-        for work in candidates:
-            asset=safe_http_url(work.get('image_url'))
-            if asset and asset not in selected:
-                selected.append(asset);jobs.append((platform['id'],work))
-            if len(selected)==2:break
+    jobs=image_jobs(load_snapshot(args.snapshot), all_images=args.all_images)
     with ThreadPoolExecutor(max_workers=4) as pool:
         results=list(pool.map(check,jobs))
-    output={'checked_at':utc_now_iso(),'scope':'sample_of_saved_public_image_urls','sampled':len(results),'reachable':sum(item['ok'] for item in results),'results':results}
+    output={'checked_at':utc_now_iso(),'scope':'all_saved_public_image_urls' if args.all_images else 'sample_of_saved_public_image_urls','sampled':len(results),'reachable':sum(item['ok'] for item in results),'results':results}
     path=Path(args.output);path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text(json.dumps(output,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps(output,ensure_ascii=False,indent=2))

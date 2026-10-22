@@ -51,6 +51,9 @@ from theme_content_manager import (
     upsert_content_frame,
 )
 
+APP_VERSION = Path(__file__).with_name("VERSION").read_text(encoding="utf-8").strip()
+
+
 st.set_page_config(
     page_title="B tv+ AI Theme Curator",
     page_icon="🧠",
@@ -2072,7 +2075,8 @@ else:
         render_ott_page(load_snapshot(OTT_SNAPSHOT_PATH), on_refresh=refresh_ott_public_homes)
 
     st.markdown(
-        '<footer class="magazine-footer" data-release="ott-public-home-v1"><span>B tv+ · THEME CURATOR</span>'
+        f'<footer class="magazine-footer" data-release="ott-public-home-v1" data-version="{html.escape(APP_VERSION, quote=True)}">'
+        f'<span>B tv+ · THEME CURATOR · v{html.escape(APP_VERSION)}</span>'
         '<span>오늘의 이슈가 내일의 취향이 되도록.</span></footer>',
         unsafe_allow_html=True,
     )

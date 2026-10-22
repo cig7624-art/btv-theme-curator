@@ -46,9 +46,9 @@ jobs:
       - name: Exercise public homepage collector
         if: ${{ hashFiles('scripts/collect_ott.py') != '' }}
         run: python scripts/collect_ott.py --browser --require-home --output ott_home_snapshot.json
-      - name: Verify a sample of saved public artwork
+      - name: Verify all saved public artwork
         if: ${{ hashFiles('ott_home_snapshot.json') != '' }}
-        run: python scripts/check_ott_images.py
+        run: python scripts/check_ott_images.py --all
       - name: Upload public evidence including screenshots
         if: always()
         uses: actions/upload-artifact@v4
