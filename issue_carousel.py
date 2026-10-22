@@ -29,7 +29,13 @@ CAROUSEL_SCRIPT = """<script>
     const position = root.querySelector('.carousel-position');
     const events = new AbortController();
     let resize;
-    const cleanup = () => { events.abort(); if (resize) resize.disconnect(); };
+    let drag = null;
+    let suppressClick = false;
+    let clickTimer;
+    const cleanup = () => {
+      events.abort(); if (resize) resize.disconnect();
+      finishDrag(false); clearTimeout(clickTimer);
+    };
     window.__btvIssueCarouselCleanup = cleanup;
     const step = () => (rail.firstElementChild?.getBoundingClientRect().width || rail.clientWidth)
       + (parseFloat(getComputedStyle(rail).columnGap) || 0);
@@ -51,6 +57,47 @@ CAROUSEL_SCRIPT = """<script>
       rail.scrollBy({left: direction * step(), behavior:
         matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
     }
+    function finishDrag(blockClick = true) {
+      const current = drag;
+      drag = null;
+      rail.classList.remove('is-dragging');
+      if (current && rail.hasPointerCapture(current.id)) rail.releasePointerCapture(current.id);
+      if (current?.active && blockClick) {
+        suppressClick = true;
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => { suppressClick = false; }, 250);
+      }
+    }
+    rail.addEventListener('pointerdown', (event) => {
+      // Touch keeps native swiping and vertical page scrolling. Mouse/pen can
+      // grab either the cover link or card body; a simple click still opens it.
+      if (event.pointerType === 'touch' || !event.isPrimary || event.button !== 0) return;
+      if (event.target.closest('summary, button, input, select, textarea, [contenteditable="true"], .evidence-panel')) return;
+      finishDrag(false); clearTimeout(clickTimer); suppressClick = false;
+      drag = {id: event.pointerId, x: event.clientX, y: event.clientY, left: rail.scrollLeft, active: false};
+    }, {signal: events.signal});
+    rail.addEventListener('pointermove', (event) => {
+      if (!drag || event.pointerId !== drag.id) return;
+      const distance = event.clientX - drag.x;
+      if (!drag.active) {
+        if (Math.abs(distance) < 6) return;
+        if (Math.abs(event.clientY - drag.y) > Math.abs(distance)) { finishDrag(false); return; }
+        drag.active = true;
+        rail.classList.add('is-dragging');
+        rail.setPointerCapture(drag.id);
+        window.getSelection()?.removeAllRanges();
+      }
+      event.preventDefault();
+      rail.scrollLeft = drag.left - distance;
+    }, {passive: false, signal: events.signal});
+    window.addEventListener('pointerup', () => finishDrag(), {signal: events.signal});
+    window.addEventListener('pointercancel', () => finishDrag(), {signal: events.signal});
+    window.addEventListener('blur', () => finishDrag(), {signal: events.signal});
+    rail.addEventListener('dragstart', (event) => event.preventDefault(), {signal: events.signal});
+    rail.addEventListener('click', (event) => {
+      if (!suppressClick) return;
+      event.preventDefault(); event.stopImmediatePropagation(); suppressClick = false;
+    }, {capture: true, signal: events.signal});
     previous.addEventListener('click', () => move(-1), {signal: events.signal});
     next.addEventListener('click', () => move(1), {signal: events.signal});
     rail.addEventListener('scroll', update, {passive: true, signal: events.signal});

@@ -44,7 +44,8 @@ class PosterRepairTests(unittest.TestCase):
             rows = [candidate("이미지 있음", poster_url="https://images.example.com/existing.jpg"),
                     candidate("더 글로리", rank="2"), candidate("더 글로리", rank="3"),
                     candidate("부부의 세계", rank="4"), candidate("스카이 캐슬", rank="5"),
-                    candidate("화면 밖 작품", rank="6"), candidate("옛 작품", run_id="old-run"),
+                    candidate("다섯 번째 작품", rank="6"), candidate("화면 밖 작품", rank="7"),
+                    candidate("옛 작품", run_id="old-run"),
                     candidate("더 글로리", theme_key="T2"), candidate("마지막 후보", theme_key="T2", rank="2")]
             save(root, rows, [history(), history("old-run", "2026-10-21T10:00:00+09:00")])
             before = (root / "theme_content_candidates.csv").read_bytes()
@@ -56,10 +57,38 @@ class PosterRepairTests(unittest.TestCase):
                 manifest = repair.collect_updates(root, limit=2)
             lookup.assert_called_once()
             self.assertEqual(manifest["source_run_id"], "new-run")
+            self.assertEqual(manifest["visible_candidates"], 7)
             self.assertEqual(manifest["checked_unique"], 2)
             self.assertEqual(manifest["found_unique"], 2)
             self.assertEqual((root / "theme_content_candidates.csv").read_bytes(), before)
             self.assertNotIn("화면 밖 작품", str(manifest["updates"]))
+
+    def test_default_budget_covers_five_unique_visible_works_for_ten_themes(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            rows = []
+            expected_titles = []
+            for theme in range(10):
+                theme_key = f"T{theme}"
+                # Duplicate rows must not displace the fifth unique visible work.
+                rows.append(candidate(f"작품 {theme}-1", theme_key=theme_key, rank="1.5"))
+                rows.extend(candidate(f"작품 {theme}-{rank}", theme_key=theme_key, rank=str(rank))
+                            for rank in range(6, 0, -1))
+                expected_titles.extend(f"작품 {theme}-{rank}" for rank in range(1, 6))
+            save(root, rows)
+
+            def enrich(items, **kwargs):
+                self.assertEqual(kwargs["limit"], 50)
+                self.assertEqual([item["title"] for item in items], expected_titles)
+                return [dict(item, poster_url="https://images.example.com/poster.jpg") for item in items]
+
+            with patch.object(repair, "enrich_poster_candidates", side_effect=enrich) as lookup:
+                manifest = repair.collect_updates(root)
+            lookup.assert_called_once()
+            self.assertEqual(manifest["visible_candidates"], 50)
+            self.assertEqual(manifest["checked_unique"], 50)
+            self.assertEqual(manifest["found_unique"], 50)
+            self.assertEqual([item["title"] for item in manifest["updates"]], expected_titles)
 
     def test_apply_changes_only_blank_poster_identity_preserving_rows_order_and_all_fields(self):
         with TemporaryDirectory() as temporary:

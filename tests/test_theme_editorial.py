@@ -67,13 +67,19 @@ class ThemeEditorialTests(unittest.TestCase):
         self.assertNotIn('a\");color:red', rendered)
         self.assertNotIn('url(https://evil.example', rendered)
 
-    def test_more_than_four_candidates_keep_all_accessible_in_native_details(self):
+    def test_more_than_five_candidates_keep_all_accessible_in_native_details(self):
         rendered = theme_card_html(1, recommendation(contents=[content(number) for number in range(8)]))
-        self.assertEqual(rendered.count('class="theme-poster-tile"'), 4)
+        self.assertEqual(rendered.count('class="theme-poster-tile"'), 5)
         self.assertIn('<details class="theme-more-candidates">', rendered)
         self.assertIn("전체 8편 보기", rendered)
         self.assertEqual(rendered.count("<li>"), 8)
         self.assertIn('href="https://m.kinolights.com/title/7"', rendered)
+
+    def test_exactly_five_candidates_are_visible_without_a_redundant_expander(self):
+        rendered = theme_card_html(1, recommendation(contents=[content(number) for number in range(5)]))
+        self.assertEqual(rendered.count('class="theme-poster-tile"'), 5)
+        self.assertIn("추천 작품 <strong>5편", rendered)
+        self.assertNotIn('<details class="theme-more-candidates">', rendered)
 
     def test_duplicate_same_work_and_year_does_not_inflate_count(self):
         rendered = theme_card_html(1, recommendation(contents=[content(1), content(1)]))

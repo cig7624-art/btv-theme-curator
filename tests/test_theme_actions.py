@@ -205,6 +205,24 @@ class ThemeActionTests(unittest.TestCase):
             self.assertEqual(app.button(key="load_weekly_contents").label, "콘텐츠 새로고침")
             self.assertFalse(any("content provider unavailable" in item.value for item in app.warning))
 
+    def test_poster_loading_covers_five_visible_unique_works_after_duplicate_rows(self):
+        with app_fixture() as state:
+            def validate(suggestions, **kwargs):
+                return {key: [dict(title=title, year="2020", content_type="영화", status="verified",
+                                   source_url="https://m.kinolights.com/title/test")
+                              for title in ["작품1", "작품1", "작품2", "작품3", "작품4", "작품5", "작품6"]]
+                        for key in suggestions}, {}
+            state["validate_content_suggestions"].side_effect = validate
+            app = state["app"]
+            app.button(key="load_weekly_contents").click().run()
+            self.assert_no_errors(app)
+            lookup = state["enrich_poster_candidates"]
+            lookup.assert_called_once()
+            self.assertEqual([item["title"] for item in lookup.call_args.args[0]],
+                             ["작품1", "작품2", "작품3", "작품4", "작품5"])
+            self.assertEqual(lookup.call_args.kwargs["limit"], 50)
+            self.assertIn("작품6", set(state["frame"].title))
+
     def test_empty_content_response_is_reported_without_saving_empty_results(self):
         with app_fixture() as state:
             app = state["app"]

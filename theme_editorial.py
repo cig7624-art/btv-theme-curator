@@ -200,9 +200,9 @@ def theme_card_html(index, rec, issue_pool=None):
         if identity not in seen:
             candidates.append(candidate)
             seen.add(identity)
-    posters = ''.join(_poster_html(item, position) for position, item in enumerate(candidates[:4]))
+    posters = ''.join(_poster_html(item, position) for position, item in enumerate(candidates[:5]))
     more = ''
-    if len(candidates) > 4:
+    if len(candidates) > 5:
         links = []
         for item in candidates:
             label = html.escape(item["title"] + (' · ' + item["year"] if item["year"] else ''))

@@ -112,7 +112,7 @@ def latest_run_id(history, content):
 
 
 def visible_candidates(content, run_id):
-    """Match the four initially displayed unique works for each saved theme."""
+    """Match the five initially displayed unique works for each saved theme."""
     if not run_id:
         return content.iloc[:0].copy()
     scoped = content[content["run_id"].eq(run_id)].copy()
@@ -130,12 +130,12 @@ def visible_candidates(content, run_id):
                 continue
             seen.add(identity)
             selected.append(index)
-            if len(seen) == 4:
+            if len(seen) == 5:
                 break
     return content.loc[selected].copy()
 
 
-def collect_updates(root=ROOT, *, limit=40):
+def collect_updates(root=ROOT, *, limit=50):
     root = Path(root)
     content, history = _load(root)
     run_id = latest_run_id(history, content)
@@ -220,7 +220,7 @@ def main():
     mode.add_argument("--collect", type=Path, help="Look up missing visible artwork and save an update manifest; never change recommendations")
     mode.add_argument("--apply", type=Path, help="Apply a previously collected manifest to the latest saved candidates")
     parser.add_argument("--root", type=Path, default=ROOT)
-    parser.add_argument("--limit", type=int, default=40)
+    parser.add_argument("--limit", type=int, default=50)
     parser.add_argument("--diagnose", action="store_true", help="Include public provider responses in the repair report")
     parser.add_argument("--write", action="store_true", help="Write poster-only changes and an audit report; default apply is dry run")
     args = parser.parse_args()

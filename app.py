@@ -2,6 +2,7 @@ import html
 import json
 import os
 import re
+import unicodedata
 from difflib import SequenceMatcher
 from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
@@ -1020,14 +1021,21 @@ def build_and_store_content_candidates(
     )
     if not any(validated.values()):
         raise ThemeGenerationError("연결할 추천 작품을 받지 못했습니다. 콘텐츠를 다시 불러와 주세요.")
-    # Fetch art only during an explicit content load, for the four visible
+    # Fetch art only during an explicit content load, for the five visible
     # candidates per theme. Ordinary page loads never perform poster searches.
-    visible_candidates = [
-        {**item, "_theme_key": key, "_candidate_index": index}
-        for key, items in validated.items()
-        for index, item in enumerate(items[:4])
-    ]
-    for item in enrich_poster_candidates(visible_candidates, limit=40):
+    visible_candidates = []
+    for key, items in validated.items():
+        seen = set()
+        for index, item in enumerate(items):
+            title = re.sub(r"[^0-9a-z가-힣]", "", unicodedata.normalize("NFKC", str(item.get("title", ""))).lower())
+            identity = (title, str(item.get("year", "")).strip())
+            if not title or identity in seen:
+                continue
+            seen.add(identity)
+            visible_candidates.append({**item, "_theme_key": key, "_candidate_index": index})
+            if len(seen) == 5:
+                break
+    for item in enrich_poster_candidates(visible_candidates, limit=50):
         validated[item["_theme_key"]][item["_candidate_index"]]["poster_url"] = item.get("poster_url", "")
     candidate_frame = content_rows_to_frame(
         run_id=str(scope_run_id),
@@ -1828,17 +1836,11 @@ elif st.session_state["page"] == "theme_db":
 
 else:
     with st.container(key="magazine_nav"):
-        brand, themes_nav = st.columns([5, 1.8], gap="small")
-        with brand:
-            st.markdown(
-                '<div class="magazine-brand">B tv<span class="brand-plus">+</span>'
-                '<span class="brand-caption">THEME CURATOR</span></div>',
-                unsafe_allow_html=True,
-            )
-        with themes_nav:
-            if st.button("테마 라이브러리 ↗", use_container_width=True):
-                go_page("theme_db")
-                st.rerun()
+        st.markdown(
+            '<div class="magazine-brand">B tv<span class="brand-plus">+</span>'
+            '<span class="brand-caption">THEME CURATOR</span></div>',
+            unsafe_allow_html=True,
+        )
 
     st.markdown(
         '<section class="magazine-hero">'
@@ -1905,12 +1907,12 @@ else:
         description = f"최근 이슈에서 발견한 {len(recs)}개의 테마" if recs else "최근 이슈에서 새로운 테마를 발견하세요."
 
         with st.container(key="curation_heading"):
-            title_column, action_column = st.columns([1.15, 1.5], gap="small", vertical_alignment="center")
+            title_column, action_column = st.columns([1, 2], gap="small", vertical_alignment="center")
             with title_column:
                 render_section_heading(2, '이번 주 추천 테마', description)
             with action_column:
                 with st.container(key="curation_actions"):
-                    create_action, content_action, settings_action = st.columns([1, 1, .23], gap="small")
+                    create_action, content_action, library_action, settings_action = st.columns([1, 1, 1, .23], gap="small")
                     with create_action:
                         generate_clicked = st.button(
                             "테마 생성하기", key="generate_weekly_themes", type="primary",
@@ -1924,6 +1926,10 @@ else:
                             disabled=not bool(recs and openai_api_key and persistent_ready),
                             help="현재 추천된 모든 테마의 작품 후보와 포스터를 불러옵니다.",
                         )
+                    with library_action:
+                        if st.button("테마 라이브러리", key="open_theme_library", use_container_width=True):
+                            go_page("theme_db")
+                            st.rerun()
                     with settings_action:
                         with st.popover("⚙", help="생성 개수와 연결 설정", use_container_width=True):
                             top_n = st.select_slider("생성할 테마 수", options=[5, 10, 15, 20, 25, 30], value=10)
