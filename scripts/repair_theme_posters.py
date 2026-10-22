@@ -20,49 +20,30 @@ sys.path.insert(0, str(ROOT))
 from poster_assets import enrich_poster_candidates
 
 
-def lookup_diagnostics():
-    """Record public provider reachability so empty lookups can be investigated."""
-    probes = [
-        ("ko_wikipedia_api", "https://ko.wikipedia.org/w/api.php", {"action": "query", "format": "json", "titles": "더 글로리", "prop": "pageimages|pageprops|extracts|categories|langlinks", "piprop": "original|name", "pilicense": "any", "exintro": 1, "explaintext": 1, "exsentences": 3, "cllimit": 50, "lllang": "en", "lllimit": 1}),
-        ("en_wikipedia_api", "https://en.wikipedia.org/w/api.php", {"action": "query", "format": "json", "redirects": 1, "titles": "The Glory (TV series)", "prop": "pageimages|pageprops|extracts|categories", "piprop": "original|name", "pilicense": "any", "exintro": 1, "explaintext": 1, "exsentences": 3, "cllimit": 50}),
-        ("ko_wikipedia_batch", "https://ko.wikipedia.org/w/api.php", {"action": "query", "format": "json", "redirects": 1, "titles": "더 글로리 (드라마)|더 글로리 (텔레비전 프로그램)|더 글로리", "prop": "pageimages|pageprops|extracts|categories|langlinks", "piprop": "original|name", "pilicense": "any", "exintro": 1, "explaintext": 1, "exsentences": 3, "cllimit": 50, "lllang": "en", "lllimit": 1}),
-        ("ko_wikipedia_infobox", "https://ko.wikipedia.org/w/api.php", {"action": "parse", "format": "json", "page": "더 글로리", "prop": "text", "disableeditsection": 1}),
-        ("en_wikipedia_infobox", "https://en.wikipedia.org/w/api.php", {"action": "parse", "format": "json", "page": "The Glory (TV series)", "prop": "text", "disableeditsection": 1}),
-        ("ko_wikipedia_article", "https://ko.wikipedia.org/wiki/더_글로리", None),
-        ("en_wikipedia_article", "https://en.wikipedia.org/wiki/The_Glory", None),
-        ("tvmaze", "https://api.tvmaze.com/search/shows", {"q": "The Glory"}),
-    ]
-    output = {}
-    for name, url, params in probes:
+def lookup_diagnostics(unresolved):
+    """Inspect a bounded sample of unresolved works using the normal API limits."""
+    from poster_assets import _is_tv, _verified_wikipedia_page, _wikipedia_pages
+
+    output = []
+    for item in unresolved[:8]:
+        title, year, kind = _identity(item)
+        tv = _is_tv(kind)
+        titles = [title, f"{title} (드라마)", f"{title} (텔레비전 프로그램)"] if tv else [title, f"{title} (영화)"]
+        if year:
+            titles.append(f"{title} ({year}년 {'드라마' if tv else '영화'})")
+        result = dict(title=title, year=year, content_type=kind)
         try:
-            response = requests.get(url, params=params, headers={"User-Agent": "BtvThemeCurator/1.0 (https://github.com/cig7624-art/btv-theme-curator; public poster metadata)"}, timeout=8)
-            result = {"status": response.status_code, "bytes": len(response.content), "content_type": response.headers.get("content-type", "")}
-            try:
-                payload = response.json()
-                if isinstance(payload, dict):
-                    result["api_error"] = payload.get("error")
-                    result["api_warnings"] = payload.get("warnings")
-                    result["pages"] = list(payload.get("query", {}).get("pages", {}).values())
-                    if "parse" in payload:
-                        from bs4 import BeautifulSoup
-                        parsed = payload["parse"]
-                        soup = BeautifulSoup(parsed.get("text", {}).get("*", ""), "html.parser")
-                        result["parsed_title"] = parsed.get("title")
-                        result["infoboxes"] = len(soup.select("table.infobox"))
-                        result["infobox_images"] = [{**{key: image.get(key) for key in ("src", "alt", "width", "height")}, "caption": image.find_parent("td").get_text(" ", strip=True)[:200]} for image in soup.select("table.infobox img")[:4] if image.find_parent("td") is not None]
-                elif isinstance(payload, list):
-                    result["matches"] = len(payload)
-            except ValueError:
-                if response.status_code != 200:
-                    result["message"] = re.sub(r"\s+", " ", response.text)[:300]
-            output[name] = result
+            pages = _wikipedia_pages("ko", titles, english_links=True)
+            result["korean_pages"] = [dict(page, identity_verified=_verified_wikipedia_page(page, [title], year, tv)) for page in pages]
+            links = list(dict.fromkeys(link["*"] for page in pages
+                                      if _verified_wikipedia_page(page, [title], year, tv)
+                                      for link in page.get("langlinks", []) if link.get("lang") == "en" and link.get("*")))
+            if links:
+                result["english_pages"] = [dict(page, identity_verified=_verified_wikipedia_page(page, links, year, tv))
+                                           for page in _wikipedia_pages("en", links)]
         except requests.RequestException as error:
-            output[name] = {"error": type(error).__name__}
-    try:
-        from poster_assets import _wikipedia_poster
-        output["actual_resolver"] = _wikipedia_poster("더 글로리", "2022", "드라마")
-    except Exception as error:
-        output["actual_resolver"] = {"error": type(error).__name__, "message": str(error)[:300]}
+            result["error"] = {"type": type(error).__name__, "message": str(error)[:300]}
+        output.append(result)
     return output
 
 
@@ -175,7 +156,8 @@ def collect_updates(root=ROOT, *, limit=40):
     return {"schema_version": 1, "collected_at": datetime.now(timezone.utc).isoformat(),
             "source_run_id": run_id, "visible_candidates": len(visible),
             "visible_with_poster": sum(_url(value) for value in visible["poster_url"]),
-            "checked_unique": len(requested), "found_unique": len(updates), "updates": list(updates.values())}
+            "checked_unique": len(requested), "found_unique": len(updates), "updates": list(updates.values()),
+            "unresolved": [item for identity, item in requested.items() if identity not in updates]}
 
 
 def _atomic_write(path, write):
@@ -221,6 +203,7 @@ def apply_updates(manifest, root=ROOT, *, write=False):
               "visible_candidates": len(after),
               "before_visible_with_poster": sum(_url(value) for value in before["poster_url"]),
               "visible_with_poster": sum(_url(value) for value in after["poster_url"])}
+    report["unresolved"] = manifest.get("unresolved", [])
     if "provider_diagnostics" in manifest:
         report["provider_diagnostics"] = manifest["provider_diagnostics"]
     if write:
@@ -244,7 +227,7 @@ def main():
     if args.collect:
         manifest = collect_updates(args.root, limit=args.limit)
         if args.diagnose:
-            manifest["provider_diagnostics"] = lookup_diagnostics()
+            manifest["provider_diagnostics"] = lookup_diagnostics(manifest["unresolved"])
         _atomic_write(args.collect, lambda path: path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"))
         print(json.dumps({key: value for key, value in manifest.items() if key != "updates"}, ensure_ascii=False, indent=2))
     else:
