@@ -3800,11 +3800,11 @@
       },
       "_h": [
         "apis.wavve.com/v1/catalog?broadcastid=VY33&catalogType=recommend&category=vod&genre=variety&limit=20&offset=0&orderby=default&recommendType=personal&uicode=VY33&uiparent=GN51-VY33&uirank=45&uitype=band_14&isBand=true",
-        "apis.wavve.com/v1/catalog?broadcastid=VY31&catalogType=recommend&category=vod&genre=ab-series&limit=20&offset=0&orderby=default&recommendType=personal&uicode=VY31&uiparent=GN51-VY31&uirank=29&uitype=band_14&isBand=true",
-        "apis.wavve.com/v1/catalog?broadcastid=VY32&catalogType=recommend&category=vod&genre=drama&isQmeta=y&limit=20&offset=0&orderby=default&recommendType=personal&uicode=VY32&uiparent=GN51-VY32&uirank=35&uitype=band_14&isBand=true",
         "apis.wavve.com/v1/catalog?broadcastid=MY14&catalogType=recommend&category=movie&limit=20&mtype=svod&offset=0&orderby=viewtime&recommendType=personal&uicode=MY14&uiparent=GN51-MY14&uirank=33&uitype=band_14&isBand=true",
-        "apis.wavve.com/cf/uiservice/banner/single/homeband?broadcastid=BY3&limit=20&offset=0&orderby=default&service=wavve&uicode=BY3&uiparent=GN51-BY3&uirank=44&uitype=banner_2",
-        "apis.wavve.com/v1/catalog?broadcastid=VY35&catalogType=recommend&category=vod&genre=animation&limit=20&offset=0&orderby=default&recommendType=personal&uicode=VY35&uiparent=GN51-VY35&uirank=30&uitype=band_14&isBand=true"
+        "apis.wavve.com/v1/catalog?broadcastid=VY32&catalogType=recommend&category=vod&genre=drama&isQmeta=y&limit=20&offset=0&orderby=default&recommendType=personal&uicode=VY32&uiparent=GN51-VY32&uirank=35&uitype=band_14&isBand=true",
+        "apis.wavve.com/v1/catalog?broadcastid=VY31&catalogType=recommend&category=vod&genre=ab-series&limit=20&offset=0&orderby=default&recommendType=personal&uicode=VY31&uiparent=GN51-VY31&uirank=29&uitype=band_14&isBand=true",
+        "apis.wavve.com/v1/catalog?broadcastid=VY35&catalogType=recommend&category=vod&genre=animation&limit=20&offset=0&orderby=default&recommendType=personal&uicode=VY35&uiparent=GN51-VY35&uirank=30&uitype=band_14&isBand=true",
+        "apis.wavve.com/cf/uiservice/banner/single/homeband?broadcastid=BY3&limit=20&offset=0&orderby=default&service=wavve&uicode=BY3&uiparent=GN51-BY3&uirank=44&uitype=banner_2"
       ]
     }
   }

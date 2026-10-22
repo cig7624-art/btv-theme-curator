@@ -18,12 +18,6 @@
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.wavve.com/js/wavve.logger.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
     "url": "https://www.wavve.com/js/wavve-register-landing-event.js",
     "status": 200,
     "resource_type": "script",
@@ -48,55 +42,7 @@
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.wavve.com/static/is-empty-object-670518ba.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/get-my-summary-79c4aa8d.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/BtnLiveAlarm-5b90c905.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/scalable.player-6e0ac36d.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/post-alarms-content-7e2db635.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/get-live-channels-detail-070d214d.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/get-notice-list-98efacf2.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/swiper-7ab19f73.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/swiper-c3f995d6.js",
+    "url": "https://www.wavve.com/static/convert-event-list-314ba261.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
@@ -108,181 +54,13 @@
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.wavve.com/static/convert-event-list-314ba261.js",
+    "url": "https://www.wavve.com/static/get-live-channels-detail-070d214d.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.wavve.com/static/HomeView-03b91791.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/PpvConfirm-c5b7bf03.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/WSvg-d2b0357c.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/Badge-0112f80f.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/TitleList-def9fd38.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/content-click-properties-6765fccd.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/useCatalog-fd4f1135.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/DurationBadge-5248c17e.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/format-seconds-to-hms-3b51bb0f.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/directives-c8df2fcf.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/TopTagList-5fdde2b0.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/resolve-thumbnail-src-31621c0a.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/DynamicSectionLoader-eba49f64.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/useEventOnDisplay-dadf8295.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/can-autoplay.es-4730b12b.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/PortraitCell-f9b8bfb3.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/vue-awesome-swiper-3c92be58.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/handle-banner-navigation-251ea070.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/CellList-a208c322.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/LiveAlarmToggle-57ac8485.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/icon-error-74-642b34d3.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/WButton-447acd6b.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/zzim.mixin-f741aeed.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/EmptyList-c5882f85.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/LiveTopTag-b48a2f2e.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/BandFilterTabs-4c2ec701.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/useLottie-5a2da8e8.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/useAiPromptDraft-49fdef9b.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/WButtonSend-bdf51771.js",
+    "url": "https://www.wavve.com/static/scalable.player-6e0ac36d.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
@@ -294,7 +72,25 @@
     "content_type": "application/javascript"
   },
   {
+    "url": "https://www.wavve.com/static/get-notice-list-98efacf2.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/HomeView-03b91791.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
     "url": "https://www.wavve.com/static/BtnTop-e91c7533.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/PpvConfirm-c5b7bf03.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
@@ -306,73 +102,19 @@
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.wavve.com/static/multisection.mixin-c5cf55dc.js",
+    "url": "https://www.wavve.com/static/swiper-c3f995d6.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.wavve.com/static/lottie-f680ae06.js",
+    "url": "https://www.wavve.com/static/useCatalog-fd4f1135.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.wavve.com/static/BtnZzimWithEvent-12c340db.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/swiper.const-72b3e711.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/shave.es-d803ca44.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/prepend-protocol-ae25c9ca.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/extract-timed-metadata-FYTN6h0w-e020442d.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/use-landing-event-log-9fb165d3.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/useCatalogScrollBandIndex-86d1753f.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/log.v2.send-9cdd0206.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/WImg-45527012.js",
-    "status": 200,
-    "resource_type": "script",
-    "content_type": "application/javascript"
-  },
-  {
-    "url": "https://www.wavve.com/static/PagingComponent-3371959f.js",
+    "url": "https://www.wavve.com/static/TitleList-def9fd38.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
@@ -390,13 +132,181 @@
     "content_type": "application/javascript"
   },
   {
+    "url": "https://www.wavve.com/static/DurationBadge-5248c17e.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/can-autoplay.es-4730b12b.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/BtnZzimWithEvent-12c340db.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/DynamicSectionLoader-eba49f64.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/swiper.const-72b3e711.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/handle-banner-navigation-251ea070.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/prepend-protocol-ae25c9ca.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/multisection.mixin-c5cf55dc.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/LiveAlarmToggle-57ac8485.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/CellList-a208c322.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/LiveTopTag-b48a2f2e.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/vue-awesome-swiper-3c92be58.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/icon-error-74-642b34d3.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/log.v2.send-9cdd0206.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/is-empty-object-670518ba.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/TopTagList-5fdde2b0.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/get-my-summary-79c4aa8d.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/resolve-thumbnail-src-31621c0a.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/WButton-447acd6b.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/swiper-7ab19f73.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/PortraitCell-f9b8bfb3.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/WImg-45527012.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/zzim.mixin-f741aeed.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/PagingComponent-3371959f.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/BtnLiveAlarm-5b90c905.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/post-alarms-content-7e2db635.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
     "url": "https://www.wavve.com/static/preview-cell-fc8c4fea.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
   },
   {
-    "url": "https://www.wavve.com/static/AgeLimits-2b73deec.js",
+    "url": "https://www.wavve.com/static/Badge-0112f80f.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/content-click-properties-6765fccd.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/directives-c8df2fcf.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
@@ -408,7 +318,103 @@
     "content_type": "application/javascript"
   },
   {
+    "url": "https://www.wavve.com/static/useLottie-5a2da8e8.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/extract-timed-metadata-FYTN6h0w-e020442d.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
     "url": "https://www.wavve.com/static/scalableplayer-0bc27169.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/WButtonSend-bdf51771.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/useCatalogScrollBandIndex-86d1753f.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/lottie-f680ae06.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/js/wavve.logger.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://apis.wavve.com/guid/issue?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+    "status": 200,
+    "resource_type": "xhr",
+    "content_type": "application/json; charset=UTF-8"
+  },
+  {
+    "url": "https://www.wavve.com/static/WSvg-d2b0357c.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/useEventOnDisplay-dadf8295.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/BandFilterTabs-4c2ec701.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/shave.es-d803ca44.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/format-seconds-to-hms-3b51bb0f.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/AgeLimits-2b73deec.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/useAiPromptDraft-49fdef9b.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/EmptyList-c5882f85.js",
+    "status": 200,
+    "resource_type": "script",
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.wavve.com/static/use-landing-event-log-9fb165d3.js",
     "status": 200,
     "resource_type": "script",
     "content_type": "application/javascript"
@@ -420,22 +426,16 @@
     "content_type": "application/json; charset=UTF-8"
   },
   {
-    "url": "https://apis.wavve.com/guid/issue?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/knock?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
-    "content_type": "application/json; charset=UTF-8"
+    "content_type": "application/json"
   },
   {
     "url": "https://apis.wavve.com/pooqzone?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 550,
     "resource_type": "xhr",
     "content_type": "application/json; charset=UTF-8"
-  },
-  {
-    "url": "https://apis.wavve.com/knock?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
-    "status": 200,
-    "resource_type": "xhr",
-    "content_type": "application/json"
   },
   {
     "url": "https://www.wavve.com/",
@@ -852,12 +852,6 @@
     "content_type": "application/javascript"
   },
   {
-    "url": "https://apis.wavve.com/notices?limit=5&offset=0&orderby=new&type=all&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
-    "status": 200,
-    "resource_type": "xhr",
-    "content_type": "application/json"
-  },
-  {
     "url": "https://apis.wavve.com/ip?device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
@@ -876,19 +870,25 @@
     "content_type": "application/json"
   },
   {
+    "url": "https://apis.wavve.com/notices?limit=5&offset=0&orderby=new&type=all&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+    "status": 200,
+    "resource_type": "xhr",
+    "content_type": "application/json"
+  },
+  {
     "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN60&broadcastid=BN60&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN60&uiparent=GN51-BN60&uirank=1&uitype=banner_text&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100435&catalogType=manualband&limit=20&manualbandId=100435&mtype=ppv&offset=0&orderby=default&uicode=EN100435&uiparent=GN51-EN100435&uirank=36&uitype=band_highlight&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN74&broadcastid=BN74&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN74&uiparent=GN51-BN74&uirank=4&uitype=banner_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN87&broadcastid=BN87&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN87&uiparent=GN51-BN87&uirank=16&uitype=banner_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100435&catalogType=manualband&limit=20&manualbandId=100435&mtype=ppv&offset=0&orderby=default&uicode=EN100435&uiparent=GN51-EN100435&uirank=36&uitype=band_highlight&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
@@ -906,7 +906,13 @@
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN74&broadcastid=BN74&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN74&uiparent=GN51-BN74&uirank=4&uitype=banner_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN400&catalogType=manualband&limit=20&manualbandId=400&offset=0&orderby=default&uicode=EN400&uiparent=GN51-EN400&uirank=11&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+    "status": 200,
+    "resource_type": "xhr",
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://apis.wavve.com/v1/catalog?bannerCode=BN87&broadcastid=BN87&catalogType=banner&limit=20&offset=0&orderby=default&uicode=BN87&uiparent=GN51-BN87&uirank=16&uitype=banner_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
@@ -924,13 +930,7 @@
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN400&catalogType=manualband&limit=20&manualbandId=400&offset=0&orderby=default&uicode=EN400&uiparent=GN51-EN400&uirank=11&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
-    "status": 200,
-    "resource_type": "xhr",
-    "content_type": "application/json"
-  },
-  {
-    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN1160&catalogType=manualband&limit=20&manualbandId=1160&offset=0&orderby=default&uicode=EN1160&uiparent=GN51-EN1160&uirank=14&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+    "url": "https://apis.wavve.com/v1/catalog?broadcastid=VN500&catalogType=ranking&category=all&limit=20&offset=0&orderby=viewtime&rankingType=realtime&uicode=VN500&uiparent=GN51-VN500&uirank=7&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
@@ -942,7 +942,19 @@
     "content_type": "application/json"
   },
   {
+    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN1160&catalogType=manualband&limit=20&manualbandId=1160&offset=0&orderby=default&uicode=EN1160&uiparent=GN51-EN1160&uirank=14&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+    "status": 200,
+    "resource_type": "xhr",
+    "content_type": "application/json"
+  },
+  {
     "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN20309&catalogType=manualband&limit=20&manualbandId=20309&offset=0&orderby=default&uicode=EN20309&uiparent=GN51-EN20309&uirank=15&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
+    "status": 200,
+    "resource_type": "xhr",
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100793&catalogType=manualband&limit=20&manualbandId=100793&offset=0&orderby=default&uicode=EN100793&uiparent=GN51-EN100793&uirank=18&uitype=band_14_weekly&weekday=thu&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"
@@ -960,12 +972,6 @@
     "content_type": "application/json"
   },
   {
-    "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100793&catalogType=manualband&limit=20&manualbandId=100793&offset=0&orderby=default&uicode=EN100793&uiparent=GN51-EN100793&uirank=18&uitype=band_14_weekly&weekday=thu&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
-    "status": 200,
-    "resource_type": "xhr",
-    "content_type": "application/json"
-  },
-  {
     "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100000&catalogType=manualband&limit=20&manualbandId=100000&offset=0&orderby=default&uicode=EN100000&uiparent=GN51-EN100000&uirank=20&uitype=band_82&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
@@ -973,12 +979,6 @@
   },
   {
     "url": "https://apis.wavve.com/v1/catalog?broadcastid=EN100926&catalogType=manualband&limit=20&manualbandId=100926&offset=0&orderby=default&uicode=EN100926&uiparent=GN51-EN100926&uirank=24&uitype=band_14&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
-    "status": 200,
-    "resource_type": "xhr",
-    "content_type": "application/json"
-  },
-  {
-    "url": "https://apis.wavve.com/v1/catalog?broadcastid=VN425&catalogType=generalband-related&category=vod&contentType=main&hideOrder=Y&limit=20&offset=0&orderby=new&referId=K22_AG2026-0017&relatedMeta=content&uicode=VN425&uiparent=GN51-VN425&uirank=26&uitype=band_2&isBand=true&device=pc&partner=pooq&region=kor&targetage=all&pooqzone=none&drm=wm&client_version=7.2.80",
     "status": 200,
     "resource_type": "xhr",
     "content_type": "application/json"

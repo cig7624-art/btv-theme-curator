@@ -18,13 +18,13 @@
     "content_type": ""
   },
   {
-    "url": "https://www.netflix.com/log/www/1",
+    "url": "https://logs.netflix.com/log/www/cl/2",
     "status": 200,
     "resource_type": "fetch",
     "content_type": ""
   },
   {
-    "url": "https://logs.netflix.com/log/www/cl/2",
+    "url": "https://www.netflix.com/log/www/1",
     "status": 200,
     "resource_type": "fetch",
     "content_type": ""
@@ -42,6 +42,12 @@
     "content_type": ""
   },
   {
+    "url": "https://logs.netflix.com/log/www/cl/2",
+    "status": 200,
+    "resource_type": "fetch",
+    "content_type": ""
+  },
+  {
     "url": "https://www.netflix.com/ichnaea/log",
     "status": 200,
     "resource_type": "xhr",
@@ -51,12 +57,6 @@
     "url": "https://ichnaea-web.netflix.com/log",
     "status": 200,
     "resource_type": "xhr",
-    "content_type": ""
-  },
-  {
-    "url": "https://logs.netflix.com/log/www/cl/2",
-    "status": 200,
-    "resource_type": "fetch",
     "content_type": ""
   }
 ]

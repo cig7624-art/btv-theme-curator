@@ -413,17 +413,17 @@
             "square_image": "https://image.wavve.com/meta/image/202608/1786682622913002688.jpg"
           },
           "content": {
-            "refer_id": "M_EP202610157246.1",
-            "title": "너 진짜 영국 가는거야?",
-            "order_title": "65",
+            "refer_id": "PQV_M_EP202610157246.1",
+            "title": "에피소드66",
+            "order_title": "66",
             "clip_type": "",
-            "title_with_order": "65. 너 진짜 영국 가는거야?",
+            "title_with_order": "66. 에피소드66",
             "subtitle": "",
-            "content_image": "https://image.wavve.com/meta/image/202610/1792635005977008861.jpg",
-            "original_release_date": "2026-10-21",
+            "content_image": "https://image.wavve.com/meta/image/202608/1786682590059171469.jpg",
+            "original_release_date": "2026-10-22",
             "original_release_year": "2026",
-            "release_weekday": "수",
-            "play_time": "1758"
+            "release_weekday": "목",
+            "play_time": "3030"
           },
           "manualband": {
             "image": "https://image.wavve.com/meta/image/202608/1786682604580428722.jpg",
@@ -444,7 +444,7 @@
             "brand": "",
             "update": "",
             "free": "",
-            "new": "new",
+            "new": "",
             "audible": ""
           },
           "personal": {
