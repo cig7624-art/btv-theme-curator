@@ -1,14 +1,15 @@
 {
   "schema_version": 1,
   "status": "passed",
-  "expected_version": "1.2.0",
-  "observed_version": "1.2.0",
-  "started_at": "2026-10-22T23:50:14.366021+00:00",
-  "finished_at": "2026-10-22T23:51:23.554544+00:00",
+  "expected_version": "1.2.1",
+  "observed_version": "1.2.1",
+  "started_at": "2026-10-23T00:26:30.749648+00:00",
+  "finished_at": "2026-10-23T00:27:24.791900+00:00",
   "attempts": 1,
   "tests": {
     "desktop_version": true,
     "desktop_four_tabs": true,
+    "desktop_weekly_actions": true,
     "desktop_director_screen": true,
     "desktop_ott_magazine": true,
     "desktop_ott_feature": true,
@@ -19,6 +20,7 @@
     "desktop_coupang_artwork": true,
     "mobile_version": true,
     "mobile_four_tabs": true,
+    "mobile_weekly_actions": true,
     "mobile_director_screen": true,
     "mobile_ott_magazine": true,
     "mobile_ott_feature": true,
@@ -44,6 +46,6 @@
       "lead_loaded": true
     }
   },
-  "source_commit": "53991f5ea18c11fa78a04e55661353d81ce409df",
+  "source_commit": "3e9f6c7aee3ebe52af6a5c2df36a163f6cb87c70",
   "frame_state": "matched_release"
 }
