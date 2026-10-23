@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "status": "failed",
-  "expected_version": "1.2.1",
-  "observed_version": "1.2.1",
-  "started_at": "2026-10-23T00:27:54.602431+00:00",
-  "finished_at": "2026-10-23T00:29:49.079678+00:00",
+  "status": "passed",
+  "expected_version": "1.2.2",
+  "observed_version": "1.2.2",
+  "started_at": "2026-10-23T00:33:46.030206+00:00",
+  "finished_at": "2026-10-23T00:36:58.833021+00:00",
   "tests": {
     "desktop_version": true,
     "desktop_empty_director": true,
@@ -15,11 +15,14 @@
     "second_title_only_preserved_others": true,
     "content_exclusion_preserved_metadata": true,
     "undo_restored_previous_drafts": true,
-    "library_search_moved_into_conversation": false
+    "library_search_section": true,
+    "library_search_moved_into_conversation": true,
+    "saved_theme_rework_adds_draft_preserves_others": true,
+    "mobile_drafts_no_overflow": true,
+    "no_app_exception": true,
+    "adoption_not_invoked": true
   },
-  "errors": [
-    "saved_theme_search_failed"
-  ],
+  "errors": [],
   "warnings": [],
   "counts": {
     "drafts": 3,
@@ -30,20 +33,22 @@
     ],
     "poster_loading": [
       {
-        "checked": 5,
-        "loaded": 5
-      },
-      {
         "checked": 6,
         "loaded": 6
       },
       {
         "checked": 5,
         "loaded": 5
+      },
+      {
+        "checked": 5,
+        "loaded": 5
       }
     ],
-    "matched_saved_themes": 0
+    "matched_saved_themes": 5,
+    "final_drafts": 4,
+    "submitted_requests": 7
   },
-  "source_commit": "d49fea2625550446560898985396906a022da30e",
+  "source_commit": "508a86211319af4b6c4ff5faca4d3d405940bfbb",
   "frame_state": "matched_release"
 }
