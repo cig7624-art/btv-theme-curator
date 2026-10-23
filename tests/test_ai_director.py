@@ -74,8 +74,112 @@ class AiDirectorTests(unittest.TestCase):
         payload = json.loads(sdk.responses.parse.call_args.kwargs['input'][-1]['content'])
         self.assertEqual(payload['actual_content_catalog'][0]['content_id'], 'C1')
         self.assertIn('한국 영화', payload['request'])
-        self.assertEqual(payload['recent_issues'], [])
+        self.assertNotIn('recent_issues', payload)
         persist.assert_not_called(); remote.assert_not_called()
+
+    def test_open_ideation_is_a_real_conversation_without_creating_cards_or_versions(self):
+        state = new_director_session(); before = deepcopy(state)
+        answer = ('1. 가족의 비밀이 뒤집히는 순간 — 관계의 반전으로 묶어볼 수 있어요.\n'
+                  '2. 도시를 떠난 사람들 — 낯선 공간이 바꾸는 삶을 비교해요.\n'
+                  '3. 능력보다 팀워크 — 엇갈린 인물이 협력하는 과정을 모아요.\n\n'
+                  '긴장감 있는 이야기와 편안한 이야기 중 어느 쪽이 끌리세요?')
+        sdk = client(DirectorPlan(action='reply', message=answer))
+        with patch('content_pipeline.resolve_director_contents', side_effect=AssertionError('ideation must not resolve content')):
+            result = run_director_turn(state, '뭐 만들어볼까?', themes=self.themes, contents=self.catalog, client=sdk)
+        self.assertEqual(state, before)
+        self.assertEqual(result['drafts'], [])
+        self.assertEqual(result['versions'], [])
+        self.assertEqual(result['messages'][-1]['content'], answer)
+        self.assertEqual(result['last_usage']['api_call_count'], 1)
+        sdk.responses.parse.assert_called_once()
+        prompt = sdk.responses.parse.call_args.kwargs['input'][0]['content']
+        self.assertIn("'뭐 만들어볼까?'", prompt)
+        self.assertIn('기획 방향 2~3개', prompt)
+        self.assertIn('action=reply, themes=[], edits=[]', prompt)
+
+    def test_selecting_a_conversation_direction_creates_without_requiring_an_existing_draft(self):
+        state = self.turn(new_director_session(), '뭐 만들어볼까?',
+                          DirectorPlan(action='reply', message='1. 관계의 반전\n2. 도시를 떠난 사람들\n어느 방향이 좋으세요?'))
+        sdk = client(create_plan())
+        result = run_director_turn(state, '2번 방향으로 테마 3개 만들어줘.', themes=self.themes,
+                                  contents=self.catalog, client=sdk, content_resolver=resolver)
+        self.assertEqual(len(result['drafts']), 3)
+        inputs = sdk.responses.parse.call_args.kwargs['input']
+        self.assertEqual(inputs[2]['content'], state['messages'][1]['content'])
+        self.assertIsNone(json.loads(inputs[-1]['content'])['selected_draft_id'])
+
+    def test_conversation_direction_is_not_mistaken_for_an_existing_draft_target(self):
+        state = self.initial()
+        state = self.turn(state, '새 방향을 제안해줘.', DirectorPlan(action='reply', message='1. 시간의 반복\n2. 도시의 밤'))
+        with patch('ai_director.generate_director_plan', return_value=(create_plan(), {'api_call_count': 1})) as planner:
+            result = run_director_turn(state, '2번 방향으로 테마 3개 만들어줘.', themes=self.themes,
+                                      contents=self.catalog, content_resolver=resolver)
+        self.assertIsNone(planner.call_args.kwargs['target_draft_id'])
+        self.assertEqual(len(result['drafts']), 3)
+
+    def test_director_ignores_legacy_issue_arguments_and_does_not_attach_issue_provenance(self):
+        issue = {'issue_key': 'I01', 'issue_title': 'DO_NOT_INJECT_WEEKLY_ISSUE', 'title': 'DO_NOT_INJECT_WEEKLY_ISSUE'}
+        raw = proposal(source_issue_keys=['I01'])
+        sdk = client(DirectorPlan(action='create', message='요청하신 기획 초안입니다.', themes=[raw]))
+        result = run_director_turn(new_director_session(), '복수극 테마 1개 만들어줘.',
+                                  themes=self.themes, contents=self.catalog, issue_records=[issue],
+                                  client=sdk, content_resolver=resolver)
+        payload = json.loads(sdk.responses.parse.call_args.kwargs['input'][-1]['content'])
+        self.assertNotIn('recent_issues', payload)
+        self.assertNotIn('DO_NOT_INJECT_WEEKLY_ISSUE', json.dumps(payload))
+        self.assertEqual(result['drafts'][0]['source_issue_keys'], [])
+        self.assertEqual(result['drafts'][0]['source_issue'], '')
+        direct_sdk = client(DirectorPlan(action='reply', message='다른 관점도 함께 생각해 볼까요?'))
+        generate_director_plan(request='다른 방향을 알려줘.', messages=[], drafts=result['drafts'],
+                               themes=self.themes, contents=self.catalog, issue_records=[issue],
+                               api_key='', model='configured-model', client=direct_sdk)
+        direct_payload = json.loads(direct_sdk.responses.parse.call_args.kwargs['input'][-1]['content'])
+        self.assertNotIn('recent_issues', direct_payload)
+        self.assertNotIn('source_issue', direct_payload['current_drafts'][0])
+
+    def test_library_search_reuses_semantic_intent_in_one_call_without_creating_drafts(self):
+        state = self.initial(); before = deepcopy(state)
+        intent = {'interpreted_request': '잔인하지 않은 복수 테마 찾기', 'anchor_titles': ['실제 작품 1'],
+                  'genres': ['드라마'], 'moods': ['긴장'], 'subjects': ['복수'], 'narrative_elements': ['관계의 반전'],
+                  'positive_keywords': ['복수', '복수', '관계'], 'negative_keywords': ['잔인함'], 'result_count': 5,
+                  'suggested_themes': [{'theme_name': 'DB 결과로 가장하면 안 되는 제안', 'theme_copy': '가상 결과', 'genre': '드라마', 'mood': '긴장'}]}
+        sdk = client(DirectorPlan(action='reply', message='저장된 테마에서 조건에 맞는 항목을 찾아볼게요.', library_search=intent))
+        result = run_director_turn(state, '라이브러리에서 잔인하지 않은 복수 테마를 찾아줘.',
+                                  themes=self.themes, contents=self.catalog, client=sdk)
+        self.assertEqual(result['library_search_intent']['positive_keywords'], ['복수', '관계'])
+        self.assertEqual(result['library_search_intent']['negative_keywords'], ['잔인함'])
+        self.assertEqual(result['library_search_intent']['suggested_themes'], [])
+        self.assertEqual(result['drafts'], before['drafts'])
+        self.assertEqual(result['versions'], before['versions'])
+        self.assertEqual(state, before)
+        sdk.responses.parse.assert_called_once()
+        followed = self.turn(result, '그 조건으로 테마 3개 만들어줘.', create_plan())
+        self.assertIsNone(followed['library_search_intent'])
+        self.assertEqual(followed['messages'][2:4], result['messages'][2:4])
+
+    def test_blank_model_reply_does_not_claim_a_draft_was_created(self):
+        state = self.initial(); before = deepcopy(state)
+        with self.assertRaisesRegex(ThemeGenerationError, '답변이 비어'):
+            self.turn(state, '뭐 만들어볼까?', DirectorPlan(action='reply', message='  '))
+        self.assertEqual(state, before)
+
+    def test_retrieved_library_matches_are_numbered_context_for_subsequent_creation(self):
+        state = self.initial()
+        state['library_search_intent'] = {'positive_keywords': ['도시']}
+        state['library_search_results'] = [
+            {'theme_id': 'T11', 'theme_name': '도시를 벗어난 관계', 'copy': '낯선 곳에서 다시 시작하다', 'genre': '드라마', 'mood': '편안함'},
+            {'theme_id': 'T12', 'theme_name': '한밤의 공범들', 'copy': '도시의 비밀을 함께 감추다', 'genre': '범죄', 'mood': '긴장'}]
+        before = deepcopy(state)
+        sdk = client(create_plan())
+        result = run_director_turn(state, '그중 2번으로 테마 3개 기획해줘.', themes=self.themes,
+                                  contents=self.catalog, client=sdk, content_resolver=resolver)
+        payload = json.loads(sdk.responses.parse.call_args.kwargs['input'][-1]['content'])
+        self.assertIsNone(payload['selected_draft_id'])
+        self.assertEqual(payload['saved_library_matches'][1]['number'], 2)
+        self.assertEqual(payload['saved_library_matches'][1]['theme_id'], 'T12')
+        self.assertEqual(payload['saved_library_matches'][1]['theme_name'], '한밤의 공범들')
+        self.assertEqual(len(result['drafts']), 3)
+        self.assertEqual(state, before)
 
     def test_second_theme_title_only_preserves_every_other_user_field_and_other_drafts(self):
         state = self.initial()

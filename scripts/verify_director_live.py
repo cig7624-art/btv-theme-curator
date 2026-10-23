@@ -25,7 +25,7 @@ from scripts.verify_deployment import (  # noqa: E402
 )
 
 TAB_ORDER = ['지금 주목할 이야기', '추천 테마', 'OTT는 지금', 'AI 디렉터']
-CREATE_REQUEST = ('한국 영화와 드라마를 섞어서 복수와 반전을 다룬 큐레이션 테마 3개 만들어줘. '
+CREATE_REQUEST = ('네가 제안한 2번 방향으로 한국 영화와 드라마를 섞어서 큐레이션 테마 3개 만들어줘. '
                   '각 테마는 서로 다른 관점으로 기획하고 실제 콘텐츠 DB에서 확인되는 작품 5~8편과 추천 이유를 붙여줘.')
 TITLE_REQUEST = ('2번 테마명만 더 감각적인 제목으로 바꿔줘. 서브카피, 기획 의도, 장르, 분위기, '
                  '추천 작품과 추천 이유는 모두 그대로 유지해줘.')
@@ -33,6 +33,10 @@ TITLE_REQUEST = ('2번 테마명만 더 감각적인 제목으로 바꿔줘. 서
 
 def _key(value):
     return re.sub(r'[^0-9a-z가-힣]+', '', str(value or '').lower())
+
+
+def valid_saved_matches(matches, known_names):
+    return bool(matches) and all(_key(re.sub(r'^\s*\d+\.\s*', '', name)) in known_names for name in matches)
 
 
 def verified_titles(root=ROOT):
@@ -128,7 +132,7 @@ def _chat(frame):
     return frame.locator('.st-key-director_composer textarea').first
 
 
-def _submit(frame, request, timeout):
+def _submit(frame, request, timeout, *, allow_empty=False):
     old_count = frame.locator('.st-key-director_conversation [data-testid="stChatMessage"]').count()
     field = _chat(frame)
     _assert(field.is_enabled(), 'director_not_configured')
@@ -143,7 +147,7 @@ def _submit(frame, request, timeout):
             raise VerificationIssue('director_request_failed')
         if frame.locator('.st-key-director_conversation [data-testid="stChatMessage"]').count() >= old_count + 2:
             current = _snapshot(frame)
-            stable = stable + 1 if current and current == previous else 0
+            stable = stable + 1 if (current or allow_empty) and current == previous else 0
             if stable >= 2:
                 return current
             previous = current
@@ -219,6 +223,10 @@ def verify(args):
             finally:
                 mobile_context.close()
             known = verified_titles()
+            brainstorm = _submit(frame, '뭐 만들어볼까?', args.turn_timeout, allow_empty=True)
+            reply = frame.locator('.st-key-director_conversation [data-testid="stChatMessage"]').last.inner_text().strip()
+            report['tests']['open_ideation_without_forced_drafts'] = not brainstorm and len(reply) > 30
+            _assert(report['tests']['open_ideation_without_forced_drafts'], 'open_ideation_failed')
             created = _submit(frame, CREATE_REQUEST, args.turn_timeout)
             report['tests']['free_prompt_three_drafts'] = valid_drafts(created, known)
             _assert(report['tests']['free_prompt_three_drafts'], 'invalid_generated_drafts')
@@ -238,6 +246,16 @@ def verify(args):
             restored = _submit(frame, '이전 버전으로 되돌려줘', min(30, args.turn_timeout))
             report['tests']['undo_restored_previous_drafts'] = restored == renamed
             _assert(report['tests']['undo_restored_previous_drafts'], 'undo_draft_mismatch')
+            searched = _submit(frame, '기존에 저장된 라이브러리에서 공포와 반전 분위기의 유사 테마를 찾아줘. 초안은 수정하지 마.', args.turn_timeout)
+            saved_names = set()
+            for path in (ROOT / 'theme_db.csv', ROOT / 'theme_pool.csv'):
+                if path.exists():
+                    with path.open(encoding='utf-8-sig', newline='') as stream:
+                        saved_names.update(_key(row.get('theme_name')) for row in csv.DictReader(stream, delimiter='|'))
+            matches = frame.locator('.director-library-card h4').all_text_contents()
+            report['tests']['library_search_moved_into_conversation'] = valid_saved_matches(matches, saved_names) and searched == restored
+            report['counts']['matched_saved_themes'] = len(matches)
+            _assert(report['tests']['library_search_moved_into_conversation'], 'saved_theme_search_failed')
             page.set_viewport_size({'width': 390, 'height': 844})
             page.wait_for_timeout(500)
             report['tests']['mobile_drafts_no_overflow'] = not _overflow(frame) and _snapshot(frame) == restored
@@ -245,7 +263,7 @@ def verify(args):
             report['tests']['no_app_exception'] = not has_app_exception(page)
             _assert(report['tests']['no_app_exception'], 'app_exception')
             report['tests']['adoption_not_invoked'] = True
-            report['counts']['submitted_requests'] = 4
+            report['counts']['submitted_requests'] = 6
             report['status'] = 'passed'
             context.close()
             browser.close(); browser = None

@@ -19,6 +19,15 @@
 [data-testid="stMarkdownContainer"] .director-conversation-empty p { margin: 9px 0 0; color: var(--muted); font-size: 12px; line-height: 1.85; }
 .st-key-director_composer [data-testid="stChatInput"] { background: #20251f; border-color: #75654c; color: var(--ink); }
 .st-key-director_composer textarea { color: var(--ink); font-size: 13px; }
+.st-key-director_library_matches { padding: 13px 0 3px; min-width: 0; }
+.director-library-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+[data-testid="stMarkdownContainer"] .director-library-heading h3 { margin: 0; padding: 0; font-size: 16px; }
+.director-library-heading > span { color: var(--muted); font-size: 10px; }
+.st-key-director_library_matches [class*="st-key-director_library_match_"] { padding: 12px 14px; border: 1px solid var(--line); border-radius: 7px; background: #1b211b; }
+.director-library-card > span { color: var(--accent); font-size: 10px; }
+[data-testid="stMarkdownContainer"] .director-library-card h4 { margin: 3px 0; padding: 0; font-size: 15px; line-height: 1.6; overflow-wrap: anywhere; }
+[data-testid="stMarkdownContainer"] .director-library-card p { margin: 0; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+.st-key-director_library_matches button p { font-size: 11px; }
 .director-results-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin: 10px 0 0; padding: 13px 0 5px; border-top: 1px solid var(--line); }
 [data-testid="stMarkdownContainer"] .director-results-heading h3 { margin: 0; padding: 0; font-size: 19px; }
 .director-results-heading > span { color: var(--muted); font-size: 11px; }

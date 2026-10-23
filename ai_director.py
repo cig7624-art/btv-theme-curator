@@ -16,7 +16,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 
 from llm_theme_generator import (
-    ThemeGenerationError, _clean_short_text, _dedupe_strings, _existing_match,
+    ThemeGenerationError, ThemeSearchIntent, _clean_short_text, _dedupe_strings, _existing_match,
     ensure_theme_schema, generate_director_plan, normalize_theme_text,
 )
 
@@ -39,6 +39,8 @@ def _now():
 def new_director_session():
     return {"schema_version": 1, "messages": [], "drafts": [], "versions": [],
             "current_version_id": None, "version_sequence": 0, "last_usage": {},
+            "library_search_intent": None,
+            "library_search_results": [],
             "session_id": "director-" + uuid4().hex[:16]}
 
 
@@ -65,15 +67,42 @@ def _find_draft(state, draft_id):
 
 
 def _requested_target(state, request, selected):
+    if selected and not _find_draft(state, selected):
+        raise ThemeGenerationError("선택한 테마를 찾지 못했습니다. 수정할 테마를 다시 선택해 주세요.")
     match = re.search(r"(?<!\d)([1-9][0-9]?)\s*번(?:째)?(?:\s*테마)?", request)
     if match:
+        # A conversational suggestion is not a saved draft. For example,
+        # '2번 방향으로 3개 만들어줘' must reach the model with its prior reply.
+        after_number = request[match.end():].lstrip()
+        if not state["drafts"] or re.match(r"(?:방향|아이디어|제안|컨셉|콘셉트|안)(?:으로|로|을|를|이|가|은|는|\s|$)", after_number):
+            return selected
+        library_reference = bool(re.search(r"라이브러리|저장(?:된)?\s*테마|찾은\s*테마|검색\s*결과", request))
+        from_recent_search = (state.get("library_search_intent") and state.get("library_search_results")
+                              and re.search(r"그\s*중|기획|만들|생성", request))
+        if library_reference or from_recent_search:
+            return selected
         number = int(match.group(1))
         if number > len(state["drafts"]):
             raise ThemeGenerationError(f"{number}번 테마가 없습니다. 현재 초안 번호를 확인해 주세요.")
         return state["drafts"][number - 1]["draft_id"]
-    if selected and not _find_draft(state, selected):
-        raise ThemeGenerationError("선택한 테마를 찾지 못했습니다. 수정할 테마를 다시 선택해 주세요.")
     return selected
+
+
+def _library_search_intent(raw):
+    if raw is None:
+        return None
+    try:
+        intent = ThemeSearchIntent.model_validate(raw).model_dump()
+    except Exception as exc:
+        raise ThemeGenerationError("저장된 테마의 검색 조건을 읽지 못했습니다. 다시 요청해 주세요.") from exc
+    intent["interpreted_request"] = _clean_short_text(intent["interpreted_request"], 140)
+    for key in ("anchor_titles", "genres", "moods", "subjects", "narrative_elements",
+                "positive_keywords", "negative_keywords"):
+        intent[key] = _dedupe_strings(intent.get(key) or [], 14)
+    # The director returns search intent, never unverified database matches or
+    # model-made cards disguised as library results. Ranking stays local.
+    intent["suggested_themes"] = []
+    return intent
 
 
 def _requested_scope(request, selected):
@@ -245,7 +274,11 @@ def _undo_version(state, target_draft_id=None):
 def run_director_turn(session, request, *, themes, contents, issue_records=None, api_key="", model="gpt-5.6-luna",
                       target_draft_id=None, edit_scope="auto", content_resolver=None, client=None,
                       existing_candidates=None):
-    """Run one real model turn, returning a fully validated new draft session."""
+    """Run one real conversational turn, independently of collected issues.
+
+    ``issue_records`` is accepted for callers from the previous release; issues
+    are deliberately not used as a hidden brief for the creative director.
+    """
     state = _session(session)
     request = str(request or "").strip()
     if not request or len(request) > 6000:
@@ -259,10 +292,14 @@ def run_director_turn(session, request, *, themes, contents, issue_records=None,
         state["messages"].append({"role": "user", "content": request})
         return restore_director_version(state, _undo_version(state, target), target_draft_id=target)
     plan, usage = generate_director_plan(request=request, messages=state["messages"], drafts=state["drafts"],
-                    themes=themes, contents=contents, issue_records=issue_records or [], api_key=api_key, model=model,
-                    target_draft_id=target, edit_scope=scope, client=client)
+                    themes=themes, contents=contents, issue_records=[], api_key=api_key, model=model,
+                    target_draft_id=target, edit_scope=scope, client=client,
+                    saved_theme_matches=state.get("library_search_results", []))
     raw = plan.model_dump(by_alias=True) if hasattr(plan, "model_dump") else deepcopy(plan)
     action = raw.get("action")
+    search_intent = _library_search_intent(raw.get("library_search"))
+    if search_intent is not None and action != "reply":
+        raise ThemeGenerationError("검색과 초안 변경이 함께 반환되어 적용하지 않았습니다. 다시 요청해 주세요.")
     if action == "create":
         if raw.get("edits") or not 1 <= len(raw.get("themes", [])) <= 10:
             raise ThemeGenerationError("신규 테마 결과가 올바르지 않습니다. 다시 요청해 주세요.")
@@ -271,7 +308,7 @@ def run_director_turn(session, request, *, themes, contents, issue_records=None,
         requested = re.search(r"테마\s*(\d{1,2})\s*개", request)
         if requested and min(int(requested.group(1)), 10) != len(raw["themes"]):
             raise ThemeGenerationError("요청한 개수의 테마를 만들지 못했습니다. 다시 시도해 주세요.")
-        generated = [_proposal(item, themes, contents, issue_records or [], content_resolver, existing_candidates) for item in raw["themes"]]
+        generated = [_proposal(item, themes, contents, [], content_resolver, existing_candidates) for item in raw["themes"]]
         keep = state["drafts"] if _explicit_append(request) or raw.get("creation_mode") == "append" else []
         names = [normalize_theme_text(row["theme_name"]) for row in [*keep, *generated]]
         if len(set(names)) != len(names):
@@ -294,13 +331,21 @@ def run_director_turn(session, request, *, themes, contents, issue_records=None,
                 raise ThemeGenerationError("수정 범위를 확인하지 못했습니다.")
             current = _find_draft(state, draft_id)
             updated = _apply_edit(current, edit, scope=effective, themes=themes, contents=contents,
-                                  issues=issue_records or [], resolver=content_resolver, existing_candidates=existing_candidates, request=request)
+                                  issues=[], resolver=content_resolver, existing_candidates=existing_candidates, request=request)
             state["drafts"] = [updated if row["draft_id"] == draft_id else row for row in state["drafts"]]
     elif action != "reply":
         raise ThemeGenerationError("AI 응답 형식을 읽지 못했습니다. 초안은 변경하지 않았습니다.")
+    # Preserve paragraph/list breaks in a useful conversation rather than
+    # flattening several proposed directions into one unreadable paragraph.
+    message = str(raw.get("message") or "").strip()[:2000]
+    if not message:
+        raise ThemeGenerationError("AI의 답변이 비어 있습니다. 초안을 유지했으니 다시 요청해 주세요.")
     state["messages"].extend([{"role": "user", "content": request},
-                              {"role": "assistant", "content": _clean_short_text(raw.get("message"), 2000) or "초안을 준비했습니다."}])
+                              {"role": "assistant", "content": message}])
     state["last_usage"] = usage
+    state["library_search_intent"] = search_intent
+    if search_intent is not None:
+        state["library_search_results"] = []
     if action in {"create", "revise"}:
         _version(state, request, kind=action)
     # No arbitrary model objects or DataFrame values may leak into session state.

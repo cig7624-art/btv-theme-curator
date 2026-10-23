@@ -1,4 +1,4 @@
-"""Saved recommendations browse preserved data without starting AI generation."""
+"""Weekly issue generation and independent director navigation preserve existing data."""
 from contextlib import ExitStack, contextmanager
 from copy import deepcopy
 import os
@@ -100,117 +100,164 @@ class ThemeActionTests(unittest.TestCase):
     def assert_no_errors(self, app):
         self.assertEqual(len(app.exception), 0, [item.value for item in app.exception])
 
-    def assert_no_generation_or_writes(self, state):
-        for name in ("generate_weekly_themes", "generate_content_candidates_for_themes",
-                     "enrich_poster_candidates", "persist_recommendations_locally",
-                     "persist_files_to_github", "persist_content_candidates_to_github",
-                     "upsert_content_frame"):
-            state[name].assert_not_called()
-
-    def csv_bytes(self):
-        return {path.name: path.read_bytes() for path in Path.cwd().glob("*.csv")}
-
-    def test_normal_reruns_browse_saved_theme_without_generation_or_file_changes(self):
+    def test_normal_reruns_do_not_generate_or_search_posters(self):
         with app_fixture() as state:
             app = state["app"]
-            before_files, before_runs = self.csv_bytes(), deepcopy(state["runs"])
             self.assert_no_errors(app)
-            keys = {button.key for button in app.button}
-            self.assertNotIn("generate_weekly_themes", keys)
-            self.assertNotIn("load_weekly_contents", keys)
-            self.assertIn("open_ai_director", keys)
-            self.assertIn("open_theme_library", keys)
+            self.assertFalse(app.button(key="generate_weekly_themes").disabled)
+            self.assertFalse(app.button(key="load_weekly_contents").disabled)
             app.run()
             self.assert_no_errors(app)
-            self.assertIn("공범들의 마지막 선택", " ".join(item.value for item in app.markdown))
-            self.assertEqual(self.csv_bytes(), before_files)
-            self.assertEqual(state["runs"], before_runs)
-            self.assert_no_generation_or_writes(state)
+            state["generate_weekly_themes"].assert_not_called()
+            state["generate_content_candidates_for_themes"].assert_not_called()
+            state["enrich_poster_candidates"].assert_not_called()
+            state["upsert_content_frame"].assert_not_called()
 
-    def test_stored_content_and_poster_are_visible_without_refetch_or_mutation(self):
+    def test_generation_fills_new_run_with_content_and_posters_before_rerender(self):
         with app_fixture() as state:
-            state["frame"] = ensure_content_schema(pd.DataFrame([{
-                "run_id": "test-run", "theme_key": "TEST-1", "theme_id": "TEST-1", "rank": "1",
-                "title": "타짜", "year": "2006", "content_type": "영화", "kinolights_status": "verified",
-                "source_url": "https://m.kinolights.com/title/test", "poster_url": "https://images.example.com/tazza.jpg",
-                "reason": "공범과 배신을 다루는 작품",
-            }]))
             app = state["app"]
-            before_frame, before_files = state["frame"].copy(), self.csv_bytes()
-            app.run()
+            app.select_slider[0].set_value(15).run()
+            app.button(key="generate_weekly_themes").click().run()
             self.assert_no_errors(app)
+            generated = state["generate_weekly_themes"]
+            generated.assert_called_once()
+            self.assertEqual(generated.call_args.kwargs["top_n"], 15)
+            self.assertTrue(generated.call_args.kwargs["issue_records"])
+            state["persist_recommendations_locally"].assert_called_once()
+            state["persist_files_to_github"].assert_called_once()
+            self.assertEqual(state["persist_files_to_github"].call_args.kwargs["run_id"], "new-run")
+            self.assertEqual(app.session_state["last_generated_run_id"], "new-run")
+            self.assertEqual(app.session_state["github_writeback_result"]["status"], "success")
+            content = state["generate_content_candidates_for_themes"]
+            content.assert_called_once()
+            self.assertEqual(content.call_args.kwargs["per_theme"], 16)
+            self.assertEqual(content.call_args.kwargs["recommendations"][0]["theme"]["theme_id"], "NEW-1")
+            self.assertLess(state["events"].index("persist_themes"), state["events"].index("generate_contents"))
+            state["enrich_poster_candidates"].assert_called_once()
+            state["upsert_content_frame"].assert_called_once()
+            self.assertEqual(set(state["frame"]["run_id"]), {"new-run", "THEME_DB"})
+            self.assertEqual(set(state["frame"]["theme_key"]), {"NEW-1"})
+            self.assertNotIn("test-run", set(state["frame"]["run_id"]))
+            self.assertEqual(state["persist_content_candidates_to_github"].call_args.kwargs["run_id"], "new-run")
             markup = " ".join(item.value for item in app.markdown)
             self.assertIn("https://images.example.com/tazza.jpg", markup)
-            self.assertIn("타짜", markup)
-            app.run()
-            pd.testing.assert_frame_equal(state["frame"], before_frame)
-            self.assertEqual(self.csv_bytes(), before_files)
-            self.assert_no_generation_or_writes(state)
-
-    def test_saved_run_selector_keeps_older_recommendations_accessible(self):
-        with app_fixture() as state:
-            earlier = deepcopy(state["runs"][0])
-            earlier["run_id"] = "older-run"
-            earlier["recommendations"][0]["theme"]["theme_name"] = "먼저 저장했던 기획"
-            state["runs"].append(earlier)
-            before_runs, before_files = deepcopy(state["runs"]), self.csv_bytes()
-            app = state["app"].run()
-            app.selectbox(key="saved_recommendation_run").set_value("older-run").run()
-            self.assert_no_errors(app)
-            self.assertIn("먼저 저장했던 기획", " ".join(item.value for item in app.markdown))
-            self.assertEqual(app.selectbox(key="saved_recommendation_run").value, "older-run")
-            self.assertEqual(state["runs"], before_runs)
-            self.assertEqual(self.csv_bytes(), before_files)
-            self.assert_no_generation_or_writes(state)
-
-    def test_director_adoption_handoff_selects_the_new_saved_run(self):
-        with app_fixture() as state:
-            adopted = deepcopy(state["runs"][0])
-            adopted["run_id"] = "adopted-run"
-            adopted["recommendations"][0]["theme"]["theme_name"] = "디렉터에서 최종 채택한 기획"
-            state["runs"].insert(0, adopted)
-            app = state["app"]
-            app.session_state["saved_recommendation_run"] = "test-run"
-            app.session_state["director_new_saved_run_id"] = "adopted-run"
+            self.assertEqual(app.button(key="load_weekly_contents").label, "콘텐츠 새로고침")
             app.run()
             self.assert_no_errors(app)
-            self.assertEqual(app.selectbox(key="saved_recommendation_run").value, "adopted-run")
-            self.assertIn("디렉터에서 최종 채택한 기획", " ".join(item.value for item in app.markdown))
-            self.assert_no_generation_or_writes(state)
+            generated.assert_called_once()
+            content.assert_called_once()
+            state["enrich_poster_candidates"].assert_called_once()
 
-    def test_director_navigation_keeps_saved_theme_data_intact(self):
+    def test_bulk_load_targets_current_run_and_keeps_poster_after_rerun(self):
         with app_fixture() as state:
             app = state["app"]
-            before_files, before_runs = self.csv_bytes(), deepcopy(state["runs"])
-            app.button(key="open_ai_director").click().run()
+            app.button(key="load_weekly_contents").click().run()
             self.assert_no_errors(app)
-            self.assertEqual(app.session_state["home_sections"], "AI 디렉터")
-            self.assertEqual(app.session_state["home_tab_default"], "AI 디렉터")
-            self.assertTrue(any(chat.key == "director_chat_input" for chat in app.chat_input))
-            self.assertEqual(self.csv_bytes(), before_files)
-            self.assertEqual(state["runs"], before_runs)
-            self.assert_no_generation_or_writes(state)
+            candidates = state["generate_content_candidates_for_themes"]
+            candidates.assert_called_once()
+            self.assertEqual(candidates.call_args.kwargs["per_theme"], 16)
+            self.assertEqual(candidates.call_args.kwargs["recommendations"][0]["theme"]["theme_id"], "TEST-1")
+            state["enrich_poster_candidates"].assert_called_once()
+            saved = state["frame"]
+            self.assertEqual(set(saved["run_id"]), {"test-run", "THEME_DB"})
+            self.assertTrue(saved["poster_url"].eq("https://images.example.com/tazza.jpg").all())
+            state["persist_content_candidates_to_github"].assert_called_once()
+            self.assertEqual(state["persist_content_candidates_to_github"].call_args.kwargs["run_id"], "test-run")
+            markup = " ".join(item.value for item in app.markdown)
+            self.assertIn("https://images.example.com/tazza.jpg", markup)
+            self.assertEqual(app.button(key="load_weekly_contents").label, "콘텐츠 새로고침")
+            app.run()
+            self.assert_no_errors(app)
+            state["enrich_poster_candidates"].assert_called_once()
 
-    def test_saved_theme_db_is_still_visible_without_recommendation_history(self):
+    def test_content_failure_keeps_generated_themes_and_retry_only_fills_new_run(self):
+        with app_fixture() as state:
+            app = state["app"]
+            content = state["generate_content_candidates_for_themes"]
+            successful_lookup = content.side_effect
+            content.side_effect = RuntimeError("content provider unavailable")
+            app.button(key="generate_weekly_themes").click().run()
+            self.assert_no_errors(app)
+            state["generate_weekly_themes"].assert_called_once()
+            state["persist_recommendations_locally"].assert_called_once()
+            state["persist_files_to_github"].assert_called_once()
+            content.assert_called_once()
+            self.assertEqual(state["runs"][0]["run_id"], "new-run")
+            self.assertEqual(app.session_state["last_generated_run_id"], "new-run")
+            self.assertTrue(app.session_state["content_candidate_error"])
+            self.assertTrue(any("콘텐츠" in item.value for item in app.warning))
+            self.assertFalse(app.button(key="load_weekly_contents").disabled)
+            self.assertTrue(state["frame"].empty)
+            state["enrich_poster_candidates"].assert_not_called()
+            state["upsert_content_frame"].assert_not_called()
+            app.run()
+            self.assert_no_errors(app)
+            content.assert_called_once()
+            content.side_effect = successful_lookup
+            app.button(key="load_weekly_contents").click().run()
+            self.assert_no_errors(app)
+            self.assertEqual(content.call_count, 2)
+            state["generate_weekly_themes"].assert_called_once()
+            state["persist_recommendations_locally"].assert_called_once()
+            self.assertEqual(set(state["frame"]["run_id"]), {"new-run", "THEME_DB"})
+            self.assertEqual(set(state["frame"]["theme_key"]), {"NEW-1"})
+            self.assertFalse(app.session_state.get("content_candidate_error", ""))
+            self.assertEqual(app.button(key="load_weekly_contents").label, "콘텐츠 새로고침")
+            self.assertFalse(any("content provider unavailable" in item.value for item in app.warning))
+
+    def test_poster_loading_covers_five_visible_unique_works_after_duplicate_rows(self):
+        with app_fixture() as state:
+            def validate(suggestions, **kwargs):
+                return {key: [dict(title=title, year="2020", content_type="영화", status="verified",
+                                   source_url="https://m.kinolights.com/title/test")
+                              for title in ["작품1", "작품1", "작품2", "작품3", "작품4", "작품5", "작품6"]]
+                        for key in suggestions}, {}
+            state["validate_content_suggestions"].side_effect = validate
+            app = state["app"]
+            app.button(key="load_weekly_contents").click().run()
+            self.assert_no_errors(app)
+            lookup = state["enrich_poster_candidates"]
+            lookup.assert_called_once()
+            self.assertEqual([item["title"] for item in lookup.call_args.args[0]],
+                             ["작품1", "작품2", "작품3", "작품4", "작품5"])
+            self.assertEqual(lookup.call_args.kwargs["limit"], 50)
+            self.assertIn("작품6", set(state["frame"].title))
+
+    def test_empty_content_response_is_reported_without_saving_empty_results(self):
+        with app_fixture() as state:
+            app = state["app"]
+            state["validate_content_suggestions"].side_effect = lambda suggestions, **kwargs: ({key: [] for key in suggestions}, {})
+            app.button(key="generate_weekly_themes").click().run()
+            self.assert_no_errors(app)
+            state["persist_recommendations_locally"].assert_called_once()
+            self.assertEqual(state["runs"][0]["run_id"], "new-run")
+            self.assertTrue(app.session_state["content_candidate_error"])
+            self.assertTrue(app.warning)
+            state["enrich_poster_candidates"].assert_not_called()
+            state["upsert_content_frame"].assert_not_called()
+            state["persist_content_candidates_to_github"].assert_not_called()
+
+    def test_theme_generation_failure_does_not_start_or_save_content(self):
+        with app_fixture() as state:
+            app = state["app"]
+            state["generate_weekly_themes"].side_effect = RuntimeError("theme generation failed")
+            app.button(key="generate_weekly_themes").click().run()
+            self.assertTrue(app.error or app.exception)
+            state["persist_recommendations_locally"].assert_not_called()
+            state["generate_content_candidates_for_themes"].assert_not_called()
+            state["enrich_poster_candidates"].assert_not_called()
+            state["upsert_content_frame"].assert_not_called()
+            self.assertEqual(state["runs"][0]["run_id"], "test-run")
+
+    def test_empty_history_is_renderable_and_content_load_is_disabled(self):
         with app_fixture(with_history=False) as state:
             app = state["app"]
-            before_files = self.csv_bytes()
             self.assert_no_errors(app)
-            self.assertIn("공범들의 마지막 선택", " ".join(item.value for item in app.markdown))
-            self.assertFalse(any(button.key in {"generate_weekly_themes", "load_weekly_contents"} for button in app.button))
-            app.run()
-            self.assertEqual(self.csv_bytes(), before_files)
-            self.assert_no_generation_or_writes(state)
-
-    def test_empty_saved_themes_offer_director_without_automatic_generation(self):
-        with app_fixture(with_history=False) as state:
-            path = Path("theme_db.csv")
-            pd.read_csv(path, sep="|").iloc[0:0].to_csv(path, sep="|", index=False)
-            app = state["app"].run()
-            self.assert_no_errors(app)
-            self.assertTrue(any("아직 채택한 테마가 없어요" in item.value for item in app.info))
-            self.assertFalse(app.button(key="open_ai_director").disabled)
-            self.assert_no_generation_or_writes(state)
+            self.assertTrue(app.button(key="load_weekly_contents").disabled)
+            self.assertFalse(app.button(key="generate_weekly_themes").disabled)
+            self.assertTrue(any("테마 생성하기" in item.value for item in app.info))
+            state["generate_content_candidates_for_themes"].assert_not_called()
+            state["enrich_poster_candidates"].assert_not_called()
 
 
 if __name__ == "__main__":

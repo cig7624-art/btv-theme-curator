@@ -63,18 +63,36 @@ class DirectorCardTests(unittest.TestCase):
 
 
 class DirectorAppTests(unittest.TestCase):
-    def test_four_tabs_and_saved_browsing_do_not_call_the_generator(self):
+    def test_four_tabs_render_both_workflows_without_starting_either_generator(self):
         with patch('ai_director_view.run_director_turn') as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
             app = state['app']
             self.assertFalse(app.exception)
             self.assertEqual([tab.label for tab in app.tabs], ['지금 주목할 이야기', '추천 테마', 'OTT는 지금', 'AI 디렉터'])
-            self.assertFalse(any(button.key == 'generate_weekly_themes' for button in app.button))
-            self.assertFalse(any(button.key == 'load_weekly_contents' for button in app.button))
+            self.assertTrue(any(button.key == 'generate_weekly_themes' for button in app.button))
+            self.assertTrue(any(button.key == 'load_weekly_contents' for button in app.button))
             self.assertTrue(any(button.key == 'open_theme_library' for button in app.button))
             app.run()
             run.assert_not_called(); adopt.assert_not_called()
             state['generate_weekly_themes'].assert_not_called()
             state['persist_recommendations_locally'].assert_not_called()
+
+    def test_open_ended_quick_request_starts_conversation_without_using_collected_issues(self):
+        expected = session_with()
+        expected['messages'] = [{'role': 'user', 'content': '뭐 만들어볼까?'},
+                                {'role': 'assistant', 'content': '밤의 도시, 엇갈린 선택, 조용한 위로 중 어떤 방향이 끌리세요?'}]
+        with patch('ai_director_view.run_director_turn', return_value=expected) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
+            app = state['app']
+            quick = app.button(key='director_quick_0')
+            self.assertEqual(quick.label, '뭐 만들어볼까?')
+            self.assertFalse(quick.disabled)
+            self.assertFalse(any('이번 주 이슈' in button.label for button in app.button))
+            quick.click().run()
+            self.assertFalse(app.exception)
+            self.assertEqual(run.call_args.args[1], '뭐 만들어볼까?')
+            self.assertEqual(run.call_args.kwargs['issue_records'], [])
+            self.assertEqual(app.session_state[SESSION_KEY]['drafts'], [])
+            self.assertIn('어떤 방향이 끌리세요?', ' '.join(message.markdown[0].value for message in app.chat_message))
+            adopt.assert_not_called()
 
     def test_natural_input_produces_only_drafts_and_persists_context_across_reruns(self):
         expected = session_with(draft())
@@ -89,6 +107,42 @@ class DirectorAppTests(unittest.TestCase):
             app.run()
             self.assertFalse(app.exception)
             run.assert_called_once(); adopt.assert_not_called()
+
+    def test_conversation_search_reuses_saved_themes_and_can_start_a_new_brief(self):
+        initial = session_with()
+        initial['library_search_intent'] = {'genres': ['범죄'], 'positive_keywords': ['공범', '배신']}
+        with patch('ai_director_view.run_director_turn', return_value=session_with(draft())) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
+            app = state['app']; app.session_state[SESSION_KEY] = initial; app.run()
+            self.assertFalse(app.exception)
+            markup = ' '.join(item.value for item in app.markdown)
+            self.assertIn('라이브러리에서 찾은 테마', markup)
+            self.assertIn('class="director-library-card"', markup)
+            self.assertTrue(any(button.key == 'director_library_rework_0' for button in app.button))
+            references = app.session_state[SESSION_KEY]['library_search_results']
+            self.assertEqual(len(references), 1)
+            self.assertEqual(references[0]['number'], 1)
+            self.assertEqual(references[0]['theme_name'], '공범들의 마지막 선택')
+            self.assertEqual(references[0]['theme_id'], 'TEST-1')
+            run.assert_not_called(); adopt.assert_not_called()
+            app.button(key='director_library_rework_0').click().run()
+            self.assertFalse(app.exception)
+            self.assertIn('공범들의 마지막 선택', run.call_args.args[1])
+            self.assertIn('새로운 큐레이션 테마 1개', run.call_args.args[1])
+            self.assertEqual(run.call_args.kwargs['issue_records'], [])
+            state['generate_weekly_themes'].assert_not_called()
+            adopt.assert_not_called()
+
+    def test_saved_theme_search_without_matches_keeps_the_conversation_open(self):
+        initial = session_with()
+        initial['library_search_intent'] = {'positive_keywords': ['완전히없는소재']}
+        expected = deepcopy(initial); expected['library_search_results'] = []
+        with patch('ai_director_view.run_director_turn') as run, app_fixture() as state:
+            app = state['app']; app.session_state[SESSION_KEY] = initial; app.run()
+            self.assertFalse(app.exception)
+            self.assertIn('가까운 저장 테마가 없어요.', ' '.join(item.value for item in app.caption))
+            self.assertFalse(app.chat_input(key='director_chat_input').disabled)
+            self.assertEqual(app.session_state[SESSION_KEY], expected)
+            run.assert_not_called()
 
     def test_explicit_target_and_title_scope_reach_engine_without_auto_adoption(self):
         initial = session_with(draft(1), draft(2), draft(3))

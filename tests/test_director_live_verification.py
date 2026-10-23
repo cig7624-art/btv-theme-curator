@@ -5,7 +5,7 @@ from tempfile import TemporaryDirectory
 import unittest
 
 from scripts.verify_director_live import (
-    content_edit_is_scoped, title_edit_is_scoped, valid_drafts, verified_titles,
+    content_edit_is_scoped, title_edit_is_scoped, valid_drafts, valid_saved_matches, verified_titles,
 )
 
 
@@ -18,6 +18,11 @@ def drafts():
 
 
 class DirectorLiveVerificationTests(unittest.TestCase):
+    def test_numbered_search_cards_must_reference_actual_saved_themes(self):
+        self.assertTrue(valid_saved_matches(['1. 여름밤의 공포', '2. 반전의 선택'], {'여름밤의공포', '반전의선택'}))
+        self.assertFalse(valid_saved_matches(['1. 모델이 지어낸 검색 결과'], {'여름밤의공포'}))
+        self.assertFalse(valid_saved_matches([], {'여름밤의공포'}))
+
     def test_three_drafts_require_verified_titles_reasons_and_real_poster_links(self):
         rows = drafts(); known = {f'실제작품{j}' for j in range(5)}
         self.assertTrue(valid_drafts(rows, known))

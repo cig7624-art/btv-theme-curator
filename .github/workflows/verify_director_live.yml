@@ -3,7 +3,7 @@ name: Verify real AI Director conversation
 on:
   workflow_dispatch:
   push:
-    branches: [codex/ai-director]
+    branches: [codex/ai-director, codex/director-workflow-correction]
     paths:
       - VERSION
       - scripts/verify_director_live.py

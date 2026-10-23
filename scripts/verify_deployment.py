@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "four_tabs", "director_screen", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork")
+CHECKS = ("version", "four_tabs", "weekly_actions", "director_screen", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork")
 
 
 def normalized_version(value):
@@ -136,6 +136,11 @@ def _check_editorial(frame, report, label, screenshots):
     report["tests"][f"{label}_four_tabs"] = [name.strip() for name in tab_names] == ["지금 주목할 이야기", "추천 테마", "OTT는 지금", "AI 디렉터"]
     if not report["tests"][f"{label}_four_tabs"]:
         raise VerificationIssue("four_tabs_missing", retry=True)
+    frame.get_by_role("tab", name="추천 테마", exact=True).click()
+    frame.locator(".st-key-curation_section").wait_for(state="visible", timeout=20000)
+    report["tests"][f"{label}_weekly_actions"] = frame.get_by_role("button", name="테마 생성하기", exact=True).count() == 1 and frame.locator('.st-key-load_weekly_contents').count() == 1
+    if not report["tests"][f"{label}_weekly_actions"]:
+        raise VerificationIssue("weekly_actions_missing", retry=True)
     frame.get_by_role("tab", name="AI 디렉터", exact=True).click()
     try:
         frame.locator(".director-heading").wait_for(state="visible", timeout=20000)

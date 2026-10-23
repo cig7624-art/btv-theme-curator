@@ -23,9 +23,9 @@ _SCOPE_LABELS = {
     "contents": "추천 작품만", "style": "장르·분위기", "all": "기획 전체",
 }
 _QUICK_REQUESTS = (
-    ("이번 주 이슈로 5개", "이번 주 수집된 화제 이슈를 기반으로 테마 5개 만들어줘.", True),
-    ("한국 영화·드라마로 3개", "한국 영화와 드라마를 섞어서 감각적인 큐레이션 테마 3개 만들어줘.", False),
-    ("복수극 테마 3개", "요즘 화제가 되는 복수극으로 자극적인 테마 3개 만들어줘.", False),
+    ("뭐 만들어볼까?", "뭐 만들어볼까?"),
+    ("분위기부터 골라볼까?", "늦은 밤에 어울리는 색다른 큐레이션을 기획해 보자. 어떤 방향이 좋을까?"),
+    ("한국 영화·드라마로 3개", "한국 영화와 드라마를 섞어서 감각적인 큐레이션 테마 3개 만들어줘."),
 )
 
 
@@ -83,10 +83,52 @@ def _previous_draft_version(session, draft):
         return None
 
 
+def _render_saved_theme_matches(session, find_saved_themes, *, configured, busy):
+    """Use the library's existing local ranking on the current chat intent."""
+    intent = session.get('library_search_intent')
+    if not isinstance(intent, Mapping) or find_saved_themes is None:
+        return
+    try:
+        matches = find_saved_themes(intent)
+        if isinstance(matches, pd.DataFrame):
+            matches = matches.fillna('').to_dict('records')
+        matches = [item for item in matches if isinstance(item, Mapping) and _text(item.get('theme_name'))][:10]
+    except Exception:
+        st.caption('라이브러리 자료를 불러오지 못했어요. 대화와 초안은 계속 이어갈 수 있습니다.')
+        return
+    session['library_search_results'] = [
+        {'number': index + 1, **{key: _text(item.get(key)) for key in ('theme_id', 'theme_name', 'copy', 'genre')}}
+        for index, item in enumerate(matches)
+    ]
+    with st.container(key='director_library_matches'):
+        st.markdown('<div class="director-library-heading"><h3>라이브러리에서 찾은 테마</h3>'
+                    '<span>저장한 기획에서 이어가기</span></div>', unsafe_allow_html=True)
+        if not matches:
+            st.caption('가까운 저장 테마가 없어요. 이 방향으로 새로운 기획을 함께 만들 수 있습니다.')
+            return
+        for index, item in enumerate(matches):
+            name = _text(item.get('theme_name'))
+            copy = _text(item.get('copy'))
+            genre = _text(item.get('genre'))
+            with st.container(key='director_library_match_' + str(index)):
+                text_column, action_column = st.columns([3, 1], gap='small', vertical_alignment='center')
+                with text_column:
+                    st.markdown('<article class="director-library-card"><span>' + _escape(genre) + '</span>'
+                                '<h4>' + str(index + 1) + '. ' + _escape(name) + '</h4><p>' + _escape(copy) + '</p></article>', unsafe_allow_html=True)
+                with action_column:
+                    if st.button('이 테마로 새롭게 기획', key='director_library_rework_' + str(index),
+                                 width='stretch', disabled=not configured or busy):
+                        _queue_request('라이브러리의 다음 테마에서 출발해 새로운 큐레이션 테마 1개를 기획해줘. '
+                                       '기존 이름은 그대로 쓰지 말고, 앞선 대화의 취향과 조건을 반영해 제목·카피·기획 의도와 '
+                                       '실제 콘텐츠 DB로 확인되는 추천 작품 5~10편을 만들어줘. '
+                                       '참고 테마명: ' + name[:100] + '\n참고 카피: ' + copy[:300] + '\n참고 장르: ' + genre[:100])
+                        st.rerun()
+
+
 def _run_request(pending, *, session, themes, contents, issue_records, api_key, model, existing_candidates):
     st.session_state["director_busy"] = True
     try:
-        with st.spinner("기획 의도를 읽고 테마와 추천 작품을 준비하고 있어요…"):
+        with st.spinner("이야기를 읽고 함께 기획하고 있어요…"):
             updated = run_director_turn(
                 session, pending['request'], themes=themes, contents=contents,
                 issue_records=issue_records, api_key=api_key, model=model,
@@ -108,7 +150,7 @@ def _run_request(pending, *, session, themes, contents, issue_records, api_key, 
 
 def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                             github_config, theme_path, history_path, content_path,
-                            existing_candidates=None):
+                            existing_candidates=None, find_saved_themes=None):
     """Draft-only chat. The adoption button is the sole persistence action."""
     styles = Path(__file__).with_name('ai_director_styles.css').read_text(encoding='utf-8')
     st.markdown('<style>' + styles + '</style>', unsafe_allow_html=True)
@@ -123,17 +165,17 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
 
     with st.container(key='ai_director_section'):
         st.markdown('<header class="director-heading"><span>AI CREATIVE DIRECTOR</span><h2>AI 디렉터</h2>'
-                    '<p>한 문장에서 시작해, 대화로 완성하는 큐레이션.</p>'
-                    '<div class="director-workflow">요청하기 <span>→</span> 초안 다듬기 <span>→</span> 최종 채택</div></header>', unsafe_allow_html=True)
+                    '<p>떠오른 한마디에서 시작해, 함께 만드는 큐레이션.</p>'
+                    '<div class="director-workflow">아이디어 나누기 <span>→</span> 함께 다듬기 <span>→</span> 최종 채택</div></header>', unsafe_allow_html=True)
         if not configured:
             st.info('AI 디렉터를 사용하려면 OpenAI 연결 설정이 필요합니다. 설정 후 자유롭게 테마를 요청할 수 있어요.')
         with st.container(key='director_quick_requests'):
             columns = st.columns(3, gap='small')
-            for column, (label, request, needs_issues) in zip(columns, _QUICK_REQUESTS):
+            for index, (column, (label, request)) in enumerate(zip(columns, _QUICK_REQUESTS)):
                 with column:
-                    if st.button(label, key='director_quick_' + str(_QUICK_REQUESTS.index((label, request, needs_issues))),
-                                 width='stretch', disabled=not configured or busy or (needs_issues and not issue_records),
-                                 help='수집된 최근 이슈를 기획 근거로 사용합니다.' if needs_issues else '이 요청으로 대화를 시작합니다.'):
+                    if st.button(label, key='director_quick_' + str(index),
+                                 width='stretch', disabled=not configured or busy,
+                                 help='이 한마디로 AI 디렉터와 대화를 시작합니다.'):
                         _queue_request(request)
                         st.rerun()
 
@@ -167,9 +209,9 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                 with st.chat_message(role):
                     st.markdown(_text(message.get('content')))
             if not session.get('messages'):
-                st.markdown('<div class="director-conversation-empty"><strong>무슨 이야기를 꺼내볼까요?</strong>'
-                            '<p>“복수극으로 테마 3개 만들어줘”처럼 요청하세요.<br>'
-                            '“2번 제목만 바꿔줘”, “이 작품을 빼줘”로 이어갈 수 있어요.</p></div>', unsafe_allow_html=True)
+                st.markdown('<div class="director-conversation-empty"><strong>뭐 만들어볼까요?</strong>'
+                            '<p>취향이나 분위기 하나만 꺼내 주세요. 아직 생각이 없다면 “뭐 만들어볼까?”도 좋아요.<br>'
+                            '함께 방향을 고르고, 제목과 작품을 대화로 다듬어 봐요.</p></div>', unsafe_allow_html=True)
 
         with st.container(key='director_composer'):
             prompt = st.chat_input('만들고 싶은 테마나 고치고 싶은 부분을 알려주세요.', key='director_chat_input',
@@ -191,6 +233,7 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                 st.rerun()
 
         if not drafts:
+            _render_saved_theme_matches(session, find_saved_themes, configured=configured, busy=busy)
             st.caption('초안은 이 대화에만 보관됩니다. 최종 채택한 테마만 추천 테마와 라이브러리에 저장돼요.')
             return
 
@@ -261,4 +304,7 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
             if st.session_state.get('director_refresh_required'):
                 st.warning('원격 저장은 완료됐어요. 동시에 변경된 자료를 보호하기 위해 현재 파일은 그대로 두었습니다. 저장 자료를 다시 불러온 뒤 확인해 주세요.')
             st.button('추천 테마에서 보기', key='director_open_saved', on_click=_show_saved_themes)
+        if session.get('library_search_intent') and find_saved_themes is not None:
+            with st.expander('라이브러리에서 찾은 테마', expanded=False):
+                _render_saved_theme_matches(session, find_saved_themes, configured=configured, busy=busy)
         st.caption('작품 정보와 포스터를 확인해 연결합니다. B tv의 판권·서비스 가능 여부를 확정하는 목록은 아닙니다.')

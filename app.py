@@ -17,7 +17,6 @@ from llm_theme_generator import (
     generate_content_candidates_for_themes,
     generate_weekly_themes,
     github_writeback_configured,
-    interpret_theme_search_query,
     load_recommendation_history,
     load_recommendation_runs,
     persist_content_candidates_to_github,
@@ -1626,7 +1625,7 @@ if st.session_state["page"] == "issue_db":
 
 elif st.session_state["page"] == "theme_db":
     st.markdown("<h1>📚 테마 DB 전체 보기</h1>", unsafe_allow_html=True)
-    st.caption("빠른 검색은 무료로 즉시 필터링하고, 기존 검색으로 찾기 어려울 때만 AI 테마 검색을 사용합니다.")
+    st.caption("저장된 테마를 검색하고 관리하세요. 문장으로 찾거나 새 기획을 시작하려면 AI 디렉터와 이야기할 수 있어요.")
 
     if st.button("← 추천 화면으로 돌아가기"):
         go_page("home")
@@ -1637,30 +1636,20 @@ elif st.session_state["page"] == "theme_db":
     openai_api_key = get_runtime_secret("OPENAI_API_KEY")
     openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
 
-    search_left, search_right = st.columns(2, gap="large")
-
-    with search_left:
-        with st.container(border=True):
-            st.markdown("### 빠른 검색")
+    with st.container(border=True):
+        st.markdown("### 빠른 검색")
+        query_column, status_column = st.columns([2, 1], gap="small")
+        with query_column:
             quick_query = st.text_input(
                 "테마명·키워드·장르·무드 검색",
                 key="theme_quick_search_input",
                 placeholder="예: 공포, 왕, 정주행, 팬 반응, 여름밤",
             )
+        with status_column:
             status_options = ["전체", "AI 신규 생성", "기존 임시 DB", "검증 테마", "실제 활용"]
             selected_status = st.selectbox("테마 출처·상태", status_options)
-
-    with search_right:
-        with st.container(border=True):
-            st.markdown("### AI 테마 검색")
-            with st.form("ai_theme_search_form", clear_on_submit=False):
-                search_query = st.text_input(
-                    "찾고 싶은 큐레이션을 문장으로 입력",
-                    key="theme_ai_search_input",
-                    placeholder="예: 살목지와 비슷한 분위기의 공포 테마를 추천해줘",
-                )
-                search_submitted = st.form_submit_button("🔎 AI로 유사 테마 찾기", use_container_width=True)
-            st.caption("기존 빠른 검색으로 찾기 어려울 때만 사용합니다. 검색 1회당 Luna API를 1회 호출합니다.")
+        st.button("AI 디렉터와 새 기획 이야기하기 ↗", key="library_open_ai_director",
+                  on_click=activate_director_tab, width="stretch")
 
     reset_col, download_col = st.columns([1, 2])
     with reset_col:
@@ -1674,36 +1663,6 @@ elif st.session_state["page"] == "theme_db":
             mime="text/csv",
             use_container_width=True,
         )
-
-    if search_submitted:
-        if not str(search_query or "").strip():
-            st.warning("찾고 싶은 테마를 문장으로 입력해 주세요.")
-        elif not openai_api_key:
-            st.error("OPENAI_API_KEY가 연결되지 않았습니다.")
-        else:
-            try:
-                with st.spinner("검색 의도를 해석해 기존 테마와 신규 제안을 함께 찾는 중입니다..."):
-                    search_intent, search_usage = interpret_theme_search_query(
-                        query=search_query,
-                        api_key=openai_api_key,
-                        model=openai_model,
-                        issue_records=build_search_issue_records(issues, search_query, max_issues=5),
-                    )
-                    search_intent = enrich_ai_intent_from_issues(search_intent, search_query, issues)
-                st.session_state["theme_ai_search_intent"] = search_intent
-                st.session_state["theme_ai_search_usage"] = search_usage
-                st.session_state["theme_ai_search_query"] = str(search_query).strip()
-                st.session_state.pop("ai_suggestion_content_map", None)
-                st.session_state.pop("ai_suggestion_content_meta", None)
-            except ThemeGenerationError as exc:
-                st.error(str(exc))
-            except Exception as exc:
-                st.error(f"AI 테마 검색 실패: {exc}")
-
-    active_intent = st.session_state.get("theme_ai_search_intent")
-    active_usage = st.session_state.get("theme_ai_search_usage", {})
-    if active_intent:
-        render_ai_search_intent(active_intent, active_usage)
 
     github_config = get_github_writeback_config()
     content_frame = load_content_candidate_frame()
@@ -1792,61 +1751,11 @@ elif st.session_state["page"] == "theme_db":
         }
         filtered = filtered[filtered["source_status"].astype(str) == reverse_map[selected_status]]
 
-    ai_suggestion_content_map = st.session_state.get("ai_suggestion_content_map", {})
-    if active_intent:
-        ranked = rank_themes_by_ai_intent(filtered, active_intent)
-        result_limit = int(active_intent.get("result_count", 10) or 10)
-        shown = ranked.head(result_limit).copy()
-        st.markdown(f"### 기존 DB 유사 테마 {len(shown)}개")
-        if shown.empty:
-            st.info("기존 DB에서 충분히 가까운 테마가 없어 아래에 AI 신규 테마 제안을 표시합니다.")
-
-        ai_recommendations = ai_suggestions_to_recommendations(
-            active_intent,
-            st.session_state.get("theme_ai_search_query", ""),
-        )
-        if ai_recommendations:
-            ai_button_label = (
-                "🎬 AI 신규 제안 콘텐츠 후보 다시 불러오기"
-                if ai_suggestion_content_map else
-                f"🎬 AI 신규 제안 {len(ai_recommendations)}개 콘텐츠 후보 일괄 불러오기"
-            )
-            if st.button(ai_button_label, use_container_width=True):
-                try:
-                    with st.spinner("AI 신규 테마 제안의 콘텐츠 후보를 생성하고 키노라이츠에서 확인하는 중입니다..."):
-                        _, validated, ai_meta = build_and_store_content_candidates(
-                            ai_recommendations,
-                            scope_run_id="AI_SEARCH",
-                            api_key=openai_api_key,
-                            model=openai_model,
-                            github_config=github_config,
-                            per_theme=16,
-                            persist=False,
-                            mirror_theme_db=False,
-                        )
-                        st.session_state["ai_suggestion_content_map"] = validated
-                        st.session_state["ai_suggestion_content_meta"] = ai_meta
-                    st.rerun()
-                except ThemeGenerationError as exc:
-                    st.error(str(exc))
-                except Exception as exc:
-                    st.error(f"AI 신규 제안 콘텐츠 연결 실패: {exc}")
-            ai_meta = st.session_state.get("ai_suggestion_content_meta", {})
-            if ai_meta:
-                st.caption(
-                    f"AI 제안 콘텐츠 · 키노라이츠 직접 확인 {ai_meta.get('verified_count', 0)}편 · "
-                    f"제목 검색 링크 {ai_meta.get('search_link_only_count', 0)}편"
-                )
-        render_ai_theme_suggestions(
-            active_intent,
-            st.session_state.get("theme_ai_search_query", ""),
-            st.session_state.get("ai_suggestion_content_map", {}),
-        )
-    elif str(quick_query or "").strip():
+    if str(quick_query or "").strip():
         shown = natural_theme_search(filtered, quick_query).copy()
         st.markdown(f"### 빠른 검색 결과 {len(shown)}개")
         if shown.empty:
-            st.info("빠른 검색 결과가 없습니다. 위의 AI 테마 검색에서 문장으로 요청해 보세요.")
+            st.info("빠른 검색 결과가 없습니다. AI 디렉터에서 원하는 분위기와 소재를 이야기해 보세요.")
     else:
         shown = filtered.copy()
         st.markdown(f"### 전체 {len(themes)}개 중 {len(shown)}개 표시")
@@ -1856,7 +1765,7 @@ elif st.session_state["page"] == "theme_db":
         render_theme_db_card(
             row,
             db_content_map.get(theme_id, []),
-            active_intent=bool(active_intent),
+            active_intent=False,
             api_key=openai_api_key,
             model=openai_model,
             github_config=github_config,
@@ -1930,54 +1839,144 @@ else:
             openai_api_key = get_runtime_secret("OPENAI_API_KEY")
             openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
             github_config = get_github_writeback_config()
+            persistent_ready = github_writeback_configured(github_config)
             recommendation_runs = load_recommendation_runs(THEME_HISTORY_PATH, themes)
-            selected_run = {}
-            recs = []
-            if recommendation_runs:
-                by_run = {str(run.get("run_id", "")): run for run in recommendation_runs}
-                run_ids = list(by_run)
-                newly_saved = st.session_state.pop("director_new_saved_run_id", None)
-                if newly_saved in by_run:
-                    st.session_state["saved_recommendation_run"] = newly_saved
-                if st.session_state.get("saved_recommendation_run") not in by_run:
-                    st.session_state["saved_recommendation_run"] = run_ids[0]
-                selected_run = by_run[st.session_state["saved_recommendation_run"]]
-                recs = attach_content_candidates(selected_run.get("recommendations", []), selected_run.get("run_id", ""))
-            elif not themes.empty:
-                recs = attach_content_candidates(theme_rows_to_recommendations(themes.tail(12).iloc[::-1]), "THEME_DB")
-            description = f"채택하고 저장한 {len(recs)}개의 테마" if recs else "채택한 기획을 모아 보는 공간"
+            selected_run = recommendation_runs[0] if recommendation_runs else {}
+            recs = attach_content_candidates(selected_run.get("recommendations", []), selected_run.get("run_id", ""))
+            meta = selected_run.get("meta", {})
+            content_frame = load_content_candidate_frame()
+            current_rows = content_frame[content_frame["run_id"].astype(str).eq(str(selected_run.get("run_id", "")))]
+            has_current_contents = not current_rows.empty
+            ready = bool(openai_api_key) and persistent_ready and not issues.empty
+            description = f"최근 이슈에서 발견한 {len(recs)}개의 테마" if recs else "최근 이슈에서 새로운 테마를 발견하세요."
+
             with st.container(key="curation_heading"):
-                title_column, action_column = st.columns([1, 1], gap="small", vertical_alignment="center")
+                title_column, action_column = st.columns([1, 2], gap="small", vertical_alignment="center")
                 with title_column:
-                    render_section_heading(2, '저장한 추천 테마', description)
+                    render_section_heading(2, '이번 주 추천 테마', description)
                 with action_column:
                     with st.container(key="curation_actions"):
-                        director_action, library_action = st.columns(2, gap="small")
-                        with director_action:
-                            st.button("AI 디렉터에서 기획", key="open_ai_director", width="stretch", on_click=activate_director_tab)
+                        create_action, content_action, library_action, settings_action = st.columns([1, 1, 1, .23], gap="small")
+                        with create_action:
+                            generate_clicked = st.button(
+                                "테마 생성하기", key="generate_weekly_themes", type="primary",
+                                use_container_width=True, disabled=not ready,
+                                help="최근 이슈로 테마를 만들고 추천 작품과 포스터까지 함께 채웁니다.",
+                            )
+                        with content_action:
+                            content_clicked = st.button(
+                                "콘텐츠 새로고침" if has_current_contents else "콘텐츠 채우기",
+                                key="load_weekly_contents", use_container_width=True,
+                                disabled=not bool(recs and openai_api_key and persistent_ready),
+                                help="현재 추천된 모든 테마의 작품 후보와 포스터를 불러옵니다.",
+                            )
                         with library_action:
-                            if st.button("테마 라이브러리", key="open_theme_library", width="stretch"):
+                            if st.button("테마 라이브러리", key="open_theme_library", use_container_width=True):
                                 go_page("theme_db")
                                 st.rerun()
-            if len(recommendation_runs) > 1:
-                def saved_run_label(run_id):
-                    run = by_run[run_id]
-                    when = str(run.get("recommended_at") or run.get("meta", {}).get("recommended_at") or "저장한 테마")
-                    saved = run.get("recommendations", [])
-                    name = str(saved[0].get("theme", {}).get("theme_name", "")) if saved else "저장한 테마"
-                    return when + " · " + name + (f" 외 {len(saved) - 1}개" if len(saved) > 1 else "")
-                selected_id = st.selectbox("저장한 테마 묶음", run_ids, format_func=saved_run_label, key="saved_recommendation_run")
-                selected_run = by_run[selected_id]
-                recs = attach_content_candidates(selected_run.get("recommendations", []), selected_run.get("run_id", ""))
+                        with settings_action:
+                            with st.popover("⚙", help="생성 개수와 연결 설정", use_container_width=True):
+                                top_n = st.select_slider("생성할 테마 수", options=[5, 10, 15, 20, 25, 30], value=10)
+                                if not openai_api_key:
+                                    st.warning("테마를 생성하려면 OpenAI 연결 설정이 필요합니다.")
+                                if not persistent_ready:
+                                    st.warning("생성한 테마를 저장하려면 GitHub 연결 설정이 필요합니다.")
+                                if issues.empty:
+                                    st.info("선정 가능한 최근 이슈가 없습니다. 이슈 수집 상태를 확인해 주세요.")
+                                st.caption("테마를 생성하면 추천 작품과 포스터도 함께 준비합니다. 콘텐츠 버튼으로 작품 후보만 다시 불러올 수 있습니다.")
+
+            if generate_clicked:
+                try:
+                    with st.spinner("최근 이슈로 테마를 만들고 저장하는 중입니다..."):
+                        issue_records = build_llm_issue_records(issues, max_issues=12)
+                        recent_history = load_recommendation_history(THEME_HISTORY_PATH, days=56)
+                        recs, run_meta = generate_weekly_themes(
+                            issue_records=issue_records,
+                            themes=themes,
+                            top_n=top_n,
+                            api_key=openai_api_key,
+                            model=openai_model,
+                            recent_history=recent_history,
+                        )
+                        updated_themes, updated_history, added_rows = persist_recommendations_locally(
+                            recommendations=recs,
+                            themes=themes,
+                            theme_path=get_active_theme_path(),
+                            history_path=THEME_HISTORY_PATH,
+                            run_meta=run_meta,
+                        )
+                        github_result = {"status": "not_configured"}
+                        if github_writeback_configured(github_config):
+                            try:
+                                github_result = persist_files_to_github(
+                                    theme_path=get_active_theme_path(),
+                                    history_path=THEME_HISTORY_PATH,
+                                    config=github_config,
+                                    run_id=str(run_meta.get("run_id", "")),
+                                )
+                            except Exception as github_exc:
+                                github_result = {"status": "error", "error": str(github_exc)}
+
+                        st.session_state["recs"] = recs
+                        st.session_state["generation_meta"] = run_meta
+                        st.session_state["last_generated_run_id"] = str(run_meta.get("run_id", ""))
+                        st.session_state["generation_added_count"] = len(added_rows)
+                        st.session_state["github_writeback_result"] = github_result
+                        st.session_state["updated_theme_csv"] = updated_themes.to_csv(
+                            sep="|", index=False, encoding="utf-8-sig"
+                        ).encode("utf-8-sig")
+                    with st.spinner("테마에 맞는 추천 작품과 포스터를 채우는 중입니다..."):
+                        fill_weekly_content_candidates(
+                            recs,
+                            run_id=str(run_meta.get("run_id", "")),
+                            api_key=openai_api_key,
+                            model=openai_model,
+                            github_config=github_config,
+                        )
+                    st.rerun()
+                except ThemeGenerationError as exc:
+                    st.error(str(exc))
+                except Exception as exc:
+                    st.exception(exc)
+            if content_clicked:
+                with st.spinner("추천 작품과 포스터를 다시 채우는 중입니다..."):
+                    fill_weekly_content_candidates(
+                        recs,
+                        run_id=str(selected_run.get("run_id", "")),
+                        api_key=openai_api_key,
+                        model=openai_model,
+                        github_config=github_config,
+                    )
+                st.rerun()
+
             if not recs:
-                st.info("아직 채택한 테마가 없어요. AI 디렉터에서 기획을 다듬고 최종 채택해 주세요.")
+                st.info("테마 생성하기를 누르면 최근 이슈에 맞는 추천 테마가 이곳에 표시됩니다.")
             else:
-                with st.expander("저장 기록", expanded=False):
-                    meta = selected_run.get("meta", {})
-                    when = selected_run.get("recommended_at") or meta.get("recommended_at")
-                    if when:
-                        st.caption("저장 시각 · " + str(when))
-                    st.caption("채택한 테마와 당시 연결한 작품을 보여드립니다. 새 기획과 수정은 AI 디렉터에서 시작하세요.")
+                if selected_run.get("run_id") == st.session_state.get("last_generated_run_id"):
+                    github_result = st.session_state.get("github_writeback_result", {"status": "restored"})
+                    added_count = int(st.session_state.get("generation_added_count", meta.get("new_count", 0)))
+                else:
+                    github_result = {"status": "restored"}
+                    added_count = int(meta.get("new_count", 0))
+                if github_result.get("status") == "error":
+                    st.warning(f"테마 저장 실패: {github_result.get('error', '')}")
+                current_content_run = st.session_state.get("content_candidate_run_id") == str(selected_run.get("run_id", ""))
+                content_meta = st.session_state.get("content_candidate_meta", {}) if current_content_run else {}
+                content_error = st.session_state.get("content_candidate_error", "") if current_content_run else ""
+                if content_error:
+                    st.warning("추천 작품을 채우지 못했어요. 테마는 저장되어 있습니다. 콘텐츠 버튼으로 다시 시도해 주세요.")
+                if content_meta.get("github_status") == "error":
+                    st.warning(f"콘텐츠 후보 저장 실패: {content_meta.get('github_error', '')}")
+                with st.expander("생성 기록", expanded=False):
+                    render_generation_status(meta, added_count, github_result)
+                    if content_error:
+                        st.caption(f"콘텐츠 연결 오류: {content_error}")
+                    if has_current_contents:
+                        verified_count = int(current_rows["kinolights_status"].astype(str).eq("verified").sum())
+                        poster_count = int(current_rows["poster_url"].astype(str).str.startswith(("https://", "http://")).sum())
+                        st.caption(f"콘텐츠 후보 {len(current_rows)}편 · 작품 정보 확인 {verified_count}편 · 포스터 연결 {poster_count}편")
+                    elif content_meta:
+                        st.caption(f"작품 정보 확인 {content_meta.get('verified_count', 0)}편 · 제목 검색 링크 {content_meta.get('search_link_only_count', 0)}편")
                 for index, rec in enumerate(recs, start=1):
                     rec["recommended_at"] = selected_run.get("recommended_at", "")
                     render_theme_card(index, rec, assessed_issues)
@@ -1988,14 +1987,15 @@ else:
     with director_tab:
         render_ai_director_page(
             themes=themes, contents=contents,
-            issue_records=build_llm_issue_records(issues, max_issues=12),
+            issue_records=[],
             api_key=openai_api_key, model=openai_model, github_config=github_config,
             theme_path=get_active_theme_path(), history_path=THEME_HISTORY_PATH,
             content_path=THEME_CONTENT_PATH, existing_candidates=load_content_candidate_frame(),
+            find_saved_themes=lambda intent: rank_themes_by_ai_intent(themes, intent).head(5).fillna("").to_dict("records"),
         )
 
     st.markdown(
-        f'<footer class="magazine-footer" data-release="ai-director-v1" data-version="{html.escape(APP_VERSION, quote=True)}">'
+        f'<footer class="magazine-footer" data-release="director-conversation-v1" data-version="{html.escape(APP_VERSION, quote=True)}">'
         f'<span>B tv+ · THEME CURATOR · v{html.escape(APP_VERSION)}</span>'
         '<span>오늘의 이슈가 내일의 취향이 되도록.</span></footer>',
         unsafe_allow_html=True,
