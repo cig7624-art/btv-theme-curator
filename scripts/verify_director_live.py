@@ -25,10 +25,11 @@ from scripts.verify_deployment import (  # noqa: E402
 )
 
 TAB_ORDER = ['지금 주목할 이야기', '추천 테마', 'OTT는 지금', 'AI 디렉터']
-CREATE_REQUEST = ('네가 제안한 2번 방향으로 한국 영화와 드라마를 섞어서 큐레이션 테마 3개 만들어줘. '
-                  '각 테마는 서로 다른 관점으로 기획하고 실제 콘텐츠 DB에서 확인되는 작품 5~8편과 추천 이유를 붙여줘.')
-TITLE_REQUEST = ('2번 테마명만 더 감각적인 제목으로 바꿔줘. 서브카피, 기획 의도, 장르, 분위기, '
+CREATE_REQUEST = '어두운 한국 심리 스릴러로 큐레이션해줘. 어떤 타이틀이 들어가는지 추천 작품과 이유도 함께 보여줘.'
+TITLE_REQUEST = ('테마명만 더 감각적인 제목으로 바꿔줘. 서브카피, 기획 의도, 장르, 분위기, '
                  '추천 작품과 추천 이유는 모두 그대로 유지해줘.')
+STYLE_REQUEST = '서늘하고 건조한 느와르 분위기로 바꿔줘. 제목과 서브카피, 기획 의도, 추천 작품은 유지해줘.'
+
 
 
 def _key(value):
@@ -187,6 +188,8 @@ def _enter_director(page, args, report, label):
     frame.locator('.director-heading').wait_for(timeout=15000)
     _assert(not _overflow(frame), label + '_horizontal_overflow')
     _assert(_chat(frame).is_enabled(), 'director_not_configured')
+    _assert(frame.locator('.st-key-director_quick_requests, .director-conversation-empty, .st-key-director_edit_context').count() == 0, 'unwanted_starter_choices')
+    report['tests'][label + '_immediate_chat_without_starters'] = True
     report['tests'][label + '_empty_director'] = True
     return frame
 
@@ -227,13 +230,9 @@ def verify(args):
             finally:
                 mobile_context.close()
             known = verified_titles()
-            brainstorm = _submit(frame, '뭐 만들어볼까?', args.turn_timeout, allow_empty=True)
-            reply = frame.locator('.st-key-director_conversation [data-testid="stChatMessage"]').last.inner_text().strip()
-            report['tests']['open_ideation_without_forced_drafts'] = not brainstorm and len(reply) > 30
-            _assert(report['tests']['open_ideation_without_forced_drafts'], 'open_ideation_failed')
             created = _submit(frame, CREATE_REQUEST, args.turn_timeout)
-            report['tests']['free_prompt_three_drafts'] = valid_drafts(created, known)
-            _assert(report['tests']['free_prompt_three_drafts'], 'invalid_generated_drafts')
+            report['tests']['direct_brief_creates_one_theme_with_titles'] = valid_drafts(created, known, expected_count=1)
+            _assert(report['tests']['direct_brief_creates_one_theme_with_titles'], 'invalid_generated_drafts')
             report['counts']['drafts'] = len(created)
             report['counts']['contents_per_draft'] = [len(row['contents']) for row in created]
             report['counts']['poster_loading'] = _poster_loading(frame)
@@ -241,47 +240,26 @@ def verify(args):
             if any(row['loaded'] < row['checked'] for row in report['counts']['poster_loading']):
                 report['warnings'].append('some_draft_posters_unavailable')
             renamed = _submit(frame, TITLE_REQUEST, args.turn_timeout)
-            report['tests']['second_title_only_preserved_others'] = title_edit_is_scoped(created, renamed)
-            _assert(report['tests']['second_title_only_preserved_others'], 'title_edit_scope_violation')
-            excluded = renamed[1]['contents'][0]['title']
-            replaced = _submit(frame, '2번 테마에서 추천 작품 〈' + excluded + '〉을 제외하고 다른 작품으로 교체해줘.', args.turn_timeout)
-            report['tests']['content_exclusion_preserved_metadata'] = content_edit_is_scoped(renamed, replaced, excluded) and valid_drafts(replaced, known)
+            report['tests']['title_only_preserves_recommended_works'] = title_edit_is_scoped(created, renamed, target=0)
+            _assert(report['tests']['title_only_preserves_recommended_works'], 'title_edit_scope_violation')
+            styled = _submit(frame, STYLE_REQUEST, args.turn_timeout)
+            report['tests']['conversational_mood_edit_preserves_other_fields'] = len(styled) == 1 and styled[0]['style'] != renamed[0]['style'] and {key: value for key, value in styled[0].items() if key != 'style'} == {key: value for key, value in renamed[0].items() if key != 'style'}
+            _assert(report['tests']['conversational_mood_edit_preserves_other_fields'], 'mood_edit_scope_violation')
+            excluded = styled[0]['contents'][0]['title']
+            replaced = _submit(frame, '추천 작품 〈' + excluded + '〉을 제외하고 다른 작품으로 교체해줘.', args.turn_timeout)
+            report['tests']['content_exclusion_preserved_metadata'] = content_edit_is_scoped(styled, replaced, excluded, target=0) and valid_drafts(replaced, known, expected_count=1)
             _assert(report['tests']['content_exclusion_preserved_metadata'], 'content_edit_scope_violation')
             restored = _submit(frame, '이전 버전으로 되돌려줘', min(30, args.turn_timeout))
-            report['tests']['undo_restored_previous_drafts'] = restored == renamed
+            report['tests']['undo_restored_previous_drafts'] = restored == styled
             _assert(report['tests']['undo_restored_previous_drafts'], 'undo_draft_mismatch')
-            searched = _submit(frame, '기존에 저장된 라이브러리에서 공포와 반전 분위기의 유사 테마를 찾아줘. 초안은 수정하지 마.', args.turn_timeout)
-            saved_names = set()
-            for path in (ROOT / 'theme_db.csv', ROOT / 'theme_pool.csv'):
-                if path.exists():
-                    with path.open(encoding='utf-8-sig', newline='') as stream:
-                        saved_names.update(_key(row.get('theme_name')) for row in csv.DictReader(stream, delimiter='|'))
-            search_expander = frame.locator('summary').filter(has_text='라이브러리에서 찾은 테마')
-            if search_expander.count():
-                search_expander.first.click()
-            report['tests']['library_search_section'] = frame.locator('.st-key-director_library_matches').count() > 0
-            try:
-                frame.locator('.director-library-card').first.wait_for(state='visible', timeout=15000)
-            except Exception:
-                pass
-            matches = frame.locator('.director-library-card h4').all_text_contents()
-            report['tests']['library_search_moved_into_conversation'] = valid_saved_matches(matches, saved_names) and searched == restored
-            report['counts']['matched_saved_themes'] = len(matches)
-            _assert(report['tests']['library_search_moved_into_conversation'], 'saved_theme_search_failed')
-            old_count = frame.locator('.st-key-director_conversation [data-testid="stChatMessage"]').count()
-            frame.get_by_role('button', name='이 테마로 새롭게 기획', exact=True).first.click()
-            reworked = _wait_reply(frame, old_count, args.turn_timeout)
-            report['tests']['saved_theme_rework_adds_draft_preserves_others'] = len(reworked) == 4 and reworked[:3] == restored and valid_drafts(reworked[3:], known, expected_count=1)
-            _assert(report['tests']['saved_theme_rework_adds_draft_preserves_others'], 'saved_theme_rework_failed')
-            report['counts']['final_drafts'] = len(reworked)
             page.set_viewport_size({'width': 390, 'height': 844})
             page.wait_for_timeout(500)
-            report['tests']['mobile_drafts_no_overflow'] = not _overflow(frame) and _snapshot(frame) == reworked
+            report['tests']['mobile_drafts_no_overflow'] = not _overflow(frame) and _snapshot(frame) == restored
             _assert(report['tests']['mobile_drafts_no_overflow'], 'mobile_drafts_changed_or_overflowed')
             report['tests']['no_app_exception'] = not has_app_exception(page)
             _assert(report['tests']['no_app_exception'], 'app_exception')
             report['tests']['adoption_not_invoked'] = True
-            report['counts']['submitted_requests'] = 7
+            report['counts']['submitted_requests'] = 5
             report['status'] = 'passed'
             context.close()
             browser.close(); browser = None

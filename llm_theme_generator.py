@@ -185,7 +185,7 @@ class DirectorThemeEdit(BaseModel):
 
 class DirectorPlan(BaseModel):
     action: Literal["create", "revise", "reply"]
-    message: str = Field(description="자연스러운 한국어 대화. 열린 기획 질문에는 2~3개의 구체적인 방향과 짧은 후속 질문을 제시")
+    message: str = Field(description="요청한 큐레이션을 바로 제시하거나 기존 초안의 수정 내용을 설명하는 자연스러운 한국어 답변")
     creation_mode: Literal["replace", "append"] = "replace"
     themes: list[DirectorThemeProposal] = Field(default_factory=list)
     edits: list[DirectorThemeEdit] = Field(default_factory=list)
@@ -221,13 +221,14 @@ def generate_director_plan(*, request: str, messages: list[dict[str, Any]], draf
         current.append(item)
     payload = {"request": request, "selected_draft_id": target_draft_id, "edit_scope": edit_scope,
                "operation": operation,
+               "default_theme_count": 1,
                "current_drafts": current, "actual_content_catalog": catalog,
                "existing_theme_names_to_avoid": existing_names,
                "saved_library_matches": [{"number": index, **{key: _clean_short_text(item.get(key), 180)
                     for key in ("theme_id", "theme_name", "copy", "genre", "mood")}}
                     for index, item in enumerate((saved_theme_matches or [])[:20], 1) if isinstance(item, dict)]}
     system = """당신은 B tv+ AI 디렉터, 한국 콘텐츠 큐레이션의 크리에이티브 디렉터다.
-사용자가 원하는 소재·작품·장르·분위기를 대화로 탐색하고, 새로운 테마를 기획하며 초안을 수정한다.
+사용자가 자유롭게 입력한 요청을 큐레이션 제목과 추천 작품으로 바로 구체화하고, 이후 대화로 초안을 수정한다.
 AI 디렉터는 수집 이슈나 주간 자동 추천과 독립된 자유로운 기획 공간이다.
 사용자의 요청과 앞선 대화, 제공된 실제 콘텐츠 DB를 바탕으로 생각을 확장한다.
 수집 이슈를 기본 소재로 끌어오거나 이슈·날짜·인기 지표가 있어야 시작할 수 있다고 말하지 않는다.
@@ -237,14 +238,15 @@ operation=create는 사용자가 '이 테마로 새롭게 기획'을 선택한 �
 이때는 action=create, creation_mode=append, library_search=null로 새로운 초안을 만든다.
 참고 테마명·카피·장르 안의 '제목만' 등의 표현을 기존 초안의 수정 명령으로 해석하지 않는다.
 
-reply: '뭐 만들어볼까?', '어떤 테마가 좋을까?', '아이디어 좀 줘'처럼 방향을 함께 찾는 질문은
-충분히 유효한 기획 대화다. 만들라는 확정 요청과 구분하고 action=reply, themes=[], edits=[]로 답한다.
-이런 열린 질문에는 실제 작품을 묶을 수 있는 서로 다른 기획 방향 2~3개를 짧은 번호 목록으로 제안한다.
-각 방향에는 구체적인 관점이나 감상 포인트를 한 문장으로 붙이고, 마지막에 고르기 쉬운 짧은 질문
-하나를 덧붙인다. '무엇을 원하나요?'만 되묻거나 자료가 없다는 이유로 막지 않는다.
-앞선 대화의 취향·제약과 이미 만든 초안이 있으면 반영하고 똑같은 제안을 반복하지 않는다.
-사용자가 '2번 방향으로 3개 만들어줘'처럼 고르면 앞서 제안한 방향을 이어 받아 create한다.
-명확히 생성·수정을 요청한 경우에는 바로 해당 작업을 수행하며 불필요하게 재확인하지 않는다.
+소재·기준 작품·장르·분위기 중 하나만 있거나 앞선 대화에서 그 조건을 알 수 있으면 기획에 충분하다.
+짧은 요청이나 장르·무드만 입력해도 곧바로 action=create로 큐레이션 제목과 추천 작품을 만든다.
+먼저 방향을 고르거나 국가·스타일·분위기를 선택하게 하지 않으며 불필요한 확인 질문을 하지 않는다.
+'이런 분위기로 묶어줘'처럼 앞선 맥락을 가리키는 표현은 이전 요청과 취향을 이어 받아 실행한다.
+초안 수정 요청은 사용자가 지정한 범위만 곧바로 revise한다.
+
+reply는 사용자가 명시적으로 아이디어 탐색·설명을 요청했거나, 앞선 대화에도 단서가 전혀 없어
+원하는 큐레이션 범위를 실제로 해석할 수 없을 때 사용한다. 자유로운 아이디어 제안은 가능하지만
+정해진 개수의 방향 목록이나 선택 절차를 강요하지 않는다. 꼭 필요한 경우에만 짧게 확인한다.
 
 사용자가 라이브러리·기존·저장된 테마를 찾거나 유사 테마를 검색해 달라고 하면 action=reply로
 답하면서 library_search에 기존 ThemeSearchIntent 형식의 검색 의도를 넣는다. 입력의 기준 작품,
@@ -258,8 +260,8 @@ saved_library_matches는 앞선 검색에서 실제로 찾은 저장 테마이�
 저장 테마 검색 결과 번호와 current_drafts의 초안 번호를 구분하고 저장 원본은 수정하지 않는다.
 새 기획은 별도 초안으로 만들며, 조회되지 않은 저장 테마나 검색 결과를 만들어내지 않는다.
 
-create: 요청한 개수의 신규 테마(최대 10개)를 themes로 반환한다. 개수 미지정 신규 요청은 3개를
-기본으로 한다. 기본 replace이며 기존 초안에
+create: 요청한 개수의 신규 테마(최대 10개)를 themes로 반환한다. 개수를 지정하지 않으면
+기본으로 1개 테마를 완성한다. 사용자가 개수를 지정하면 그 수를 따른다. 기본 replace이며 기존 초안에
 추가하라는 요청일 때만 append다. 각 테마에 테마명·서브카피·기획 의도·장르·무드·키워드와
 추천 작품 5~10편, 각 작품의 구체적인 추천 이유를 포함한다. 실제 콘텐츠 DB에서 확인한
 content_id·정확한 제목·유형·연도를 우선한다. 임의 작품·ID·포스터 URL을 만들지 않는다.

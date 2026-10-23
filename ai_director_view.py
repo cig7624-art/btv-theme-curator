@@ -22,11 +22,7 @@ _SCOPE_LABELS = {
     "auto": "요청에 맞게", "title": "테마명만", "copy": "서브카피만",
     "contents": "추천 작품만", "style": "장르·분위기", "all": "기획 전체",
 }
-_QUICK_REQUESTS = (
-    ("뭐 만들어볼까?", "뭐 만들어볼까?"),
-    ("분위기부터 골라볼까?", "늦은 밤에 어울리는 색다른 큐레이션을 기획해 보자. 어떤 방향이 좋을까?"),
-    ("한국 영화·드라마로 3개", "한국 영화와 드라마를 섞어서 감각적인 큐레이션 테마 3개 만들어줘."),
-)
+
 
 
 def _text(value):
@@ -167,30 +163,10 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
 
     with st.container(key='ai_director_section'):
         st.markdown('<header class="director-heading"><span>AI CREATIVE DIRECTOR</span><h2>AI 디렉터</h2>'
-                    '<p>떠오른 한마디에서 시작해, 함께 만드는 큐레이션.</p>'
-                    '<div class="director-workflow">아이디어 나누기 <span>→</span> 함께 다듬기 <span>→</span> 최종 채택</div></header>', unsafe_allow_html=True)
+                    '<p>주제를 말하면 테마와 작품을 제안하고, 대화로 고쳐갑니다.</p></header>', unsafe_allow_html=True)
         if not configured:
             st.info('AI 디렉터를 사용하려면 OpenAI 연결 설정이 필요합니다. 설정 후 자유롭게 테마를 요청할 수 있어요.')
-        with st.container(key='director_quick_requests'):
-            columns = st.columns(3, gap='small')
-            for index, (column, (label, request)) in enumerate(zip(columns, _QUICK_REQUESTS)):
-                with column:
-                    if st.button(label, key='director_quick_' + str(index),
-                                 width='stretch', disabled=not configured or busy,
-                                 help='이 한마디로 AI 디렉터와 대화를 시작합니다.'):
-                        _queue_request(request)
-                        st.rerun()
-
         if drafts:
-            with st.container(key='director_edit_context'):
-                target_column, scope_column = st.columns([2, 1], gap='small')
-                targets = {'': '새 기획 / 전체 초안', **{draft['draft_id']: f"{index}. {draft['theme_name']}" for index, draft in enumerate(drafts, 1)}}
-                if st.session_state.get('director_target') not in targets:
-                    st.session_state['director_target'] = ''
-                with target_column:
-                    selected_target = st.selectbox('수정할 테마', list(targets), format_func=targets.get, key='director_target')
-                with scope_column:
-                    selected_scope = st.selectbox('수정 범위', list(_SCOPE_LABELS), format_func=_SCOPE_LABELS.get, key='director_scope')
             versions = session.get('versions', [])
             if len(versions) > 1:
                 with st.expander('이전 버전으로 되돌리기', expanded=False):
@@ -202,19 +178,11 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                     if st.button('이 버전으로 되돌리기', key='director_restore', disabled=busy or version_id == current):
                         st.session_state[SESSION_KEY] = restore_director_version(session, version_id)
                         st.rerun()
-        else:
-            selected_target, selected_scope = '', 'auto'
-
         with st.container(key='director_conversation'):
             for message in session.get('messages', []):
                 role = 'user' if message.get('role') == 'user' else 'assistant'
                 with st.chat_message(role):
                     st.markdown(_text(message.get('content')))
-            if not session.get('messages'):
-                st.markdown('<div class="director-conversation-empty"><strong>뭐 만들어볼까요?</strong>'
-                            '<p>취향이나 분위기 하나만 꺼내 주세요. 아직 생각이 없다면 “뭐 만들어볼까?”도 좋아요.<br>'
-                            '함께 방향을 고르고, 제목과 작품을 대화로 다듬어 봐요.</p></div>', unsafe_allow_html=True)
-
         # A search answer belongs next to the conversation that requested it.
         # Show the actual matches without hiding them beneath existing drafts.
         _render_saved_theme_matches(session, find_saved_themes, configured=configured, busy=busy)
@@ -224,7 +192,7 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                                    disabled=not configured or busy, max_chars=4000)
         pending = st.session_state.pop('director_pending_request', None)
         if prompt:
-            pending = {'request': prompt, 'target': selected_target or None, 'scope': selected_scope}
+            pending = {'request': prompt, 'target': None, 'scope': 'auto'}
         if pending and configured and not busy:
             _run_request(pending, session=session, themes=themes, contents=contents,
                          issue_records=issue_records, api_key=api_key, model=model,

@@ -77,15 +77,14 @@ class AiDirectorTests(unittest.TestCase):
         self.assertNotIn('recent_issues', payload)
         persist.assert_not_called(); remote.assert_not_called()
 
-    def test_open_ideation_is_a_real_conversation_without_creating_cards_or_versions(self):
+    def test_explicit_brainstorming_can_reply_freely_without_a_required_choices_format(self):
         state = new_director_session(); before = deepcopy(state)
-        answer = ('1. 가족의 비밀이 뒤집히는 순간 — 관계의 반전으로 묶어볼 수 있어요.\n'
-                  '2. 도시를 떠난 사람들 — 낯선 공간이 바꾸는 삶을 비교해요.\n'
-                  '3. 능력보다 팀워크 — 엇갈린 인물이 협력하는 과정을 모아요.\n\n'
-                  '긴장감 있는 이야기와 편안한 이야기 중 어느 쪽이 끌리세요?')
+        answer = ('같은 공간이 인물에게 다르게 보이는 이야기를 묶는 관점도 흥미로워요.\n\n'
+                  '익숙한 장소가 비밀을 드러내는 순간을 감상 포인트로 잡을 수 있어요.')
         sdk = client(DirectorPlan(action='reply', message=answer))
         with patch('content_pipeline.resolve_director_contents', side_effect=AssertionError('ideation must not resolve content')):
-            result = run_director_turn(state, '뭐 만들어볼까?', themes=self.themes, contents=self.catalog, client=sdk)
+            result = run_director_turn(state, '새로운 공간형 큐레이션을 위한 관점만 자유롭게 제안해줘.',
+                                       themes=self.themes, contents=self.catalog, client=sdk)
         self.assertEqual(state, before)
         self.assertEqual(result['drafts'], [])
         self.assertEqual(result['versions'], [])
@@ -93,9 +92,43 @@ class AiDirectorTests(unittest.TestCase):
         self.assertEqual(result['last_usage']['api_call_count'], 1)
         sdk.responses.parse.assert_called_once()
         prompt = sdk.responses.parse.call_args.kwargs['input'][0]['content']
-        self.assertIn("'뭐 만들어볼까?'", prompt)
-        self.assertIn('기획 방향 2~3개', prompt)
-        self.assertIn('action=reply, themes=[], edits=[]', prompt)
+        self.assertNotIn('기획 방향 2~3개', prompt)
+        self.assertNotIn('개수 미지정 신규 요청은 3개', prompt)
+        self.assertIn('정해진 개수의 방향 목록이나 선택 절차를 강요하지 않는다', prompt)
+
+    def test_unseeded_brief_immediately_creates_one_complete_theme_then_supports_chat_revision(self):
+        for brief in ('어두운 한국 스릴러 큐레이션해줘.', '음산한 도시 분위기로 묶어줘.'):
+            with self.subTest(brief=brief):
+                plan = DirectorPlan(action='create', message='요청한 분위기의 큐레이션을 만들었어요.',
+                                    themes=[proposal('도시의 밤이 숨긴 선택들')])
+                sdk = client(plan)
+                state = new_director_session()
+                result = run_director_turn(state, brief, themes=self.themes, contents=self.catalog,
+                                          client=sdk, content_resolver=resolver)
+                sdk.responses.parse.assert_called_once()
+                self.assertEqual(len(result['drafts']), 1)
+                self.assertEqual(len(result['drafts'][0]['contents']), 5)
+                self.assertTrue(all(item['reason'] for item in result['drafts'][0]['contents']))
+                self.assertEqual(result['drafts'][0]['source_issue'], '')
+                self.assertEqual(state['messages'], [])
+                inputs = sdk.responses.parse.call_args.kwargs['input']
+                payload = json.loads(inputs[-1]['content'])
+                self.assertEqual(len(inputs), 2)
+                self.assertEqual(payload['request'], brief)
+                self.assertEqual(payload['current_drafts'], [])
+                self.assertEqual(payload['default_theme_count'], 1)
+                self.assertNotIn('recent_issues', payload)
+                self.assertIn('기본으로 1개 테마를 완성한다', inputs[0]['content'])
+                self.assertIn('곧바로 action=create', inputs[0]['content'])
+                target = result['drafts'][0]['draft_id']
+                revision_sdk = client(edit_plan(target, theme_name='잠들지 않는 밤의 선택'))
+                revised = run_director_turn(result, '1번 테마 제목만 더 짧게 바꿔줘.', themes=self.themes,
+                                            contents=self.catalog, client=revision_sdk, content_resolver=resolver)
+                self.assertEqual(revised['drafts'][0]['theme_name'], '잠들지 않는 밤의 선택')
+                self.assertEqual(revised['drafts'][0]['contents'], result['drafts'][0]['contents'])
+                self.assertEqual(revised['drafts'][0]['copy'], result['drafts'][0]['copy'])
+                next_inputs = revision_sdk.responses.parse.call_args.kwargs['input']
+                self.assertEqual(next_inputs[1]['content'], brief)
 
     def test_selecting_a_conversation_direction_creates_without_requiring_an_existing_draft(self):
         state = self.turn(new_director_session(), '뭐 만들어볼까?',

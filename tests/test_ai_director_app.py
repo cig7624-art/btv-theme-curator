@@ -76,24 +76,30 @@ class DirectorAppTests(unittest.TestCase):
             state['generate_weekly_themes'].assert_not_called()
             state['persist_recommendations_locally'].assert_not_called()
 
-    def test_open_ended_quick_request_starts_conversation_without_using_collected_issues(self):
-        expected = session_with()
-        expected['messages'] = [{'role': 'user', 'content': '뭐 만들어볼까?'},
-                                {'role': 'assistant', 'content': '밤의 도시, 엇갈린 선택, 조용한 위로 중 어떤 방향이 끌리세요?'}]
+    def test_direct_brief_creates_without_intro_choices_or_collected_issues(self):
+        request = '도시의 밤을 배경으로 어두운 스릴러 큐레이션을 만들어줘.'
+        expected = session_with(draft())
+        expected['messages'][0]['content'] = request
         with patch('ai_director_view.run_director_turn', return_value=expected) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
             app = state['app']
-            quick = app.button(key='director_quick_0')
-            self.assertEqual(quick.label, '뭐 만들어볼까?')
-            self.assertFalse(quick.disabled)
-            self.assertFalse(any('이번 주 이슈' in button.label for button in app.button))
-            quick.click().run()
+            self.assertFalse(any(str(button.key or '').startswith('director_quick_') for button in app.button))
+            self.assertFalse(any(widget.key in {'director_target', 'director_scope'} for widget in app.selectbox))
+            intro = ' '.join(item.value for item in app.markdown)
+            self.assertNotIn('director-conversation-empty', intro)
+            self.assertNotIn('분위기부터 골라볼까?', intro)
+            chat = app.chat_input(key='director_chat_input')
+            self.assertFalse(chat.disabled)
+            chat.set_value(request).run()
             self.assertFalse(app.exception)
-            self.assertEqual(run.call_args.args[1], '뭐 만들어볼까?')
+            self.assertEqual(run.call_args.args[0]['messages'], [])
+            self.assertEqual(run.call_args.args[1], request)
+            self.assertIsNone(run.call_args.kwargs['target_draft_id'])
+            self.assertEqual(run.call_args.kwargs['edit_scope'], 'auto')
             self.assertEqual(run.call_args.kwargs['operation'], 'auto')
             self.assertEqual(run.call_args.kwargs['issue_records'], [])
-            self.assertEqual(app.session_state[SESSION_KEY]['drafts'], [])
-            self.assertIn('어떤 방향이 끌리세요?', ' '.join(message.markdown[0].value for message in app.chat_message))
+            self.assertEqual(len(app.session_state[SESSION_KEY]['drafts']), 1)
             adopt.assert_not_called()
+            state['generate_weekly_themes'].assert_not_called()
 
     def test_natural_input_produces_only_drafts_and_persists_context_across_reruns(self):
         expected = session_with(draft())
@@ -148,22 +154,24 @@ class DirectorAppTests(unittest.TestCase):
             self.assertEqual(app.session_state[SESSION_KEY], expected)
             run.assert_not_called()
 
-    def test_explicit_target_and_title_scope_reach_engine_without_auto_adoption(self):
+    def test_card_edit_targets_one_theme_without_requiring_global_selection(self):
         initial = session_with(draft(1), draft(2), draft(3))
         revised = deepcopy(initial); revised['drafts'][1]['theme_name'] = '더 감각적인 이름'
         with patch('ai_director_view.run_director_turn', return_value=revised) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
             app = state['app']
             app.session_state[SESSION_KEY] = initial
             app.run()
-            app.selectbox(key='director_target').set_value('draft-2').run()
-            app.selectbox(key='director_scope').set_value('title').run()
-            app.chat_input(key='director_chat_input').set_value('이 제목을 더 감각적으로 바꿔줘.').run()
+            self.assertFalse(any(widget.key in {'director_target', 'director_scope'} for widget in app.selectbox))
+            app.selectbox(key='director_card_scope_draft-2').set_value('title')
+            app.text_area(key='director_card_request_draft-2').set_value('이 제목을 더 감각적으로 바꿔줘.')
+            app.button(key='FormSubmitter:director_edit_form_draft-2-수정 요청').click().run()
             self.assertFalse(app.exception)
             self.assertEqual(run.call_args.kwargs['target_draft_id'], 'draft-2')
             self.assertEqual(run.call_args.kwargs['edit_scope'], 'title')
             self.assertEqual(run.call_args.kwargs['operation'], 'auto')
             adopt.assert_not_called()
             self.assertEqual(app.session_state[SESSION_KEY]['drafts'][0], initial['drafts'][0])
+            self.assertEqual(app.session_state[SESSION_KEY]['drafts'][2], initial['drafts'][2])
 
     def test_final_adoption_is_explicit_and_same_revision_is_disabled_after_success(self):
         result = {'status': 'success', 'theme_id': 'T999', 'run_id': 'director-run'}

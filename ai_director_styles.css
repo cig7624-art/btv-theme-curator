@@ -4,19 +4,10 @@
 .director-heading > span { font-size: 10px; letter-spacing: 2.3px; color: var(--accent); }
 [data-testid="stMarkdownContainer"] .director-heading h2 { margin: 9px 0; padding: 0; font-size: 29px; color: var(--ink); letter-spacing: -.9px; }
 [data-testid="stMarkdownContainer"] .director-heading p { margin: 0; color: var(--muted); font-size: 13px; }
-.director-workflow { display: flex; gap: 10px; align-items: center; margin-top: 16px; color: #c6c4b6; font-size: 11px; }
-.director-workflow span { color: var(--accent); }
-.st-key-director_quick_requests { margin: 4px 0 10px; }
-.st-key-director_quick_requests button { background: transparent; min-height: 40px; border-color: #4a4f43; }
-.st-key-director_quick_requests button p { font-size: 11px; }
-.st-key-director_edit_context { padding: 11px 14px; border: 1px solid var(--line); border-radius: 7px; background: #1c211c; }
 .st-key-director_conversation { margin: 4px 0; }
 .st-key-director_conversation [data-testid="stChatMessage"] { background: #1c211e; border: 1px solid #343d33; border-radius: 9px; padding: 15px; }
 .st-key-director_conversation [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) { background: #242720; border-color: #665c48; }
 .st-key-director_conversation [data-testid="stChatMessageContent"] p { font-size: 13px; line-height: 1.85; }
-.director-conversation-empty { padding: 27px 20px; border: 1px dashed #4b5145; border-radius: 8px; background: #151b16; }
-.director-conversation-empty strong { color: var(--ink); font-size: 17px; }
-[data-testid="stMarkdownContainer"] .director-conversation-empty p { margin: 9px 0 0; color: var(--muted); font-size: 12px; line-height: 1.85; }
 .st-key-director_composer [data-testid="stChatInput"] { background: #20251f; border-color: #75654c; color: var(--ink); }
 .st-key-director_composer textarea { color: var(--ink); font-size: 13px; }
 .st-key-director_library_matches { padding: 13px 0 3px; min-width: 0; }
@@ -66,11 +57,6 @@
  .st-key-home_sections [role="tab"] p { font-size: 10px; }
  [data-testid="stMarkdownContainer"] .director-heading h2 { font-size: 25px; }
  .director-heading { padding-bottom: 15px; }
- .director-workflow { font-size: 10px; gap: 7px; }
- .st-key-director_quick_requests [data-testid="stHorizontalBlock"] { flex-wrap: wrap; gap: 6px; }
- .st-key-director_quick_requests [data-testid="stColumn"] { flex: 1 1 130px; min-width: 0; }
- .st-key-director_quick_requests button { min-height: 42px; }
- .director-conversation-empty { padding: 19px 15px; }
  .director-draft-card { padding: 15px; }
  [data-testid="stMarkdownContainer"] .director-draft-card h3 { font-size: 22px; }
  .director-draft-top { gap: 8px; font-size: 9px; }

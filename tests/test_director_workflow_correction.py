@@ -26,15 +26,16 @@ class DirectorWorkflowCorrectionTests(unittest.TestCase):
             self.assertEqual(before,{p.name:p.read_bytes() for p in Path('.').glob('*.csv')})
 
     def test_no_collected_issues_disable_weekly_creation_but_not_creative_conversation(self):
-        reply={'schema_version':1,'messages':[{'role':'user','content':'뭐 만들어볼까?'},{'role':'assistant','content':'잔잔한 관계극이나 강렬한 반전극은 어때요?'}],
+        reply={'schema_version':1,'messages':[{'role':'user','content':'차가운 분위기의 범죄 스릴러를 큐레이션해줘.'},{'role':'assistant','content':'범죄 스릴러 기획을 준비했어요.'}],
                'drafts':[],'versions':[],'current_version_id':None,'version_sequence':0,'last_usage':{'api_call_count':1}}
         with patch('ai_director_view.run_director_turn',return_value=reply) as run, app_fixture() as state:
             path=Path('issue_feed.csv');pd.read_csv(path,sep='|').iloc[:0].to_csv(path,sep='|',index=False)
             app=state['app'].run()
             self.assertFalse(app.exception)
             self.assertTrue(app.button(key='generate_weekly_themes').disabled)
-            self.assertFalse(app.button(key='director_quick_0').disabled)
-            app.chat_input(key='director_chat_input').set_value('뭐 만들어볼까?').run()
+            self.assertFalse(app.chat_input(key='director_chat_input').disabled)
+            self.assertFalse(any(str(button.key or '').startswith('director_quick_') for button in app.button))
+            app.chat_input(key='director_chat_input').set_value('차가운 분위기의 범죄 스릴러를 큐레이션해줘.').run()
             self.assertFalse(app.exception)
             self.assertEqual(run.call_args.kwargs['issue_records'],[])
             state['generate_weekly_themes'].assert_not_called()

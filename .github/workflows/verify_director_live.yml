@@ -1,10 +1,10 @@
 name: Verify real AI Director conversation
 
-# Verify independent ideation and the library search moved into conversation.
+# Verify that an arbitrary brief immediately creates a theme and supports chat edits.
 on:
   workflow_dispatch:
   push:
-    branches: [codex/ai-director, codex/director-workflow-correction]
+    branches: [codex/ai-director, codex/director-workflow-correction, codex/director-direct-chat]
     paths:
       - VERSION
       - scripts/verify_director_live.py
