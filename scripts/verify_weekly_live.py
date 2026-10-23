@@ -23,7 +23,9 @@ sys.path.insert(0, str(ROOT))
 from scripts.verify_deployment import APP_URL, VerificationIssue, _load_version, has_app_exception
 from theme_generation_rules import title_review
 
-FILES = ("theme_db.csv", "theme_recommendation_history.csv", "theme_content_candidates.csv")
+# Production retains the original tracked theme_pool name. theme_db can exist
+# as an ignored local mirror, so only inspect the actual repository data here.
+FILES = ("theme_pool.csv", "theme_recommendation_history.csv", "theme_content_candidates.csv")
 
 
 def csv_rows(text):
