@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "status": "failed",
+  "expected_version": "1.2.6",
+  "observed_version": "1.2.6",
+  "started_at": "2026-10-23T09:17:23.005822+00:00",
+  "generation_click_attempted": false,
+  "tests": {
+    "desktop_version": true
+  },
+  "counts": {},
+  "errors": [
+    "saved_data_read_failed"
+  ],
+  "source_commit": "7e42efc8ebf329b7dabf0e1b10eebe1e06944600",
+  "frame_state": "matched_release",
+  "finished_at": "2026-10-23T09:18:07.769362+00:00"
+}
