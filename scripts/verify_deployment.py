@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "four_tabs", "weekly_actions", "director_screen", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork")
+CHECKS = ("version", "four_tabs", "weekly_actions", "library_director_filter", "director_screen", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork")
 
 
 def normalized_version(value):
@@ -141,6 +141,22 @@ def _check_editorial(frame, report, label, screenshots):
     report["tests"][f"{label}_weekly_actions"] = frame.get_by_role("button", name="테마 생성하기", exact=True).count() == 1 and frame.locator('.st-key-load_weekly_contents').count() == 1
     if not report["tests"][f"{label}_weekly_actions"]:
         raise VerificationIssue("weekly_actions_missing", retry=True)
+    frame.get_by_role("button", name="테마 라이브러리", exact=True).click()
+    frame.locator('.st-key-theme_library_source_filter').wait_for(state='visible', timeout=30000)
+    frame.locator('.st-key-theme_library_source_filter').get_by_role('combobox').click()
+    frame.get_by_role('option', name='AI 디렉터', exact=True).click()
+    frame.locator('.theme-db-main').first.wait_for(state='visible', timeout=30000)
+    frame.wait_for_function('''() => {
+      const cards = Array.from(document.querySelectorAll('.theme-db-main > .small:first-child'));
+      return cards.length > 0 && cards.every(card => card.textContent.includes('[AI 디렉터]'))
+        && !document.querySelector('[data-stale=true]');
+    }''', timeout=30000)
+    badges = frame.locator('.theme-db-main > .small:first-child').all_text_contents()
+    report["tests"][f"{label}_library_director_filter"] = bool(badges) and all('[AI 디렉터]' in badge for badge in badges)
+    if not report["tests"][f"{label}_library_director_filter"]:
+        raise VerificationIssue("library_director_filter_failed")
+    frame.get_by_role('button', name='AI 디렉터와 새 기획 이야기하기 ↗', exact=True).click()
+    frame.locator('.director-heading').wait_for(state='visible', timeout=30000)
     frame.get_by_role("tab", name="AI 디렉터", exact=True).click()
     try:
         frame.locator(".director-heading").wait_for(state="visible", timeout=20000)

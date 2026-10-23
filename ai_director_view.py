@@ -40,10 +40,10 @@ def activate_director_tab():
     st.session_state["home_sections"] = "AI 디렉터"
 
 
-def _show_saved_themes():
-    st.session_state["page"] = "home"
-    st.session_state["home_tab_default"] = "추천 테마"
-    st.session_state["home_sections"] = "추천 테마"
+def _show_library_themes():
+    st.session_state["page"] = "theme_db"
+    st.session_state["theme_library_source_filter"] = "AI 디렉터"
+    st.session_state["theme_quick_search_input"] = ""
 
 
 def director_draft_card_html(index, draft):
@@ -207,7 +207,7 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                 st.rerun()
 
         if not drafts:
-            st.caption('초안은 이 대화에만 보관됩니다. 최종 채택한 테마만 추천 테마와 라이브러리에 저장돼요.')
+            st.caption('초안은 이 대화에만 보관됩니다. 최종 채택한 테마만 테마 라이브러리에 저장돼요.')
             return
 
         st.markdown('<div class="director-results-heading"><h3>함께 다듬는 초안</h3><span>' + str(len(drafts)) + '개의 기획</span></div>', unsafe_allow_html=True)
@@ -255,9 +255,10 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                                     github_config=github_config, model=model, catalog=contents)
                             if result.get('status') in {'success', 'already_adopted'}:
                                 st.session_state['director_adopted'][fingerprint] = result
-                                st.session_state['director_new_saved_run_id'] = result.get('run_id')
-                                st.session_state['director_adoption_notice'] = f"‘{draft['theme_name']}’을 추천 테마와 라이브러리에 저장했어요."
+                                st.session_state.pop('director_new_saved_run_id', None)
+                                st.session_state['director_adoption_notice'] = f"‘{draft['theme_name']}’을 테마 라이브러리에 저장했어요."
                                 st.session_state['director_refresh_required'] = result.get('local_status') == 'refresh_required'
+                                _show_library_themes()
                                 st.rerun()
                             else:
                                 st.error('영구 저장을 완료하지 못했어요. 초안은 그대로 보관했습니다.')
@@ -272,9 +273,6 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                 elif not durable_ready:
                     st.caption('최종 채택하려면 테마 저장 연결 설정이 필요합니다. 초안 기획과 수정은 계속할 수 있어요.')
 
-        if st.session_state.get('director_adoption_notice'):
-            st.success(st.session_state['director_adoption_notice'])
-            if st.session_state.get('director_refresh_required'):
-                st.warning('원격 저장은 완료됐어요. 동시에 변경된 자료를 보호하기 위해 현재 파일은 그대로 두었습니다. 저장 자료를 다시 불러온 뒤 확인해 주세요.')
-            st.button('추천 테마에서 보기', key='director_open_saved', on_click=_show_saved_themes)
+        if adopted:
+            st.button('테마 라이브러리에서 보기', key='director_open_saved', on_click=_show_library_themes)
         st.caption('작품 정보와 포스터를 확인해 연결합니다. B tv의 판권·서비스 가능 여부를 확정하는 목록은 아닙니다.')

@@ -17,6 +17,7 @@ from openai import OpenAI
 from pydantic import BaseModel, ConfigDict, Field
 
 from data_storage_lock import with_data_write_lock
+from theme_provenance import is_director_theme
 
 
 THEME_OPTIONAL_DEFAULTS: dict[str, str] = {
@@ -388,7 +389,7 @@ def _read_recommendation_history(path: Path) -> pd.DataFrame:
     for column in HISTORY_COLUMNS:
         if column not in history.columns:
             history[column] = ""
-    return history[HISTORY_COLUMNS].copy()
+    return history[list(dict.fromkeys([*HISTORY_COLUMNS, *history.columns]))].copy()
 
 
 def load_recommendation_history(path: Path, days: int = 56) -> pd.DataFrame:
@@ -472,9 +473,11 @@ def load_recommendation_runs(path: Path, themes: pd.DataFrame) -> list[dict[str,
                     theme[key] = value
 
             source = str(row.get("recommendation_source", "")) or "AI_GENERATED"
+            if str(run_id).startswith("AI-DIRECTOR-") or is_director_theme(row):
+                source = "AI_DIRECTOR"
             recs.append({
                 "recommendation_source": source,
-                "source_label": "AI 신규 생성" if source == "AI_GENERATED" else "기존 DB 활용",
+                "source_label": {"AI_GENERATED": "AI 신규 생성", "AI_DIRECTOR": "AI 디렉터"}.get(source, "기존 DB 활용"),
                 "theme": theme,
                 "source_issue_summary": str(row.get("source_issue", "")),
                 "creation_angle": str(row.get("creation_angle", "")),
@@ -491,7 +494,7 @@ def load_recommendation_runs(path: Path, themes: pd.DataFrame) -> list[dict[str,
             recommended_at = run_ts.strftime("%Y-%m-%d %H:%M:%S")
         model_values = [str(v) for v in group["generation_model"].tolist() if str(v)]
         model = model_values[0] if model_values else ""
-        new_count = sum(1 for rec in recs if rec["recommendation_source"] == "AI_GENERATED")
+        new_count = sum(1 for rec in recs if rec["recommendation_source"] in {"AI_GENERATED", "AI_DIRECTOR"})
         existing_count = len(recs) - new_count
         runs.append({
             "run_id": str(run_id),
@@ -506,6 +509,7 @@ def load_recommendation_runs(path: Path, themes: pd.DataFrame) -> list[dict[str,
                 "existing_count": existing_count,
                 "recommended_at": recommended_at,
                 "restored": True,
+                "creation_origin": "AI_DIRECTOR" if any(rec["recommendation_source"] == "AI_DIRECTOR" for rec in recs) else "WEEKLY",
             },
         })
 

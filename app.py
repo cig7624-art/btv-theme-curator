@@ -38,6 +38,7 @@ from issue_rules import ISSUE_LOOKBACK_DAYS
 from ott_collection import collect_public_homes, load_snapshot, save_snapshot
 from ott_view import render_ott_page
 from ai_director_view import activate_director_tab, render_ai_director_page
+from theme_provenance import director_theme_mask, is_director_theme, weekly_recommendation_runs
 from issue_selection_copy import SOURCE_CONFIG, SOURCE_DETAIL_LOGIC, SELECTION_STEPS
 
 from theme_content_manager import (
@@ -934,7 +935,7 @@ def render_theme_db_card(
         f'<span class="tag">{html.escape(str(kw))}</span>'
         for kw in split_keywords(row_data.get("trigger_keywords", ""))[:12]
     )
-    label = source_status_label(row_data.get("source_status", "LEGACY_UNVERIFIED"))
+    label = source_status_label("AI_DIRECTOR" if is_director_theme(row_data) else row_data.get("source_status", "LEGACY_UNVERIFIED"))
     source_issue = str(row_data.get("source_issue", "")).strip()
     source_issue_html = f'<div class="small">생성 근거: {html.escape(source_issue)}</div>' if source_issue else ""
     created = str(row_data.get("created_date", "")).strip()
@@ -1123,6 +1124,7 @@ def fill_weekly_content_candidates(recommendations, *, run_id, api_key, model, g
 def source_status_label(value):
     mapping = {
         "AI_GENERATED": "AI 신규 생성",
+        "AI_DIRECTOR": "AI 디렉터",
         "HUMAN_APPROVED": "검증 테마",
         "USED": "실제 활용",
         "LEGACY_UNVERIFIED": "기존 임시 DB",
@@ -1624,8 +1626,12 @@ if st.session_state["page"] == "issue_db":
 
 
 elif st.session_state["page"] == "theme_db":
-    st.markdown("<h1>📚 테마 DB 전체 보기</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>테마 라이브러리</h1>", unsafe_allow_html=True)
     st.caption("저장된 테마를 검색하고 관리하세요. 문장으로 찾거나 새 기획을 시작하려면 AI 디렉터와 이야기할 수 있어요.")
+    if st.session_state.get("director_adoption_notice"):
+        st.success(st.session_state.pop("director_adoption_notice"))
+        if st.session_state.pop("director_refresh_required", False):
+            st.warning("저장은 완료됐어요. 다른 작업의 변경을 보호해 화면 자료는 유지했습니다. 앱을 새로 열면 최신 저장 자료를 확인할 수 있어요.")
 
     if st.button("← 추천 화면으로 돌아가기"):
         go_page("home")
@@ -1646,8 +1652,8 @@ elif st.session_state["page"] == "theme_db":
                 placeholder="예: 공포, 왕, 정주행, 팬 반응, 여름밤",
             )
         with status_column:
-            status_options = ["전체", "AI 신규 생성", "기존 임시 DB", "검증 테마", "실제 활용"]
-            selected_status = st.selectbox("테마 출처·상태", status_options)
+            status_options = ["전체", "AI 신규 생성", "AI 디렉터", "기존 임시 DB", "검증 테마", "실제 활용"]
+            selected_status = st.selectbox("테마 출처·상태", status_options, key="theme_library_source_filter")
         st.button("AI 디렉터와 새 기획 이야기하기 ↗", key="library_open_ai_director",
                   on_click=activate_director_tab, width="stretch")
 
@@ -1742,7 +1748,10 @@ elif st.session_state["page"] == "theme_db":
             st.warning(f"콘텐츠 후보 영구 저장 실패: {db_build_meta.get('github_error', '')}")
 
     filtered = themes.copy()
-    if selected_status != "전체":
+    director_mask = director_theme_mask(themes, load_recommendation_history(THEME_HISTORY_PATH, days=36500))
+    if selected_status == "AI 디렉터":
+        filtered = themes.loc[director_mask].iloc[::-1].copy()
+    elif selected_status != "전체":
         reverse_map = {
             "AI 신규 생성": "AI_GENERATED",
             "기존 임시 DB": "LEGACY_UNVERIFIED",
@@ -1750,6 +1759,8 @@ elif st.session_state["page"] == "theme_db":
             "실제 활용": "USED",
         }
         filtered = filtered[filtered["source_status"].astype(str) == reverse_map[selected_status]]
+        if selected_status == "AI 신규 생성":
+            filtered = filtered.loc[~director_mask.loc[filtered.index]]
 
     if str(quick_query or "").strip():
         shown = natural_theme_search(filtered, quick_query).copy()
@@ -1761,6 +1772,9 @@ elif st.session_state["page"] == "theme_db":
         st.markdown(f"### 전체 {len(themes)}개 중 {len(shown)}개 표시")
 
     for _, row in shown.iterrows():
+        if director_mask.loc[row.name]:
+            row = row.copy()
+            row["source_status"] = "AI_DIRECTOR"
         theme_id = str(row.get("theme_id", ""))
         render_theme_db_card(
             row,
@@ -1840,7 +1854,10 @@ else:
             openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
             github_config = get_github_writeback_config()
             persistent_ready = github_writeback_configured(github_config)
-            recommendation_runs = load_recommendation_runs(THEME_HISTORY_PATH, themes)
+            recommendation_runs = weekly_recommendation_runs(
+                load_recommendation_runs(THEME_HISTORY_PATH, themes),
+                history=load_recommendation_history(THEME_HISTORY_PATH, days=36500),
+            )
             selected_run = recommendation_runs[0] if recommendation_runs else {}
             recs = attach_content_candidates(selected_run.get("recommendations", []), selected_run.get("run_id", ""))
             meta = selected_run.get("meta", {})
@@ -1995,7 +2012,7 @@ else:
         )
 
     st.markdown(
-        f'<footer class="magazine-footer" data-release="director-direct-chat-v1" data-version="{html.escape(APP_VERSION, quote=True)}">'
+        f'<footer class="magazine-footer" data-release="director-library-v1" data-version="{html.escape(APP_VERSION, quote=True)}">'
         f'<span>B tv+ · THEME CURATOR · v{html.escape(APP_VERSION)}</span>'
         '<span>오늘의 이슈가 내일의 취향이 되도록.</span></footer>',
         unsafe_allow_html=True,

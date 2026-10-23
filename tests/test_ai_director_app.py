@@ -177,11 +177,19 @@ class DirectorAppTests(unittest.TestCase):
         result = {'status': 'success', 'theme_id': 'T999', 'run_id': 'director-run'}
         with patch('ai_director_view.adopt_director_draft', return_value=result) as adopt, app_fixture() as state:
             app = state['app']; app.session_state[SESSION_KEY] = session_with(draft())
+            app.session_state['theme_quick_search_input'] = '이전에 검색한 조건'
             app.run(); adopt.assert_not_called()
             app.button(key='director_adopt_draft-1').click().run()
             self.assertFalse(app.exception)
             adopt.assert_called_once()
             self.assertEqual(adopt.call_args.args[0]['draft_id'], 'draft-1')
+            self.assertEqual(app.session_state['page'], 'theme_db')
+            self.assertEqual(app.selectbox(key='theme_library_source_filter').value, 'AI 디렉터')
+            self.assertEqual(app.text_input(key='theme_quick_search_input').value, '')
+            self.assertFalse(any(button.key == 'director_open_saved' for button in app.button))
+            app.button(key='library_open_ai_director').click().run()
+            self.assertFalse(app.exception)
+            self.assertEqual(app.session_state['home_sections'], 'AI 디렉터')
             self.assertTrue(app.button(key='director_adopt_draft-1').disabled)
             self.assertEqual(app.button(key='director_adopt_draft-1').label, '채택 완료')
             app.run(); adopt.assert_called_once()

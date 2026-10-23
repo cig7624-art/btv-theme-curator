@@ -31,6 +31,9 @@ from llm_theme_generator import (
 )
 from theme_content_manager import CONTENT_COLUMNS
 
+DIRECTOR_SOURCE = 'AI_DIRECTOR'
+
+
 class DirectorStorageError(RuntimeError):
     """An actionable error whose message never includes tokens or API bodies."""
 
@@ -167,11 +170,18 @@ def _prepare(draft, themes, history, candidates, now, model, allow_similar):
     stamp = now.isoformat(timespec='seconds')
     day = now.date().isoformat()
     mask = updated['theme_id'].astype(str).eq(theme_id)
+    # The legacy helper allocates new IDs under AI_GENERATED. Only after that
+    # temporary preparation do we distinguish an adopted director theme from a
+    # weekly recommendation. Existing rows and retry paths are left untouched.
+    updated.loc[mask, 'source_status'] = DIRECTOR_SOURCE
     updated.loc[mask, 'approved_status'] = 'ADOPTED'
     updated.loc[mask, ['created_date', 'last_recommended_date']] = day
     updated.loc[mask, 'director_draft_id'] = str(draft['draft_id'])
     updated.loc[mask, 'director_adoption_key'] = key
     updated = updated.fillna('')
+    rec['recommendation_source'] = DIRECTOR_SOURCE
+    rec['theme'] = updated.loc[mask].iloc[0].to_dict()
+    new_history['recommendation_source'] = DIRECTOR_SOURCE
     new_history['recommended_date'] = day
     new_history['recommended_at'] = stamp
     new_history['director_draft_id'] = str(draft['draft_id'])
@@ -334,9 +344,9 @@ def adopt_director_draft(draft, *, themes, theme_path, history_path, content_pat
                 raise DirectorStorageError('GitHub 저장을 완료하지 못했습니다. 초안은 유지되며 다시 채택할 수 있습니다.')
         elif remotely_adopted:
             github_result = {'status': 'already_saved'}
-        local_status = _write_local(paths, payloads, before)
+        local_status = 'success' if payloads == before else _write_local(paths, payloads, before)
         status = 'already_adopted' if remotely_adopted or (already and not ready) else 'success' if ready else 'local_only'
-        recommendation = {'recommendation_source': 'AI_GENERATED', 'source_label': 'AI 디렉터 채택',
+        recommendation = {'recommendation_source': DIRECTOR_SOURCE, 'source_label': 'AI 디렉터 채택',
                           'theme': theme, 'rationale': draft['rationale'], 'source_issue_summary': draft.get('source_issue', ''),
                           'contents': deepcopy(draft['contents'])}
         return {'status': status, 'local_status': local_status, 'durable': bool(ready), 'theme_id': str(theme['theme_id']),

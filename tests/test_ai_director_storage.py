@@ -67,13 +67,23 @@ class DirectorStorageTests(unittest.TestCase):
         themes=pd.read_csv(self.paths['themes'],sep='|',dtype=str).fillna('')
         self.assertEqual(len(themes),2)
         self.assertEqual(themes.iloc[0]['operator_note'],'보존')
+        self.assertEqual(themes.iloc[-1]['source_status'],'AI_DIRECTOR')
+        self.assertEqual(themes.iloc[-1]['approved_status'],'ADOPTED')
+        self.assertEqual(themes.iloc[-1]['director_draft_id'],self.draft['draft_id'])
+        self.assertEqual(themes.iloc[-1]['director_adoption_key'],storage.director_adoption_key(self.draft))
         history=pd.read_csv(self.paths['history'],sep='|',dtype=str).fillna('')
         self.assertEqual(history.iloc[0]['run_id'],'old-run')
         self.assertEqual(history.iloc[0]['custom_history'],'이력 보존')
         self.assertEqual(history.iloc[-1]['recommended_at'],NOW.isoformat())
+        self.assertEqual(history.iloc[-1]['recommendation_source'],'AI_DIRECTOR')
+        self.assertTrue(history.iloc[-1]['run_id'].startswith('AI-DIRECTOR-'))
+        self.assertEqual(result['recommendations'][0]['recommendation_source'],'AI_DIRECTOR')
+        self.assertEqual(result['recommendations'][0]['source_label'],'AI 디렉터 채택')
+        self.assertEqual(result['recommendations'][0]['theme']['source_status'],'AI_DIRECTOR')
         runs=load_recommendation_runs(self.paths['history'],themes)
         self.assertEqual(runs[0]['run_id'],result['run_id'])
         self.assertEqual(runs[0]['recommendations'][0]['theme']['theme_name'],self.draft['theme_name'])
+        self.assertEqual(runs[0]['recommendations'][0]['recommendation_source'],'AI_DIRECTOR')
         frame=load_content_frame(self.paths['contents'])
         self.assertEqual(len(frame),11)
         self.assertEqual(len(content_map_for_scope(frame,'THEME_DB')['T051']),5)
@@ -94,6 +104,21 @@ class DirectorStorageTests(unittest.TestCase):
         self.draft['theme_name']='되돌아온 심판자들의 잔혹한 재회'
         self.assertNotEqual(storage.director_adoption_key(self.draft),key)
         self.assertNotEqual(self.adopt()['theme_id'],first['theme_id'])
+
+    def test_legacy_director_retry_preserves_old_source_labels_without_rewriting(self):
+        first=self.adopt()
+        for name, column in [('themes','source_status'),('history','recommendation_source')]:
+            frame=pd.read_csv(self.paths[name],sep='|',dtype=str).fillna('')
+            frame.loc[frame['theme_id'].eq(first['theme_id']),column]='AI_GENERATED'
+            self.paths[name].write_bytes(csvbytes(frame))
+        before=self.before()
+        with patch('ai_director_storage._write_local') as write:
+            retry=self.adopt()
+        write.assert_not_called()
+        self.assertEqual(retry['status'],'already_adopted')
+        self.assertEqual(retry['theme']['source_status'],'AI_GENERATED')
+        self.assertEqual(retry['recommendations'][0]['recommendation_source'],'AI_DIRECTOR')
+        self.assertEqual(self.before(),before)
 
     def test_same_accepted_name_does_not_overwrite_previous_version(self):
         self.adopt(); before=self.before()
@@ -154,6 +179,14 @@ class DirectorStorageTests(unittest.TestCase):
         self.assertEqual(set(captured),{'themes','history','contents'})
         themes=pd.read_csv(io.BytesIO(captured['themes']),sep='|').fillna('')
         self.assertEqual(set(themes.theme_id),{'T050','T099','T100'})
+        self.assertEqual(themes.loc[themes.theme_id.eq('T100'),'source_status'].iloc[0],'AI_DIRECTOR')
+        original=themes.loc[themes.theme_id.eq('T050')].iloc[0]
+        self.assertEqual({key:original[key] for key in self.themes.columns},self.themes.iloc[0].to_dict())
+        history=pd.read_csv(io.BytesIO(captured['history']),sep='|',dtype=str).fillna('')
+        self.assertEqual(history.iloc[-1]['recommendation_source'],'AI_DIRECTOR')
+        self.assertEqual({key:history.iloc[0][key] for key in self.history.columns},self.history.iloc[0].to_dict())
+        candidates=pd.read_csv(io.BytesIO(captured['contents']),sep='|',dtype=str).fillna('')
+        self.assertEqual({key:candidates.iloc[0][key] for key in self.candidates.columns},self.candidates.iloc[0].to_dict())
 
     def test_concurrent_remote_edit_is_rejected_before_write(self):
         snapshot=self.remote()
