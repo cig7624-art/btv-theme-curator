@@ -10,7 +10,8 @@ from collections.abc import Mapping, MutableMapping
 
 
 SESSION_KEY = "api_response_usage"
-FEATURES = frozenset({"director", "weekly_themes", "content_candidates", "theme_search"})
+FEATURES = frozenset({"director", "weekly_themes", "content_candidates", "theme_search",
+                      "media_analysis", "media_research"})
 
 
 def _counter(value):

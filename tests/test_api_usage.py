@@ -97,7 +97,7 @@ class ApiUsageTests(unittest.TestCase):
                 with self.subTest(feature=feature), self.assertRaises(ThemeGenerationError):
                     call()
             self.assertEqual(read_session_usage(state)["response_count"], 4)
-            self.assertTrue(all(count == 1 for count in read_session_usage(state)["features"].values()))
+            self.assertTrue(all(read_session_usage(state)["features"][feature] == 1 for feature, _ in calls))
             sdk.responses.parse.side_effect = RuntimeError("connection failed")
             for feature, call in calls:
                 with self.subTest(failed_feature=feature), self.assertRaises(ThemeGenerationError):
