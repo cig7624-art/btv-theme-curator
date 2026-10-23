@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-10-23T11:44:17+00:00",
+  "collected_at": "2026-10-23T11:52:06+00:00",
   "sources": [
     {
       "id": "netflix_ir",
@@ -8,8 +8,8 @@
       "company": "Netflix",
       "url": "https://ir.netflix.net/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-23T11:44:17+00:00",
-      "last_success_at": "2026-10-23T11:44:17+00:00",
+      "last_checked_at": "2026-10-23T11:52:06+00:00",
+      "last_success_at": "2026-10-23T11:52:06+00:00",
       "error_code": "",
       "item_count": 3,
       "retained_item_count": 3
@@ -19,10 +19,10 @@
       "name": "The Walt Disney Company Investor Relations",
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/investor-relations/",
-      "status": "ok",
-      "last_checked_at": "2026-10-23T11:44:17+00:00",
-      "last_success_at": "2026-10-23T11:44:17+00:00",
-      "error_code": "",
+      "status": "partial",
+      "last_checked_at": "2026-10-23T11:52:06+00:00",
+      "last_success_at": "2026-10-23T11:52:06+00:00",
+      "error_code": "some_documents_unavailable",
       "item_count": 2,
       "retained_item_count": 2
     },
@@ -32,11 +32,11 @@
       "company": "Amazon",
       "url": "https://ir.aboutamazon.com/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-23T11:44:17+00:00",
-      "last_success_at": "2026-10-23T11:44:17+00:00",
+      "last_checked_at": "2026-10-23T11:52:06+00:00",
+      "last_success_at": "2026-10-23T11:52:06+00:00",
       "error_code": "",
-      "item_count": 1,
-      "retained_item_count": 1
+      "item_count": 3,
+      "retained_item_count": 3
     },
     {
       "id": "comcast_ir",
@@ -44,7 +44,7 @@
       "company": "Comcast",
       "url": "https://www.cmcsa.com/financial-information/quarterly-results",
       "status": "unavailable",
-      "last_checked_at": "2026-10-23T11:44:17+00:00",
+      "last_checked_at": "2026-10-23T11:52:06+00:00",
       "last_success_at": "",
       "error_code": "http_403",
       "item_count": 0,
@@ -56,8 +56,8 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/feed/",
       "status": "ok",
-      "last_checked_at": "2026-10-23T11:44:17+00:00",
-      "last_success_at": "2026-10-23T11:44:17+00:00",
+      "last_checked_at": "2026-10-23T11:52:06+00:00",
+      "last_success_at": "2026-10-23T11:52:06+00:00",
       "error_code": "",
       "item_count": 3,
       "retained_item_count": 3
@@ -68,7 +68,7 @@
       "company": "Amazon",
       "url": "https://www.aboutamazon.com/news/entertainment",
       "status": "unavailable",
-      "last_checked_at": "2026-10-23T11:44:17+00:00",
+      "last_checked_at": "2026-10-23T11:52:06+00:00",
       "last_success_at": "",
       "error_code": "no_business_documents",
       "item_count": 0,
@@ -80,7 +80,7 @@
       "company": "SKT",
       "url": "https://news.sktelecom.com/feed",
       "status": "unavailable",
-      "last_checked_at": "2026-10-23T11:44:17+00:00",
+      "last_checked_at": "2026-10-23T11:52:06+00:00",
       "last_success_at": "",
       "error_code": "no_business_documents",
       "item_count": 0,
@@ -743,7 +743,413 @@
         }
       ],
       "content_hash": "d5eed575231d5cf16dae13543385bcbda71ba4d2178ed1d732d90858850e4d48",
-      "last_checked_at": "2026-10-23T11:44:17+00:00"
+      "last_checked_at": "2026-10-23T11:44:17+00:00",
+      "published_at_source": "pdf_publication_unconfirmed"
+    },
+    {
+      "id": "mi-f225fce079cd30efb6",
+      "source_id": "amazon_ir",
+      "company": "Amazon",
+      "topic": "earnings_strategy",
+      "title": "Amazon.com Announces Second Quarter Results",
+      "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx",
+      "published_at": "2026-07-30",
+      "collected_at": "2026-10-23T11:52:06+00:00",
+      "country": "global",
+      "period": "",
+      "source_name": "Amazon Investor Relations",
+      "source_type": "earnings",
+      "excerpt": "Net sales increased 20% year-over-year Operating income was $27.5 billion, up 43% year-over-year AWS net sales increased 37%—its fastest growth in 18 quarters—to a $169 billion annualized revenue run rate\nSEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its second quarter ended June 30, 2026.\nNet sales increased 20% to $200.6 billion in the second quarter, compared with",
+      "body_text": "Net sales increased 20% year-over-year Operating income was $27.5 billion, up 43% year-over-year AWS net sales increased 37%—its fastest growth in 18 quarters—to a $169 billion annualized revenue run rate\nSEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its second quarter ended June 30, 2026.\nNet sales increased 20% to $200.6 billion in the second quarter, compared with $167.7 billion in second quarter 2025. Excluding the $0.1 billion favorable impact from year-over-year changes in foreign exchange rates throughout the quarter, net sales increased 20% compared with second quarter 2025. North America segment sales increased 16% year-over-year to $116.2 billion. International segment sales increased 15% year-over-year to $42.2 billion. AWS segment sales increased 37% year-over-year to $42.2 billion.\nNorth America segment sales increased 16% year-over-year to $116.2 billion.\nInternational segment sales increased 15% year-over-year to $42.2 billion.\nAWS segment sales increased 37% year-over-year to $42.2 billion.\nOperating income increased to $27.5 billion in the second quarter, compared with $19.2 billion in second quarter 2025. North America segment operating income was $9.1 billion, compared with $7.5 billion in second quarter 2025. International segment operating income was $1.7 billion, compared with $1.5 billion in second quarter 2025. AWS segment operating income was $16.6 billion, compared with $10.2 billion in second quarter 2025.\nNorth America segment operating income was $9.1 billion, compared with $7.5 billion in second quarter 2025.\nInternational segment operating income was $1.7 billion, compared with $1.5 billion in second quarter 2025.\nAWS segment operating income was $16.6 billion, compared with $10.2 billion in second quarter 2025.\nNet income increased to $62.6 billion in the second quarter, or $5.75 per diluted share, compared with $18.2 billion, or $1.68 per diluted share, in second quarter 2025. Second quarter 2026 net income includes non-operating pre-tax other income of $53.4 billion, primarily from our investments in Anthropic.\nSecond quarter 2026 net income includes non-operating pre-tax other income of $53.4 billion, primarily from our investments in Anthropic.\nOperating cash flow increased 33% to $161.4 billion for the trailing twelve months, compared with $121.1 billion for the trailing twelve months ended June 30, 2025.\nFree cash flow decreased to an outflow of $7.6 billion for the trailing twelve months, driven primarily by a year-over-year increase of $66.1 billion in purchases of property and equipment, net of proceeds from sales and incentives. This increase primarily reflects investments in artificial intelligence. This compares to free cash flow inflow of $18.2 billion for the trailing twelve months ended June 30, 2025.\n“AWS is booming, growing 36.7% year-over-year in Q2—our fastest growth in 18 quarters—and our AI and Chips businesses each eclipsed run rates of more than $25 billion,” said Andy Jassy, President and CEO, Amazon. “In Stores, we again set record delivery speeds for Prime members in the first half of the year—over 40% more items delivered same-day or overnight, with Grocery and Everyday Essentials growing meaningfully faster than the rest of the business. And, Advertising had another strong quarter with 26% year-over-year growth. There’s a lot to be excited about, and we have much more coming for customers in the second half of the year and beyond.”\nSome other highlights since the company’s last earnings announcement include that Amazon:\nExceeded a $25 billion annual revenue run rate for AWS’s AI business, growing triple-digit percentages year-over-year.\nExceeded a $25 billion annual revenue run rate for its chips business, growing triple-digit percentages year-over-year.\nContinued gaining momentum with Trainium, with the two leading AI labs in the world, Anthropic and OpenAI, making multi-year, multi-gigawatt commitments; an increasing number of AI start-ups adopting Trainium, including unicorns like NEURA Robotics and Odyssey; and commitments from other startups like TwelveLabs, Decart, Poolside, Karakuri, Inc., Metagenomi Therapeutics, Inc., NetoAI, and Splash Music, as well as larger companies like Uber and Pinterest.\nReleased Graviton5 into general availability. Graviton delivers up to 30 to 40% better price-performance than comparable instances, and Graviton5 delivers up to 25% better compute performance than Graviton4. Graviton is used by 98% of the top 1,000 EC2 customers, revenue commitments have increased nearly 3x quarter-over-quarter, and Graviton5 is growing nearly 2x faster than Graviton4 did.\nAdded 10+ fully managed foundation models to Amazon Bedrock, including OpenAI’s GPT-5.6, Anthropic’s Claude Opus 5, Google DeepMind’s Gemma 4, and SpaceXAI’s Grok 4.3. Amazon Bedrock provides the best selection of leading models, at superior performance, and with the governance and security controls that companies need, and it’s continuing to grow quickly—hundreds of thousands of customers now use Bedrock, more customers were added in the last six months than in the first two years after launch, and customers spent more in Q2 than all prior quarters combined.\nPreviewed AWS Continuum, which discovers, prioritizes, validates, and remediates code vulnerabilities. It starts by ingesting the backlog of vulnerabilities a team already has, and then leverages the new frontier models to run comprehensive scans. Continuum uses agents and each company’s own business context to prioritize what matters, then validates vulnerabilities in a sandbox and recommends the fix.\nAdded new capabilities to Bedrock AgentCore, which provides the building blocks that companies need to quickly and securely deploy and operate agents at scale. New capabilities include Payments (so agents can execute transactions autonomously), Web Search (to ground agents’ knowledge without having to leave AWS), and Harness, which further speeds up how fast customers can stitch together all the infrastructure they need for their agents.\nMade Amazon Quick—an intelligent AI work companion that helps manage, search, and automate digital workloads across email, calendar, local or cloud files, and custom workflows—even more capable, adding autonomous agents that customers set up in plain language to run continuously in the background and carry out multi-step tasks; a personalized activity feed that pulls email, messages, calendar, and tasks into one prioritized view; and 16 new integrations, including Adobe, Moody’s, and Snowflake. Quick manages across leading SaaS tools like Slack, Salesforce, Jira, Teams, and ServiceNow; enforces a company’s existing access controls; and takes actions like scheduling meetings, drafting and sending email, updating a CRM record, building a dashboard, and more.\nMade its spec-drive coding agent, Kiro, available on iOS so developers can now kick off a new project, monitor progress, steer an agent, and interact with Kiro sessions from their phone, desktop, command line, and the web. Kiro is up to 50% more cost-effective than alternatives and tripled in usage quarter-over-quarter.\nAdded new capabilities to AWS DevOps Agent, an always-available software operations teammate that helps developers ship software safely and reliably, including Release Management to perform readiness reviews of code changes and autonomously test releases to spot potential issues before they go live.\nLaunched serverless infrastructure for agentic AI that scales on demand, including: Lambda MicroVMs, a new flavor of the popular AWS Lambda serverless compute service that not only offers instant start times with the ability to scale all the way up or down depending on demand, but also now provides a stateful runtime with sessions that can last up to 8 hours—ideal for long-running agent loops, multi-step pipelines, or persistent database engines. Next-generation OpenSearch Serverless, which gives agents fast access to search across massive volumes of data, scales capacity up to 20x faster than the previous generation, and offers up to 60% cost savings versus provisioning for peak. Purpose-built log analytics engine for Amazon OpenSearch Service, designed to keep pace with the vast increase in logs being produced by agentic workloads. It delivers up to 4x better price performance compared to the existing general-purpose engine, up to 2x higher data ingestion on the same hardware, and up to 2x faster analytical queries, while retaining up to 3x more data at the same cost—enabling teams to retain and analyze more observability data without choosing between insight and budget.\nLambda MicroVMs, a new flavor of the popular AWS Lambda serverless compute service that not only offers instant start times with the ability to scale all the way up or down depending on demand, but also now provides a stateful runtime with sessions that can last up to 8 hours—ideal for long-running agent loops, multi-step pipelines, or persistent database engines.\nNext-generation OpenSearch Serverless, which gives agents fast access to search across massive volumes of data, scales capacity up to 20x faster than the previous generation, and offers up to 60% cost savings versus provisioning for peak.\nPurpose-built log analytics engine for Amazon OpenSearch Service, designed to keep pace with the vast increase in logs being produced by agentic workloads. It delivers up to 4x better price performance compared to the existing general-purpose engine, up to 2x higher data ingestion on the same hardware, and up to 2x faster analytical queries, while retaining up to 3x more data at the same cost—enabling teams to retain and analyze more observability data without choosing between insight and budget.\nAnnounced an investment of $1 billion to create AWS Forward Deployed Engineering, a team of AI engineers embedded directly with customers to co-develop and deploy agentic AI solutions in days rather than months. Early customers include Allen Institute, Cox Automotive, the NBA, the NFL, Ricoh, and Southwest Airlines.\nAnnounced general availability of AWS Secret Cloud for Industry, giving defense contractors a faster, more secure path to classified innovation, with Northrop Grumman first to run classified workloads on the platform, and committed up to $1 billion in cloud credits to accelerate U.S. Intelligence Community cloud migration and modernization.\nAnnounced its global data centers are over 7x more water-efficient than the industry average. Amazon also reached 75% progress toward its goal to be water positive across global data center operations by 2030, and achieved water-positive status across its direct operations in India ahead of its 2027 target.\nAnnounced new AWS agreements with Warner Bros. Discovery, Vodafone, Siemens Energy, Ryanair, Pinterest, Snowflake, Moody’s, Danske Bank, WNBA, Pennymac, Fiserv, WPP Enterprise Solutions, Vonage, Recursive, fal, Chai Discovery, Odyssey, TwelveLabs, Reactor, OpenRouter, Dash0, New York State Office of Information Technology Services, State of Iowa, University of South Florida, and The University of Utah.\nContinued to expand its ultra-fast delivery service, Amazon Now, which offers delivery in 30 minutes or less on thousands of everyday essentials—adding 80 new cities and towns across the U.S. and several major cities in Egypt. Amazon Now is available in nine countries and over 250 cities and towns globally, and customers love it, with over 80% growth in gross sales and units sold quarter-over-quarter and over 60% more customers served quarter-over-quarter.\nAdded millions of new products to its selection, including over 700,000 from notable brands like ADT Blu, Bobbi Brown, BROWN GIRL Jane, CR7 Underwear, LeGer, Mamonde, OLIVA COSMETICS, Rabanne, and Ted Baker.\nBrought together Rufus and Alexa+ into Alexa for Shopping, an agentic AI shopping assistant that offers personalized recommendations, product comparisons, price history, and the ability to automate shopping through features like Price Alerts and Auto-Buy. Worldwide customer adoption and engagement accelerated in Q2, with active users close to doubling and interactions up over 5x year-over-year.\nLaunched Amazon Supply Chain Services so any business can move, store, and deliver everything from raw materials to finished products using the same supply chain that supports Amazon, with Procter & Gamble, 3M, Lands’ End, and American Eagle Outfitters among the first customers.\nReached $60 billion in annualized gross sales for Amazon Business and continued to expand selection—adding nearly 30% more items compared to last year, including Same-Day Delivery of fresh groceries for businesses in 2,300+ U.S. cities and towns.\nIntroduced the next-generation of Proteus, an autonomous robot that assists Amazon fulfillment center employees by moving goods up to 1,300 pounds, reducing heavy lifting and further increasing safety. Using AI, employees can now direct Proteus with plain, conversational language.\nGrew the number of new customers for Amazon Pharmacy by more than 2x in the first six months of the year, and same-day prescription deliveries nearly 5x. Also saved customers nearly $250 million so far this year in out-of-pocket costs, up more than 400% year-over-year, through manufacturer discounts applied automatically on an expanded selection of widely prescribed medications.\nExpanded Ads Agent—an AI-powered tool that simplifies planning, launching, and managing advertising campaigns and turns hours of setup and targeting into minutes—to 11 new countries so far this year. Advertisers using Ads Agent see 8% lower cost-per-impression and 6% lower cost-per-acquisition than those that don’t use it.\nExpanded Alexa+ to Germany, Austria, France, and Brazil, with hundreds of millions of customers now using new Alexa experiences, and that number growing every month. Alexa continues to drive meaningful momentum for the business, including in the U.S., where customers who use Alexa for Shopping spend an average of over 40% more per order than those who don’t, and customers who have tried Alexa+ are signing up for Prime at a nearly 25% higher rate.\nDrew 36 million viewers globally for the series premiere of Off Campus on Prime Video in its first 12 days, becoming Prime Video’s No. 3 top-viewed series debut ever.\nDelivered strong viewership for inaugural season of NBA on Prime Video, with a peak of 6.5 million U.S. viewers for Game 7 of the Eastern Conference Semifinals (outperforming Game 7 on broadcast in 2025). In Europe, viewership of the NBA more than doubled year-over-year on Prime Video, with the highest average viewership on record.\nAveraged 2.3 million viewers during the second season of NASCAR on Prime Video and attracted the youngest audience the last two years among NASCAR broadcasters since 2017.\nCompleted four additional launches for Amazon Leo, its low Earth orbit satellite network, bringing the total constellation to nearly 400 satellites in orbit—enough to begin initial satellite internet service this year.\nReceived approval from the National Highway Traffic Safety Administration (Part 555 Exemption) for Zoox to charge for rides—the first purpose-built robotaxi to receive this exemption—paving the way for Zoox to begin offering paid commercial service to customers.\nSupported relief efforts following earthquakes in Venezuela with its Amazon Disaster Relief program, donating and delivering more than 650,000 emergency supplies to more than a dozen nonprofits and establishing weekly humanitarian relief flights to Caracas in a first-of-its-kind collaboration with Airlink, the U.S. State Department, and World Food Programme, delivering approximately 120 tons of supplies.\nFinancial Guidance The following forward-looking statements reflect Amazon.com’s expectations as of July 30, 2026, and are subject to substantial uncertainty. Our results are inherently unpredictable and may be materially affected by many factors, such as fluctuations in foreign exchange rates and energy prices, changes in global economic and geopolitical conditions, tariff and trade policies, resource and supply volatility, including for memory chips, and customer demand and spending (including the impact of recessionary fears), inflation, interest rates, regional labor market constraints, world events, the rate of growth of the internet, online commerce, cloud services, and new and emerging technologies, and the various factors detailed below.\nNet sales are expected to be between $197.0 billion and $202.0 billion, or to grow between 9% and 12% compared with third quarter 2025. Excluding the impact of Prime Day in both 2025 and 2026, third quarter 2026 year-over-year growth would be nearly 400 basis points higher. This guidance anticipates an unfavorable impact of approximately 80 basis points from foreign exchange rates.\nOperating income is expected to be between $22.5 billion and $26.5 billion, compared with $17.4 billion in third quarter 2025.\nThis guidance assumes, among other things, no impact from energy derivative contract remeasurements, and that no additional business acquisitions, restructurings, or legal settlements are concluded.\nConference Call Information A conference call will be webcast live today at 2:00 p.m. PT/5:00 p.m. ET, and will be available for at least three months at amazon.com/ir. This call will contain forward-looking statements and other material information regarding the Company’s financial and operating results.\nForward-Looking Statements These forward-looking statements are inherently difficult to predict. Actual results and outcomes could differ materially for a variety of reasons, including, in addition to the factors discussed above, the amount that Amazon.com invests in new business opportunities and the timing of those investments, the mix of products and services sold to customers, the mix of net sales derived from products as compared with services, the extent to which we owe income or other taxes, competition, management of growth, potential fluctuations in operating results, international growth and expansion, the outcomes of claims, litigation, government investigations, and other proceedings, fulfillment, sortation, delivery, and data center optimization, risks of inventory management, variability in demand, the degree to which the Company enters into, maintains, and develops commercial agreements, proposed and completed acquisitions and strategic transactions, payments risks, and risks of fulfillment throughput and productivity. Other risks and uncertainties include, among others, risks related to new products, services, and technologies, security incidents, system interruptions, government regulation and taxation, and fraud. In addition, global economic and geopolitical conditions and additional or unforeseen circumstances, developments, or events may give rise to or amplify many of these risks. More information about factors that potentially could affect Amazon.com’s f\nAdditional Information Our investor relations website is amazon.com/ir and we encourage investors to use it as a way of easily finding information about us. We promptly make available on this website, free of charge, the reports that we file or furnish with the SEC, corporate governance information (including our Code of Business Conduct and Ethics), and select press releases, which may contain material information about us, and you may subscribe to be notified of new information posted to this site.\nAbout Amazon Amazon is guided by four principles: customer obsession rather than competitor focus, passion for invention, commitment to operational excellence, and long-term thinking. Amazon strives to be Earth’s Most Customer-Centric Company, Earth’s Best Employer, and Earth’s Safest Place to Work. Customer reviews, 1-Click shopping, personalized recommendations, Prime, Fulfillment by Amazon, AWS, Kindle Direct Publishing, Kindle, Career Choice, Fire tablets, Fire TV, Amazon Echo, Alexa, Just Walk Out technology, Amazon Studios, and The Climate Pledge are some of the things pioneered by Amazon. For more information, visit amazon.com/about and follow @AmazonNews.\nAMAZON.COM, INC. Consolidated Statements of Cash Flows (in millions) (unaudited)\nConsolidated Statements of Cash Flows\nCASH, CASH EQUIVALENTS, AND RESTRICTED CASH, BEGINNING OF PERIOD\nAdjustments to reconcile net income to net cash from operating activities:\nDepreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other\nNon-operating expense (income), net\nChanges in operating assets and liabilities:",
+      "image_url": "",
+      "evidence": [
+        {
+          "id": "mi-f225fce079cd30efb6-p001",
+          "text": "Net sales increased 20% year-over-year Operating income was $27.5 billion, up 43% year-over-year AWS net sales increased 37%—its fastest growth in 18 quarters—to a $169 billion annualized revenue run rate",
+          "locator": "p001",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p002",
+          "text": "SEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its second quarter ended June 30, 2026.",
+          "locator": "p002",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p003",
+          "text": "Net sales increased 20% to $200.6 billion in the second quarter, compared with $167.7 billion in second quarter 2025. Excluding the $0.1 billion favorable impact from year-over-year changes in foreign exchange rates throughout the quarter, net sales increased 20% compared with second quarter 2025. North America segment sales increased 16% year-over-year to $116.2 billion. International segment sales increased 15% year-over-year to $42.2 billion. AWS segment sales increased 37% year-over-year to $42.2 billion.",
+          "locator": "p003",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p004",
+          "text": "North America segment sales increased 16% year-over-year to $116.2 billion.",
+          "locator": "p004",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p005",
+          "text": "International segment sales increased 15% year-over-year to $42.2 billion.",
+          "locator": "p005",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p006",
+          "text": "AWS segment sales increased 37% year-over-year to $42.2 billion.",
+          "locator": "p006",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p007",
+          "text": "Operating income increased to $27.5 billion in the second quarter, compared with $19.2 billion in second quarter 2025. North America segment operating income was $9.1 billion, compared with $7.5 billion in second quarter 2025. International segment operating income was $1.7 billion, compared with $1.5 billion in second quarter 2025. AWS segment operating income was $16.6 billion, compared with $10.2 billion in second quarter 2025.",
+          "locator": "p007",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p008",
+          "text": "North America segment operating income was $9.1 billion, compared with $7.5 billion in second quarter 2025.",
+          "locator": "p008",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p009",
+          "text": "International segment operating income was $1.7 billion, compared with $1.5 billion in second quarter 2025.",
+          "locator": "p009",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p010",
+          "text": "AWS segment operating income was $16.6 billion, compared with $10.2 billion in second quarter 2025.",
+          "locator": "p010",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p011",
+          "text": "Net income increased to $62.6 billion in the second quarter, or $5.75 per diluted share, compared with $18.2 billion, or $1.68 per diluted share, in second quarter 2025. Second quarter 2026 net income includes non-operating pre-tax other income of $53.4 billion, primarily from our investments in Anthropic.",
+          "locator": "p011",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p012",
+          "text": "Second quarter 2026 net income includes non-operating pre-tax other income of $53.4 billion, primarily from our investments in Anthropic.",
+          "locator": "p012",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p013",
+          "text": "Operating cash flow increased 33% to $161.4 billion for the trailing twelve months, compared with $121.1 billion for the trailing twelve months ended June 30, 2025.",
+          "locator": "p013",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p014",
+          "text": "Free cash flow decreased to an outflow of $7.6 billion for the trailing twelve months, driven primarily by a year-over-year increase of $66.1 billion in purchases of property and equipment, net of proceeds from sales and incentives. This increase primarily reflects investments in artificial intelligence. This compares to free cash flow inflow of $18.2 billion for the trailing twelve months ended June 30, 2025.",
+          "locator": "p014",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p015",
+          "text": "“AWS is booming, growing 36.7% year-over-year in Q2—our fastest growth in 18 quarters—and our AI and Chips businesses each eclipsed run rates of more than $25 billion,” said Andy Jassy, President and CEO, Amazon. “In Stores, we again set record delivery speeds for Prime members in the first half of the year—over 40% more items delivered same-day or overnight, with Grocery and Everyday Essentials growing meaningfully faster than the rest of the business. And, Advertising had another strong quarter with 26% year-over-year growth. There’s a lot to be excited about, and we have much more coming for customers in the second half of the year and beyond.”",
+          "locator": "p015",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p016",
+          "text": "Some other highlights since the company’s last earnings announcement include that Amazon:",
+          "locator": "p016",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p017",
+          "text": "Exceeded a $25 billion annual revenue run rate for AWS’s AI business, growing triple-digit percentages year-over-year.",
+          "locator": "p017",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p018",
+          "text": "Exceeded a $25 billion annual revenue run rate for its chips business, growing triple-digit percentages year-over-year.",
+          "locator": "p018",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p019",
+          "text": "Continued gaining momentum with Trainium, with the two leading AI labs in the world, Anthropic and OpenAI, making multi-year, multi-gigawatt commitments; an increasing number of AI start-ups adopting Trainium, including unicorns like NEURA Robotics and Odyssey; and commitments from other startups like TwelveLabs, Decart, Poolside, Karakuri, Inc., Metagenomi Therapeutics, Inc., NetoAI, and Splash Music, as well as larger companies like Uber and Pinterest.",
+          "locator": "p019",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p020",
+          "text": "Released Graviton5 into general availability. Graviton delivers up to 30 to 40% better price-performance than comparable instances, and Graviton5 delivers up to 25% better compute performance than Graviton4. Graviton is used by 98% of the top 1,000 EC2 customers, revenue commitments have increased nearly 3x quarter-over-quarter, and Graviton5 is growing nearly 2x faster than Graviton4 did.",
+          "locator": "p020",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p021",
+          "text": "Added 10+ fully managed foundation models to Amazon Bedrock, including OpenAI’s GPT-5.6, Anthropic’s Claude Opus 5, Google DeepMind’s Gemma 4, and SpaceXAI’s Grok 4.3. Amazon Bedrock provides the best selection of leading models, at superior performance, and with the governance and security controls that companies need, and it’s continuing to grow quickly—hundreds of thousands of customers now use Bedrock, more customers were added in the last six months than in the first two years after launch, and customers spent more in Q2 than all prior quarters combined.",
+          "locator": "p021",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p022",
+          "text": "Previewed AWS Continuum, which discovers, prioritizes, validates, and remediates code vulnerabilities. It starts by ingesting the backlog of vulnerabilities a team already has, and then leverages the new frontier models to run comprehensive scans. Continuum uses agents and each company’s own business context to prioritize what matters, then validates vulnerabilities in a sandbox and recommends the fix.",
+          "locator": "p022",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p023",
+          "text": "Added new capabilities to Bedrock AgentCore, which provides the building blocks that companies need to quickly and securely deploy and operate agents at scale. New capabilities include Payments (so agents can execute transactions autonomously), Web Search (to ground agents’ knowledge without having to leave AWS), and Harness, which further speeds up how fast customers can stitch together all the infrastructure they need for their agents.",
+          "locator": "p023",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p024",
+          "text": "Made Amazon Quick—an intelligent AI work companion that helps manage, search, and automate digital workloads across email, calendar, local or cloud files, and custom workflows—even more capable, adding autonomous agents that customers set up in plain language to run continuously in the background and carry out multi-step tasks; a personalized activity feed that pulls email, messages, calendar, and tasks into one prioritized view; and 16 new integrations, including Adobe, Moody’s, and Snowflake. Quick manages across leading SaaS tools like Slack, Salesforce, Jira, Teams, and ServiceNow; enforces a company’s existing access controls; and takes actions like scheduling meetings, drafting and sending email, updating a CRM record, building a dashboard, and more.",
+          "locator": "p024",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p025",
+          "text": "Made its spec-drive coding agent, Kiro, available on iOS so developers can now kick off a new project, monitor progress, steer an agent, and interact with Kiro sessions from their phone, desktop, command line, and the web. Kiro is up to 50% more cost-effective than alternatives and tripled in usage quarter-over-quarter.",
+          "locator": "p025",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p026",
+          "text": "Added new capabilities to AWS DevOps Agent, an always-available software operations teammate that helps developers ship software safely and reliably, including Release Management to perform readiness reviews of code changes and autonomously test releases to spot potential issues before they go live.",
+          "locator": "p026",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p027",
+          "text": "Launched serverless infrastructure for agentic AI that scales on demand, including: Lambda MicroVMs, a new flavor of the popular AWS Lambda serverless compute service that not only offers instant start times with the ability to scale all the way up or down depending on demand, but also now provides a stateful runtime with sessions that can last up to 8 hours—ideal for long-running agent loops, multi-step pipelines, or persistent database engines. Next-generation OpenSearch Serverless, which gives agents fast access to search across massive volumes of data, scales capacity up to 20x faster than the previous generation, and offers up to 60% cost savings versus provisioning for peak. Purpose-built log analytics engine for Amazon OpenSearch Service, designed to keep pace with the vast increase in logs being produced by agentic workloads. It delivers up to 4x better price performance compared to the existing general-purpose engine, up to 2x higher data ingestion on the same hardware, and up to 2x faster analytical queries, while retaining up to 3x more data at the same cost—enabling teams to retain and analyze more observability data without choosing between insight and budget.",
+          "locator": "p027",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p028",
+          "text": "Lambda MicroVMs, a new flavor of the popular AWS Lambda serverless compute service that not only offers instant start times with the ability to scale all the way up or down depending on demand, but also now provides a stateful runtime with sessions that can last up to 8 hours—ideal for long-running agent loops, multi-step pipelines, or persistent database engines.",
+          "locator": "p028",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p029",
+          "text": "Next-generation OpenSearch Serverless, which gives agents fast access to search across massive volumes of data, scales capacity up to 20x faster than the previous generation, and offers up to 60% cost savings versus provisioning for peak.",
+          "locator": "p029",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p030",
+          "text": "Purpose-built log analytics engine for Amazon OpenSearch Service, designed to keep pace with the vast increase in logs being produced by agentic workloads. It delivers up to 4x better price performance compared to the existing general-purpose engine, up to 2x higher data ingestion on the same hardware, and up to 2x faster analytical queries, while retaining up to 3x more data at the same cost—enabling teams to retain and analyze more observability data without choosing between insight and budget.",
+          "locator": "p030",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p031",
+          "text": "Announced an investment of $1 billion to create AWS Forward Deployed Engineering, a team of AI engineers embedded directly with customers to co-develop and deploy agentic AI solutions in days rather than months. Early customers include Allen Institute, Cox Automotive, the NBA, the NFL, Ricoh, and Southwest Airlines.",
+          "locator": "p031",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p032",
+          "text": "Announced general availability of AWS Secret Cloud for Industry, giving defense contractors a faster, more secure path to classified innovation, with Northrop Grumman first to run classified workloads on the platform, and committed up to $1 billion in cloud credits to accelerate U.S. Intelligence Community cloud migration and modernization.",
+          "locator": "p032",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p033",
+          "text": "Announced its global data centers are over 7x more water-efficient than the industry average. Amazon also reached 75% progress toward its goal to be water positive across global data center operations by 2030, and achieved water-positive status across its direct operations in India ahead of its 2027 target.",
+          "locator": "p033",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p034",
+          "text": "Announced new AWS agreements with Warner Bros. Discovery, Vodafone, Siemens Energy, Ryanair, Pinterest, Snowflake, Moody’s, Danske Bank, WNBA, Pennymac, Fiserv, WPP Enterprise Solutions, Vonage, Recursive, fal, Chai Discovery, Odyssey, TwelveLabs, Reactor, OpenRouter, Dash0, New York State Office of Information Technology Services, State of Iowa, University of South Florida, and The University of Utah.",
+          "locator": "p034",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p035",
+          "text": "Continued to expand its ultra-fast delivery service, Amazon Now, which offers delivery in 30 minutes or less on thousands of everyday essentials—adding 80 new cities and towns across the U.S. and several major cities in Egypt. Amazon Now is available in nine countries and over 250 cities and towns globally, and customers love it, with over 80% growth in gross sales and units sold quarter-over-quarter and over 60% more customers served quarter-over-quarter.",
+          "locator": "p035",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p036",
+          "text": "Added millions of new products to its selection, including over 700,000 from notable brands like ADT Blu, Bobbi Brown, BROWN GIRL Jane, CR7 Underwear, LeGer, Mamonde, OLIVA COSMETICS, Rabanne, and Ted Baker.",
+          "locator": "p036",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p037",
+          "text": "Brought together Rufus and Alexa+ into Alexa for Shopping, an agentic AI shopping assistant that offers personalized recommendations, product comparisons, price history, and the ability to automate shopping through features like Price Alerts and Auto-Buy. Worldwide customer adoption and engagement accelerated in Q2, with active users close to doubling and interactions up over 5x year-over-year.",
+          "locator": "p037",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p038",
+          "text": "Launched Amazon Supply Chain Services so any business can move, store, and deliver everything from raw materials to finished products using the same supply chain that supports Amazon, with Procter & Gamble, 3M, Lands’ End, and American Eagle Outfitters among the first customers.",
+          "locator": "p038",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p039",
+          "text": "Reached $60 billion in annualized gross sales for Amazon Business and continued to expand selection—adding nearly 30% more items compared to last year, including Same-Day Delivery of fresh groceries for businesses in 2,300+ U.S. cities and towns.",
+          "locator": "p039",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p040",
+          "text": "Introduced the next-generation of Proteus, an autonomous robot that assists Amazon fulfillment center employees by moving goods up to 1,300 pounds, reducing heavy lifting and further increasing safety. Using AI, employees can now direct Proteus with plain, conversational language.",
+          "locator": "p040",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p041",
+          "text": "Grew the number of new customers for Amazon Pharmacy by more than 2x in the first six months of the year, and same-day prescription deliveries nearly 5x. Also saved customers nearly $250 million so far this year in out-of-pocket costs, up more than 400% year-over-year, through manufacturer discounts applied automatically on an expanded selection of widely prescribed medications.",
+          "locator": "p041",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p042",
+          "text": "Expanded Ads Agent—an AI-powered tool that simplifies planning, launching, and managing advertising campaigns and turns hours of setup and targeting into minutes—to 11 new countries so far this year. Advertisers using Ads Agent see 8% lower cost-per-impression and 6% lower cost-per-acquisition than those that don’t use it.",
+          "locator": "p042",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p043",
+          "text": "Expanded Alexa+ to Germany, Austria, France, and Brazil, with hundreds of millions of customers now using new Alexa experiences, and that number growing every month. Alexa continues to drive meaningful momentum for the business, including in the U.S., where customers who use Alexa for Shopping spend an average of over 40% more per order than those who don’t, and customers who have tried Alexa+ are signing up for Prime at a nearly 25% higher rate.",
+          "locator": "p043",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p044",
+          "text": "Drew 36 million viewers globally for the series premiere of Off Campus on Prime Video in its first 12 days, becoming Prime Video’s No. 3 top-viewed series debut ever.",
+          "locator": "p044",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p045",
+          "text": "Delivered strong viewership for inaugural season of NBA on Prime Video, with a peak of 6.5 million U.S. viewers for Game 7 of the Eastern Conference Semifinals (outperforming Game 7 on broadcast in 2025). In Europe, viewership of the NBA more than doubled year-over-year on Prime Video, with the highest average viewership on record.",
+          "locator": "p045",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p046",
+          "text": "Averaged 2.3 million viewers during the second season of NASCAR on Prime Video and attracted the youngest audience the last two years among NASCAR broadcasters since 2017.",
+          "locator": "p046",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p047",
+          "text": "Completed four additional launches for Amazon Leo, its low Earth orbit satellite network, bringing the total constellation to nearly 400 satellites in orbit—enough to begin initial satellite internet service this year.",
+          "locator": "p047",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p048",
+          "text": "Received approval from the National Highway Traffic Safety Administration (Part 555 Exemption) for Zoox to charge for rides—the first purpose-built robotaxi to receive this exemption—paving the way for Zoox to begin offering paid commercial service to customers.",
+          "locator": "p048",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p049",
+          "text": "Supported relief efforts following earthquakes in Venezuela with its Amazon Disaster Relief program, donating and delivering more than 650,000 emergency supplies to more than a dozen nonprofits and establishing weekly humanitarian relief flights to Caracas in a first-of-its-kind collaboration with Airlink, the U.S. State Department, and World Food Programme, delivering approximately 120 tons of supplies.",
+          "locator": "p049",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p050",
+          "text": "Financial Guidance The following forward-looking statements reflect Amazon.com’s expectations as of July 30, 2026, and are subject to substantial uncertainty. Our results are inherently unpredictable and may be materially affected by many factors, such as fluctuations in foreign exchange rates and energy prices, changes in global economic and geopolitical conditions, tariff and trade policies, resource and supply volatility, including for memory chips, and customer demand and spending (including the impact of recessionary fears), inflation, interest rates, regional labor market constraints, world events, the rate of growth of the internet, online commerce, cloud services, and new and emerging technologies, and the various factors detailed below.",
+          "locator": "p050",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p052",
+          "text": "Net sales are expected to be between $197.0 billion and $202.0 billion, or to grow between 9% and 12% compared with third quarter 2025. Excluding the impact of Prime Day in both 2025 and 2026, third quarter 2026 year-over-year growth would be nearly 400 basis points higher. This guidance anticipates an unfavorable impact of approximately 80 basis points from foreign exchange rates.",
+          "locator": "p052",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p053",
+          "text": "Operating income is expected to be between $22.5 billion and $26.5 billion, compared with $17.4 billion in third quarter 2025.",
+          "locator": "p053",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p054",
+          "text": "This guidance assumes, among other things, no impact from energy derivative contract remeasurements, and that no additional business acquisitions, restructurings, or legal settlements are concluded.",
+          "locator": "p054",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p055",
+          "text": "Conference Call Information A conference call will be webcast live today at 2:00 p.m. PT/5:00 p.m. ET, and will be available for at least three months at amazon.com/ir. This call will contain forward-looking statements and other material information regarding the Company’s financial and operating results.",
+          "locator": "p055",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p056",
+          "text": "Forward-Looking Statements These forward-looking statements are inherently difficult to predict. Actual results and outcomes could differ materially for a variety of reasons, including, in addition to the factors discussed above, the amount that Amazon.com invests in new business opportunities and the timing of those investments, the mix of products and services sold to customers, the mix of net sales derived from products as compared with services, the extent to which we owe income or other taxes, competition, management of growth, potential fluctuations in operating results, international growth and expansion, the outcomes of claims, litigation, government investigations, and other proceedings, fulfillment, sortation, delivery, and data center optimization, risks of inventory management, variability in demand, the degree to which the Company enters into, maintains, and develops commercial agreements, proposed and completed acquisitions and strategic transactions, payments risks, and risks of fulfillment throughput and productivity. Other risks and uncertainties include, among others, risks related to new products, services, and technologies, security incidents, system interruptions, government regulation and taxation, and fraud. In addition, global economic and geopolitical conditions and additional or unforeseen circumstances, developments, or events may give rise to or amplify many of these risks. More information about factors that potentially could affect Amazon.com’s f",
+          "locator": "p056",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p057",
+          "text": "Additional Information Our investor relations website is amazon.com/ir and we encourage investors to use it as a way of easily finding information about us. We promptly make available on this website, free of charge, the reports that we file or furnish with the SEC, corporate governance information (including our Code of Business Conduct and Ethics), and select press releases, which may contain material information about us, and you may subscribe to be notified of new information posted to this site.",
+          "locator": "p057",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p058",
+          "text": "About Amazon Amazon is guided by four principles: customer obsession rather than competitor focus, passion for invention, commitment to operational excellence, and long-term thinking. Amazon strives to be Earth’s Most Customer-Centric Company, Earth’s Best Employer, and Earth’s Safest Place to Work. Customer reviews, 1-Click shopping, personalized recommendations, Prime, Fulfillment by Amazon, AWS, Kindle Direct Publishing, Kindle, Career Choice, Fire tablets, Fire TV, Amazon Echo, Alexa, Just Walk Out technology, Amazon Studios, and The Climate Pledge are some of the things pioneered by Amazon. For more information, visit amazon.com/about and follow @AmazonNews.",
+          "locator": "p058",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p059",
+          "text": "AMAZON.COM, INC. Consolidated Statements of Cash Flows (in millions) (unaudited)",
+          "locator": "p059",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p061",
+          "text": "Consolidated Statements of Cash Flows",
+          "locator": "p061",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p073",
+          "text": "CASH, CASH EQUIVALENTS, AND RESTRICTED CASH, BEGINNING OF PERIOD",
+          "locator": "p073",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p089",
+          "text": "Adjustments to reconcile net income to net cash from operating activities:",
+          "locator": "p089",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p090",
+          "text": "Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other",
+          "locator": "p090",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p104",
+          "text": "Non-operating expense (income), net",
+          "locator": "p104",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f225fce079cd30efb6-p119",
+          "text": "Changes in operating assets and liabilities:",
+          "locator": "p119",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"
+        }
+      ],
+      "content_hash": "c2b345f02d73b7330cc03ae0d0a4a354a1091ce21eb936974e40a8821caffcf3",
+      "last_checked_at": "2026-10-23T11:52:06+00:00"
     },
     {
       "id": "mi-667b17944eef11e106",
@@ -926,7 +1332,413 @@
         }
       ],
       "content_hash": "cc64576f1e9ad7812785a28bb7f37659fc937b2746c65ea702d9f6da13e1fcfb",
-      "last_checked_at": "2026-10-23T11:44:17+00:00"
+      "last_checked_at": "2026-10-23T11:44:17+00:00",
+      "published_at_source": "pdf_publication_unconfirmed"
+    },
+    {
+      "id": "mi-5f320346020eccf5b8",
+      "source_id": "amazon_ir",
+      "company": "Amazon",
+      "topic": "earnings_strategy",
+      "title": "Amazon.com Announces First Quarter Results",
+      "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx",
+      "published_at": "2026-04-29",
+      "collected_at": "2026-10-23T11:52:06+00:00",
+      "country": "global",
+      "period": "",
+      "source_name": "Amazon Investor Relations",
+      "source_type": "earnings",
+      "excerpt": "SEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its first quarter ended March 31, 2026.\nNet sales increased 17% to $181.5 billion in the first quarter, compared with $155.7 billion in first quarter 2025. Excluding the $2.9 billion favorable impact from year-over-year changes in foreign exchange rates throughout the quarter, net sales increased 15% compared with first q",
+      "body_text": "SEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its first quarter ended March 31, 2026.\nNet sales increased 17% to $181.5 billion in the first quarter, compared with $155.7 billion in first quarter 2025. Excluding the $2.9 billion favorable impact from year-over-year changes in foreign exchange rates throughout the quarter, net sales increased 15% compared with first quarter 2025. North America segment sales increased 12% year-over-year to $104.1 billion. International segment sales increased 19% year-over-year to $39.8 billion, or increased 11% excluding changes in foreign exchange rates. AWS segment sales increased 28% year-over-year to $37.6 billion.\nNorth America segment sales increased 12% year-over-year to $104.1 billion.\nInternational segment sales increased 19% year-over-year to $39.8 billion, or increased 11% excluding changes in foreign exchange rates.\nAWS segment sales increased 28% year-over-year to $37.6 billion.\nOperating income increased to $23.9 billion in the first quarter, compared with $18.4 billion in first quarter 2025. North America segment operating income was $8.3 billion, compared with $5.8 billion in first quarter 2025. International segment operating income was $1.4 billion, compared with $1.0 billion in first quarter 2025. AWS segment operating income was $14.2 billion, compared with $11.5 billion in first quarter 2025.\nNorth America segment operating income was $8.3 billion, compared with $5.8 billion in first quarter 2025.\nInternational segment operating income was $1.4 billion, compared with $1.0 billion in first quarter 2025.\nAWS segment operating income was $14.2 billion, compared with $11.5 billion in first quarter 2025.\nNet income increased to $30.3 billion in the first quarter, or $2.78 per diluted share, compared with $17.1 billion, or $1.59 per diluted share, in first quarter 2025. First quarter 2026 net income includes pre-tax gains of $16.8 billion included in non-operating income from our investments in Anthropic.\nFirst quarter 2026 net income includes pre-tax gains of $16.8 billion included in non-operating income from our investments in Anthropic.\nOperating cash flow increased 30% to $148.5 billion for the trailing twelve months, compared with $113.9 billion for the trailing twelve months ended March 31, 2025.\nFree cash flow decreased to $1.2 billion for the trailing twelve months, driven primarily by a year-over-year increase of $59.3 billion in purchases of property and equipment, net of proceeds from sales and incentives. This increase primarily reflects investments in artificial intelligence. This compares to free cash flow of $25.9 billion for the trailing twelve months ended March 31, 2025.\n“We’re making customers’ lives easier and better every day across all our businesses, and their response is driving significant growth,” said Andy Jassy, President and CEO, Amazon. “AWS is growing 28% (our fastest growth in 15 quarters) on a very large base, our chips business topped a $20 billion revenue run rate (growing triple digits year-over-year), Advertising grew to over $70 billion in TTM revenue, and unit growth in our Stores reached 15% (the highest since the tail end of covid lockdowns). We also hit exciting milestones with delivery speed (more than 1 billion items same-day or overnight in 2026 and counting), Project Hail Mary (nearly $615 million at the box office to date and the second most successful non-sequel, non-franchise opening of recent memory), and Amazon Leo continues to resonate with prospective customers, with Delta Airlines the latest to sign on. We’re in the middle of some of the biggest inflections of our lifetime, we’re well positioned to lead, and I’m very optimistic about what’s ahead for our customers and Amazon.”\nSome other highlights since the company’s last earnings announcement include that Amazon:\nContinued growing custom silicon business while also continuing to offer the broadest selection of compute options. Exceeded $20 billion annual revenue run rate for Amazon’s chips business—inclusive of Graviton, Trainium, and Nitro—which is growing triple-digit percentages year-over-year. Secured a commitment from OpenAI to consume approximately two gigawatts (GW) of Trainium capacity through AWS infrastructure to power its frontier models and advanced workloads, which begins ramping in 2027. Announced that Anthropic will secure up to five gigawatts (GW) of current and future generations of Amazon’s Trainium chips to train and power their advanced AI models. Landed 2.1 million+ AI chips over the past 12 months, more than half of which were Trainium, and announced one million+ NVIDIA GPUs to be deployed starting in 2026, giving customers the widest range of accelerated compute options. Announced a collaboration with Cerebras and plans to deliver through Amazon Bedrock the fastest AI inference speeds available for large language models, becoming the only cloud provider to offer a solution like this. Partnered with Uber to put Graviton4 chips to work on millions of daily rides and deliveries—matching riders with drivers in fractions of a second at lower cost—and leveraging Trainium3 to train the Al models that make every ride smarter over time. Signed an agreement with Meta, already an Amazon Bedrock customer at scale, to deploy tens of millions of AWS Graviton cores to power CP\nExceeded $20 billion annual revenue run rate for Amazon’s chips business—inclusive of Graviton, Trainium, and Nitro—which is growing triple-digit percentages year-over-year.\nSecured a commitment from OpenAI to consume approximately two gigawatts (GW) of Trainium capacity through AWS infrastructure to power its frontier models and advanced workloads, which begins ramping in 2027.\nAnnounced that Anthropic will secure up to five gigawatts (GW) of current and future generations of Amazon’s Trainium chips to train and power their advanced AI models.\nLanded 2.1 million+ AI chips over the past 12 months, more than half of which were Trainium, and announced one million+ NVIDIA GPUs to be deployed starting in 2026, giving customers the widest range of accelerated compute options.\nAnnounced a collaboration with Cerebras and plans to deliver through Amazon Bedrock the fastest AI inference speeds available for large language models, becoming the only cloud provider to offer a solution like this.\nPartnered with Uber to put Graviton4 chips to work on millions of daily rides and deliveries—matching riders with drivers in fractions of a second at lower cost—and leveraging Trainium3 to train the Al models that make every ride smarter over time.\nSigned an agreement with Meta, already an Amazon Bedrock customer at scale, to deploy tens of millions of AWS Graviton cores to power CPU-intensive workloads behind its agentic AI efforts, including real-time reasoning, code generation, and multi-step agent workflows.\nAnnounced new AWS agreements with OpenAI, Anthropic, Meta, NVIDIA, Uber, U.S. Bank, Fox Corporation, Southwest Airlines, U.S. Army, Bloomberg, Cerebras, AT&T, DTCC, Nokia, Fundamental, The National Geographic Society, NEURA Robotics, DXC, PGA TOUR, O2 Telefónica, NTT DOCOMO, Veolia, The Evri Group, Telenor, ModMed, Yotta Data Services, Parrot Analytics, U.S. Hunger, TGS, and more.\nAnnounced the preview of Amazon Bedrock Managed Agents, powered by OpenAI, a Stateful Runtime Environment available on Amazon Bedrock for AWS customers to build generative AI applications and agents at production scale.\nAnnounced OpenAI’s GPT-5.4 model is available to customers in limited preview on Amazon Bedrock, with GPT-5.5 coming soon.\nAnnounced the Amazon Quick desktop app, which can query email, calendar, Slack, local files, and several other applications to retrieve and summarize information, make recommendations, compose and send communications, and create agents that highlight or automatically do work. Users can keep refining their preferences and Quick’s advanced knowledge graph enables its AI agents to automatically learn from users’ interactions with others, becoming more personalized over time.\nExpanded Amazon Connect to include Connect Decisions, Connect Talent, Connect Customer, and Connect Health to help organizations transform supply chain operations, hiring, customer experience, and health care, without requiring teams to overhaul existing processes or become AI experts.\nLaunched new capabilities for Amazon Bedrock AgentCore, AWS’s pioneering set of infrastructure building blocks for developers and companies to build secure, scalable agents that is now used to deploy an agent as frequently as every 10 seconds, including: AWS Agent Registry to help customers discover, share, and reuse AI agents, tools, and agent skills across an enterprise for secure, governed access to agents at scale. A new managed agent harness that allows customers to define the model, tools, and instructions an agent should use, and AgentCore automatically stitches together the infrastructure to create a running agent in minutes. The general availability of Policy in Amazon Bedrock AgentCore to control what agents can and cannot do, and of AgentCore Evaluations for automated quality assessments of agents.\nAWS Agent Registry to help customers discover, share, and reuse AI agents, tools, and agent skills across an enterprise for secure, governed access to agents at scale.\nA new managed agent harness that allows customers to define the model, tools, and instructions an agent should use, and AgentCore automatically stitches together the infrastructure to create a running agent in minutes.\nThe general availability of Policy in Amazon Bedrock AgentCore to control what agents can and cannot do, and of AgentCore Evaluations for automated quality assessments of agents.\nAnnounced the availability of Claude Mythos Preview, as part of Project Glasswing with Anthropic, in Amazon Bedrock. Claude Mythos Preview is a new class of AI model for cybersecurity and vulnerability detection that has been applied to critical AWS codebases and is available in gated research preview with enterprise-grade security controls.\nAnnounced availability of Claude Opus 4.7 in Amazon Bedrock—Anthropic’s most capable Opus model for coding, long-running agents, and professional work—which delivers enhanced privacy controls, broader regional availability, and improved throughput.\nProcessed more tokens on Bedrock in the first quarter than all prior years combined, and Bedrock saw 170% growth in customer spend quarter-over-quarter.\nMore than doubled the number of developers using Kiro quarter-over-quarter, and enterprise customer usage increased nearly tenfold.\nLaunched Amazon Bio Discovery, an agentic AI application designed to accelerate drug discovery by giving scientists access to biological foundation models, an AI agent for experimental designs, and integrated lab partners for testing, which Memorial Sloan Kettering Cancer Center used to compress antibody design for potential pediatric cancer therapies from months to weeks.\nShared that Prime Day will take place in most countries in June. Amazon’s annual shopping event delivers incredible savings to Prime members on millions of deals across more than 35 categories—from fashion and beauty to groceries, household essentials, and electronics.\nExpanded selection on Amazon.com, including more than 600 new notable brands, like Ted Baker, PAPATUI by Dwayne Johnson, Simpson Strong-Tie, Sun Mountain Golf, Kind Patches, ONDO, and Chosen Foods.\nMade Same-Day delivery even faster with new 1-hour and 3-hour delivery options on 90,000+ products in the U.S.—everything from paper towels and cleaning supplies to electronics. One-hour delivery is available in hundreds of cities and towns, and 3-hour delivery is in 2,000+ cities and towns.\nLaunched availability of Amazon Now (ultra-fast delivery in 30-minutes or less) in parts of Tokyo and eight major cities in Brazil—bringing the total availability of Amazon Now to tens of millions of customers across nine countries—and plans to continue expanding the service in the U.S. and around the world this year.\nIntroduced a new AI experience in Seller Central that dynamically generates a custom, personalized visualization of data, key insights, and scenarios tailored to the seller’s goals to help them take actions to grow their business.\nLaunched “Join the chat,” a new feature in Amazon’s AI-powered “Hear the highlights,” that lets customers ask questions while listening to product summaries and get answers in real time. “Hear the highlights” has been used by millions of customers who have streamed over 40 million minutes of audio.\nLaunched Health AI on the Amazon U.S. app and website, bringing a 24/7 AI-powered personal health agent backed by One Medical clinicians to customers. Health AI gives personalized health insights and guidance and takes action with permission, including providing instant care via messaging, booking appointments, and managing prescriptions. Virtual care visits have nearly tripled year-over-year, with a majority of those visits now via Health AI. No other major AI assistant enables care services in this way, and only Amazon offers up to five free virtual care visits through Prime.\nAnnounced plans to expand Same-Day Amazon Pharmacy delivery to nearly 4,500 U.S. cities and towns by year-end, with expanded GLP-1 selection, including Novo Nordisk’s Wegovy High Dose injectable and Eli Lilly and Company’s Zepbound KwikPen and Foundayo pill. In addition, Amazon launched a comprehensive GLP-1 Management Program through Amazon One Medical that integrates primary care, pharmacy, and virtual care options to help patients achieve lasting weight loss results.\nIntroduced Sponsored Products and Brand Prompts in Rufus, Amazon’s AI shopping assistant. Prompts act as a virtual product expert, automatically surfacing relevant details and deepening shopper confidence at key moments in their shopping journey. Nearly 20% of shoppers who interact with a prompt in Rufus continue the conversation about that brand.\nAdded Amazon Audiences for advertisers using Amazon Ads to buy advertising on Netflix, enabling brands to use Amazon’s proprietary shopping, streaming, and browsing signals, to reach relevant Netflix audiences and drive even stronger performance.\nLaunched Creative Agent, an agentic AI solution for advertisers in Canada, France, Germany, India, Italy, Spain, and the UK. Creative Agent acts as a virtual creative partner, helping advertisers research, brainstorm, and generate full-funnel ad campaigns from concept to completion using conversational guidance and Amazon’s retail data.\nGenerated nearly $615 million in global box office for Project Hail Mary to date, anchored by an $80 million+ U.S./Canada opening weekend—only the second non-sequel, non-franchise film in the last decade to exceed this mark.\nDebuted exclusive coverage of NBA SoFi Play-In Tournament, averaging nearly 2.8 million U.S. viewers on Prime Video across six exclusive broadcasts, up 18% compared to last year on cable.\nAnnounced planned acquisition of Globalstar, which will enable Amazon Leo to add direct-to-device services to its network, and that Amazon Leo will power satellite services for Apple iPhone and Apple Watch.\nAnnounced new customer agreements with Delta Air Lines to bring free, high-speed Amazon Leo-powered Wi-Fi to hundreds of aircraft beginning in 2028; Vodafone to extend mobile coverage across Europe and Africa; and the DP World Tour to provide satellite-powered connectivity across 42 professional golf tournaments annually.\nCompleted its tenth launch of Amazon Leo’s satellites, bringing the number of satellites in orbit to 250+, with 20+ additional launches planned over the next year.\nExpanded Alexa+ to Mexico, the UK, Italy, and Spain and introduced new capabilities, including Alexa+ Personality Styles to customize how Alexa responds to questions and requests as well as Send to Alexa to share notebooks and documents from Kindle Scribe to Alexa.\nBegan testing Zoox’s purpose-built robotaxi in Austin and Miami, expanded services in San Francisco and Las Vegas, and announced an agreement with Uber to bring Zoox robotaxis to the Uber app in Las Vegas and Los Angeles. Zoox has driven nearly 2 million miles and carried 350,000+ riders in its robotaxis.\nContinued making significant progress on safety—improving both Amazon’s Global Recordable Incident Rate and Global Lost Time Incident Rate by 14% year-over-year, and improving Global Recordable Incident Rate by 43% and Global Lost Time Incident Rate by 70% over the past six years.\nFinancial Guidance The following forward-looking statements reflect Amazon.com’s expectations as of April 29, 2026, and are subject to substantial uncertainty. Our results are inherently unpredictable and may be materially affected by many factors, such as fluctuations in foreign exchange rates and energy prices, changes in global economic and geopolitical conditions, tariff and trade policies, resource and supply volatility, including for memory chips, and customer demand and spending (including the impact of recessionary fears), inflation, interest rates, regional labor market constraints, world events, the rate of growth of the internet, online commerce, cloud services, and new and emerging technologies, and the various factors detailed below.\nNet sales are expected to be between $194.0 billion and $199.0 billion, or to grow between 16% and 19% compared with second quarter 2025. This guidance anticipates an unfavorable impact of approximately 10 basis points from foreign exchange rates.\nOperating income is expected to be between $20.0 billion and $24.0 billion, compared with $19.2 billion in second quarter 2025.\nThis guidance assumes that Prime Day occurs in second quarter 2026.\nThis guidance assumes, among other things, that no additional business acquisitions, restructurings, or legal settlements are concluded.\nConference Call Information A conference call will be webcast live today at 2:30 p.m. PT/5:30 p.m. ET, and will be available for at least three months at amazon.com/ir. This call will contain forward-looking statements and other material information regarding the Company’s financial and operating results.\nForward-Looking Statements These forward-looking statements are inherently difficult to predict. Actual results and outcomes could differ materially for a variety of reasons, including, in addition to the factors discussed above, the amount that Amazon.com invests in new business opportunities and the timing of those investments, the mix of products and services sold to customers, the mix of net sales derived from products as compared with services, the extent to which we owe income or other taxes, competition, management of growth, potential fluctuations in operating results, international growth and expansion, the outcomes of claims, litigation, government investigations, and other proceedings, fulfillment, sortation, delivery, and data center optimization, risks of inventory management, variability in demand, the degree to which the Company enters into, maintains, and develops commercial agreements, proposed and completed acquisitions and strategic transactions, payments risks, and risks of fulfillment throughput and productivity. Other risks and uncertainties include, among others, risks related to new products, services, and technologies, security incidents, system interruptions, government regulation and taxation, and fraud. In addition, global economic and geopolitical conditions and additional or unforeseen circumstances, developments, or events may give rise to or amplify many of these risks. More information about factors that potentially could affect Amazon.com’s f\nAdditional Information Our investor relations website is amazon.com/ir and we encourage investors to use it as a way of easily finding information about us. We promptly make available on this website, free of charge, the reports that we file or furnish with the SEC, corporate governance information (including our Code of Business Conduct and Ethics), and select press releases, which may contain material information about us, and you may subscribe to be notified of new information posted to this site.",
+      "image_url": "",
+      "evidence": [
+        {
+          "id": "mi-5f320346020eccf5b8-p001",
+          "text": "SEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its first quarter ended March 31, 2026.",
+          "locator": "p001",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p002",
+          "text": "Net sales increased 17% to $181.5 billion in the first quarter, compared with $155.7 billion in first quarter 2025. Excluding the $2.9 billion favorable impact from year-over-year changes in foreign exchange rates throughout the quarter, net sales increased 15% compared with first quarter 2025. North America segment sales increased 12% year-over-year to $104.1 billion. International segment sales increased 19% year-over-year to $39.8 billion, or increased 11% excluding changes in foreign exchange rates. AWS segment sales increased 28% year-over-year to $37.6 billion.",
+          "locator": "p002",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p003",
+          "text": "North America segment sales increased 12% year-over-year to $104.1 billion.",
+          "locator": "p003",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p004",
+          "text": "International segment sales increased 19% year-over-year to $39.8 billion, or increased 11% excluding changes in foreign exchange rates.",
+          "locator": "p004",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p005",
+          "text": "AWS segment sales increased 28% year-over-year to $37.6 billion.",
+          "locator": "p005",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p006",
+          "text": "Operating income increased to $23.9 billion in the first quarter, compared with $18.4 billion in first quarter 2025. North America segment operating income was $8.3 billion, compared with $5.8 billion in first quarter 2025. International segment operating income was $1.4 billion, compared with $1.0 billion in first quarter 2025. AWS segment operating income was $14.2 billion, compared with $11.5 billion in first quarter 2025.",
+          "locator": "p006",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p007",
+          "text": "North America segment operating income was $8.3 billion, compared with $5.8 billion in first quarter 2025.",
+          "locator": "p007",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p008",
+          "text": "International segment operating income was $1.4 billion, compared with $1.0 billion in first quarter 2025.",
+          "locator": "p008",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p009",
+          "text": "AWS segment operating income was $14.2 billion, compared with $11.5 billion in first quarter 2025.",
+          "locator": "p009",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p010",
+          "text": "Net income increased to $30.3 billion in the first quarter, or $2.78 per diluted share, compared with $17.1 billion, or $1.59 per diluted share, in first quarter 2025. First quarter 2026 net income includes pre-tax gains of $16.8 billion included in non-operating income from our investments in Anthropic.",
+          "locator": "p010",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p011",
+          "text": "First quarter 2026 net income includes pre-tax gains of $16.8 billion included in non-operating income from our investments in Anthropic.",
+          "locator": "p011",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p012",
+          "text": "Operating cash flow increased 30% to $148.5 billion for the trailing twelve months, compared with $113.9 billion for the trailing twelve months ended March 31, 2025.",
+          "locator": "p012",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p013",
+          "text": "Free cash flow decreased to $1.2 billion for the trailing twelve months, driven primarily by a year-over-year increase of $59.3 billion in purchases of property and equipment, net of proceeds from sales and incentives. This increase primarily reflects investments in artificial intelligence. This compares to free cash flow of $25.9 billion for the trailing twelve months ended March 31, 2025.",
+          "locator": "p013",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p014",
+          "text": "“We’re making customers’ lives easier and better every day across all our businesses, and their response is driving significant growth,” said Andy Jassy, President and CEO, Amazon. “AWS is growing 28% (our fastest growth in 15 quarters) on a very large base, our chips business topped a $20 billion revenue run rate (growing triple digits year-over-year), Advertising grew to over $70 billion in TTM revenue, and unit growth in our Stores reached 15% (the highest since the tail end of covid lockdowns). We also hit exciting milestones with delivery speed (more than 1 billion items same-day or overnight in 2026 and counting), Project Hail Mary (nearly $615 million at the box office to date and the second most successful non-sequel, non-franchise opening of recent memory), and Amazon Leo continues to resonate with prospective customers, with Delta Airlines the latest to sign on. We’re in the middle of some of the biggest inflections of our lifetime, we’re well positioned to lead, and I’m very optimistic about what’s ahead for our customers and Amazon.”",
+          "locator": "p014",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p015",
+          "text": "Some other highlights since the company’s last earnings announcement include that Amazon:",
+          "locator": "p015",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p016",
+          "text": "Continued growing custom silicon business while also continuing to offer the broadest selection of compute options. Exceeded $20 billion annual revenue run rate for Amazon’s chips business—inclusive of Graviton, Trainium, and Nitro—which is growing triple-digit percentages year-over-year. Secured a commitment from OpenAI to consume approximately two gigawatts (GW) of Trainium capacity through AWS infrastructure to power its frontier models and advanced workloads, which begins ramping in 2027. Announced that Anthropic will secure up to five gigawatts (GW) of current and future generations of Amazon’s Trainium chips to train and power their advanced AI models. Landed 2.1 million+ AI chips over the past 12 months, more than half of which were Trainium, and announced one million+ NVIDIA GPUs to be deployed starting in 2026, giving customers the widest range of accelerated compute options. Announced a collaboration with Cerebras and plans to deliver through Amazon Bedrock the fastest AI inference speeds available for large language models, becoming the only cloud provider to offer a solution like this. Partnered with Uber to put Graviton4 chips to work on millions of daily rides and deliveries—matching riders with drivers in fractions of a second at lower cost—and leveraging Trainium3 to train the Al models that make every ride smarter over time. Signed an agreement with Meta, already an Amazon Bedrock customer at scale, to deploy tens of millions of AWS Graviton cores to power CP",
+          "locator": "p016",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p017",
+          "text": "Exceeded $20 billion annual revenue run rate for Amazon’s chips business—inclusive of Graviton, Trainium, and Nitro—which is growing triple-digit percentages year-over-year.",
+          "locator": "p017",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p018",
+          "text": "Secured a commitment from OpenAI to consume approximately two gigawatts (GW) of Trainium capacity through AWS infrastructure to power its frontier models and advanced workloads, which begins ramping in 2027.",
+          "locator": "p018",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p019",
+          "text": "Announced that Anthropic will secure up to five gigawatts (GW) of current and future generations of Amazon’s Trainium chips to train and power their advanced AI models.",
+          "locator": "p019",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p020",
+          "text": "Landed 2.1 million+ AI chips over the past 12 months, more than half of which were Trainium, and announced one million+ NVIDIA GPUs to be deployed starting in 2026, giving customers the widest range of accelerated compute options.",
+          "locator": "p020",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p021",
+          "text": "Announced a collaboration with Cerebras and plans to deliver through Amazon Bedrock the fastest AI inference speeds available for large language models, becoming the only cloud provider to offer a solution like this.",
+          "locator": "p021",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p022",
+          "text": "Partnered with Uber to put Graviton4 chips to work on millions of daily rides and deliveries—matching riders with drivers in fractions of a second at lower cost—and leveraging Trainium3 to train the Al models that make every ride smarter over time.",
+          "locator": "p022",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p023",
+          "text": "Signed an agreement with Meta, already an Amazon Bedrock customer at scale, to deploy tens of millions of AWS Graviton cores to power CPU-intensive workloads behind its agentic AI efforts, including real-time reasoning, code generation, and multi-step agent workflows.",
+          "locator": "p023",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p024",
+          "text": "Announced new AWS agreements with OpenAI, Anthropic, Meta, NVIDIA, Uber, U.S. Bank, Fox Corporation, Southwest Airlines, U.S. Army, Bloomberg, Cerebras, AT&T, DTCC, Nokia, Fundamental, The National Geographic Society, NEURA Robotics, DXC, PGA TOUR, O2 Telefónica, NTT DOCOMO, Veolia, The Evri Group, Telenor, ModMed, Yotta Data Services, Parrot Analytics, U.S. Hunger, TGS, and more.",
+          "locator": "p024",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p025",
+          "text": "Announced the preview of Amazon Bedrock Managed Agents, powered by OpenAI, a Stateful Runtime Environment available on Amazon Bedrock for AWS customers to build generative AI applications and agents at production scale.",
+          "locator": "p025",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p026",
+          "text": "Announced OpenAI’s GPT-5.4 model is available to customers in limited preview on Amazon Bedrock, with GPT-5.5 coming soon.",
+          "locator": "p026",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p027",
+          "text": "Announced the Amazon Quick desktop app, which can query email, calendar, Slack, local files, and several other applications to retrieve and summarize information, make recommendations, compose and send communications, and create agents that highlight or automatically do work. Users can keep refining their preferences and Quick’s advanced knowledge graph enables its AI agents to automatically learn from users’ interactions with others, becoming more personalized over time.",
+          "locator": "p027",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p028",
+          "text": "Expanded Amazon Connect to include Connect Decisions, Connect Talent, Connect Customer, and Connect Health to help organizations transform supply chain operations, hiring, customer experience, and health care, without requiring teams to overhaul existing processes or become AI experts.",
+          "locator": "p028",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p029",
+          "text": "Launched new capabilities for Amazon Bedrock AgentCore, AWS’s pioneering set of infrastructure building blocks for developers and companies to build secure, scalable agents that is now used to deploy an agent as frequently as every 10 seconds, including: AWS Agent Registry to help customers discover, share, and reuse AI agents, tools, and agent skills across an enterprise for secure, governed access to agents at scale. A new managed agent harness that allows customers to define the model, tools, and instructions an agent should use, and AgentCore automatically stitches together the infrastructure to create a running agent in minutes. The general availability of Policy in Amazon Bedrock AgentCore to control what agents can and cannot do, and of AgentCore Evaluations for automated quality assessments of agents.",
+          "locator": "p029",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p030",
+          "text": "AWS Agent Registry to help customers discover, share, and reuse AI agents, tools, and agent skills across an enterprise for secure, governed access to agents at scale.",
+          "locator": "p030",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p031",
+          "text": "A new managed agent harness that allows customers to define the model, tools, and instructions an agent should use, and AgentCore automatically stitches together the infrastructure to create a running agent in minutes.",
+          "locator": "p031",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p032",
+          "text": "The general availability of Policy in Amazon Bedrock AgentCore to control what agents can and cannot do, and of AgentCore Evaluations for automated quality assessments of agents.",
+          "locator": "p032",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p033",
+          "text": "Announced the availability of Claude Mythos Preview, as part of Project Glasswing with Anthropic, in Amazon Bedrock. Claude Mythos Preview is a new class of AI model for cybersecurity and vulnerability detection that has been applied to critical AWS codebases and is available in gated research preview with enterprise-grade security controls.",
+          "locator": "p033",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p034",
+          "text": "Announced availability of Claude Opus 4.7 in Amazon Bedrock—Anthropic’s most capable Opus model for coding, long-running agents, and professional work—which delivers enhanced privacy controls, broader regional availability, and improved throughput.",
+          "locator": "p034",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p035",
+          "text": "Processed more tokens on Bedrock in the first quarter than all prior years combined, and Bedrock saw 170% growth in customer spend quarter-over-quarter.",
+          "locator": "p035",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p036",
+          "text": "More than doubled the number of developers using Kiro quarter-over-quarter, and enterprise customer usage increased nearly tenfold.",
+          "locator": "p036",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p037",
+          "text": "Launched Amazon Bio Discovery, an agentic AI application designed to accelerate drug discovery by giving scientists access to biological foundation models, an AI agent for experimental designs, and integrated lab partners for testing, which Memorial Sloan Kettering Cancer Center used to compress antibody design for potential pediatric cancer therapies from months to weeks.",
+          "locator": "p037",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p038",
+          "text": "Shared that Prime Day will take place in most countries in June. Amazon’s annual shopping event delivers incredible savings to Prime members on millions of deals across more than 35 categories—from fashion and beauty to groceries, household essentials, and electronics.",
+          "locator": "p038",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p039",
+          "text": "Expanded selection on Amazon.com, including more than 600 new notable brands, like Ted Baker, PAPATUI by Dwayne Johnson, Simpson Strong-Tie, Sun Mountain Golf, Kind Patches, ONDO, and Chosen Foods.",
+          "locator": "p039",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p040",
+          "text": "Made Same-Day delivery even faster with new 1-hour and 3-hour delivery options on 90,000+ products in the U.S.—everything from paper towels and cleaning supplies to electronics. One-hour delivery is available in hundreds of cities and towns, and 3-hour delivery is in 2,000+ cities and towns.",
+          "locator": "p040",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p041",
+          "text": "Launched availability of Amazon Now (ultra-fast delivery in 30-minutes or less) in parts of Tokyo and eight major cities in Brazil—bringing the total availability of Amazon Now to tens of millions of customers across nine countries—and plans to continue expanding the service in the U.S. and around the world this year.",
+          "locator": "p041",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p042",
+          "text": "Introduced a new AI experience in Seller Central that dynamically generates a custom, personalized visualization of data, key insights, and scenarios tailored to the seller’s goals to help them take actions to grow their business.",
+          "locator": "p042",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p043",
+          "text": "Launched “Join the chat,” a new feature in Amazon’s AI-powered “Hear the highlights,” that lets customers ask questions while listening to product summaries and get answers in real time. “Hear the highlights” has been used by millions of customers who have streamed over 40 million minutes of audio.",
+          "locator": "p043",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p044",
+          "text": "Launched Health AI on the Amazon U.S. app and website, bringing a 24/7 AI-powered personal health agent backed by One Medical clinicians to customers. Health AI gives personalized health insights and guidance and takes action with permission, including providing instant care via messaging, booking appointments, and managing prescriptions. Virtual care visits have nearly tripled year-over-year, with a majority of those visits now via Health AI. No other major AI assistant enables care services in this way, and only Amazon offers up to five free virtual care visits through Prime.",
+          "locator": "p044",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p045",
+          "text": "Announced plans to expand Same-Day Amazon Pharmacy delivery to nearly 4,500 U.S. cities and towns by year-end, with expanded GLP-1 selection, including Novo Nordisk’s Wegovy High Dose injectable and Eli Lilly and Company’s Zepbound KwikPen and Foundayo pill. In addition, Amazon launched a comprehensive GLP-1 Management Program through Amazon One Medical that integrates primary care, pharmacy, and virtual care options to help patients achieve lasting weight loss results.",
+          "locator": "p045",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p046",
+          "text": "Introduced Sponsored Products and Brand Prompts in Rufus, Amazon’s AI shopping assistant. Prompts act as a virtual product expert, automatically surfacing relevant details and deepening shopper confidence at key moments in their shopping journey. Nearly 20% of shoppers who interact with a prompt in Rufus continue the conversation about that brand.",
+          "locator": "p046",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p047",
+          "text": "Added Amazon Audiences for advertisers using Amazon Ads to buy advertising on Netflix, enabling brands to use Amazon’s proprietary shopping, streaming, and browsing signals, to reach relevant Netflix audiences and drive even stronger performance.",
+          "locator": "p047",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p048",
+          "text": "Launched Creative Agent, an agentic AI solution for advertisers in Canada, France, Germany, India, Italy, Spain, and the UK. Creative Agent acts as a virtual creative partner, helping advertisers research, brainstorm, and generate full-funnel ad campaigns from concept to completion using conversational guidance and Amazon’s retail data.",
+          "locator": "p048",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p049",
+          "text": "Generated nearly $615 million in global box office for Project Hail Mary to date, anchored by an $80 million+ U.S./Canada opening weekend—only the second non-sequel, non-franchise film in the last decade to exceed this mark.",
+          "locator": "p049",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p050",
+          "text": "Debuted exclusive coverage of NBA SoFi Play-In Tournament, averaging nearly 2.8 million U.S. viewers on Prime Video across six exclusive broadcasts, up 18% compared to last year on cable.",
+          "locator": "p050",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p051",
+          "text": "Announced planned acquisition of Globalstar, which will enable Amazon Leo to add direct-to-device services to its network, and that Amazon Leo will power satellite services for Apple iPhone and Apple Watch.",
+          "locator": "p051",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p052",
+          "text": "Announced new customer agreements with Delta Air Lines to bring free, high-speed Amazon Leo-powered Wi-Fi to hundreds of aircraft beginning in 2028; Vodafone to extend mobile coverage across Europe and Africa; and the DP World Tour to provide satellite-powered connectivity across 42 professional golf tournaments annually.",
+          "locator": "p052",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p053",
+          "text": "Completed its tenth launch of Amazon Leo’s satellites, bringing the number of satellites in orbit to 250+, with 20+ additional launches planned over the next year.",
+          "locator": "p053",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p054",
+          "text": "Expanded Alexa+ to Mexico, the UK, Italy, and Spain and introduced new capabilities, including Alexa+ Personality Styles to customize how Alexa responds to questions and requests as well as Send to Alexa to share notebooks and documents from Kindle Scribe to Alexa.",
+          "locator": "p054",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p055",
+          "text": "Began testing Zoox’s purpose-built robotaxi in Austin and Miami, expanded services in San Francisco and Las Vegas, and announced an agreement with Uber to bring Zoox robotaxis to the Uber app in Las Vegas and Los Angeles. Zoox has driven nearly 2 million miles and carried 350,000+ riders in its robotaxis.",
+          "locator": "p055",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p056",
+          "text": "Continued making significant progress on safety—improving both Amazon’s Global Recordable Incident Rate and Global Lost Time Incident Rate by 14% year-over-year, and improving Global Recordable Incident Rate by 43% and Global Lost Time Incident Rate by 70% over the past six years.",
+          "locator": "p056",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p057",
+          "text": "Financial Guidance The following forward-looking statements reflect Amazon.com’s expectations as of April 29, 2026, and are subject to substantial uncertainty. Our results are inherently unpredictable and may be materially affected by many factors, such as fluctuations in foreign exchange rates and energy prices, changes in global economic and geopolitical conditions, tariff and trade policies, resource and supply volatility, including for memory chips, and customer demand and spending (including the impact of recessionary fears), inflation, interest rates, regional labor market constraints, world events, the rate of growth of the internet, online commerce, cloud services, and new and emerging technologies, and the various factors detailed below.",
+          "locator": "p057",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p059",
+          "text": "Net sales are expected to be between $194.0 billion and $199.0 billion, or to grow between 16% and 19% compared with second quarter 2025. This guidance anticipates an unfavorable impact of approximately 10 basis points from foreign exchange rates.",
+          "locator": "p059",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p060",
+          "text": "Operating income is expected to be between $20.0 billion and $24.0 billion, compared with $19.2 billion in second quarter 2025.",
+          "locator": "p060",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p061",
+          "text": "This guidance assumes that Prime Day occurs in second quarter 2026.",
+          "locator": "p061",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p062",
+          "text": "This guidance assumes, among other things, that no additional business acquisitions, restructurings, or legal settlements are concluded.",
+          "locator": "p062",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p063",
+          "text": "Conference Call Information A conference call will be webcast live today at 2:30 p.m. PT/5:30 p.m. ET, and will be available for at least three months at amazon.com/ir. This call will contain forward-looking statements and other material information regarding the Company’s financial and operating results.",
+          "locator": "p063",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p064",
+          "text": "Forward-Looking Statements These forward-looking statements are inherently difficult to predict. Actual results and outcomes could differ materially for a variety of reasons, including, in addition to the factors discussed above, the amount that Amazon.com invests in new business opportunities and the timing of those investments, the mix of products and services sold to customers, the mix of net sales derived from products as compared with services, the extent to which we owe income or other taxes, competition, management of growth, potential fluctuations in operating results, international growth and expansion, the outcomes of claims, litigation, government investigations, and other proceedings, fulfillment, sortation, delivery, and data center optimization, risks of inventory management, variability in demand, the degree to which the Company enters into, maintains, and develops commercial agreements, proposed and completed acquisitions and strategic transactions, payments risks, and risks of fulfillment throughput and productivity. Other risks and uncertainties include, among others, risks related to new products, services, and technologies, security incidents, system interruptions, government regulation and taxation, and fraud. In addition, global economic and geopolitical conditions and additional or unforeseen circumstances, developments, or events may give rise to or amplify many of these risks. More information about factors that potentially could affect Amazon.com’s f",
+          "locator": "p064",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-5f320346020eccf5b8-p065",
+          "text": "Additional Information Our investor relations website is amazon.com/ir and we encourage investors to use it as a way of easily finding information about us. We promptly make available on this website, free of charge, the reports that we file or furnish with the SEC, corporate governance information (including our Code of Business Conduct and Ethics), and select press releases, which may contain material information about us, and you may subscribe to be notified of new information posted to this site.",
+          "locator": "p065",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx"
+        }
+      ],
+      "content_hash": "10f11121079894d5e410635c297e2bd2fe9c2be36687347a7420dfee8c012654",
+      "last_checked_at": "2026-10-23T11:52:06+00:00"
     },
     {
       "id": "mi-7cb4165a48c7bf427a",
@@ -1331,17 +2143,18 @@
         }
       ],
       "content_hash": "4825da0b4b4b5cddabe6f859cf349400c3e17c6e26260ba335c2060c0cfb356f",
-      "last_checked_at": "2026-10-23T11:44:17+00:00"
+      "last_checked_at": "2026-10-23T11:44:17+00:00",
+      "published_at_source": "official_feed"
     },
     {
       "id": "mi-9067619953f803ee73",
       "source_id": "netflix_ir",
       "company": "Netflix",
-      "topic": "earnings_strategy",
-      "title": "Press Release Details",
+      "topic": "partnership_distribution",
+      "title": "Netflix Declines to Raise Offer for Warner Bros.",
       "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx",
       "published_at": "2026-02-26",
-      "collected_at": "2026-10-23T11:44:17+00:00",
+      "collected_at": "2026-10-23T11:52:06+00:00",
       "country": "global",
       "period": "",
       "source_name": "Netflix Investor Relations",
@@ -1423,18 +2236,101 @@
           "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
         }
       ],
-      "content_hash": "504d2b339cc29a608621f06a549fb39d53e851375fe0edcbe39bce7a1d79c630",
-      "last_checked_at": "2026-10-23T11:44:17+00:00"
+      "content_hash": "05ac069470d7041d12fa2cd31a7bf06eb3632ffdfb0be9b462915040cb192920",
+      "published_at_source": "official_feed",
+      "last_checked_at": "2026-10-23T11:52:06+00:00",
+      "versions": [
+        {
+          "content_hash": "504d2b339cc29a608621f06a549fb39d53e851375fe0edcbe39bce7a1d79c630",
+          "title": "Press Release Details",
+          "published_at": "2026-02-26",
+          "collected_at": "2026-10-23T11:44:17+00:00",
+          "evidence": [
+            {
+              "id": "mi-9067619953f803ee73-p001",
+              "text": "HOLLYWOOD, Calif. , Feb. 26, 2026 /PRNewswire/ -- Netflix, Inc. today announced that it has declined to raise its offer for Warner Bros. Netflix had earlier received notice from Warner Bros. Discovery (WBD) that its Board of Directors has determined Paramount Skydance's (PSKY) latest proposal constitutes a \"Superior Proposal\" under the terms of WBD's existing merger agreement with Netflix. Netflix issued the following statement in response from co-CEOs Ted Sarandos and Greg Peters:",
+              "locator": "p001",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p002",
+              "text": "The transaction we negotiated would have created shareholder value with a clear path to regulatory approval. However, we've always been disciplined, and at the price required to match Paramount Skydance's latest offer, the deal is no longer financially attractive, so we are declining to match the Paramount Skydance bid.",
+              "locator": "p002",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p003",
+              "text": "Warner Bros. is a world-class organization, and we want to thank David Zaslav, Gunnar Wiedenfels, Bruce Campbell, Brad Singer and the WBD Board for running a fair and rigorous process. We believe we would have been strong stewards of Warner Bros.' iconic brands, and that our deal would have strengthened the entertainment industry and preserved and created more production jobs in the U.S. But this transaction was always a 'nice to have' at the right price, not a 'must have' at any price.",
+              "locator": "p003",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p004",
+              "text": "Netflix's business is healthy, strong and growing organically, powered by our slate and best-in-class streaming service. This year, we'll invest approximately $20 billion in quality films and series and will expand our entertainment offering. Consistent with our capital allocation policy, we'll also resume our share repurchase program.",
+              "locator": "p004",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p005",
+              "text": "We will continue to do what we've done for more than 20 years as a public company: delight our members, profitably grow our business, and drive long-term shareholder value.",
+              "locator": "p005",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p007",
+              "text": "Netflix is one of the world's leading entertainment services offering TV series, films, games and live programming across a wide variety of genres and languages. Members can play, pause and resume watching as much as they want, anytime, anywhere, and can change their plans at any time.",
+              "locator": "p007",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p008",
+              "text": "Important Information and Where to Find It",
+              "locator": "p008",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p009",
+              "text": "In connection with the proposed transaction between Netflix and WBD, WBD filed a definitive proxy statement on Schedule 14A (the \"Proxy Statement\") with the U.S. Securities and Exchange Commission (the \"SEC\"). The Proxy Statement was first mailed to WBD stockholders on or around February 17, 2026. Each of Netflix and WBD may also file with or furnish to the SEC other relevant documents regarding the proposed transaction. This communication is not a substitute for the Proxy Statement or any other document that Netflix or WBD may file with the SEC or mail to WBD's stockholders in connection with the proposed transaction. INVESTORS AND SECURITY HOLDERS OF NETFLIX AND WBD ARE URGED TO READ THE PROXY STATEMENT, AS WELL AS ANY OTHER RELEVANT DOCUMENTS FILED WITH THE SEC IN CONNECTION WITH THE PROPOSED TRANSACTION OR INCORPORATED BY REFERENCE INTO THE PROXY STATEMENT (INCLUDING ANY AMENDMENTS OR SUPPLEMENTS THERETO), BECAUSE THEY WILL CONTAIN IMPORTANT INFORMATION REGARDING NETFLIX, WBD, THE PROPOSED TRANSACTION AND RELATED MATTERS. Investors and security holders may obtain free copies of the Proxy Statement as well as other filings containing information about Netflix and WBD, without charge, at the SEC's website, https://www.sec.gov . The documents filed by Netflix with the SEC also may be obtained free of charge at Netflix's website at https://ir.netflix.net/home/default.aspx . The documents filed by WBD with the SEC also may be obtained free of charge at WBD's website at https:/",
+              "locator": "p009",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p011",
+              "text": "Netflix, WBD and certain of their respective directors and executive officers may be deemed to be participants in the solicitation of proxies from the stockholders of WBD in connection with the proposed transaction under the rules of the SEC. Information about the interests of the directors and executive officers of WBD and other persons who may be deemed to be participants in the solicitation of stockholders of WBD in connection with the proposed transaction and a description of their direct and indirect interests, by security holdings or otherwise, is included in the Proxy Statement, which has been filed by WBD with the SEC. Information about WBD's directors and executive officers is set forth in WBD's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 23, 2025, WBD's Annual Report on Form 10-K for the year ended December 31, 2024, and any subsequent filings with the SEC. Information about Netflix's directors and executive officers is set forth in Netflix's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 17, 2025, and any subsequent filings with the SEC. Additional information regarding the direct and indirect interests of those persons and other persons who may be deemed participants in the proposed transaction may be obtained by reading the Proxy Statement regarding the proposed transaction. Free copies of these documents may be obtained as described above.",
+              "locator": "p011",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p012",
+              "text": "Cautionary Statement Regarding Forward-Looking Statements",
+              "locator": "p012",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p013",
+              "text": "This document contains \"forward-looking statements\" within the meaning of the federal securities laws, including Section 27A of the U.S. Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended. These forward-looking statements are based on Netflix's and WBD's current expectations, estimates and projections about the expected date of closing of the proposed transaction and the potential benefits thereof, their respective businesses and industries, management's beliefs and certain assumptions made by Netflix and WBD, all of which are subject to change. In this context, forward-looking statements often address expected future business and financial performance and financial condition, and often contain words such as \"expect,\" \"anticipate,\" \"intend,\" \"plan,\" \"believe,\" \"could,\" \"seek,\" \"see,\" \"will,\" \"may,\" \"would,\" \"might,\" \"potentially,\" \"estimate,\" \"continue,\" \"expect,\" \"target,\" similar expressions or the negatives of these words or other comparable terminology that convey uncertainty of future events or outcomes. All forward-looking statements by their nature address matters that involve risks and uncertainties, many of which are beyond our control and are not guarantees of future results, such as statements about the consummation of the proposed transaction and the anticipated benefits thereof. These and other forward-looking statements, including the failure to consummate the proposed transaction or to make or take any filing",
+              "locator": "p013",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            },
+            {
+              "id": "mi-9067619953f803ee73-p014",
+              "text": "View original content to download multimedia: https://www.prnewswire.com/news-releases/netflix-declines-to-raise-offer-for-warner-bros-302699059.html",
+              "locator": "p014",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "mi-8129e4a29e655e18c2",
       "source_id": "netflix_ir",
       "company": "Netflix",
-      "topic": "earnings_strategy",
-      "title": "Press Release Details",
+      "topic": "partnership_distribution",
+      "title": "WBD Files Definitive Proxy Statement and Schedules Special Meeting for March 20, 2026, to Approve the WBD-Netflix Transaction",
       "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx",
       "published_at": "2026-02-17",
-      "collected_at": "2026-10-23T11:44:17+00:00",
+      "collected_at": "2026-10-23T11:52:06+00:00",
       "country": "global",
       "period": "",
       "source_name": "Netflix Investor Relations",
@@ -1654,18 +2550,239 @@
           "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
         }
       ],
-      "content_hash": "8e3908e1efc308b6d1611c3112c14fe94bf0baaad0daad49fac8440701a5157d",
-      "last_checked_at": "2026-10-23T11:44:17+00:00"
+      "content_hash": "4a2b8c2217143371b92bc9097abe1eb31059fed756ba2f1ae36438389bc84fc3",
+      "published_at_source": "official_feed",
+      "last_checked_at": "2026-10-23T11:52:06+00:00",
+      "versions": [
+        {
+          "content_hash": "8e3908e1efc308b6d1611c3112c14fe94bf0baaad0daad49fac8440701a5157d",
+          "title": "Press Release Details",
+          "published_at": "2026-02-17",
+          "collected_at": "2026-10-23T11:44:17+00:00",
+          "evidence": [
+            {
+              "id": "mi-8129e4a29e655e18c2-p001",
+              "text": "The WBD-Netflix Transaction Delivers Incredible Value and Certainty to WBD Stockholders with Clear Path to Timely Regulatory Approval",
+              "locator": "p001",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p002",
+              "text": "Netflix is the Superior Deal and the Only Deal Before WBD Stockholders",
+              "locator": "p002",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p003",
+              "text": "Together WBD and Netflix will Protect U.S. Jobs, Bring Great Value to Consumers and Assure Growth of the Broader Entertainment Industry",
+              "locator": "p003",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p004",
+              "text": "A PSKY transaction does not have an easier or faster path to regulatory approval and PSKY's financing challenges and rapid deleveraging plans pose tremendous risk to the entertainment industry",
+              "locator": "p004",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p005",
+              "text": "HOLLYWOOD, Calif. , Feb. 17, 2026 /PRNewswire/ -- Netflix, Inc. today issued the following statement regarding its fully financed definitive agreement with Warner Bros. Discovery, Inc. (WBD) to acquire Warner Bros., including its film and television studios, HBO Max and HBO:",
+              "locator": "p005",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p006",
+              "text": "Today marks another important milestone for our transaction with WBD. WBD has filed and commenced the mailing of its definitive proxy statement for the special meeting to be held on March 20, 2026, to approve our Board-recommended transaction and superior offer.",
+              "locator": "p006",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p007",
+              "text": "Throughout the robust and highly competitive strategic review process, Netflix has consistently taken a constructive, responsive approach with WBD, in stark contrast to Paramount Skydance (PSKY). While we are confident that our transaction provides superior value and certainty, we recognize the ongoing distraction for WBD stockholders and the broader entertainment industry caused by PSKY's antics. Accordingly, we granted WBD a narrow seven-day waiver of certain obligations under our merger agreement to allow them to engage with PSKY to fully and finally resolve this matter.",
+              "locator": "p007",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p008",
+              "text": "This does not change the fact that we have the only signed, board-recommended agreement with WBD, and ours is the only certain path to delivering value to WBD's stockholders. In its press release today, WBD reaffirmed its recommendation that WBD stockholders vote to approve the Netflix transaction at WBD's special meeting.",
+              "locator": "p008",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p009",
+              "text": "Together, Netflix and Warner Bros. will deliver more choice and greater value to audiences worldwide with expanded access to exceptional films and series – both at home and in theaters. Our transaction also expands production capacity and increases investment in original content, leading to long-term job creation. The Netflix transaction is centered on growth, opportunity, and a reinforced commitment to creating world-class films and television – not consolidation and layoffs.",
+              "locator": "p009",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p010",
+              "text": "Netflix is confident that our transaction, a largely vertical merger of complementary assets, has a clear path to timely regulatory approval. Netflix and WBD have each submitted their Hart-Scott-Rodino (HSR) filings and are engaged constructively with competition authorities across the world, including the U.S. Department of Justice (DOJ), state Attorneys General, the European Commission, and the U.K. Competition and Markets Authority (CMA). Netflix and WBD are driving the regulatory process forward — collaboratively and constructively and focused on a clear path to closing.",
+              "locator": "p010",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p011",
+              "text": "By contrast, PSKY has repeatedly mischaracterized the regulatory review process by suggesting its proposal will sail through, misleading WBD stockholders about the real risk of their regulatory challenges around the world. WBD stockholders should not be misled into thinking that PSKY has an easier or faster path to regulatory approval – it does not.",
+              "locator": "p011",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p012",
+              "text": "PSKY is also quick to publicize routine checkpoints to exaggerate \"progress.\" For example, PSKY cited securing German FDI clearance on January 27, 2026, as evidence of their \"regulatory certainty.\" In fact, Netflix received German FDI clearance on the very same day.",
+              "locator": "p012",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p013",
+              "text": "Separately, the foreign funding behind PSKY's bid is already raising serious national security concerns . We expect government reviewers globally, including CFIUS and Team Telecom in the U.S., as well as European authorities, to scrutinize the Middle Eastern investors in PSKY's consortium and to be skeptical of claims that they are purely passive investors.",
+              "locator": "p013",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p014",
+              "text": "In reality, PSKY is far from obtaining all of the regulatory clearances required. Enforcers will focus on the impact of PSKY's proposal on competition, job losses, reduced output, and downward pressure on wages for film and television workers. PSKY's offer results in significant horizontal overlaps that will concern antitrust enforcers globally by combining:",
+              "locator": "p014",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p015",
+              "text": "two of the five major Hollywood studios, two major theatrical distribution channels, two of the major TV studios, two major news networks, and two major sports distributors.",
+              "locator": "p015",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p016",
+              "text": "two of the five major Hollywood studios,",
+              "locator": "p016",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p017",
+              "text": "two major theatrical distribution channels,",
+              "locator": "p017",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p021",
+              "text": "Beyond their regulatory hurdles, PSKY's aggressive financing package, rapid deleveraging plans, and performance track record pose tremendous risks to both the completion of their proposed deal and the industry.",
+              "locator": "p021",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p022",
+              "text": "PSKY has promised to rapidly de-lever following its proposed transaction which can only be achieved through unprecedented job cuts (on top of the previous PSKY layoffs ):",
+              "locator": "p022",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p023",
+              "text": "Post-merger, PSKY would be over-leveraged with approximately $84 billion of total proforma debt — the largest proposed leveraged buyout in history — and an estimated ~7x leverage ratio (Debt / 2026 LTM EBITDA). PSKY has promised its concerned investors that it \"will be below, call it, at closing with accounting for synergies around 4x. And [will] de-lever quickly to below 3x and almost 2x over the convening 2 years to 2.5 years.\" 1 This means PSKY would need to realize ~$16 billion of cost savings in order to meet the midpoint of its leverage target range, far in excess of the $6+ billion synergy figure PSKY has publicly communicated 2 . The only way to achieve this would be through greater, even deeper job cuts that would irreparably harm the entertainment industry. PSKY is already undershooting its financial projections. Based on their most recent published \"Adjusted OIBDA\" guidance for 2026, they have underperformed their initial Paramount acquisition business plan by 15% 3 , which could mean even more cost cuts. This extraordinary execution risk and track record of operational underperformance could impact PSKY's ability to fund and close a transaction.",
+              "locator": "p023",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p024",
+              "text": "Post-merger, PSKY would be over-leveraged with approximately $84 billion of total proforma debt — the largest proposed leveraged buyout in history — and an estimated ~7x leverage ratio (Debt / 2026 LTM EBITDA).",
+              "locator": "p024",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p025",
+              "text": "PSKY has promised its concerned investors that it \"will be below, call it, at closing with accounting for synergies around 4x. And [will] de-lever quickly to below 3x and almost 2x over the convening 2 years to 2.5 years.\" 1",
+              "locator": "p025",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p026",
+              "text": "This means PSKY would need to realize ~$16 billion of cost savings in order to meet the midpoint of its leverage target range, far in excess of the $6+ billion synergy figure PSKY has publicly communicated 2 . The only way to achieve this would be through greater, even deeper job cuts that would irreparably harm the entertainment industry. PSKY is already undershooting its financial projections. Based on their most recent published \"Adjusted OIBDA\" guidance for 2026, they have underperformed their initial Paramount acquisition business plan by 15% 3 , which could mean even more cost cuts. This extraordinary execution risk and track record of operational underperformance could impact PSKY's ability to fund and close a transaction.",
+              "locator": "p026",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p027",
+              "text": "The only way to achieve this would be through greater, even deeper job cuts that would irreparably harm the entertainment industry.",
+              "locator": "p027",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p028",
+              "text": "PSKY is already undershooting its financial projections. Based on their most recent published \"Adjusted OIBDA\" guidance for 2026, they have underperformed their initial Paramount acquisition business plan by 15% 3 , which could mean even more cost cuts.",
+              "locator": "p028",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p029",
+              "text": "This extraordinary execution risk and track record of operational underperformance could impact PSKY's ability to fund and close a transaction.",
+              "locator": "p029",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p030",
+              "text": "A business plan that is dependent upon $16 billion in cost savings should be an unmistakable red flag for regulators, policymakers, union leaders and creatives.",
+              "locator": "p030",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p031",
+              "text": "Netflix's strong cash flow generation supports our all-cash transaction structure while preserving a healthy balance sheet and flexibility to capitalize on future strategic priorities. A combined Netflix and Warner Bros. will strengthen the entertainment industry, preserve choice and value for consumers, and give creators more opportunities.",
+              "locator": "p031",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p032",
+              "text": "WBD Stockholders — your vote is crucial. Vote FOR the Netflix and Warner Bros. deal at votewbdnetflix.com . A dedicated website providing ongoing information and resources about the transaction is available at netflixwbtogether.com .",
+              "locator": "p032",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p033",
+              "text": "About Netflix, Inc. Netflix (NASDAQ:NFLX) is one of the world's leading entertainment services offering TV series, films, games and live programming across a wide variety of genres and languages. Members can play, pause and resume watching as much as they want, anytime, anywhere, and can change their plans at any time.",
+              "locator": "p033",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p034",
+              "text": "Important Information and Where to Find It In connection with the proposed transaction between Netflix and WBD, WBD filed a definitive proxy statement on Schedule 14A (the \"Proxy Statement\") with the U.S. Securities and Exchange Commission (the \"SEC\"). The Proxy Statement was first mailed to WBD stockholders on or around February 17, 2026. Each of Netflix and WBD may also file with or furnish to the SEC other relevant documents regarding the proposed transaction. This communication is not a substitute for the Proxy Statement or any other document that Netflix or WBD may file with the SEC or mail to WBD's stockholders in connection with the proposed transaction. INVESTORS AND SECURITY HOLDERS OF NETFLIX AND WBD ARE URGED TO READ THE PROXY STATEMENT, AS WELL AS ANY OTHER RELEVANT DOCUMENTS FILED WITH THE SEC IN CONNECTION WITH THE PROPOSED TRANSACTION OR INCORPORATED BY REFERENCE INTO THE PROXY STATEMENT (INCLUDING ANY AMENDMENTS OR SUPPLEMENTS THERETO), BECAUSE THEY WILL CONTAIN IMPORTANT INFORMATION REGARDING NETFLIX, WBD, THE PROPOSED TRANSACTION AND RELATED MATTERS. Investors and security holders may obtain free copies of the Proxy Statement as well as other filings containing information about Netflix and WBD, without charge, at the SEC's website, https://www.sec.gov . The documents filed by Netflix with the SEC also may be obtained free of charge at Netflix's website at https://ir.netflix.net/home/default.aspx . The documents filed by WBD with the SEC also may be obtained",
+              "locator": "p034",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p035",
+              "text": "Participants in the Solicitation Netflix, WBD and certain of their respective directors and executive officers may be deemed to be participants in the solicitation of proxies from the stockholders of WBD in connection with the proposed transaction under the rules of the SEC. Information about the interests of the directors and executive officers of WBD and other persons who may be deemed to be participants in the solicitation of stockholders of WBD in connection with the proposed transaction and a description of their direct and indirect interests, by security holdings or otherwise, is included in the Proxy Statement, which has been filed by WBD with the SEC. Information about WBD's directors and executive officers is set forth in WBD's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 23, 2025, WBD's Annual Report on Form 10-K for the year ended December 31, 2024, and any subsequent filings with the SEC. Information about Netflix's directors and executive officers is set forth in Netflix's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 17, 2025, and any subsequent filings with the SEC. Additional information regarding the direct and indirect interests of those persons and other persons who may be deemed participants in the proposed transaction may be obtained by reading the Proxy Statement regarding the proposed transaction. Free copies of these documents may be obt",
+              "locator": "p035",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p036",
+              "text": "Cautionary Statement Regarding Forward-Looking Statements This document contains \"forward-looking statements\" within the meaning of the federal securities laws, including Section 27A of the U.S. Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended. These forward-looking statements are based on Netflix's and WBD's current expectations, estimates and projections about the expected date of closing of the proposed transaction and the potential benefits thereof, their respective businesses and industries, management's beliefs and certain assumptions made by Netflix and WBD, all of which are subject to change. In this context, forward-looking statements often address expected future business and financial performance and financial condition, and often contain words such as \"expect,\" \"anticipate,\" \"intend,\" \"plan,\" \"believe,\" \"could,\" \"seek,\" \"see,\" \"will,\" \"may,\" \"would,\" \"might,\" \"potentially,\" \"estimate,\" \"continue,\" \"expect,\" \"target,\" similar expressions or the negatives of these words or other comparable terminology that convey uncertainty of future events or outcomes. All forward-looking statements by their nature address matters that involve risks and uncertainties, many of which are beyond our control and are not guarantees of future results, such as statements about the consummation of the proposed transaction and the anticipated benefits thereof. These and other forward-looking statements, including the failure to consumma",
+              "locator": "p036",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p037",
+              "text": "1 Paramount Skydance Corporation M&A Call on 12/08/2025 2 Paramount Skydance 12/08/2025 Press Release 3 Creating a Next Generation Leading Entertainment Company and PSKY Q3'25 Shareholder Letter .",
+              "locator": "p037",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-8129e4a29e655e18c2-p038",
+              "text": "View original content to download multimedia: https://www.prnewswire.com/news-releases/wbd-files-definitive-proxy-statement-and-schedules-special-meeting-for-march-20-2026-to-approve-the-wbd-netflix-transaction-302689458.html",
+              "locator": "p038",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "mi-794e58b4f8209e8d01",
       "source_id": "netflix_ir",
       "company": "Netflix",
-      "topic": "earnings_strategy",
-      "title": "Press Release Details",
+      "topic": "partnership_distribution",
+      "title": "Netflix and Warner Bros. Discovery Amend Agreement to All-Cash Transaction",
       "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx",
       "published_at": "2026-01-20",
-      "collected_at": "2026-10-23T11:44:17+00:00",
+      "collected_at": "2026-10-23T11:52:06+00:00",
       "country": "global",
       "period": "",
       "source_name": "Netflix Investor Relations",
@@ -1831,8 +2948,175 @@
           "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
         }
       ],
-      "content_hash": "5f3f1574ff6ed065c706ddfa634a9ac58e20dfd11ddd04306765dc007e72d50e",
-      "last_checked_at": "2026-10-23T11:44:17+00:00"
+      "content_hash": "317445884687100e21d6e4df531c49a79ce80af82bbd250ddf35e1c36f7091f9",
+      "published_at_source": "official_feed",
+      "last_checked_at": "2026-10-23T11:52:06+00:00",
+      "versions": [
+        {
+          "content_hash": "5f3f1574ff6ed065c706ddfa634a9ac58e20dfd11ddd04306765dc007e72d50e",
+          "title": "Press Release Details",
+          "published_at": "2026-01-20",
+          "collected_at": "2026-10-23T11:44:17+00:00",
+          "evidence": [
+            {
+              "id": "mi-794e58b4f8209e8d01-p001",
+              "text": "All-Cash Structure Increases Value Certainty for WBD Stockholders, Accelerates WBD Stockholder Vote and Underscores Netflix's Financial Strength",
+              "locator": "p001",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p002",
+              "text": "WBD Files Preliminary Proxy Statement for Transaction Approval",
+              "locator": "p002",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p003",
+              "text": "HOLLYWOOD, Calif. and NEW YORK , Jan. 20, 2026 /PRNewswire/ -- Netflix, Inc. (NASDAQ:NFLX) (\"Netflix\") and Warner Bros. Discovery, Inc. (\"WBD\" or \"Warner Bros. Discovery\") announced they have amended their definitive agreement for Netflix's pending acquisition of Warner Bros. to an all-cash transaction. The revised agreement simplifies the transaction structure, provides greater certainty of value for WBD stockholders, and accelerates the path to a WBD stockholder vote.",
+              "locator": "p003",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p004",
+              "text": "The all-cash transaction continues to be valued at $27.75 per WBD share, unchanged from the prior transaction structure. WBD stockholders will also receive the additional value of shares of Discovery Global following its separation from WBD. The transaction will be financed through a combination of cash on hand, available credit facilities and committed financing.",
+              "locator": "p004",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p005",
+              "text": "The revised structure enhances execution certainty, aligns with Netflix's disciplined capital allocation framework and provides clear benefits, including:",
+              "locator": "p005",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p006",
+              "text": "Greater Value Certainty: The all-cash transaction provides enhanced certainty around the value WBD stockholders will receive at closing, eliminating market-based variability.",
+              "locator": "p006",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p007",
+              "text": "Faster Path to Stockholder Vote: The revised transaction structure is expected to enable WBD stockholders to vote on the proposed transaction by April 2026. To support this accelerated timeline, WBD has today filed its preliminary proxy statement with the SEC.",
+              "locator": "p007",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p008",
+              "text": "Netflix's strong cash flow generation supports the revised all-cash transaction structure while preserving a healthy balance sheet and flexibility to capitalize on future strategic priorities.",
+              "locator": "p008",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p009",
+              "text": "\"Today's revised merger agreement brings us even closer to combining two of the greatest storytelling companies in the world and with it even more people enjoying the entertainment they love to watch the most,\" said David Zaslav, President and CEO of Warner Bros. Discovery. \"By coming together with Netflix, we will combine the stories Warner Bros. has told that have captured the world's attention for more than a century and ensure audiences continue to enjoy them for generations to come.\"",
+              "locator": "p009",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p010",
+              "text": "\"The WBD Board continues to support and unanimously recommend our transaction, and we are confident that it will deliver the best outcome for stockholders, consumers, creators and the broader entertainment community,\" said Ted Sarandos, co-CEO of Netflix. \"Our revised all-cash agreement will enable an expedited timeline to a stockholder vote and provide greater financial certainty at $27.75 per share in cash, plus the value from the planned separation of Discovery Global. Together, Netflix and Warner Bros. will deliver broader choice and greater value to audiences worldwide, enhancing access to world-class television and film both at home and in theaters. The acquisition will also significantly expand U.S. production capacity and investment in original programming, driving job creation and long-term industry growth.\"",
+              "locator": "p010",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p011",
+              "text": "\"Over the last decade, when much of the entertainment industry has contracted, Netflix has grown and invested tremendously in the business of film and television in the U.S. and abroad. This transaction will further fuel that growth and investment,\" said Greg Peters, co-CEO of Netflix. \"By amending our agreement today, we are underscoring what we have believed all along: not only does our transaction provide superior stockholder value, it is also fundamentally pro-consumer, pro-innovation, pro-creator and pro-growth. Our revised all-cash agreement demonstrates our commitment to the transaction with Warner Bros. and provides WBD stockholders with an accelerated process and the financial certainty of cash consideration, while maintaining our commitment to a healthy balance sheet and our solid investment grade ratings. We will continue to work closely with WBD to successfully complete the transaction as we remain focused on our mission to entertain the world and, together, define the next century of storytelling.\"",
+              "locator": "p011",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p012",
+              "text": "\"Our amended agreement with Netflix is a testament to the Board's unrelenting focus on representing and advancing our stockholders' interests,\" said Samuel A. Di Piazza, Jr., Chair of the Warner Bros. Discovery Board of Directors. \"By transitioning to all-cash consideration, we can now deliver the incredible value of our combination with Netflix at even greater levels of certainty, while providing our stockholders the opportunity to participate in management's strategic plans to realize the value of Discovery Global's iconic brands and global reach. We look forward to continuing to engage with our investors about the compelling benefits of the transaction as we progress toward our stockholder vote on an accelerated timeline.\"",
+              "locator": "p012",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p013",
+              "text": "As previously announced, WBD will separate Warner Bros. and Discovery Global into two separate publicly traded companies. This separation is expected to be completed in six to nine months, prior to the closing of the proposed Netflix and Warner Bros. transaction.",
+              "locator": "p013",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p014",
+              "text": "The amended, all-cash transaction was unanimously approved by the Boards of Directors of both Netflix and WBD. Closing remains subject to completion of the Discovery Global separation, receipt of required regulatory approvals, approval of WBD stockholders and other customary closing conditions. The financing structure is not subject to review by the Committee on Foreign Investment in the United States (CFIUS).",
+              "locator": "p014",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p015",
+              "text": "Netflix and WBD have each submitted their Hart-Scott-Rodino (HSR) filings and are engaging with competition authorities, including the U.S. Department of Justice and European Commission. Netflix and WBD remain committed to working closely with regulators and all stakeholders to ensure a smooth and successful transaction. As previously disclosed, the transaction is expected to close 12-18 months from the date that Netflix and WBD originally entered into their merger agreement.",
+              "locator": "p015",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p016",
+              "text": "Advisors Moelis & Company LLC is acting as Netflix's financial advisor and Skadden, Arps, Slate, Meagher & Flom LLP is serving as legal counsel. Wells Fargo is acting as an additional financial advisor and, along with BNP and HSBC, are serving as lead arrangers for the debt financing related to the transaction.",
+              "locator": "p016",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p017",
+              "text": "Allen & Company, J.P. Morgan and Evercore are serving as financial advisors to Warner Bros. Discovery and Wachtell, Lipton, Rosen & Katz and Debevoise & Plimpton LLP are serving as legal counsel.",
+              "locator": "p017",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p018",
+              "text": "A dedicated website providing ongoing information and resources about the transaction is available at netflixwbtogether.com .",
+              "locator": "p018",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p019",
+              "text": "About Netflix, Inc. Netflix is one of the world's leading entertainment services offering TV series, films, games and live programming across a wide variety of genres and languages. Members can play, pause and resume watching as much as they want, anytime, anywhere, and can change their plans at any time.",
+              "locator": "p019",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p020",
+              "text": "About Warner Bros. Discovery Warner Bros. Discovery is a leading global media and entertainment company that creates and distributes the world's most differentiated and complete portfolio of branded content across television, film, streaming and gaming. Warner Bros. Discovery inspires, informs and entertains audiences worldwide through its iconic brands and products including: Discovery Channel, HBO Max, discovery+, CNN, DC, TNT Sports, Eurosport, HBO, HGTV, Food Network, OWN, Investigation Discovery, TLC, Magnolia Network, TNT, TBS, truTV, Travel Channel, Animal Planet, Science Channel, Warner Bros. Motion Picture Group, Warner Bros. Television Group, Warner Bros. Pictures Animation, Warner Bros. Games, New Line Cinema, Cartoon Network, Adult Swim, Turner Classic Movies, Discovery en Español, Hogar de HGTV and others. For more information, please visit www.wbd.com .",
+              "locator": "p020",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p021",
+              "text": "Important Information About the Transaction and Where to Find It",
+              "locator": "p021",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p022",
+              "text": "This communication may be deemed to be solicitation material in respect of the proposed transaction between WBD and Netflix (the \"proposed transaction\"). In connection with the proposed transaction between Netflix and WBD, WBD filed a preliminary proxy statement on Schedule 14A (the \"Proxy Statement\") with the U.S. Securities and Exchange Commission (the \"SEC\") on January 20, 2026. The preliminary Proxy Statement is not final and may be amended, and the definitive Proxy Statement (if and when available) will be mailed to stockholders of WBD. WBD also intends to file a registration statement for the newly formed subsidiary of WBD (\"Discovery Global\") that will be spun off from WBD prior to the closing of the proposed transaction. Each of Netflix and WBD may also file with or furnish to the SEC other relevant documents regarding the proposed transaction. This communication is not a substitute for the Proxy Statement or any other document that Netflix or WBD may file with the SEC or mail to WBD's stockholders in connection with the proposed transaction. INVESTORS AND SECURITY HOLDERS OF NETFLIX AND WBD ARE URGED TO READ THE PROXY STATEMENT, AS WELL AS ANY OTHER RELEVANT DOCUMENTS FILED WITH THE SEC IN CONNECTION WITH THE PROPOSED TRANSACTION OR INCORPORATED BY REFERENCE INTO THE PROXY STATEMENT (INCLUDING ANY AMENDMENTS OR SUPPLEMENTS THERETO), BECAUSE THEY WILL CONTAIN IMPORTANT INFORMATION REGARDING NETFLIX, WBD, THE PROPOSED TRANSACTION AND RELATED MATTERS. The documents file",
+              "locator": "p022",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p024",
+              "text": "Netflix, WBD and certain of their respective directors and executive officers may be deemed to be participants in the solicitation of proxies from the stockholders of WBD in connection with the proposed transaction under the rules of the SEC. Information about the interests of the directors and executive officers of WBD and other persons who may be deemed to be participants in the solicitation of stockholders of WBD in connection with the proposed transaction and a description of their direct and indirect interests, by security holdings or otherwise, will be included in the Proxy Statement, which will be filed by WBD with the SEC. Information about WBD's directors and executive officers is set forth in WBD's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 23, 2025, WBD's Annual Report on Form 10-K for the year ended December 31, 2024, and any subsequent filings with the SEC. Information about Netflix's directors and executive officers is set forth in Netflix's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 17, 2025, and any subsequent filings with the SEC. Additional information regarding the direct and indirect interests of those persons and other persons who may be deemed participants in the proposed transaction may be obtained by reading the Proxy Statement regarding the proposed transaction when it becomes available. Free copies of these documents may be obtain",
+              "locator": "p024",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p025",
+              "text": "Cautionary Statement Regarding Forward-Looking Statements",
+              "locator": "p025",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p026",
+              "text": "This document contains \"forward-looking statements\" within the meaning of the federal securities laws, including Section 27A of the U.S. Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended. These forward-looking statements are based on Netflix's and WBD's current expectations, estimates and projections about the expected date of closing of the proposed transaction and the potential benefits thereof, their respective businesses and industries, management's beliefs and certain assumptions made by Netflix and WBD, all of which are subject to change. In this context, forward-looking statements often address expected future business and financial performance and financial condition, and often contain words such as \"expect,\" \"anticipate,\" \"intend,\" \"plan,\" \"believe,\" \"could,\" \"seek,\" \"see,\" \"will,\" \"may,\" \"would,\" \"might,\" \"potentially,\" \"estimate,\" \"continue,\" \"expect,\" \"target,\" similar expressions or the negatives of these words or other comparable terminology that convey uncertainty of future events or outcomes. All forward-looking statements by their nature address matters that involve risks and uncertainties, many of which are beyond our control and are not guarantees of future results, such as statements about the consummation of the proposed transaction and the anticipated benefits thereof. These and other forward-looking statements, including the failure to consummate the proposed transaction or to make or take any filing",
+              "locator": "p026",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            },
+            {
+              "id": "mi-794e58b4f8209e8d01-p027",
+              "text": "View original content to download multimedia: https://www.prnewswire.com/news-releases/netflix-and-warner-bros-discovery-amend-agreement-to-all-cash-transaction-302665337.html",
+              "locator": "p027",
+              "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
