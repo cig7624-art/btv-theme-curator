@@ -253,6 +253,50 @@ class MediaInsightsStorageTests(unittest.TestCase):
         self.assertNotIn("SECRET", str(error.exception))
         self.assertEqual(self.path.read_bytes(), before)
 
+    def test_large_contents_metadata_reads_raw_same_endpoint_and_preserves_sha(self):
+        large = deepcopy(self.initial)
+        large["public_excerpt_archive"] = "공식 원문 " * 100_000
+        encoded = payload(large)
+        self.assertGreater(len(encoded), 1024 * 1024)
+        metadata = Mock(status_code=200)
+        metadata.json.return_value = {"sha": "large-current-sha", "encoding": "none", "content": "",
+                                      "size": len(encoded), "download_url": "https://unsafe.example/ignored"}
+        raw = Mock(status_code=200, headers={"Content-Length": str(len(encoded))})
+        raw.iter_content.return_value = [encoded[offset:offset + 65_536]
+                                         for offset in range(0, len(encoded), 65_536)]
+        put = Mock(status_code=200)
+        put.json.return_value = {"commit": {"html_url": "https://github.com/owner/repo/commit/example"}}
+        with patch("media_insights_storage.requests.request", side_effect=[metadata, raw, put]) as request:
+            result = persist_media_analysis("one", analysis(self.first), snapshot_path=self.path, github_config=CONFIG)
+        calls = request.call_args_list
+        self.assertEqual(result["status"], "success")
+        self.assertEqual(calls[0].args[1], calls[1].args[1])
+        self.assertEqual(calls[1].kwargs["headers"]["Accept"], "application/vnd.github.raw+json")
+        self.assertEqual(calls[1].kwargs["params"], {"ref": "main"})
+        self.assertTrue(calls[1].kwargs["stream"])
+        self.assertEqual(calls[2].kwargs["json"]["sha"], "large-current-sha")
+        self.assertEqual(result["snapshot"]["public_excerpt_archive"], large["public_excerpt_archive"])
+        raw.close.assert_called_once()
+
+    def test_failed_or_oversized_raw_read_never_writes_or_overwrites_local(self):
+        before = self.path.read_bytes()
+        metadata = Mock(status_code=200)
+        metadata.json.return_value = {"sha": "large-sha", "encoding": "none", "content": ""}
+        failed = Mock(status_code=500, headers={}, text="PRIVATE-TOKEN SECRET BODY")
+        oversized = Mock(status_code=200, headers={"Content-Length": str(25 * 1024 * 1024)})
+        unbounded = Mock(status_code=200, headers={})
+        unbounded.iter_content.return_value = [b"x" * 1024 * 1024] * 25
+        for raw in (failed, oversized, unbounded):
+            with self.subTest(status=raw.status_code), \
+                    patch("media_insights_storage.requests.request", side_effect=[metadata, raw]) as request, \
+                    self.assertRaises(MediaInsightsStorageError) as error:
+                persist_media_analysis("one", analysis(self.first), snapshot_path=self.path, github_config=CONFIG)
+            self.assertEqual(request.call_count, 2)
+            self.assertEqual(self.path.read_bytes(), before)
+            self.assertNotIn("PRIVATE", str(error.exception))
+            self.assertNotIn("SECRET", str(error.exception))
+            raw.close.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()

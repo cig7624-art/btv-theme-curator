@@ -23,6 +23,7 @@ from data_storage_lock import DATA_WRITE_LOCK
 
 
 DEFAULT_REMOTE_PATH = "media_insights_snapshot.json"
+MAX_REMOTE_SNAPSHOT_BYTES = 24 * 1024 * 1024
 _PROTECTED_JSON = {"ott_home_snapshot.json", "collection_status.json", "release_state.json"}
 
 
@@ -199,13 +200,13 @@ def _remote_path(config):
     return value
 
 
-def _request(method, config, path, **kwargs):
+def _request(method, config, path, *, accept="application/vnd.github+json", **kwargs):
     repo = str(config.get("repo", ""))
     if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo):
         raise MediaInsightsStorageError("GitHub 저장소 연결 설정을 확인해 주세요.")
     try:
         return requests.request(method, "https://api.github.com/repos/" + repo + "/contents/" + quote(path, safe="/"),
-            headers={"Authorization": "Bearer " + str(config["token"]), "Accept": "application/vnd.github+json",
+            headers={"Authorization": "Bearer " + str(config["token"]), "Accept": accept,
                      "X-GitHub-Api-Version": "2022-11-28"}, timeout=(5, 25), **kwargs)
     except Exception:
         raise MediaInsightsStorageError("GitHub 저장 결과를 확인하지 못했습니다. 분석 내용은 유지했습니다.") from None
@@ -219,8 +220,33 @@ def _read_remote(config, path):
         raise MediaInsightsStorageError("GitHub 미디어 자료를 읽지 못했습니다. 연결 설정을 확인해 주세요.")
     try:
         data = response.json()
-        payload = base64.b64decode(data["content"].replace("\n", ""), validate=True)
         if not isinstance(data.get("sha"), str) or not data["sha"]:
+            raise ValueError
+        # Contents metadata omits base64 for files larger than 1 MiB. Fetch
+        # raw bytes from the same authenticated endpoint, never download_url.
+        if data.get("encoding") == "none":
+            raw = _request("GET", config, path, params={"ref": config.get("branch") or "main"},
+                           accept="application/vnd.github.raw+json", stream=True)
+            try:
+                if raw.status_code != 200:
+                    raise ValueError
+                declared = raw.headers.get("Content-Length")
+                if declared and int(declared) > MAX_REMOTE_SNAPSHOT_BYTES:
+                    raise ValueError
+                chunks, size = [], 0
+                for chunk in raw.iter_content(chunk_size=64 * 1024):
+                    if not chunk:
+                        continue
+                    size += len(chunk)
+                    if size > MAX_REMOTE_SNAPSHOT_BYTES:
+                        raise ValueError
+                    chunks.append(chunk)
+                payload = b"".join(chunks)
+            finally:
+                raw.close()
+        else:
+            payload = base64.b64decode(data["content"].replace("\n", ""), validate=True)
+        if len(payload) > MAX_REMOTE_SNAPSHOT_BYTES:
             raise ValueError
         return {"snapshot": _decode(payload), "sha": data["sha"]}
     except MediaInsightsStorageError:
