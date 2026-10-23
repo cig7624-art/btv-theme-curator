@@ -1,6 +1,6 @@
 name: Verify real AI Director conversation
 
-# Verify that an arbitrary brief immediately creates a theme and supports chat edits.
+# Verify a direct brief, immediate recommended works, and contextual title/mood edits.
 on:
   workflow_dispatch:
   push:
