@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-23T11:29:58.068848+00:00",
+  "checked_at": "2026-10-23T11:33:53.466820+00:00",
   "sources": [
     {
       "id": "netflix_ir",
@@ -7,56 +7,12 @@
       "status": "ok",
       "links": [
         {
-          "text": "Skip to main content",
-          "url": "https://ir.netflix.net/financials/quarterly-earnings/default.aspx#main-content"
-        },
-        {
-          "text": "Skip to main content",
-          "url": "https://ir.netflix.net/financials/quarterly-earnings/default.aspx#maincontent"
-        },
-        {
-          "text": "Top Investor Questions",
-          "url": "https://ir.netflix.net/ir-overview/top-investor-questions/default.aspx"
-        },
-        {
           "text": "Content Accounting Overview",
           "url": "https://s22.q4cdn.com/959853165/files/doc_downloads/2025/IR-Content-Accounting-Slides-May-2025.pdf"
         },
         {
           "text": "Financials",
           "url": "https://ir.netflix.net/financials/quarterly-earnings/default.aspx"
-        },
-        {
-          "text": "Financial Statements",
-          "url": "https://ir.netflix.net/financials/financial-statements/default.aspx"
-        },
-        {
-          "text": "Annual Reports & Proxies",
-          "url": "https://ir.netflix.net/financials/annual-reports-and-proxies/default.aspx"
-        },
-        {
-          "text": "SEC Filings",
-          "url": "https://ir.netflix.net/financials/sec-filings/default.aspx"
-        },
-        {
-          "text": "Tax Information",
-          "url": "https://ir.netflix.net/financials/taxinformation/default.aspx"
-        },
-        {
-          "text": "News & Events",
-          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/default.aspx"
-        },
-        {
-          "text": "Investor Events",
-          "url": "https://ir.netflix.net/investor-news-and-events/investor-events/default.aspx"
-        },
-        {
-          "text": "Resources",
-          "url": "https://ir.netflix.net/resources/investor-contacts/default.aspx"
-        },
-        {
-          "text": "Email Alerts",
-          "url": "https://ir.netflix.net/resources/email-alerts/default.aspx"
         }
       ],
       "http_status": 200,
@@ -77,52 +33,52 @@
       "feed_items": [
         {
           "text": "Netflix to Announce Third Quarter 2026 Financial Results",
-          "url": "",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-to-Announce-Third-Quarter-2026-Financial-Results/default.aspx",
           "date": "Mon, 14 Sep 2026 12:00:00 -0400"
         },
         {
           "text": "Netflix to Announce Second Quarter 2026 Financial Results",
-          "url": "",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-to-Announce-Second-Quarter-2026-Financial-Results/default.aspx",
           "date": "Mon, 15 Jun 2026 12:00:00 -0400"
         },
         {
           "text": "Netflix to Announce First Quarter 2026 Financial Results",
-          "url": "",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-to-Announce-First-Quarter-2026-Financial-Results/default.aspx",
           "date": "Fri, 13 Mar 2026 12:00:00 -0400"
         },
         {
           "text": "Netflix Declines to Raise Offer for Warner Bros.",
-          "url": "",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx",
           "date": "Thu, 26 Feb 2026 17:45:00 -0500"
         },
         {
           "text": "Netflix CFO to Participate in a Q&A session at the Morgan Stanley Technology, Media & Telecom Conference",
-          "url": "",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-CFO-to-Participate-in-a-QA-session-at-the-Morgan-Stanley-Technology-Media--Telecom-Conference/default.aspx",
           "date": "Wed, 25 Feb 2026 12:00:00 -0500"
         },
         {
           "text": "WBD Files Definitive Proxy Statement and Schedules Special Meeting for March 20, 2026, to Approve the WBD-Netflix Transaction",
-          "url": "",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx",
           "date": "Tue, 17 Feb 2026 07:03:00 -0500"
         },
         {
           "text": "Netflix and Warner Bros. Discovery Amend Agreement to All-Cash Transaction",
-          "url": "",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx",
           "date": "Tue, 20 Jan 2026 07:05:00 -0500"
         },
         {
           "text": "Netflix Supports Warner Bros. Discovery Board's Commitment to Merger Agreement",
-          "url": "",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx",
           "date": "Wed, 07 Jan 2026 07:02:00 -0500"
         },
         {
           "text": "Netflix Recommends Rejection Of Mini-Tender Offer By TRC Capital Investment Corporation",
-          "url": "",
+          "url": "/files/doc_news/2025/Dec/Netflix-Mini-tender-offer-response.pdf",
           "date": "Wed, 24 Dec 2025 06:30:00 -0500"
         },
         {
           "text": "Netflix Welcomes Warner Bros. Discovery Board Recommendation",
-          "url": "",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2025/Netflix-Welcomes-Warner-Bros--Discovery-Board-Recommendation/default.aspx",
           "date": "Wed, 17 Dec 2025 07:04:00 -0500"
         }
       ],
@@ -130,12 +86,14 @@
     },
     {
       "id": "netflix_news",
-      "url": "https://about.netflix.com/en/news",
-      "status": "unavailable",
+      "url": "https://about.netflix.com/",
+      "status": "ok",
       "links": [],
-      "http_status": 404,
-      "final_url": "https://about.netflix.com/en/news",
-      "content_type": "text/html; charset=utf-8"
+      "http_status": 200,
+      "final_url": "http://about.netflix.com/en",
+      "content_type": "text/html; charset=utf-8",
+      "title": "About Netflix  - Homepage",
+      "excerpt": "We are here to entertain the world, one fan at a time. Thrilling everyone again and again. Whatever you’re into, whatever your mood, Netflix delivers the next series, films and games you’ll obsess over. This is entertainment the world never sees coming – and can’t stop talking about. We do this through: Reach We are entertaining over half a billion people in more than 190 countries and 50 languages, programmed for just about every taste and culture. Recommendations To help you discover something great every time, no matter what you’re looking for. Fandom When our series and films become cultural moments, you can feel it across music, books, fashion, travel and more."
     },
     {
       "id": "disney_ir",
@@ -143,68 +101,16 @@
       "status": "ok",
       "links": [
         {
-          "text": "Skip to main content",
-          "url": "https://investors.thewaltdisneycompany.com/overview/default.aspx#main-content"
-        },
-        {
-          "text": "Overview",
-          "url": "https://investors.thewaltdisneycompany.com/overview/default.aspx"
-        },
-        {
-          "text": "News",
-          "url": "https://investors.thewaltdisneycompany.com/news/default.aspx"
-        },
-        {
-          "text": "Events & Presentations",
-          "url": "https://investors.thewaltdisneycompany.com/events-and-presentations/default.aspx"
-        },
-        {
-          "text": "Stock Info",
-          "url": "https://investors.thewaltdisneycompany.com/stock-info/default.aspx"
-        },
-        {
           "text": "Financials",
           "url": "https://investors.thewaltdisneycompany.com/financials/quarterly-results/default.aspx"
         },
         {
-          "text": "Annual Reports",
-          "url": "https://investors.thewaltdisneycompany.com/financials/annual-reports/default.aspx"
-        },
-        {
-          "text": "SEC Filings",
-          "url": "https://investors.thewaltdisneycompany.com/financials/sec-filings/default.aspx"
-        },
-        {
-          "text": "Governance",
-          "url": "https://investors.thewaltdisneycompany.com/default.aspx"
-        },
-        {
-          "text": "Governance Documents",
-          "url": "https://investors.thewaltdisneycompany.com/governance/governance-documents/default.aspx"
-        },
-        {
-          "text": "Board of Directors",
-          "url": "https://investors.thewaltdisneycompany.com/governance/board-of-directors/default.aspx"
-        },
-        {
-          "text": "Committee Composition",
-          "url": "https://investors.thewaltdisneycompany.com/governance/committee-composition/default.aspx"
-        },
-        {
-          "text": "Resources",
-          "url": "https://investors.thewaltdisneycompany.com/resources/investor-faqs/default.aspx"
-        },
-        {
-          "text": "Shareholder Newsletter",
-          "url": "https://investors.thewaltdisneycompany.com/resources/shareholder-newsletter/default.aspx"
-        },
-        {
-          "text": "Contacts",
-          "url": "https://investors.thewaltdisneycompany.com/resources/contacts/default.aspx"
-        },
-        {
           "text": "Shareholder Letter of Q3 2026, PDF file, (opens in new window)",
           "url": "https://s206.q4cdn.com/979796730/files/doc_financials/2026/q3/q3-fy26-earnings.pdf"
+        },
+        {
+          "text": "Webcast of Q3 2026, Online link, (opens in new window)",
+          "url": "https://events.q4inc.com/attendee/200002552"
         },
         {
           "text": "Financial Reconciliations of Q3 2026, PDF file, (opens in new window)",
@@ -217,10 +123,6 @@
         {
           "text": "Interest-Based Ads opens in new window",
           "url": "https://privacy.thewaltdisneycompany.com/en/privacy-controls/online-tracking-and-advertising/"
-        },
-        {
-          "text": "Site Map opens in new window",
-          "url": "https://investors.thewaltdisneycompany.com/site-map/default.aspx"
         }
       ],
       "http_status": 200,
@@ -241,82 +143,82 @@
       "feed_items": [
         {
           "text": "The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
           "date": "Thu, 15 Oct 2026 20:00:28 +0000"
         },
         {
           "text": "Behind the Scenes of 20th Century Studios’ ‘Whalefall,’ a Survival Thriller with Heart",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/whalefall-austin-abrams-josh-brolin/",
           "date": "Thu, 15 Oct 2026 18:44:32 +0000"
         },
         {
           "text": "Disney Imagination Revealed as the First Disney Cruise Ship to Sail from Japan",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/imagination-cruise-ship-japan/",
           "date": "Wed, 14 Oct 2026 03:01:10 +0000"
         },
         {
           "text": "Marvel Television’s ‘VisionQuest’: Paul Bettany and James Spader on Vision’s Journey of Self-Discovery",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/marvel-television-visionquest-disney-plus/",
           "date": "Tue, 13 Oct 2026 19:08:14 +0000"
         },
         {
           "text": "Inside ‘Disney’s Hexed,’ a Mother-Daughter Adventure in a World of Witches",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/disneys-hexed-billie-alice/",
           "date": "Tue, 13 Oct 2026 00:58:46 +0000"
         },
         {
           "text": "‘Artemis Fowl’ Series Greenlit for Disney Channel and Disney+",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/artemis-fowl-disney-channel-disney-plus/",
           "date": "Mon, 12 Oct 2026 13:59:26 +0000"
         },
         {
           "text": "ESPN and Disney Jr. Celebrate Two Years of Impact During Youth Sports Week",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/espn-disney-jr-youth-sports-week/",
           "date": "Fri, 09 Oct 2026 16:00:08 +0000"
         },
         {
           "text": "Disney Believe to Debut World’s First ‘Encanto’ Musical, All-New ‘Frozen’ Family Feast and More in December 2027",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/believe-cruise-ship-details/",
           "date": "Wed, 07 Oct 2026 22:12:13 +0000"
         },
         {
           "text": "‘Abbott Elementary’ Is Just Getting Started, 6 Seasons and 100 Episodes Later",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/abbott-elementary-season-6/",
           "date": "Wed, 07 Oct 2026 18:22:51 +0000"
         },
         {
           "text": "Disney+ to Stream Super Bowl LXI, Joining ESPN and ABC to Give Fans More Ways to Watch",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
           "date": "Wed, 07 Oct 2026 15:02:20 +0000"
         },
         {
           "text": "Verts for ABC News: A New Way to Discover News",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/verts-abc-news/",
           "date": "Mon, 05 Oct 2026 13:50:08 +0000"
         },
         {
           "text": "‘Avengers: Endgame’ Surpasses ‘Avatar’ to Reclaim All-Time Box Office Record",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/avengers-endgame-box-office-record/",
           "date": "Sun, 04 Oct 2026 15:40:04 +0000"
         },
         {
           "text": "The Making of ‘Walt Disney Archives: Uncrated’ at D23: The Ultimate Disney Fan Event",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/walt-disney-archives-uncrated/",
           "date": "Thu, 01 Oct 2026 22:42:27 +0000"
         },
         {
           "text": "‘Coven Academy’ Brings Magic, Mystery, and Found Family to Modern Disney Audiences",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/coven-academy-freeform-hulu-disney-plus/",
           "date": "Wed, 30 Sep 2026 16:31:38 +0000"
         },
         {
           "text": "Russo Brothers Unpack Explosive ‘Avengers: Doomsday’ Footage in ‘Endgame: Encore’",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/russo-brothers-avengers-endgame-doomsday/",
           "date": "Tue, 29 Sep 2026 15:38:48 +0000"
         },
         {
           "text": "‘Toy Story 5’ Premieres at No. 1 on Disney+",
-          "url": "",
+          "url": "https://thewaltdisneycompany.com/news/toy-story-5-streaming/",
           "date": "Mon, 28 Sep 2026 22:45:22 +0000"
         }
       ],
@@ -328,48 +230,8 @@
       "status": "ok",
       "links": [
         {
-          "text": "Skip to main content",
-          "url": "https://ir.aboutamazon.com/quarterly-results/default.aspx#main-content"
-        },
-        {
-          "text": "Skip to main content",
-          "url": "https://ir.aboutamazon.com/quarterly-results/default.aspx#maincontent"
-        },
-        {
-          "text": "France Français",
-          "url": "https://www.aboutamazon.fr/"
-        },
-        {
-          "text": "Spain (España) Español",
-          "url": "https://www.aboutamazon.es/"
-        },
-        {
-          "text": "Investor Relations",
-          "url": "https://ir.aboutamazon.com/overview/default.aspx"
-        },
-        {
           "text": "Quarterly results",
           "url": "https://ir.aboutamazon.com/quarterly-results/default.aspx"
-        },
-        {
-          "text": "Press releases",
-          "url": "https://press.aboutamazon.com/"
-        },
-        {
-          "text": "Sustainability",
-          "url": "https://sustainability.aboutamazon.com/"
-        },
-        {
-          "text": "Packaging",
-          "url": "https://sustainability.aboutamazon.com/waste/packaging"
-        },
-        {
-          "text": "Progress",
-          "url": "https://sustainability.aboutamazon.com/progress"
-        },
-        {
-          "text": "Investors",
-          "url": "https://ir.aboutamazon.com/"
         }
       ],
       "http_status": 200,
@@ -390,52 +252,52 @@
       "feed_items": [
         {
           "text": "Amazon.com to Webcast Third Quarter 2026 Financial Results Conference Call",
-          "url": "",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-to-Webcast-Third-Quarter-2026-Financial-Results-Conference-Call/default.aspx",
           "date": "Thu, 15 Oct 2026 16:01:00 -0400"
         },
         {
           "text": "Amazon.com Announces Second Quarter Results",
-          "url": "",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx",
           "date": "Thu, 30 Jul 2026 16:01:00 -0400"
         },
         {
           "text": "Amazon.com to Webcast Second Quarter 2026 Financial Results Conference Call",
-          "url": "",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-to-Webcast-Second-Quarter-2026-Financial-Results-Conference-Call/default.aspx",
           "date": "Thu, 16 Jul 2026 16:01:00 -0400"
         },
         {
           "text": "Amazon.com Announces First Quarter Results",
-          "url": "",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-First-Quarter-Results/default.aspx",
           "date": "Wed, 29 Apr 2026 16:01:00 -0400"
         },
         {
           "text": "Amazon.com to Webcast First Quarter 2026 Financial Results Conference Call",
-          "url": "",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-to-Webcast-First-Quarter-2026-Financial-Results-Conference-Call-57c6bd583/default.aspx",
           "date": "Wed, 15 Apr 2026 16:01:00 -0400"
         },
         {
           "text": "2026 Proxy Statement and Annual Meeting Information",
-          "url": "",
+          "url": "https://www.ezodproxy.com/amazon/2026/proxy",
           "date": "Wed, 08 Apr 2026 05:00:00 -0400"
         },
         {
           "text": "2025 Letter to Shareholders",
-          "url": "",
+          "url": "/files/doc_financials/2026/ar/2025-Shareholder-Letter-Final.pdf",
           "date": "Wed, 08 Apr 2026 00:00:00 -0400"
         },
         {
           "text": "Amazon.com Announces Fourth Quarter Results",
-          "url": "",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx",
           "date": "Thu, 05 Feb 2026 16:01:00 -0500"
         },
         {
           "text": "Amazon.com to Webcast Fourth Quarter 2025 Financial Results Conference Call",
-          "url": "",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-to-Webcast-Fourth-Quarter-2025-Financial-Results-Conference-Call/default.aspx",
           "date": "Thu, 22 Jan 2026 16:01:00 -0500"
         },
         {
           "text": "Amazon.com Announces Third Quarter Results",
-          "url": "",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2025/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
           "date": "Thu, 30 Oct 2025 16:01:00 -0400"
         }
       ],
@@ -447,48 +309,12 @@
       "status": "ok",
       "links": [
         {
-          "text": "‘The Odyssey’ is coming to Prime Video November 17. Here's how to watch.",
-          "url": "https://www.aboutamazon.com/news/entertainment/the-odyssey-christopher-nolan-prime-video"
-        },
-        {
-          "text": "Entertainment",
-          "url": "https://www.aboutamazon.com/news/entertainment"
-        },
-        {
           "text": "Watch the new trailer for 'I Play Rocky,' the true story behind ‘Rocky,’ coming to theaters November 6, 2026",
           "url": "https://www.aboutamazon.com/news/entertainment/i-play-rocky-trailer-cast-release-date-amazon-mgm-studios"
         },
         {
-          "text": "'Carrie' renewed for Season 2: Everything to know and how to watch Season 1 on Prime Video",
-          "url": "https://www.aboutamazon.com/news/entertainment/carrie-stephen-king-mike-flanagan-prime-video"
-        },
-        {
-          "text": "Everything to know about the ‘Fourth Wing’ series coming to Prime Video",
-          "url": "https://www.aboutamazon.com/news/entertainment/fourth-wing-series-prime-video"
-        },
-        {
-          "text": "Prime Video’s ‘Fourth Wing’ series casts Esther McGregor and Emilio Sakraya as leads",
-          "url": "https://www.aboutamazon.com/news/entertainment/fourth-wing-cast-violet-xaden-prime-video"
-        },
-        {
-          "text": "Top 10 Original films and series on Prime Video: See the weekly rankings",
-          "url": "https://www.aboutamazon.com/news/entertainment/prime-video-top-10-movies-shows"
-        },
-        {
-          "text": "Watch the trailer for ‘The Lord of the Rings: The Rings of Power’ Season 3, premiering November 11",
-          "url": "https://www.aboutamazon.com/news/entertainment/lord-of-the-rings-rings-of-power-season-3-prime-video"
-        },
-        {
           "text": "How to watch 'The Terminal List' Season 2 starring Chris Pratt, streaming now on Prime Video",
           "url": "https://www.aboutamazon.com/news/entertainment/terminal-list-prime-video-chris-pratt"
-        },
-        {
-          "text": "Watch the trailer for 'Perfect Liars,' the adaptation of the hit novel coming to Prime Video November 20",
-          "url": "https://www.aboutamazon.com/news/entertainment/perfect-liars-prime-video"
-        },
-        {
-          "text": "Watch the trailer for ‘Drive – The Pretenders,’ coming to Prime Video October 28",
-          "url": "https://www.aboutamazon.com/news/entertainment/drive-the-pretenders-prime-video"
         },
         {
           "text": "How to watch Michael Bublé and Drew Scott hockey docuseries 'Hometown Giants,' out now on Prime Video",
@@ -499,39 +325,15 @@
           "url": "https://www.aboutamazon.com/news/entertainment/masterplan-stanley-tucci-prime-video"
         },
         {
-          "text": "Investor Resources",
-          "url": "https://ir.aboutamazon.com/"
-        },
-        {
-          "text": "Careers",
-          "url": "https://www.amazon.jobs/?utm_source=amazonblog&utm_medium=footerlink&utm_campaign=footer"
-        },
-        {
-          "text": "Entertainment",
-          "url": "https://www.aboutamazon.com/entertainment-news"
-        },
-        {
-          "text": "Artificial Intelligence",
-          "url": "https://www.aboutamazon.com/artificial-intelligence-ai-news"
-        },
-        {
-          "text": "Sustainability",
-          "url": "https://www.aboutamazon.com/sustainability-company-reports-news-updates"
-        },
-        {
-          "text": "Artificial Intelligence",
-          "url": "https://www.aboutamazon.com/what-we-do/artificial-intelligence-ai"
-        },
-        {
-          "text": "Sustainability",
-          "url": "https://www.aboutamazon.com/planet"
+          "text": "How to watch the 2026-27 NBA season on Prime Video",
+          "url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video"
         }
       ],
       "http_status": 200,
       "final_url": "https://www.aboutamazon.com/news/entertainment",
       "content_type": "text/html; charset=utf-8",
       "title": "Entertainment",
-      "excerpt": "Entertainment Entertainment 563 results - showing results 1 - 12 563 results < Previous Next > ‘The Odyssey’ is coming to Prime Video November 17. Here's how to watch. Entertainment Watch the new trailer for 'I Play Rocky,' the true story behind ‘Rocky,’ coming to theaters November 6, 2026 Entertainment 'Carrie' renewed for Season 2: Everything to know and how to watch Season 1 on Prime Video Entertainment Everything to know about the ‘Fourth Wing’ series coming to Prime Video Entertainment Prime Video’s ‘Fourth Wing’ series casts Esther McGregor and Emilio Sakraya as leads Entertainment Top 10 Original films and series on Prime Video: See the weekly rankings Entertainment Watch the trailer for ‘The Lord of the Rings: The Rings of Power’ Season 3, premiering November 11 Entertainment How to watch 'The Terminal List' Season 2 starring Chris Pratt, streaming now on Prime Video Entertainment Watch the trailer for 'Perfect Liars,' the adaptation of the hit novel coming to Prime Video November 20 Entertainment Watch the trailer for ‘Drive – The Pretenders,’ coming to Prime Video October 28 Entertainment How to watch Michael Bublé and Drew Scott hockey docuseries 'Hometown Giants,' out now on Prime Video Entertainment How to watch ‘Masterplan’ starring Stanley Tucci, the new heist movie streaming now on Prime Video Entertainment 563 results - showing results 1 - 12 563 results < Previous Next > Scroll to top button"
+      "excerpt": "Entertainment Entertainment 562 results - showing results 1 - 12 562 results < Previous Next > Watch the new trailer for 'I Play Rocky,' the true story behind ‘Rocky,’ coming to theaters November 6, 2026 Entertainment 'Carrie' renewed for Season 2: Everything to know and how to watch Season 1 on Prime Video Entertainment Everything to know about the ‘Fourth Wing’ series coming to Prime Video Entertainment Prime Video’s ‘Fourth Wing’ series casts Esther McGregor and Emilio Sakraya as leads Entertainment Top 10 Original films and series on Prime Video: See the weekly rankings Entertainment Watch the trailer for ‘The Lord of the Rings: The Rings of Power’ Season 3, premiering November 11 Entertainment How to watch 'The Terminal List' Season 2 starring Chris Pratt, streaming now on Prime Video Entertainment Watch the trailer for 'Perfect Liars,' the adaptation of the hit novel coming to Prime Video November 20 Entertainment Watch the trailer for ‘Drive – The Pretenders,’ coming to Prime Video October 28 Entertainment How to watch Michael Bublé and Drew Scott hockey docuseries 'Hometown Giants,' out now on Prime Video Entertainment How to watch ‘Masterplan’ starring Stanley Tucci, the new heist movie streaming now on Prime Video Entertainment How to watch the 2026-27 NBA season on Prime Video Entertainment 562 results - showing results 1 - 12 562 results < Previous Next > Scroll to top button"
     },
     {
       "id": "comcast_ir",
@@ -563,82 +365,82 @@
       "feed_items": [
         {
           "text": "SKT, iPhone Duo 출시",
-          "url": "",
+          "url": "https://news.sktelecom.com/232371",
           "date": "Thu, 22 Oct 2026 23:38:30 +0000"
         },
         {
           "text": "SKT, iPhone Duo 출시",
-          "url": "",
+          "url": "https://news.sktelecom.com/232357",
           "date": "Thu, 22 Oct 2026 23:33:14 +0000"
         },
         {
           "text": "SKT, 수학 난제 연구로 독파모 모델 추론 성능 높인다",
-          "url": "",
+          "url": "https://news.sktelecom.com/232316",
           "date": "Thu, 22 Oct 2026 04:06:44 +0000"
         },
         {
           "text": "SKT, 수학 난제 연구로 독파모 모델 추론 성능 높인다",
-          "url": "",
+          "url": "https://news.sktelecom.com/232303",
           "date": "Thu, 22 Oct 2026 00:08:55 +0000"
         },
         {
           "text": "달리기 좋은 가을, SKT와 함께 러닝을 더 즐겁게",
-          "url": "",
+          "url": "https://news.sktelecom.com/232223",
           "date": "Wed, 21 Oct 2026 23:29:48 +0000"
         },
         {
           "text": "SKT, 러너 위한 체험 공간 ‘런메이트 캠프’ 연다",
-          "url": "",
+          "url": "https://news.sktelecom.com/232210",
           "date": "Tue, 20 Oct 2026 23:53:21 +0000"
         },
         {
           "text": "SKT, 러너 위한 체험 공간 ‘런메이트 캠프’ 연다",
-          "url": "",
+          "url": "https://news.sktelecom.com/232198",
           "date": "Tue, 20 Oct 2026 23:49:10 +0000"
         },
         {
           "text": "SKT-금융감독원, 금융의 날 앞두고 보이스피싱 피해 예방 나서",
-          "url": "",
+          "url": "https://news.sktelecom.com/232192",
           "date": "Tue, 20 Oct 2026 23:37:41 +0000"
         },
         {
           "text": "SKT-금융감독원, 금융의 날 앞두고 보이스피싱 피해 예방 나서",
-          "url": "",
+          "url": "https://news.sktelecom.com/232183",
           "date": "Tue, 20 Oct 2026 23:35:45 +0000"
         },
         {
           "text": "[영상] 영상·포스터 제작부터 협동 미션까지 ‘행복 AI 챌린지’ 현장",
-          "url": "",
+          "url": "https://news.sktelecom.com/232143",
           "date": "Mon, 19 Oct 2026 23:29:18 +0000"
         },
         {
           "text": "영상·포스터 제작부터 협동 미션까지 ‘행복 AI 챌린지’ 현장",
-          "url": "",
+          "url": "https://news.sktelecom.com/232085",
           "date": "Mon, 19 Oct 2026 23:28:38 +0000"
         },
         {
           "text": "SKT, ‘할인·구독·이색 경품’ 혜택 꽉 채운 아이폰 듀오 사전예약 실시",
-          "url": "",
+          "url": "https://news.sktelecom.com/232072",
           "date": "Thu, 15 Oct 2026 23:45:15 +0000"
         },
         {
           "text": "SKT, ‘할인·구독·이색 경품’ 혜택 꽉 채운 아이폰 듀오 사전예약 실시",
-          "url": "",
+          "url": "https://news.sktelecom.com/232060",
           "date": "Thu, 15 Oct 2026 23:37:21 +0000"
         },
         {
           "text": "화면은 더 넓게, 혜택은 더 풍성하게! iPhone Duo와 함께하는 SKT 혜택",
-          "url": "",
+          "url": "https://news.sktelecom.com/232034",
           "date": "Thu, 15 Oct 2026 23:29:56 +0000"
         },
         {
           "text": "SKT, 장애청소년 디지털 격차 해소 기여… ‘행복 AI 챌린지’ 개최",
-          "url": "",
+          "url": "https://news.sktelecom.com/232017",
           "date": "Thu, 15 Oct 2026 02:05:27 +0000"
         },
         {
           "text": "SKT, 장애청소년 디지털 격차 해소 기여… ‘행복 AI 챌린지’ 개최",
-          "url": "",
+          "url": "https://news.sktelecom.com/232006",
           "date": "Thu, 15 Oct 2026 01:00:55 +0000"
         }
       ],
@@ -670,92 +472,60 @@
       "status": "ok",
       "links": [
         {
-          "text": "본문 바로가기",
-          "url": "https://www.kocca.kr/kocca/main.do#main"
-        },
-        {
-          "text": "회원가입",
-          "url": "https://www.kocca.kr/kocca/member/joinMain.do?menuNo=204399"
-        },
-        {
-          "text": "EN",
-          "url": "https://www.kocca.kr/en/main.do"
-        },
-        {
-          "text": "CN",
-          "url": "https://www.kocca.kr/cn/main.do"
-        },
-        {
-          "text": "JP",
-          "url": "https://www.kocca.kr/jp/main.do"
-        },
-        {
-          "text": "한국콘텐츠진흥원 KOREA CREATIVE CONTENT AGENCY",
-          "url": "https://www.kocca.kr/kocca/main.do"
-        },
-        {
           "text": "방송영상・OTT 트렌드",
           "url": "https://www.kocca.kr/kocca/trendott/list.do?menuNo=205122"
-        },
-        {
-          "text": "콘텐츠도서관",
-          "url": "https://library.kocca.kr/main.do?action=main"
-        },
-        {
-          "text": "일반현황",
-          "url": "https://alio.go.kr/organ/organDisclosureDtl.do?apbaId=C0395&pageNo=1&apba_id=C0395"
         },
         {
           "text": "2027 콘텐츠 아메리카 한국공동관 및 쇼케이스 참가기업 추가모집 공고 ㅇ 행사기간 2027. 1. 19.(화) ~ 1. 21.(수) ㅇ 행사내용 북미/중남미 콘텐츠 산업을 연결하는 대표적인 B2B 콘텐츠 마켓으로, 방송사·OTT·제작배급사가 대거 참여하는 비즈니스 행사 접수 2026-10-22 ~ 2026-11-03",
           "url": "https://www.kocca.kr/kocca/pims/view.do?intcNo=326D00085010&menuNo=204104&recptSt=&category=&pageIndex=1&search=&searchWrd="
         },
         {
+          "text": "2026년 VP 활용 콘텐츠 제작 인프라 지원 추가공모 ㅇ 사업목적 스튜디오큐브 버추얼스튜디오 운영 활성화 및 중소 방송영상콘텐츠 제작사의 제작경쟁력 강화를 위한 VP 활용콘텐츠 제작 인프라 지원 접수 2026-10-22 ~ 2026-11-17",
+          "url": "https://www.kocca.kr/kocca/pims/view.do?intcNo=326D00059002&menuNo=204104&recptSt=&category=&pageIndex=1&search=&searchWrd="
+        },
+        {
+          "text": "<2026년 게임콘텐츠 제작지원 이용자평가 및 QA 지원> 과제 모집공고 ㅇ 모집구분 및 규모 - 이용자평가 13개사 ㅇ 모집대상 - 국내 중소게임기업이 개발 중인 게임이나,서비스 운영 중인 게임 - 온라인 이용자평가가 가능한 분야 (PC, 모바일, 콘솔 등)만 가능 접수 2026-10-15 ~ 2026-10-28",
+          "url": "https://www.kocca.kr/kocca/pims/view.do?intcNo=326D00108003&menuNo=204104&recptSt=&category=&pageIndex=1&search=&searchWrd="
+        },
+        {
+          "text": "2027 대중음악 해외 쇼케이스(Korea Spotlight) 참가뮤지션 모집 공고(1차/스페인) ㅇ 추진권역 스페인 바르셀로나 ㅇ 행사기간 2027. 6. 17. ~ 19. 접수 2026-10-14 ~ 2026-10-30",
+          "url": "https://www.kocca.kr/kocca/pims/view.do?intcNo=326D00110006&menuNo=204104&recptSt=&category=&pageIndex=1&search=&searchWrd="
+        },
+        {
+          "text": "2026년 KOCCA CKL TOKYO 입주기업 모집 ㅇ 사업목적 일본 진출을 희망하는 한국 콘텐츠기업 대상 사무공간 및 지원 프로그램 제공 ㅇ 입주기간 협약체결일로부터 1년 접수 2026-10-14 ~ 2026-11-04",
+          "url": "https://www.kocca.kr/kocca/pims/view.do?intcNo=326D00088011&menuNo=204104&recptSt=&category=&pageIndex=1&search=&searchWrd="
+        },
+        {
+          "text": "2026년 방송영상콘텐츠후반작업지원 추가공고 ㅇ 사업목적 후반작업 종합지원을 통해 국산 콘텐츠 품질 강화 및 방송콘텐츠 글로벌 경쟁력 강화 ㅇ 사업기간(협약기간) 협약 체결일 ~ 2027. 04. 30. 접수 2026-10-19 ~ 2026-10-29",
+          "url": "https://www.kocca.kr/kocca/pims/view.do?intcNo=126D00107006&menuNo=204104&recptSt=&category=&pageIndex=1&search=&searchWrd="
+        },
+        {
+          "text": "2026년 제 2차 글로벌게임허브센터 게임벤처4.0 신규 입주기업 모집 ㅇ 사업목적 - 글로벌 게임시장 진출 잠재력이 있는 우수 중소 게임기업의 발굴 및 육성 - 예비/초기창업인의 우수 게임 개발사로의 성장 지원 및 육성 접수 2026-10-15 ~ 2026-11-05",
+          "url": "https://www.kocca.kr/kocca/pims/view.do?intcNo=326D00034008&menuNo=204104&recptSt=&category=&pageIndex=1&search=&searchWrd="
+        },
+        {
+          "text": "2026년 글로벌게임허브센터 신규 입주기업 추가모집(상시) 공고 ㅇ 사업목적 글로벌 게임시장 진출 잠재력이 있는 우수 중소 게임기업의 발굴 및 육성 ㅇ 유형별 모집규모 입주사 : 소형 1개, 중형 11개, 대형 1개 (2026년 4월 기준) 접수 2026-04-27 ~ 2026-12-31",
+          "url": "https://www.kocca.kr/kocca/pims/view.do?intcNo=326D00034004&menuNo=204104&recptSt=&category=&pageIndex=1&search=&searchWrd="
+        },
+        {
           "text": "2026년 OTT 콘텐츠 특성화 대학원 지원사업 성과발표회 위탁용역 선정결과 공지",
           "url": "https://www.kocca.kr/kocca/bbs/view/B0000137/2012685.do?menuNo=204802¬icevent=Y&cate= "
         },
         {
-          "text": "한국국제교류재단",
-          "url": "https://www.kf.or.kr/kf/main.do"
+          "text": "2026년 대중음악 공연환경 개선 사업 2차 공모 통합평가(1차) 결과공지",
+          "url": "https://www.kocca.kr/kocca/bbs/view/B0000137/2012682.do?menuNo=204802¬icevent=Y&cate= "
         },
         {
-          "text": "콘텐츠코리아랩",
-          "url": "https://venture.ckl.or.kr/main.do"
+          "text": "<2026년 게임콘텐츠 제작지원 이용자평가 및 QA 지원> 과제 모집공고",
+          "url": "https://www.kocca.kr/kocca/bbs/view/B0000137/2012672.do?menuNo=204802¬icevent=Y&cate= "
         },
         {
-          "text": "한국콘텐츠아카데미",
-          "url": "https://edu.kocca.kr/edu/main/main.do"
+          "text": "‘K-인디 게임, 북유럽 시장 진출 기회 모색’ 콘진원, ‘2026 스웨덴 게임 컨퍼런스’ 참가 지원",
+          "url": "https://www.kocca.kr/kocca/koccanews/reportview.do?menuNo=204767&nttNo=1236"
         },
         {
-          "text": "게임더하기",
-          "url": "https://gsp.kocca.kr/web/user/main.do"
-        },
-        {
-          "text": "게임국가기술자격검정",
-          "url": "https://www.kgq.or.kr/service/main.do"
-        },
-        {
-          "text": "콘텐츠성평등센터",
-          "url": "https://www.kocca.kr/bora/main.do"
-        },
-        {
-          "text": "스토리움",
-          "url": "https://www.storyum.kr/story/main/main.do"
-        },
-        {
-          "text": "사용자가이드",
-          "url": "https://www.kocca.kr/kocca/bbs/view/B0000137/2007344.do?searchCnd=&searchWrd=&cateTp1=&cateTp2=&useYn=&menuNo=204802&categorys=0&subcate=0&cateCode=&type=&instNo=0&questionTp=&ufSetting=&recovery=&option1=&option2=&year=&morePage=&qtp=&domainId=&sortCode=&pageIndex=1"
-        },
-        {
-          "text": "이용꿀팁",
-          "url": "https://www.kocca.kr/kocca/bbs/view/B0000137/2012005.do?searchCnd=&searchWrd=&cateTp1=&cateTp2=&useYn=&menuNo=204802&categorys=0&subcate=0&cateCode=&type=&instNo=0&questionTp=&ufSetting=&recovery=&option1=&option2=&year=&morePage=&qtp=&domainId=&sortCode=&pageIndex=1"
-        },
-        {
-          "text": "열린이사회",
-          "url": "https://www.kocca.kr/kocca/open/recentSubMain.do?menuNo=204284"
-        },
-        {
-          "text": "메일링서비스",
-          "url": "https://www.kocca.kr/kocca/common/Mailling.do?menuNo=204918"
+          "text": "“K-콘텐츠, 프랑스 칸에서 글로벌 판로 넓혔다” 콘진원, ‘밉컴 2026’ 한국공동관 운영 성료",
+          "url": "https://www.kocca.kr/kocca/koccanews/reportview.do?menuNo=204767&nttNo=1235"
         }
       ],
       "http_status": 200,
@@ -763,6 +533,20 @@
       "content_type": "text/html;charset=utf-8",
       "title": "한국콘텐츠진흥원",
       "excerpt": "한국콘텐츠진흥원 본문 바로가기 검색어 일괄 삭제 검색바에 입력하는 검색바에 따른 연관검색어입니다. 검색바에 입력하는 검색바에 따른 연관검색어입니다. 검색바에 입력하는 검색바에 따른 연관검색어입니다. 검색바에 입력하는 검색바에 따른 연관검색어입니다. 닫기 인기검색어 일시정지 게임 방송 애니메이션 신기술 융합 콘텐츠 만화 스토리 캐릭터 음악 패션 가장 빠르게 콘텐츠 소식을 전하는 KOCCA 알림 이전 다음 새로운소식 지원공고 입찰정보 이전 다음 2027 콘텐츠 아메리카 한국공동관 및 쇼케이스 참가기업 추가모집 공고 ㅇ 행사기간 2027. 1. 19.(화) ~ 1. 21.(수) ㅇ 행사내용 북미/중남미 콘텐츠 산업을 연결하는 대표적인 B2B 콘텐츠 마켓으로, 방송사·OTT·제작배급사가 대거 참여하는 비즈니스 행사 접수 2026-10-22 ~ 2026-11-03 2026년 VP 활용 콘텐츠 제작 인프라 지원 추가공모 ㅇ 사업목적 스튜디오큐브 버추얼스튜디오 운영 활성화 및 중소 방송영상콘텐츠 제작사의 제작경쟁력 강화를 위한 VP 활용콘텐츠 제작 인프라 지원 접수 2026-10-22 ~ 2026-11-17 <2026년 게임콘텐츠 제작지원 이용자평가 및 QA 지원> 과제 모집공고 ㅇ 모집구분 및 규모 - 이용자평가 13개사 ㅇ 모집대상 - 국내 중소게임기업이 개발 중인 게임이나,서비스 운영 중인 게임 - 온라인 이용자평가가 가능한 분야 (PC, 모바일, 콘솔 등)만 가능 접수 2026-10-15 ~ 2026-10-28 2027 대중음악 해외 쇼케이스(Korea Spotlight) 참가뮤지션 모집 공고(1차/스페인) ㅇ 추진권역 스페인 바르셀로나 ㅇ 행사기간 2027. 6. 17. ~ 19. 접수 2026-10-14 ~ 2026-10-30 2026년 KOCCA CKL TOKYO 입주기업 모집 ㅇ 사업목적 일본 진출을 희망하는 한국 콘텐츠기업 대상 사무공간 및 지원 프로그램 제공 ㅇ 입주기간 협약체결일로부터 1년 접수 2026-10-14 ~ 2026-11-04 2026년 방송영상콘텐츠후반작업지원 추가공고 ㅇ 사업목적 후반작업 종합지원을 통해 국산 콘텐츠 품질 강화 및 방송콘텐츠 글로벌 경쟁력 강화 ㅇ 사업기간(협약기간) 협약 체결일 ~ 2027. 04. 30. 접수 2026-10-19 ~ 2026-10-29 2026년 제 2차 글로벌게임허브센터 게임벤처4.0 신규 입주기업 모집 ㅇ 사업목적 - 글로벌 게임시장 진출 잠재력이 있는 우수 중소 게임기업의 발굴 및 육성 - 예비/초기창업인의 우수 게임 개발사로의 성장 지원 및 육성 접수 2026-10-15 ~ 2026-11-05 2026년 글로벌게임허브센터 신규 입주기업 추가모집(상시) 공고 ㅇ 사업목적 글로벌 게임시장 진출 잠재력이 있는 우수 중소 게임기업의 발굴 및 육성 ㅇ 유형별 모집규모 입주사 : 소형 1개, 중형 11개, 대형 1개 (2026년 4월 기준) 접수 2026-04-27 ~ 2026-12-31 공지사항 [KCTEP] 2027년 CT R&D 신규 기획 대상 후보 주제 인터넷 사전 공시 2026년 OTT 콘텐츠 특성화 대학원 지원사업 성과발표회 위탁용역 선정결과 공지 2026년 대중음악 공연환경 개선 사업 2차 공모 통합평가(1차) 결과공지 <2026년 게임콘텐츠 제작지원 이용자평가 및 QA 지원> 과제 모집공고 공지사항 더보기 보도자료 콘진원, 지역 콘텐츠 현장 찾아 청렴 실천‧소통 강화 ‘K-인디 게임, 북유럽 시장 진출 기회 모색’ 콘진원, ‘2026 스웨덴 게임 컨퍼런스’ 참가 지원 “K-콘텐츠, 프랑스 칸에서 글로벌 판로 넓혔다” 콘진원, ‘밉컴 2026’ 한국공동관 운영 성료 “K-콘텐츠 지속가능 경영 협력체계 성과 인정… 5년 연속 수상” 콘진원, ‘한국 ESG 혁신정책 대상’ 지배구조(G) 부문 대상 보도자료 더보기 연구보고서 산업통계정보 시장동향분석 KOCCA웹진 N콘텐츠 해외산업동향 한국콘텐츠진흥원 SNS 한국콘텐츠진흥원의 소식을 SNS로 생생하게 확인하세요! 유튜브 인스타그램 페이스북 블로그 네이버TV 엑스 티스토리"
+    }
+  ],
+  "browser_documents": [
+    {
+      "id": "netflix_ir",
+      "status": "ok",
+      "links": [],
+      "excerpt": "ir.netflix.net\nPerforming security verification\n\nThis website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot.\n\nRay ID: a4f06e426f8bfc89\nPerformance and Security by Cloudflare\nPrivacy"
+    },
+    {
+      "id": "amazon_ir",
+      "status": "ok",
+      "links": [],
+      "excerpt": "ir.aboutamazon.com\nPerforming security verification\n\nThis website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot.\n\nRay ID: a4f06e6bcdc554a3\nPerformance and Security by Cloudflare\nPrivacy"
     }
   ]
 }
