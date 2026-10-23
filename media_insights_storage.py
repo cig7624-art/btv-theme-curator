@@ -170,7 +170,12 @@ def merge_media_snapshots(current, incoming):
         elif not newer:
             chosen = deepcopy(previous)
         documents[item["id"]] = chosen
-    result["items"] = list(documents.values())
+    # A scheduled collection appends IDs to the merge map. Display documents
+    # by actual publication date instead of that historical insertion order;
+    # unknown publication dates stay last, even when freshly collected.
+    result["items"] = sorted(documents.values(),
+                             key=lambda row: (_time(row.get("published_at")), _document_time(row)),
+                             reverse=True)
     if "notes" in current or "notes" in incoming:
         # Explicitly saved public research notes can survive collector snapshots.
         notes = []

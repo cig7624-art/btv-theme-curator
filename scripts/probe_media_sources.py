@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = [
+    ("amazon_entertainment_debug", "https://www.aboutamazon.com/news/entertainment"),
     ("amazon_report_debug", "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/default.aspx"),
     ("amazon_nba_debug", "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video"),
     ("netflix_release_debug", "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx"),

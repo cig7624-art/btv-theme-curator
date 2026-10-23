@@ -104,6 +104,38 @@ class DocumentExtractionTests(unittest.TestCase):
         self.assertEqual(item["evidence"][1]["url"], "https://official.example/q3.pdf#page=2")
         self.assertEqual(item["url"], "https://official.example/q3.pdf")
 
+    def test_pdf_reporting_period_date_is_not_publication(self):
+        class Page:
+            def extract_text(self):
+                return "Reconciliation of Non-GAAP Financial Measures\nJune 27, 2026\n\n" + "\n\n".join(PARAGRAPHS)
+        class Reader:
+            def __init__(self, stream):
+                self.pages = [Page()]
+        source = {**SOURCE, "source_type": "earnings"}
+        item = collection.parse_pdf_document(b"%PDF-test", source, url="https://official.example/q3.pdf",
+                                             collected_at=NOW, title_hint="Q3 2026 Financial Reconciliations", pdf_reader=Reader)
+        self.assertEqual(item["published_at"], "")
+        self.assertEqual(item["published_at_source"], "pdf_publication_unconfirmed")
+
+    def test_verified_feed_title_replaces_generic_press_release_scaffolding(self):
+        source = {**SOURCE, "source_type": "earnings"}
+        item = collection.parse_html_document(article("Press Release Details"), source,
+                                              url="https://official.example/news/warner", collected_at=NOW,
+                                              title_hint="Netflix and Warner Bros. Discovery Amend Agreement to All-Cash Transaction")
+        self.assertEqual(item["title"], "Netflix and Warner Bros. Discovery Amend Agreement to All-Cash Transaction")
+        self.assertEqual(item["topic"], "partnership_distribution")
+
+    def test_q4_aspx_form_does_not_remove_real_earnings_release(self):
+        # Small structural fixture derived from the actual Amazon IR page.
+        html = '<html><head><meta property="og:title" content="Amazon.com Announces Second Quarter Results"></head><body><div class="Sectionnews-release" id="pageClass"><form><h1>News release details</h1><div class="module-news-details"><div class="module_date-text">July 30, 2026</div><div class="module_body"><div class="q4default">' + "".join(f"<p>{p}</p>" for p in PARAGRAPHS) + '</div></div></div></form></div></body></html>'
+        source = {**SOURCE, "source_type": "earnings"}
+        item = collection.parse_html_document(html, source, collected_at=NOW)
+        self.assertIsNotNone(item)
+        self.assertEqual(item["title"], "Amazon.com Announces Second Quarter Results")
+        self.assertEqual(item["topic"], "earnings_strategy")
+        self.assertEqual(item["published_at"], "2026-07-30")
+        self.assertEqual([e["text"] for e in item["evidence"]], PARAGRAPHS)
+
 
 class TransportAndDiscoveryTests(unittest.TestCase):
     def test_canonical_url_strips_tracking_and_rejects_external_credentials_and_secrets(self):
@@ -192,6 +224,17 @@ class SnapshotPreservationTests(unittest.TestCase):
         before = self.collect()
         after = self.collect(article(date=""), previous=before, now=LATER)
         self.assertEqual(after["items"][0]["published_at"], "2026-10-21")
+
+    def test_pdf_unconfirmed_publication_clears_previously_misread_fiscal_end(self):
+        before = self.collect()
+        before["items"][0]["published_at"] = "2026-06-27"
+        parsed = deepcopy(before["items"][0])
+        parsed.update(published_at="", published_at_source="pdf_publication_unconfirmed", collected_at=LATER)
+        with patch.object(collection, "parse_pdf_document", return_value=parsed):
+            after = collection.collect_media_insights(before, fetcher=lambda _: b"%PDF-fixture", now=LATER,
+                                                       sources=[{**SOURCE, "url": "https://official.example/news/article"}])
+        self.assertEqual(after["items"][0]["published_at"], "")
+        self.assertEqual(after["items"][0]["collected_at"], NOW)
 
     def test_failure_preserves_items_and_success_date_without_leaking_exception_text(self):
         before = self.collect()

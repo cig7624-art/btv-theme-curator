@@ -74,7 +74,7 @@ _TOPICS = (
 )
 _DOCUMENT_LINK = re.compile(r"\.pdf(?:$|\?)|/news/[^/]+|/news-releases/|/press-release|/press-releases/|earnings|shareholder|financial-results|reports?-.*quarter|quarter.*results|실적|보도자료", re.I)
 _EXCLUDED_LINK = re.compile(r"privacy|cookie|terms|contact|accessibility|login|sign.?in|unsubscribe|stock-information|email-alert|/events-and-presentations/.*calendar", re.I)
-_GENERIC_TITLES = re.compile(r"^(?:investor relations|quarterly (?:earnings|results)|financials?|news(?:room)?|entertainment|press releases?|home|Netflix Newsroom|about amazon)(?:\s*[|–—-].*)?$", re.I)
+_GENERIC_TITLES = re.compile(r"^(?:investor relations|quarterly (?:earnings|results)|financials?|news(?:room)?|entertainment|(?:press|news) release(?:s| details)?|home|Netflix Newsroom|about amazon)(?:\s*[|–—-].*)?$", re.I)
 _MONTHS = "January February March April May June July August September October November December".split()
 _MONTH_DATE = re.compile(r"\b(" + "|".join(_MONTHS) + r")\s+(\d{1,2}),?\s+(20\d{2})\b", re.I)
 _ISO_DATE = re.compile(r"\b(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})(?!\d)")
@@ -208,7 +208,7 @@ def _date(value):
         return ""
 
 
-def _publication_dateline(value):
+def _publication_dateline(value, *, allow_standalone=True):
     """Accept explicit publication datelines, not dates in financial prose."""
     for line in str(value or "").splitlines()[:12]:
         line = _text(line, 180)
@@ -216,7 +216,7 @@ def _publication_dateline(value):
         if not match:
             continue
         prefix = line[:match.start()].strip(" ,–—-|")
-        if not prefix or re.fullmatch(r"(?:Published|Date|Dated)(?:\s+on)?[:\s]*", prefix, re.I):
+        if (not prefix and allow_standalone) or re.fullmatch(r"(?:Published|Date|Dated)(?:\s+on)?[:\s]*", prefix, re.I):
             return _date(match.group())
         # Official press releases use city datelines, e.g. SEATTLE--July 30.
         if len(prefix) < 65 and re.fullmatch(r"[A-Z\s,.()]+", prefix) and re.search(r"[-–—]{1,2}\s*$", line[:match.start()]):
@@ -294,7 +294,7 @@ def _make_item(source, url, title, paragraphs, published_at, collected_at, *, im
             "evidence": evidence, "content_hash": sha256((title + "\n" + body).encode()).hexdigest()}
 
 
-def parse_html_document(html, source, *, url=None, collected_at=None):
+def parse_html_document(html, source, *, url=None, collected_at=None, title_hint=""):
     """Extract real article paragraphs; publication date can remain unknown."""
     url = _official_url(url or source["url"], source)
     if not url:
@@ -309,9 +309,11 @@ def parse_html_document(html, source, *, url=None, collected_at=None):
     structured = next((item for item in articles if (item.get("headline") or item.get("name")) and current_article(item)), {})
     title_node = soup.find("h1")
     og = soup.find("meta", property="og:title")
-    title = structured.get("headline") or structured.get("name") or (title_node.get_text(" ", strip=True) if title_node else "") or (og.get("content", "") if og else "")
-    if not title:
-        title = soup.title.get_text(" ", strip=True) if soup.title else ""
+    candidates = [structured.get("headline") or structured.get("name"),
+                  title_node.get_text(" ", strip=True) if title_node else "",
+                  og.get("content", "") if og else "", title_hint,
+                  soup.title.get_text(" ", strip=True) if soup.title else ""]
+    title = next((_text(value, 300) for value in candidates if value and not _GENERIC_TITLES.fullmatch(_text(value, 300))), "")
     published = _date(structured.get("datePublished"))
     if not published:
         for attrs in ({"property": "article:published_time"}, {"name": "date"}, {"name": "pubdate"}, {"name": "DC.date.issued"}):
@@ -325,7 +327,8 @@ def parse_html_document(html, source, *, url=None, collected_at=None):
         node = soup.select_one("[itemprop='datePublished'],.module_date-text,.module-news-details_date,.entry-date")
         if node:
             published = _date(node.get("content") or node.get("datetime") or node.get_text(" ", strip=True))
-    region = (soup.find("article") or soup.find("main") or soup.find(attrs={"role": "main"})
+    region = (soup.select_one(".module-news-details .module_body,.module-press-release .module_body")
+              or soup.find("article") or soup.find("main") or soup.find(attrs={"role": "main"})
               or soup.find(class_=re.compile(r"article-body|article-content|press-release|news-release|entry-content|module_body", re.I)))
     if region is None:
         # An explicit article body in structured data is also source text.
@@ -334,7 +337,9 @@ def parse_html_document(html, source, *, url=None, collected_at=None):
             return None
         paragraphs = [(f"p{i:03d}", text) for i, text in enumerate(re.split(r"\n+", body), 1)]
     else:
-        for node in region.select("script,style,nav,footer,header,form,button,aside,[aria-hidden='true']"):
+        # ASP.NET investor sites wrap their entire article in a <form>.
+        # Remove controls, keeping the real document paragraphs in that form.
+        for node in region.select("script,style,nav,footer,header,input,select,textarea,button,aside,[aria-hidden='true']"):
             node.decompose()
         if not published:
             # Only a dateline near the start of an actual article, not a year
@@ -377,8 +382,13 @@ def parse_pdf_document(content, source, *, url, collected_at=None, title_hint=""
                     paragraphs.append((f"page{page_number}-p{index:03d}", part))
         first = page_texts[0] if page_texts else ""
         title = _text(title_hint, 300) or _text(" ".join(first.splitlines()[:3]), 300)
-        published = _publication_dateline(first[:1000])
-        return _make_item(source, url, title, paragraphs, published, _timestamp(collected_at))
+        # A financial reconciliation often prints its reporting-period end on
+        # a line by itself. That is not evidence of when the PDF was published.
+        published = _publication_dateline(first[:1000], allow_standalone=False)
+        item = _make_item(source, url, title, paragraphs, published, _timestamp(collected_at))
+        if item:
+            item["published_at_source"] = "explicit_pdf_dateline" if published else "pdf_publication_unconfirmed"
+        return item
     except CollectionError:
         raise
     except Exception as error:
@@ -436,7 +446,7 @@ def _collect_source(source, previous_source, *, fetcher, observed, limit):
         if payload["content"].lstrip().startswith(b"%PDF") or "application/pdf" in payload["content_type"].lower():
             return parse_pdf_document(payload["content"], source, url=payload["url"], collected_at=observed, title_hint=title)
         return parse_html_document(payload["content"].decode("utf-8", errors="replace"), source,
-                                   url=payload["url"], collected_at=observed)
+                                   url=payload["url"], collected_at=observed, title_hint=title)
     try:
         root = _fetch(source["url"], source, fetcher)
         is_feed = re.search(br"<(?:rss|feed)[\s>]", root["content"][:1500], re.I)
@@ -461,8 +471,11 @@ def _collect_source(source, previous_source, *, fetcher, observed, limit):
                     item = parse(_fetch(link["url"], source, fetcher), link["title"])
                     if item and not item["published_at"] and link.get("published_at"):
                         item["published_at"] = link["published_at"]
+                        item["published_at_source"] = "official_feed"
                 if item:
                     items.append(item)
+                else:
+                    errors.append("document_not_extractable")
             except CollectionError as error:
                 errors.append(str(error))
             except requests.RequestException:
@@ -512,7 +525,8 @@ def collect_media_insights(previous=None, *, fetcher=None, now=None, sources=Non
                 # Collection time means when this version was first acquired;
                 # repeated observations have their own last-checked timestamp.
                 merged["collected_at"] = old.get("collected_at") or item["collected_at"]
-                merged["published_at"] = item.get("published_at") or old.get("published_at", "")
+                merged["published_at"] = (item.get("published_at", "") if item.get("published_at_source") == "pdf_publication_unconfirmed"
+                                          else item.get("published_at") or old.get("published_at", ""))
                 merged["last_checked_at"] = observed
                 old_items[item["id"]] = merged
             else:

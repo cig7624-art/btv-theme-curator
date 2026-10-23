@@ -108,6 +108,16 @@ class MediaInsightsStorageTests(unittest.TestCase):
         self.assertNotIn("PRIVATE-TOKEN", repr(result))
         self.assertEqual(remote.writes[0]["path"], "media_insights_snapshot.json")
 
+    def test_scheduled_merge_shows_newest_publication_first_and_unknown_last(self):
+        older = {**self.first, "published_at": "2026-10-20T10:00:00Z"}
+        newer = {**self.second, "published_at": "2026-10-23T10:00:00Z"}
+        same_day_older_version = {**document("three"), "published_at": "2026-10-23T10:00:00+00:00"}
+        newer["collected_at"] = "2026-10-24T09:00:00+00:00"
+        unknown = document("unknown", collected_at="2026-11-01T12:00:00+00:00")
+        merged = merge_media_snapshots(snapshot(older, same_day_older_version), snapshot(newer, unknown))
+        self.assertEqual([row["id"] for row in merged["items"]], ["two", "three", "one", "unknown"])
+        self.assertNotIn("published_at", merged["items"][-1])
+
     def test_sha_conflict_rereads_new_docs_and_analysis_before_one_retry(self):
         remote = Remote(self.initial)
         def concurrent_update(store, updated):
