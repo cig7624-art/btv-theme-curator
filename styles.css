@@ -175,6 +175,13 @@ button[kind="primary"]:disabled :is(div, p, span) { color: #b6b8b0 !important; }
 .engine-model { margin-left: auto; color: var(--muted); font-size: 12px; letter-spacing: .2px; }
 .st-key-generation_workspace { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 12px 0; margin: 0 0 15px; }
 .magazine-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--line); margin-top: 35px; padding-top: 22px; color: var(--quiet); font-size: 10px; letter-spacing: 1px; }
+.st-key-app_footer { border-top: 1px solid var(--line); margin-top: 26px; padding-top: 10px; }
+.st-key-app_footer .magazine-footer { border: 0; margin: 0; padding: 0; letter-spacing: .4px; }
+.st-key-api_cost_indicator { display: flex; align-items: center; justify-content: flex-end; }
+.st-key-api_cost_indicator [data-testid="stPopover"] { margin-left: auto; }
+.st-key-api_cost_indicator [data-testid="stPopoverButton"] { min-height: 28px; padding: 4px 7px; color: var(--muted) !important; border: 0 !important; background: transparent !important; }
+.st-key-api_cost_indicator [data-testid="stPopoverButton"] p { font-size: 11px; color: inherit !important; white-space: nowrap; }
+.api-cost-summary { display: block; font-size: 10px; color: var(--muted); text-align: right; }
 
 /* Shared issue and recommendation cards. */
 .card, .theme-card, .logic-card { background: var(--surface); border: 1px solid #484f43; border-radius: 8px; padding: 16px; margin-bottom: 14px; color: var(--ink); }

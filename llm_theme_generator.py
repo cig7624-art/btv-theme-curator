@@ -16,6 +16,7 @@ import requests
 from openai import OpenAI
 from pydantic import BaseModel, ConfigDict, Field
 
+from api_usage import record_llm_response
 from data_storage_lock import with_data_write_lock
 from theme_provenance import is_director_theme
 
@@ -298,6 +299,7 @@ source_issue_keys는 항상 빈 목록으로 두고 수집 이슈 연계를 만�
         response = active.responses.parse(model=model, input=[{"role": "system", "content": system}, *history,
                         {"role": "user", "content": json.dumps(payload, ensure_ascii=False)}],
                         text_format=DirectorPlan, max_output_tokens=16000)
+        record_llm_response(response, feature="director", model=model)
         plan = response.output_parsed
         if plan is None:
             raise ThemeGenerationError("AI가 기획 결과를 반환하지 못했습니다. 요청을 조금 줄여 다시 시도해 주세요.")
@@ -628,6 +630,7 @@ def _generate_candidates(
             ],
             text_format=GeneratedThemeBatch,
         )
+        record_llm_response(response, feature="weekly_themes", model=model)
     except Exception as exc:
         raise ThemeGenerationError(f"신규 테마 생성 API 호출 실패: {exc}") from exc
 
@@ -690,6 +693,7 @@ suggested_themes의 이름은 제목만 봐도 어떤 콘텐츠가 묶일지 예
             reasoning={"effort": "none"},
             max_output_tokens=1200,
         )
+        record_llm_response(response, feature="theme_search", model=model)
     except Exception as exc:
         raise ThemeGenerationError(f"AI 테마 검색 해석 실패: {exc}") from exc
 
@@ -783,6 +787,7 @@ year는 확실한 경우에만 적고 content_type은 영화/드라마/예능/�
             reasoning={"effort": "none"},
             max_output_tokens=max(3000, min(24000, len(payload_themes) * per_theme * 85)),
         )
+        record_llm_response(response, feature="content_candidates", model=model)
     except Exception as exc:
         raise ThemeGenerationError(f"콘텐츠 후보 생성 실패: {exc}") from exc
 

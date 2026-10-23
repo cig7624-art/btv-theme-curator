@@ -39,6 +39,7 @@ from ott_collection import collect_public_homes, load_snapshot, save_snapshot
 from ott_view import render_ott_page
 from ai_director_view import activate_director_tab, render_ai_director_page
 from theme_provenance import director_theme_mask, is_director_theme, weekly_recommendation_runs
+from api_usage_view import render_api_cost_control
 from issue_selection_copy import SOURCE_CONFIG, SOURCE_DETAIL_LOGIC, SELECTION_STEPS
 
 from theme_content_manager import (
@@ -2011,9 +2012,13 @@ else:
             find_saved_themes=lambda intent: rank_themes_by_ai_intent(themes, intent).head(5).fillna("").to_dict("records"),
         )
 
-    st.markdown(
-        f'<footer class="magazine-footer" data-release="director-library-v1" data-version="{html.escape(APP_VERSION, quote=True)}">'
-        f'<span>B tv+ · THEME CURATOR · v{html.escape(APP_VERSION)}</span>'
-        '<span>오늘의 이슈가 내일의 취향이 되도록.</span></footer>',
-        unsafe_allow_html=True,
-    )
+with st.container(key="app_footer"):
+    footer_brand, footer_cost = st.columns([3, 2], vertical_alignment="center", gap="small")
+    with footer_brand:
+        st.markdown(
+            f'<footer class="magazine-footer" data-release="api-cost-v1" data-version="{html.escape(APP_VERSION, quote=True)}">'
+            f'<span>B tv+ · THEME CURATOR · v{html.escape(APP_VERSION)}</span></footer>',
+            unsafe_allow_html=True,
+        )
+    with footer_cost:
+        render_api_cost_control(get_runtime_secret)

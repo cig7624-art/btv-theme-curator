@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "four_tabs", "weekly_actions", "library_director_filter", "director_screen", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork")
+CHECKS = ("version", "four_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork")
 
 
 def normalized_version(value):
@@ -165,6 +165,16 @@ def _check_editorial(frame, report, label, screenshots):
         raise VerificationIssue("director_screen_missing", retry=True)
     if not report["tests"][f"{label}_director_screen"]:
         raise VerificationIssue("director_composer_missing")
+    frame.get_by_role('button', name='AI 비용·잔액', exact=True).click()
+    cost_details = frame.locator('[data-testid="stPopoverBody"]').filter(has_text='AI 사용과 비용')
+    cost_details.wait_for(state='visible', timeout=30000)
+    report['tests'][f'{label}_api_cost_control'] = (
+        cost_details.get_by_role('link', name='충전 잔액 확인 ↗', exact=True).count() == 1
+        and '이번 접속:' in cost_details.inner_text()
+    )
+    if not report['tests'][f'{label}_api_cost_control']:
+        raise VerificationIssue('api_cost_control_missing')
+    page.keyboard.press('Escape')
     frame.get_by_role("tab", name="OTT는 지금", exact=True).click(timeout=15000)
     try:
         frame.locator(".ott-magazine").first.wait_for(state="visible", timeout=20000)
