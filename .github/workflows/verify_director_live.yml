@@ -1,5 +1,6 @@
 name: Verify real AI Director conversation
 
+# Verify independent ideation and the library search moved into conversation.
 on:
   workflow_dispatch:
   push:
