@@ -53,8 +53,8 @@ def verified_titles(root=ROOT):
     return known
 
 
-def valid_drafts(rows, known):
-    if len(rows) != 3:
+def valid_drafts(rows, known, *, expected_count=3):
+    if len(rows) != expected_count:
         return False
     for row in rows:
         items = row.get('contents', [])
@@ -138,6 +138,10 @@ def _submit(frame, request, timeout, *, allow_empty=False):
     _assert(field.is_enabled(), 'director_not_configured')
     field.fill(request)
     field.press('Enter')
+    return _wait_reply(frame, old_count, timeout, allow_empty=allow_empty)
+
+
+def _wait_reply(frame, old_count, timeout, *, allow_empty=False):
     deadline = time.monotonic() + timeout
     previous = None
     stable = 0
@@ -148,7 +152,7 @@ def _submit(frame, request, timeout, *, allow_empty=False):
         if frame.locator('.st-key-director_conversation [data-testid="stChatMessage"]').count() >= old_count + 2:
             current = _snapshot(frame)
             stable = stable + 1 if (current or allow_empty) and current == previous else 0
-            if stable >= 2:
+            if stable >= 2 and not frame.locator('[data-stale="true"]').count():
                 return current
             previous = current
         frame.page.wait_for_timeout(500)
@@ -252,18 +256,32 @@ def verify(args):
                 if path.exists():
                     with path.open(encoding='utf-8-sig', newline='') as stream:
                         saved_names.update(_key(row.get('theme_name')) for row in csv.DictReader(stream, delimiter='|'))
+            search_expander = frame.locator('summary').filter(has_text='라이브러리에서 찾은 테마')
+            if search_expander.count():
+                search_expander.first.click()
+            report['tests']['library_search_section'] = frame.locator('.st-key-director_library_matches').count() > 0
+            try:
+                frame.locator('.director-library-card').first.wait_for(state='visible', timeout=15000)
+            except Exception:
+                pass
             matches = frame.locator('.director-library-card h4').all_text_contents()
             report['tests']['library_search_moved_into_conversation'] = valid_saved_matches(matches, saved_names) and searched == restored
             report['counts']['matched_saved_themes'] = len(matches)
             _assert(report['tests']['library_search_moved_into_conversation'], 'saved_theme_search_failed')
+            old_count = frame.locator('.st-key-director_conversation [data-testid="stChatMessage"]').count()
+            frame.get_by_role('button', name='이 테마로 새롭게 기획', exact=True).first.click()
+            reworked = _wait_reply(frame, old_count, args.turn_timeout)
+            report['tests']['saved_theme_rework_adds_draft_preserves_others'] = len(reworked) == 4 and reworked[:3] == restored and valid_drafts(reworked[3:], known, expected_count=1)
+            _assert(report['tests']['saved_theme_rework_adds_draft_preserves_others'], 'saved_theme_rework_failed')
+            report['counts']['final_drafts'] = len(reworked)
             page.set_viewport_size({'width': 390, 'height': 844})
             page.wait_for_timeout(500)
-            report['tests']['mobile_drafts_no_overflow'] = not _overflow(frame) and _snapshot(frame) == restored
+            report['tests']['mobile_drafts_no_overflow'] = not _overflow(frame) and _snapshot(frame) == reworked
             _assert(report['tests']['mobile_drafts_no_overflow'], 'mobile_drafts_changed_or_overflowed')
             report['tests']['no_app_exception'] = not has_app_exception(page)
             _assert(report['tests']['no_app_exception'], 'app_exception')
             report['tests']['adoption_not_invoked'] = True
-            report['counts']['submitted_requests'] = 6
+            report['counts']['submitted_requests'] = 7
             report['status'] = 'passed'
             context.close()
             browser.close(); browser = None

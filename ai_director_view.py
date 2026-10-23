@@ -71,8 +71,8 @@ def director_draft_card_html(index, draft):
             + content + '</article>')
 
 
-def _queue_request(request, *, target=None, scope="auto"):
-    st.session_state["director_pending_request"] = {"request": request, "target": target, "scope": scope}
+def _queue_request(request, *, target=None, scope="auto", operation="auto"):
+    st.session_state["director_pending_request"] = {"request": request, "target": target, "scope": scope, "operation": operation}
     st.session_state["home_tab_default"] = "AI 디렉터"
 
 
@@ -118,10 +118,11 @@ def _render_saved_theme_matches(session, find_saved_themes, *, configured, busy)
                 with action_column:
                     if st.button('이 테마로 새롭게 기획', key='director_library_rework_' + str(index),
                                  width='stretch', disabled=not configured or busy):
-                        _queue_request('라이브러리의 다음 테마에서 출발해 새로운 큐레이션 테마 1개를 기획해줘. '
+                        _queue_request('현재 초안들은 그대로 보존하고, 라이브러리의 다음 테마에서 출발해 새로운 큐레이션 테마 1개를 추가로 기획해줘. '
                                        '기존 이름은 그대로 쓰지 말고, 앞선 대화의 취향과 조건을 반영해 제목·카피·기획 의도와 '
                                        '실제 콘텐츠 DB로 확인되는 추천 작품 5~10편을 만들어줘. '
-                                       '참고 테마명: ' + name[:100] + '\n참고 카피: ' + copy[:300] + '\n참고 장르: ' + genre[:100])
+                                       '참고 테마명: ' + name[:100] + '\n참고 카피: ' + copy[:300] + '\n참고 장르: ' + genre[:100],
+                                       operation='create')
                         st.rerun()
 
 
@@ -133,6 +134,7 @@ def _run_request(pending, *, session, themes, contents, issue_records, api_key, 
                 session, pending['request'], themes=themes, contents=contents,
                 issue_records=issue_records, api_key=api_key, model=model,
                 target_draft_id=pending.get('target'), edit_scope=pending.get('scope', 'auto'),
+                operation=pending.get('operation', 'auto'),
                 existing_candidates=existing_candidates,
             )
         st.session_state[SESSION_KEY] = updated
@@ -213,6 +215,10 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                             '<p>취향이나 분위기 하나만 꺼내 주세요. 아직 생각이 없다면 “뭐 만들어볼까?”도 좋아요.<br>'
                             '함께 방향을 고르고, 제목과 작품을 대화로 다듬어 봐요.</p></div>', unsafe_allow_html=True)
 
+        # A search answer belongs next to the conversation that requested it.
+        # Show the actual matches without hiding them beneath existing drafts.
+        _render_saved_theme_matches(session, find_saved_themes, configured=configured, busy=busy)
+
         with st.container(key='director_composer'):
             prompt = st.chat_input('만들고 싶은 테마나 고치고 싶은 부분을 알려주세요.', key='director_chat_input',
                                    disabled=not configured or busy, max_chars=4000)
@@ -233,7 +239,6 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                 st.rerun()
 
         if not drafts:
-            _render_saved_theme_matches(session, find_saved_themes, configured=configured, busy=busy)
             st.caption('초안은 이 대화에만 보관됩니다. 최종 채택한 테마만 추천 테마와 라이브러리에 저장돼요.')
             return
 
@@ -304,7 +309,4 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
             if st.session_state.get('director_refresh_required'):
                 st.warning('원격 저장은 완료됐어요. 동시에 변경된 자료를 보호하기 위해 현재 파일은 그대로 두었습니다. 저장 자료를 다시 불러온 뒤 확인해 주세요.')
             st.button('추천 테마에서 보기', key='director_open_saved', on_click=_show_saved_themes)
-        if session.get('library_search_intent') and find_saved_themes is not None:
-            with st.expander('라이브러리에서 찾은 테마', expanded=False):
-                _render_saved_theme_matches(session, find_saved_themes, configured=configured, busy=busy)
         st.caption('작품 정보와 포스터를 확인해 연결합니다. B tv의 판권·서비스 가능 여부를 확정하는 목록은 아닙니다.')

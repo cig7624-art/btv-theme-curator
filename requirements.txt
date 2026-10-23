@@ -3,7 +3,7 @@ pandas
 feedparser
 requests
 beautifulsoup4
-openai>=3.35.1
+openai==3.35.1
 pydantic>=2
 playwright
 openpyxl

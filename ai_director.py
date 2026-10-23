@@ -77,8 +77,9 @@ def _requested_target(state, request, selected):
         if not state["drafts"] or re.match(r"(?:방향|아이디어|제안|컨셉|콘셉트|안)(?:으로|로|을|를|이|가|은|는|\s|$)", after_number):
             return selected
         library_reference = bool(re.search(r"라이브러리|저장(?:된)?\s*테마|찾은\s*테마|검색\s*결과", request))
-        from_recent_search = (state.get("library_search_intent") and state.get("library_search_results")
-                              and re.search(r"그\s*중|기획|만들|생성", request))
+        from_recent_search = (state.get("library_search_results") and
+                              (re.search(r"그\s*중", request) or
+                               (state.get("library_search_intent") and re.search(r"기획|만들|생성", request))))
         if library_reference or from_recent_search:
             return selected
         number = int(match.group(1))
@@ -273,7 +274,7 @@ def _undo_version(state, target_draft_id=None):
 
 def run_director_turn(session, request, *, themes, contents, issue_records=None, api_key="", model="gpt-5.6-luna",
                       target_draft_id=None, edit_scope="auto", content_resolver=None, client=None,
-                      existing_candidates=None):
+                      existing_candidates=None, operation="auto"):
     """Run one real conversational turn, independently of collected issues.
 
     ``issue_records`` is accepted for callers from the previous release; issues
@@ -285,18 +286,24 @@ def run_director_turn(session, request, *, themes, contents, issue_records=None,
         raise ThemeGenerationError("요청을 1~6,000자 이내로 입력해 주세요.")
     if edit_scope not in EDIT_SCOPES:
         raise ThemeGenerationError("수정 범위를 다시 선택해 주세요.")
-    target = _requested_target(state, request, target_draft_id)
-    scope = _requested_scope(request, edit_scope)
+    if operation not in {"auto", "create"}:
+        raise ThemeGenerationError("기획 작업을 다시 선택해 주세요.")
+    # A dedicated new-planning button carries an explicit intent. Quoted source
+    # copy (e.g. '제목만 바꾼 관계') must never be parsed as an edit command.
+    target = None if operation == "create" else _requested_target(state, request, target_draft_id)
+    scope = "auto" if operation == "create" else _requested_scope(request, edit_scope)
     undo_request = re.sub(r"^\s*[1-9][0-9]?\s*번(?:째)?(?:\s*테마)?\s*", "", request)
-    if re.fullmatch(r"(?:(?:이전|앞선|직전)\s*(?:버전|초안)(?:으로)?\s*(?:되돌려(?:줘)?|돌아가(?:줘)?|돌려줘|복원해(?:줘)?)?|되돌리기|실행\s*취소|undo)[.!?\s]*", undo_request, re.I):
+    if operation == "auto" and re.fullmatch(r"(?:(?:이전|앞선|직전)\s*(?:버전|초안)(?:으로)?\s*(?:되돌려(?:줘)?|돌아가(?:줘)?|돌려줘|복원해(?:줘)?)?|되돌리기|실행\s*취소|undo)[.!?\s]*", undo_request, re.I):
         state["messages"].append({"role": "user", "content": request})
         return restore_director_version(state, _undo_version(state, target), target_draft_id=target)
     plan, usage = generate_director_plan(request=request, messages=state["messages"], drafts=state["drafts"],
                     themes=themes, contents=contents, issue_records=[], api_key=api_key, model=model,
                     target_draft_id=target, edit_scope=scope, client=client,
-                    saved_theme_matches=state.get("library_search_results", []))
+                    saved_theme_matches=state.get("library_search_results", []), operation=operation)
     raw = plan.model_dump(by_alias=True) if hasattr(plan, "model_dump") else deepcopy(plan)
     action = raw.get("action")
+    if operation == "create" and action != "create":
+        raise ThemeGenerationError("새 기획 요청에 맞는 초안이 반환되지 않았습니다. 기존 초안은 유지했습니다.")
     search_intent = _library_search_intent(raw.get("library_search"))
     if search_intent is not None and action != "reply":
         raise ThemeGenerationError("검색과 초안 변경이 함께 반환되어 적용하지 않았습니다. 다시 요청해 주세요.")
@@ -309,7 +316,7 @@ def run_director_turn(session, request, *, themes, contents, issue_records=None,
         if requested and min(int(requested.group(1)), 10) != len(raw["themes"]):
             raise ThemeGenerationError("요청한 개수의 테마를 만들지 못했습니다. 다시 시도해 주세요.")
         generated = [_proposal(item, themes, contents, [], content_resolver, existing_candidates) for item in raw["themes"]]
-        keep = state["drafts"] if _explicit_append(request) or raw.get("creation_mode") == "append" else []
+        keep = state["drafts"] if operation == "create" or _explicit_append(request) or raw.get("creation_mode") == "append" else []
         names = [normalize_theme_text(row["theme_name"]) for row in [*keep, *generated]]
         if len(set(names)) != len(names):
             raise ThemeGenerationError("새 초안의 테마명이 서로 겹칩니다. 다른 관점으로 다시 요청해 주세요.")

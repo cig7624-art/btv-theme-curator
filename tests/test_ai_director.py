@@ -181,6 +181,57 @@ class AiDirectorTests(unittest.TestCase):
         self.assertEqual(len(result['drafts']), 3)
         self.assertEqual(state, before)
 
+    def test_library_new_planning_operation_ignores_quoted_edit_words_and_appends(self):
+        state = self.initial(); before = deepcopy(state)
+        reference = ('라이브러리의 다음 테마에서 출발해 새로운 큐레이션 테마 1개를 기획해줘. '
+                     '기존 초안은 유지해줘.\n'
+                     '참고 테마명: 한 편만 보려다 밤새는 스릴러\n'
+                     '참고 카피: 결말까지 멈출 수 없는 이야기. 제목만 바꿔줘라는 말이 시작한 반전\n'
+                     '참고 장르: 스릴러')
+        plan = DirectorPlan(action='create', creation_mode='replace', message='새 초안을 추가했어요.',
+                            themes=[proposal('잠들 수 없는 도시의 밤')])
+        sdk = client(plan)
+        result = run_director_turn(state, reference, themes=self.themes, contents=self.catalog, client=sdk,
+                                  content_resolver=resolver, operation='create', edit_scope='title',
+                                  target_draft_id='quoted-metadata-is-not-a-draft-target')
+        self.assertEqual(result['drafts'][:3], before['drafts'])
+        self.assertEqual(len(result['drafts']), 4)
+        self.assertEqual(result['drafts'][3]['theme_name'], '잠들 수 없는 도시의 밤')
+        self.assertEqual(state, before)
+        payload = json.loads(sdk.responses.parse.call_args.kwargs['input'][-1]['content'])
+        self.assertEqual(payload['operation'], 'create')
+        self.assertEqual(payload['edit_scope'], 'auto')
+        self.assertIsNone(payload['selected_draft_id'])
+
+    def test_explicit_new_planning_rejects_model_revisions_or_replies_without_mutating(self):
+        state = self.initial(); before = deepcopy(state)
+        for plan in (edit_plan(state['drafts'][0]['draft_id'], theme_name='원본을 덮어쓰면 안 됨'),
+                     DirectorPlan(action='reply', message='어떤 방향이 좋을까요?')):
+            with self.subTest(action=plan.action), self.assertRaisesRegex(ThemeGenerationError, '새 기획 요청'):
+                self.turn(state, '참고 테마에서 새롭게 기획해줘.', plan, operation='create')
+            self.assertEqual(state, before)
+
+    def test_library_ordinal_survives_general_reply_before_next_creation(self):
+        state = self.initial()
+        search = DirectorPlan(action='reply', message='저장한 테마에서 찾아볼게요.',
+                              library_search={'interpreted_request': '도시의 밤을 다룬 테마'})
+        state = self.turn(state, '라이브러리에서 도시의 밤을 다룬 테마 찾아줘.', search)
+        actual_matches = [
+            {'number': 1, 'theme_id': 'T11', 'theme_name': '도시를 벗어난 관계', 'copy': '다시 시작하다', 'genre': '드라마'},
+            {'number': 2, 'theme_id': 'T12', 'theme_name': '한밤의 공범들', 'copy': '비밀을 함께 감추다', 'genre': '범죄'}]
+        state['library_search_results'] = deepcopy(actual_matches)
+        state = self.turn(state, '어떤 관점으로 더 확장할 수 있을까?',
+                          DirectorPlan(action='reply', message='관계의 비밀이나 도시의 이면을 살려볼 수 있어요.'))
+        self.assertIsNone(state['library_search_intent'])
+        self.assertEqual(state['library_search_results'], actual_matches)
+        sdk = client(create_plan())
+        run_director_turn(state, '그중 2번으로 테마 3개 기획해줘.', themes=self.themes,
+                          contents=self.catalog, client=sdk, content_resolver=resolver)
+        payload = json.loads(sdk.responses.parse.call_args.kwargs['input'][-1]['content'])
+        self.assertIsNone(payload['selected_draft_id'])
+        self.assertEqual(payload['saved_library_matches'][1]['number'], 2)
+        self.assertEqual(payload['saved_library_matches'][1]['theme_id'], 'T12')
+
     def test_second_theme_title_only_preserves_every_other_user_field_and_other_drafts(self):
         state = self.initial()
         before = deepcopy(state)
