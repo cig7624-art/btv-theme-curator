@@ -168,6 +168,10 @@ def _check_editorial(frame, report, label, screenshots):
     frame.get_by_role('button', name='AI 비용·잔액', exact=True).click()
     cost_details = frame.locator('[data-testid="stPopoverBody"]').filter(has_text='AI 사용과 비용')
     cost_details.wait_for(state='visible', timeout=30000)
+    # A stateful popover reruns the app. The heading arrives before its links
+    # and counters on Cloud; wait for the actual completed content.
+    cost_details.get_by_role('link', name='충전 잔액 확인 ↗', exact=True).wait_for(state='visible', timeout=30000)
+    cost_details.get_by_text(re.compile(r'^이번 접속: 응답')).wait_for(state='visible', timeout=30000)
     report['tests'][f'{label}_api_cost_control'] = (
         cost_details.get_by_role('link', name='충전 잔액 확인 ↗', exact=True).count() == 1
         and '이번 접속:' in cost_details.inner_text()
