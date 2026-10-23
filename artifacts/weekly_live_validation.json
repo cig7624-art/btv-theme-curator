@@ -1,18 +1,31 @@
 {
   "schema_version": 1,
-  "status": "failed",
+  "status": "passed",
   "expected_version": "1.2.6",
   "observed_version": "1.2.6",
-  "started_at": "2026-10-23T09:17:23.005822+00:00",
-  "generation_click_attempted": false,
+  "started_at": "2026-10-23T09:20:54.319487+00:00",
+  "generation_click_attempted": true,
   "tests": {
-    "desktop_version": true
+    "desktop_version": true,
+    "normal_run_saved": true,
+    "titles_and_content_rules": true,
+    "prior_themes_preserved": true,
+    "prior_history_preserved": true,
+    "prior_run_contents_preserved": true,
+    "content_connection": true,
+    "poster_connection": true,
+    "actual_poster_loading": true,
+    "no_exception": true
   },
-  "counts": {},
-  "errors": [
-    "saved_data_read_failed"
-  ],
-  "source_commit": "7e42efc8ebf329b7dabf0e1b10eebe1e06944600",
+  "counts": {
+    "generated_themes": 10,
+    "rows": 128,
+    "themes_with_contents": 10,
+    "themes_with_posters": 10,
+    "themes_with_loaded_poster": 10
+  },
+  "errors": [],
+  "source_commit": "ada20b636c4f70ed8a282409998882e908955648",
   "frame_state": "matched_release",
-  "finished_at": "2026-10-23T09:18:07.769362+00:00"
+  "finished_at": "2026-10-23T09:24:34.280066+00:00"
 }
