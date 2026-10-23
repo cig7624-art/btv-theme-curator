@@ -32,6 +32,15 @@ def content(number=0, **changes):
 
 
 class ThemeEditorialTests(unittest.TestCase):
+    def test_planned_theme_explains_its_viewing_premise_below_title(self):
+        rec = recommendation()
+        rec["theme"].update(copy="가족 사이에 숨겨진 비밀을 추적하는 영화와 드라마",
+                            content_selection_rule="가족의 비밀이 미스터리의 중심인 작품")
+        rec["rationale"] = "최근 공식 영상의 반응에서 출발한 기획"
+        rendered = theme_card_html(1, rec)
+        self.assertIn("가족 사이에 숨겨진 비밀을 추적하는 영화와 드라마", rendered)
+        self.assertNotIn(rec["rationale"], rendered)
+
     def test_card_order_preserves_issue_name_reason_and_real_poster_titles(self):
         rec = recommendation(contents=[content(1), content(2)])
         rendered = theme_card_html(1, rec, pd.DataFrame([issue()]))

@@ -19,6 +19,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from api_usage import record_llm_response
 from data_storage_lock import with_data_write_lock
 from theme_provenance import is_director_theme
+from theme_generation_rules import title_review
 
 
 THEME_OPTIONAL_DEFAULTS: dict[str, str] = {
@@ -30,6 +31,9 @@ THEME_OPTIONAL_DEFAULTS: dict[str, str] = {
     "last_recommended_date": "",
     "content_search_terms": "",
     "generation_model": "",
+    "content_selection_rule": "",
+    "content_exclusion_rule": "",
+    "content_reference_titles": "",
 }
 
 HISTORY_COLUMNS = [
@@ -49,6 +53,9 @@ HISTORY_COLUMNS = [
     "creation_angle",
     "content_search_terms",
     "generation_model",
+    "content_selection_rule",
+    "content_exclusion_rule",
+    "content_reference_titles",
 ]
 
 VALID_ANGLES = {
@@ -60,27 +67,6 @@ GENERIC_THEME_WORDS = {
     "지금 봐야 할", "놓치면 안 될", "재미있는 영화", "재미있는 드라마",
 }
 
-CONCRETE_THEME_TERMS = {
-    "팬", "팬덤", "전문가", "평론가", "관객", "배우", "감독", "작가", "주인공", "악당",
-    "영웅", "형사", "범인", "왕", "재벌", "가족", "부부", "친구", "동료", "아이", "부모",
-    "원작", "웹툰", "웹소설", "애니메이션", "실사", "리메이크", "시리즈", "후속편", "시즌",
-    "극장", "OTT", "드라마", "영화", "예능", "다큐", "공포", "로맨스", "사극", "SF",
-    "반전", "결말", "해석", "복수", "생존", "추리", "법정", "수사", "괴물", "외계인",
-    "재개봉", "역주행", "정주행", "공개", "캐스팅", "연기", "명장면", "빌런", "능력", "무기",
-}
-
-AMBIGUOUS_TITLE_PHRASES = {
-    "한 장면으로 뒤집힌 기대", "스크린으로 찢고 나온 세계", "극장 밖에서 다시 뜬다",
-    "악당의 기술, 주인공의 무기", "호불호를 넘어선 밤",
-}
-
-ACTION_MARKERS = {
-    "하는", "되는", "된", "맞선", "훔친", "빼앗은", "되찾은", "돌아온", "숨긴", "쫓는",
-    "구한", "먼저", "다시", "넘어선", "바꾼", "뒤집은", "지킨", "살린", "무너뜨린",
-    "공개", "정주행", "역주행", "재회", "복수", "생존", "해석", "싸우는", "찾는",
-}
-
-
 class ThemeGenerationError(RuntimeError):
     """Raised when an LLM theme generation run cannot be completed."""
 
@@ -88,8 +74,8 @@ class ThemeGenerationError(RuntimeError):
 class GeneratedTheme(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    theme_name: str = Field(description="B tv+ 화면에 노출할 한국어 큐레이션 테마명")
-    display_copy: str = Field(alias="copy", description="테마를 보조하는 짧은 한국어 카피")
+    theme_name: str = Field(description="시청자가 작품의 공통 주제·장르 또는 감상 상황을 바로 떠올릴 수 있는 짧고 자연스러운 한국어 제목. 조회·화제 지표나 줄거리 나열은 금지")
+    display_copy: str = Field(alias="copy", description="어떤 작품을 함께 보는지 또는 감상 상황을 보완하는 짧은 한국어 한 문장. 수집 지표 반복 금지")
     genre: str = Field(description="대표 장르. 복수 장르는 /로 구분")
     mood: str = Field(description="대표 감정 또는 분위기")
     keywords: list[str] = Field(description="테마를 설명하는 핵심 키워드 5~8개")
@@ -98,6 +84,9 @@ class GeneratedTheme(BaseModel):
     source_issue_summary: str = Field(description="실제 작품명·사건명을 포함한 최근 이슈 요약. 내부 이슈 ID는 쓰지 말고 70자 이내 한 문장")
     content_search_terms: list[str] = Field(description="추후 콘텐츠 검색에 사용할 검색어 4~6개")
     rationale: str = Field(description="최근 이슈가 이 테마로 확장되는 이유. 80자 이내 한 문장")
+    selection_rule: str = Field(description="모든 추천 작품에 공통 적용할 단일 포함 기준을 70자 안팎 한 문장으로. 줄거리·관계·정서·감상 상황을 구체적으로 설명")
+    exclusion_rule: str = Field(description="장르만 같거나 일부 장면만 비슷해 넣지 말아야 할 작품의 기준을 50자 안팎 한 문장으로")
+    reference_titles: list[str] = Field(description="해당 포함 기준에 맞는 실제 공개 작품의 정확한 제목 3~5개. 검증 전 참고 후보이며 존재·서비스 권리를 보장하지 않음")
 
 
 class GeneratedThemeBatch(BaseModel):
@@ -469,6 +458,9 @@ def load_recommendation_runs(path: Path, themes: pd.DataFrame) -> list[dict[str,
                 "creation_angle": str(row.get("creation_angle", "")),
                 "content_search_terms": str(row.get("content_search_terms", "")),
                 "generation_model": str(row.get("generation_model", "")),
+                "content_selection_rule": str(row.get("content_selection_rule", "")),
+                "content_exclusion_rule": str(row.get("content_exclusion_rule", "")),
+                "content_reference_titles": str(row.get("content_reference_titles", "")),
             }
             for key, value in snapshots.items():
                 if value:
@@ -567,6 +559,9 @@ def _sanitize_generated(themes: list[GeneratedTheme], candidate_count: int) -> l
             "source_issue_summary": _clean_short_text(theme.source_issue_summary, 100),
             "content_search_terms": search_terms,
             "rationale": _clean_short_text(theme.rationale, 100),
+            "selection_rule": _clean_short_text(theme.selection_rule, 220),
+            "exclusion_rule": _clean_short_text(theme.exclusion_rule, 160),
+            "reference_titles": _dedupe_strings(theme.reference_titles, 5),
         })
         if len(cleaned) >= candidate_count:
             break
@@ -586,37 +581,49 @@ def _generate_candidates(
 
     system_prompt = """
 당신은 한국 IPTV의 콘텐츠 편성·큐레이션을 담당하는 시니어 에디터다.
-최근 콘텐츠 이슈를 해석해 여러 작품을 묶을 수 있는 신규 큐레이션 테마를 만든다.
-기존 테마 DB는 제공되지 않으며 최근 이슈에서만 아이디어를 발산한다.
+최근 콘텐츠 이슈에서 출발해 시청자가 보고 싶어질 신규 큐레이션 테마를 만든다.
+기존 테마 DB는 제공되지 않는다. 이슈는 지금 제안하는 계기이며, 테마의 주제는 묶일 작품의 공통점 또는 시청자의 감상 상황이다.
 근거에 표시된 기준 기간과 실제 지표를 지킨다. 초기 반응은 급등으로, 기사 반복은 대중적 인기로 표현하지 않는다.
 공식 순위와 공식 발표를 구분하고, 증가 관측이 없으면 상승·역주행을 추정하지 않는다.
 
-가장 중요한 기준은 테마명만 읽어도 어떤 콘텐츠가 들어갈지 바로 예측되는 것이다.
-테마명에는 인물, 관계, 소재, 장르, 사건, 서사 행동 중 하나 이상을 구체적으로 드러낸다.
-주어·대상·콘텐츠 범위가 없는 시적 문구나 은유형 문구는 만들지 않는다.
-최소 8편 이상의 영화·드라마·예능을 묶을 수 있어야 하며 특정 작품 하나의 홍보 문구가 되어서는 안 된다.
+제목만 읽어도 어떤 작품을 함께 볼지, 또는 언제 어떤 마음으로 볼지 떠올라야 한다.
+작품명+닮은 장르, 감상 상황+정서, 관계+장르, 하나의 소재 등 한 가지 중심축을 잡는다.
+'가족이라는 미스터리' 같은 짧은 함축도 허용한다. 시적인 표현 자체를 금지하지 않는다.
+'가을밤 온 가족이 모여 앉아'처럼 감상 장면이 분명하면 제목에 영화·드라마를 억지로 붙이지 않는다.
+여러 사건을 연결한 문장, 검색어 나열, 줄거리 설명, 어색한 명사화로 제목을 늘리지 않는다.
 
-나쁜 예: '한 장면으로 뒤집힌 기대', '스크린으로 찢고 나온 세계', '극장 밖에서 다시 뜬다', '악당의 기술, 주인공의 무기', '호불호를 넘어선 밤'
-좋은 방향: '한 장면으로 평가가 뒤집힌 영화', '애니메이션 세계를 실사로 옮긴 영화', 'OTT 공개 후 역주행한 영화', '악당의 능력을 빼앗아 싸우는 주인공', '혹평 뒤 입소문으로 살아난 공포영화'
+이런 제목은 제외: 'OTT 공개 후 클립 조회가 늘어난 콘텐츠', '예고편 반응이 급증한 작품',
+'이혼 뒤 새 사랑과 복수를 한 주인공', '화제를 모은 콘텐츠'. 앞의 둘은 수집 지표이며 작품의 공통 주제가 아니다.
+자연스러운 방향의 예: '비 오는 날 생각나는 추억의 영화', '가족이라는 미스터리',
+'가을밤 온 가족이 모여 앉아', '이혼 후 다시 시작하는 로맨스', '복수에 인생을 건 여자들'.
+기준 작품이 근거에 실제로 있고 장르가 확인되면 '그 작품과 비슷한 액션 스릴러' 방향도 가능하다.
+예시를 그대로 복제하거나 모든 후보를 같은 문장 틀로 만들지 않는다. 제공된 이슈와 실제 작품의 공통점에서 새로 기획한다.
 
-소재형·상황형·감정형·인물형·관계형·공간형·해석형·장르변주형을 고르게 활용한다.
-테마명은 한국어 8~28자 안팎으로 간결하게 작성한다.
+각 테마마다 작품을 고를 단일 포함 기준(selection_rule), 맞지 않는 작품의 제외 기준(exclusion_rule),
+그 기준에 맞는 실제 공개 작품 3~5편(reference_titles)을 먼저 생각하고 제목을 붙인다.
+참고 작품은 정확한 실제 제목을 쓴다. 알 수 없는 신작 줄거리·캐릭터 관계를 지어내지 않는다.
+기준 작품을 닮았다는 이유는 액션의 방식·추리 구조·시대 배경 등으로 구체화한다.
+장르만 같은 작품을 억지로 넣지 않는다. 한 작품의 복잡한 사건 조합으로 범위를 좁히지도 않는다.
+테마명은 대체로 6~26자, 자연스러우면 더 짧아도 된다. 같은 주제·감상 상황의 반복은 줄인다.
+시즌·날씨 표현은 제안하는 감상 상황이며 실제 날씨나 모든 시청자의 상황으로 단정하지 않는다.
 """.strip()
 
     user_payload = {
         "requested_candidate_count": candidate_count,
+        "curation_date": datetime.now(ZoneInfo("Asia/Seoul")).date().isoformat(),
         "recent_issues": issues_payload,
         "avoid_recently_recommended_theme_names": recent_names,
         "requirements": [
-            "테마명만 보고 포함될 콘텐츠의 공통점을 바로 이해할 수 있을 것",
-            "테마명에 구체적인 인물·관계·소재·장르·사건·행동 중 하나 이상을 포함할 것",
-            "주어와 대상이 없는 시적 문구, 추상적 은유, 명사 두 개만 병렬한 문구는 금지",
-            "각 테마는 최근 이슈와 연결되지만 특정 작품 하나에 종속되지 않을 것",
+            "제목은 작품의 공통 주제·닮은 장르 또는 감상 상황 하나를 직관적으로 암시할 것",
+            "조회·클립·예고 반응, 순위·화제 지표는 source_issue_summary와 rationale에만 쓰고 제목의 주제로 삼지 말 것",
+            "짧고 함축적인 관계·정서 제목도 허용하며 긴 줄거리·사건 나열은 피할 것",
+            "테마별 단일 포함 기준, 제외 기준, 실제 공개 참고 작품 3~5개를 함께 작성할 것",
+            "각 테마는 실제 최근 이슈와 연결하되 제목에서 이슈 문구를 반복할 필요는 없음",
             "테마끼리 관점과 어휘가 충분히 다를 것",
             "테마명, 짧은 카피, 장르, 무드, 키워드, 생성 관점, 연계 이슈 요약, 콘텐츠 검색어를 모두 작성할 것",
             "연계 이슈 요약에는 I01 같은 내부 ID 대신 실제 작품명·사건명을 쓰고 70자 이내로 작성할 것",
             "선정 이유는 최근 이슈와 테마의 연결만 80자 이내 한 문장으로 작성할 것",
-            "콘텐츠 검색어는 추후 작품 후보를 찾기 쉬운 구체적인 표현일 것",
+            "콘텐츠 검색어는 조회·반응 지표가 아닌 포함 기준의 소재·관계·정서·감상 상황으로 작성할 것",
             f"가능한 한 정확히 {candidate_count}개를 생성할 것",
         ],
     }
@@ -629,6 +636,8 @@ def _generate_candidates(
                 {"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)},
             ],
             text_format=GeneratedThemeBatch,
+            reasoning={"effort": "none"},
+            max_output_tokens=min(24000, max(6000, candidate_count * 650)),
         )
         record_llm_response(response, feature="weekly_themes", model=model)
     except Exception as exc:
@@ -734,6 +743,15 @@ suggested_themes의 이름은 제목만 봐도 어떤 콘텐츠가 묶일지 예
     }
 
 
+def _reference_titles(value) -> list[str]:
+    if isinstance(value, str):
+        try:
+            value = json.loads(value) if value.strip() else []
+        except (TypeError, ValueError):
+            value = []
+    return _dedupe_strings(value, 5) if isinstance(value, list) else []
+
+
 def generate_content_candidates_for_themes(
     recommendations: list[dict[str, Any]],
     api_key: str,
@@ -763,14 +781,23 @@ def generate_content_candidates_for_themes(
             "keywords": _clean_short_text(theme.get("trigger_keywords", ""), 140),
             "source_issue": _clean_short_text(rec.get("source_issue_summary") or theme.get("source_issue", ""), 140),
             "rationale": _clean_short_text(rec.get("rationale", ""), 120),
+            "selection_rule": _clean_short_text(rec.get("selection_rule") or theme.get("content_selection_rule", ""), 220),
+            "exclusion_rule": _clean_short_text(rec.get("exclusion_rule") or theme.get("content_exclusion_rule", ""), 160),
+            "reference_titles": _reference_titles(rec.get("reference_titles") or theme.get("content_reference_titles", "")),
         })
 
     system_prompt = f"""
 당신은 한국 IPTV 편성용 콘텐츠 큐레이터다.
-입력된 모든 테마에 대해 실제 존재하고 공개된 영화·드라마·예능·애니메이션·다큐 후보를 각각 {per_theme}개 제안한다.
+입력된 모든 테마에 대해 실제 존재하고 공개된 영화·드라마·예능·애니메이션·다큐 후보를 각각 최대 {per_theme}개 제안한다.
 한국에서 통용되는 공식 제목을 쓰고, 존재 여부가 불확실한 작품은 절대 만들지 않는다.
-한 테마 안에서는 같은 시리즈가 과도하게 반복되지 않게 하고 국내·해외, 신작·기성작을 적절히 섞는다.
+한 테마 안에서는 같은 시리즈가 과도하게 반복되지 않게 한다. 국내·해외, 신작·기성작의 분배보다 주제 적합성을 우선한다.
+selection_rule은 모든 작품이 충족할 핵심 포함 기준이며 exclusion_rule에 해당하면 제외한다.
+reference_titles는 기획 단계의 검증 전 참고 후보이다. 실제 존재하고 포함 기준에도 맞는지 다시 판단하고 틀리면 제외한다.
+별도 기준이 없는 기존 테마는 제목·카피에서 한 가지 중심 소재·관계·정서 또는 감상 상황을 해석해 적용한다.
 테마의 핵심 소재·관계·상황에 직접 맞는 작품만 고르고 단순히 장르만 같은 작품은 제외한다.
+reason에는 이 작품이 해당 포함 기준에 맞는 구체적인 관계·소재·정서·서사 특징을 쓴다. '주제에 적합하다' 같은 반복 설명은 쓰지 않는다.
+source_issue와 rationale은 기획의 계기이며 후보의 조회수·순위·바이럴 여부를 증명하지 않는다. 그런 수집 지표로 작품을 골랐다고 주장하지 않는다.
+적합한 작품이 적으면 {per_theme}편보다 적게 반환한다. 편수를 맞추려고 존재가 불확실하거나 주제와 먼 작품을 넣지 않는다.
 year는 확실한 경우에만 적고 content_type은 영화/드라마/예능/애니메이션/다큐 중 하나로 쓴다.
 입력받은 theme_key를 그대로 반환한다.
 """.strip()
@@ -849,39 +876,7 @@ def _row_text(row: pd.Series) -> str:
 
 
 def _title_clarity_score(candidate: dict[str, Any]) -> int:
-    name = str(candidate.get("theme_name", "")).strip()
-    normalized = normalize_theme_text(name)
-    score = 34
-
-    if 8 <= len(name) <= 28:
-        score += 14
-    elif 5 <= len(name) <= 34:
-        score += 7
-    else:
-        score -= 10
-
-    concrete_hits = sum(1 for term in CONCRETE_THEME_TERMS if normalize_theme_text(term) in normalized)
-    score += min(26, concrete_hits * 8)
-
-    if any(marker in name for marker in ACTION_MARKERS):
-        score += 10
-    elif any(separator in name for separator in [",", "·", "/", ":"]):
-        score -= 18
-
-    if any(normalize_theme_text(phrase) in normalized for phrase in AMBIGUOUS_TITLE_PHRASES):
-        score -= 34
-    if concrete_hits == 0:
-        score -= 24
-    if len(_tokenize(name)) <= 2 and concrete_hits <= 1:
-        score -= 12
-
-    keyword_tokens = set()
-    for keyword in candidate.get("keywords", []) or []:
-        keyword_tokens |= _tokenize(keyword)
-    title_overlap = len(_tokenize(name) & keyword_tokens)
-    score += min(8, title_overlap * 2)
-
-    return max(0, min(100, score))
+    return title_review(candidate)["clarity"]
 
 
 def _quality_score(candidate: dict[str, Any]) -> int:
@@ -894,14 +889,16 @@ def _quality_score(candidate: dict[str, Any]) -> int:
     rationale = str(candidate.get("rationale", "")).strip()
 
     clarity = _title_clarity_score(candidate)
-    score = round(clarity * 0.48)
-    score += min(12, max(0, len(copy) - 6) // 4)
-    score += min(10, len(keywords) * 2)
-    score += min(8, len(search_terms) * 2)
-    score += 6 if str(candidate.get("creation_angle", "")) in VALID_ANGLES else 0
+    score = round(clarity * 0.56)
+    score += 6 if copy else 0
+    score += 4 if keywords else 0
+    score += 4 if search_terms else 0
+    score += 4 if str(candidate.get("creation_angle", "")) in VALID_ANGLES else 0
     score += 5 if genre else 0
     score += 4 if mood else 0
-    score += min(7, max(0, len(rationale) - 12) // 8)
+    score += 3 if rationale else 0
+    score += 10 if candidate.get("selection_rule") else 0
+    score += 8 if len(_reference_titles(candidate.get("reference_titles"))) >= 3 else 0
 
     normalized_name = normalize_theme_text(name)
     if any(normalize_theme_text(word) in normalized_name for word in GENERIC_THEME_WORDS):
@@ -924,7 +921,10 @@ def _relevance_score(candidate: dict[str, Any], issues_payload: list[dict[str, A
         ])
         for issue in selected_issues
     )
-    candidate_tokens = _tokenize(_candidate_text(candidate))
+    # An issue supports the reason to propose this theme. Repeating traffic
+    # metrics in a consumer heading must not increase its relevance score.
+    candidate_tokens = _tokenize(" ".join(str(candidate.get(key, "")) for key in
+                                ("source_issue_summary", "rationale", "selection_rule")))
     issue_tokens = _tokenize(issue_text)
     overlap = len(candidate_tokens & issue_tokens)
     coverage = overlap / max(1, min(len(candidate_tokens), 12))
@@ -991,12 +991,18 @@ def _candidate_to_recommendation(
             "last_recommended_date": date.today().isoformat(),
             "content_search_terms": ",".join(candidate["content_search_terms"]),
             "generation_model": model,
+            "content_selection_rule": candidate.get("selection_rule", ""),
+            "content_exclusion_rule": candidate.get("exclusion_rule", ""),
+            "content_reference_titles": json.dumps(candidate.get("reference_titles", []), ensure_ascii=False),
         },
         "source_issue_keys": candidate["source_issue_keys"],
         "source_issue_summary": candidate["source_issue_summary"],
         "creation_angle": candidate["creation_angle"],
         "rationale": candidate["rationale"],
         "content_search_terms": candidate["content_search_terms"],
+        "selection_rule": candidate.get("selection_rule", ""),
+        "exclusion_rule": candidate.get("exclusion_rule", ""),
+        "reference_titles": candidate.get("reference_titles", []),
         "relevance_score": decision.relevance_score,
         "novelty_score": decision.novelty_score,
         "quality_score": decision.quality_score,
@@ -1020,6 +1026,9 @@ def _existing_to_recommendation(
         "creation_angle": candidate.get("creation_angle", "기존 테마") or "기존 테마",
         "rationale": candidate.get("rationale", ""),
         "content_search_terms": candidate.get("content_search_terms", []),
+        "selection_rule": theme.get("content_selection_rule") or candidate.get("selection_rule", ""),
+        "exclusion_rule": theme.get("content_exclusion_rule") or candidate.get("exclusion_rule", ""),
+        "reference_titles": _reference_titles(theme.get("content_reference_titles")) or candidate.get("reference_titles", []),
         "relevance_score": decision.relevance_score,
         "novelty_score": decision.novelty_score,
         "quality_score": decision.quality_score,
@@ -1039,9 +1048,15 @@ def _local_review_and_select(
     theme_df = ensure_theme_schema(themes)
     evaluated: list[dict[str, Any]] = []
 
+    valid_issue_keys = {issue["issue_key"] for issue in issues_payload}
     for index, candidate in enumerate(candidates, start=1):
-        clarity = _title_clarity_score(candidate)
-        if clarity < 52:
+        review = title_review(candidate)
+        clarity = review["clarity"]
+        if not review["eligible"]:
+            continue
+        if not candidate.get("selection_rule") or len(_reference_titles(candidate.get("reference_titles"))) < 3:
+            continue
+        if issues_payload and not any(key in valid_issue_keys for key in candidate.get("source_issue_keys", [])):
             continue
         relevance = _relevance_score(candidate, issues_payload)
         quality = _quality_score(candidate)
@@ -1106,7 +1121,8 @@ def _local_review_and_select(
             and normalize_theme_text(candidate.get("theme_name", "")) == normalize_theme_text(best_row.get("theme_name", ""))
         )
         trusted_existing = source_status in {"HUMAN_APPROVED", "USED"} or approved_status in {"HUMAN_APPROVED", "APPROVED", "USED"}
-        use_existing = best_row is not None and (exact_name or (trusted_existing and similarity >= 0.93))
+        use_existing = (best_row is not None and title_review(best_row.to_dict())["eligible"]
+                        and (exact_name or (trusted_existing and similarity >= 0.93)))
 
         if use_existing:
             decision = SelectedThemeDecision(
@@ -1175,7 +1191,7 @@ def generate_weekly_themes(
     )
     if len(recommendations) < top_n:
         raise ThemeGenerationError(
-            f"중복·다양성 필터 후 추천 가능 테마가 {len(recommendations)}개만 남았습니다. 다시 생성해 주세요."
+            f"주제·작품 선정 기준을 통과한 테마가 {len(recommendations)}개입니다. 요청한 {top_n}개를 채우지 못해 저장하지 않았습니다."
         )
 
     run_id = datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y%m%d-%H%M%S") + "-" + hashlib.sha1(
@@ -1289,6 +1305,9 @@ def persist_recommendations_locally(
             "creation_angle": str(rec.get("creation_angle", "")),
             "content_search_terms": ",".join(rec.get("content_search_terms", []) or []),
             "generation_model": str(run_meta.get("model", "")),
+            "content_selection_rule": str(rec.get("selection_rule") or theme.get("content_selection_rule", "")),
+            "content_exclusion_rule": str(rec.get("exclusion_rule") or theme.get("content_exclusion_rule", "")),
+            "content_reference_titles": json.dumps(_reference_titles(rec.get("reference_titles") or theme.get("content_reference_titles", "")), ensure_ascii=False),
         })
     incoming_history = pd.DataFrame(history_rows, columns=HISTORY_COLUMNS)
     keys = ["run_id", "theme_id", "rank"]

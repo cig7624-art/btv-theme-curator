@@ -1,4 +1,4 @@
-# Validated app runtime v1.2.5
+# Validated app runtime v1.2.6
 streamlit==1.66.0
 pandas
 feedparser

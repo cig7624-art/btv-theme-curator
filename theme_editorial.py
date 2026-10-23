@@ -185,7 +185,9 @@ def theme_card_html(index, rec, issue_pool=None):
     theme = rec.get("theme") if isinstance(rec.get("theme"), Mapping) else {}
     name = _text(theme.get("theme_name")) or "추천 테마"
     summary = _text(rec.get("source_issue_summary") or theme.get("source_issue"))
-    reason = _text(rec.get("rationale") or theme.get("copy"))
+    has_content_rule = bool(rec.get("selection_rule") or theme.get("content_selection_rule"))
+    reason = _text((theme.get("copy") or rec.get("rationale")) if has_content_rule
+                   else (rec.get("rationale") or theme.get("copy")))
     linked = linked_issue_for_theme(rec, issue_pool)
     source = '<span class="theme-issue-source">' + html.escape(linked["source_label"]) + '</span>' if linked else ''
     source_link = ('<a class="theme-issue-link" href="' + html.escape(linked["url"], quote=True) + '" target="_blank" rel="noopener noreferrer" title="'

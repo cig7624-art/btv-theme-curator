@@ -101,6 +101,9 @@ def theme_rows_to_recommendations(theme_rows: pd.DataFrame) -> list[dict[str, An
                 "mood": _clean(row.get("mood")),
                 "trigger_keywords": "|".join(_keywords(row.get("trigger_keywords"))),
                 "source_issue": _clean(row.get("source_issue")),
+                "content_selection_rule": _clean(row.get("content_selection_rule")),
+                "content_exclusion_rule": _clean(row.get("content_exclusion_rule")),
+                "content_reference_titles": _clean(row.get("content_reference_titles")),
             },
         })
     return recommendations

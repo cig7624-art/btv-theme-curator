@@ -1,0 +1,78 @@
+name: Verify real weekly theme generation
+
+# This paid check intentionally saves one normal weekly run. It never retries
+# generation after clicking; it does not run on ordinary main deployments.
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/intuitive-weekly-themes]
+    paths:
+      - scripts/verify_weekly_live.py
+      - .github/workflows/verify_weekly_live.yml
+
+concurrency:
+  group: verify-weekly-live-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-one-weekly-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Discard stale evidence
+        run: rm -f artifacts/weekly_live_validation.json
+      - name: Install browser verification driver
+        run: python -m pip install playwright
+      - name: Prefer the runner's preinstalled browser
+        run: |
+          weekly_browser="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -n "$weekly_browser" ]; then
+            echo "WEEKLY_CHROMIUM_PATH=$weekly_browser" >> "$GITHUB_ENV"
+          else
+            python -m playwright install --with-deps chromium
+          fi
+      - name: Verify single-click and data preservation rules without API calls
+        run: python -m unittest discover -s tests -p test_weekly_live_verification.py -v
+      - name: Generate and save one normal weekly run
+        id: verify
+        continue-on-error: true
+        run: python scripts/verify_weekly_live.py
+      - name: Preserve sanitized verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-weekly-generation-verification
+          path: artifacts/weekly_live_validation.json
+          retention-days: 7
+      - name: Record sanitized result on this development branch
+        if: ${{ always() && !cancelled() && startsWith(github.ref, 'refs/heads/') }}
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          if [ ! -f artifacts/weekly_live_validation.json ]; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- artifacts/weekly_live_validation.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'Record real weekly generation verification [skip ci]'
+          git pull --rebase origin "$TARGET_BRANCH"
+          checked_version="$(python -c 'import json; print(json.load(open("artifacts/weekly_live_validation.json"))["expected_version"])')"
+          current_version="$(tr -d '[:space:]' < VERSION)"
+          if [ "$checked_version" = "$current_version" ]; then
+            git push origin HEAD:"$TARGET_BRANCH"
+          fi
+      - name: Require genuine generation validation
+        if: ${{ steps.verify.outcome != 'success' }}
+        run: exit 1
