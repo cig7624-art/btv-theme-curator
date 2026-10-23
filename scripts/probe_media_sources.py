@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import re
+import os
+import xml.etree.ElementTree as ET
 from urllib.parse import urljoin
 
 import requests
@@ -14,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCES = [
     ("netflix_ir", "https://ir.netflix.net/financials/quarterly-earnings/default.aspx"),
     ("netflix_ir_rss", "https://ir.netflix.net/rss/pressrelease.aspx"),
-    ("netflix_news", "https://about.netflix.com/en/news"),
+    ("netflix_news", "https://about.netflix.com/"),
     ("disney_ir", "https://thewaltdisneycompany.com/investor-relations/"),
     ("disney_news", "https://thewaltdisneycompany.com/feed/"),
     ("amazon_ir", "https://ir.aboutamazon.com/quarterly-results/default.aspx"),
@@ -44,7 +46,12 @@ def probe(entry):
         soup = BeautifulSoup(response.content, "html.parser")
         result["title"] = soup.title.get_text(" ", strip=True) if soup.title else ""
         results = []
-        for item in soup.find_all(["item", "entry"]):
+        if "xml" in result["content_type"] or "rss" in result["content_type"]:
+            root = ET.fromstring(response.content)
+            for item in root.findall(".//item"):
+                results.append({"text": item.findtext("title", ""), "url": item.findtext("link", ""),
+                                "date": item.findtext("pubDate", "")})
+        for item in ([] if results else soup.find_all(["item", "entry"])):
             title, link, date = item.find("title"), item.find("link"), item.find(["pubdate", "published", "updated"])
             target = link.get("href") or link.get_text(strip=True) if link else ""
             results.append({"text": title.get_text(" ", strip=True) if title else "", "url": target,
@@ -57,7 +64,7 @@ def probe(entry):
             title = anchor.get_text(" ", strip=True)
             if not title or href in seen:
                 continue
-            if re.search(r"earnings|quarter|results|release|\.pdf|investor|financial|광고|제휴|미디어|요금|OTT|AI|stream|advertis", href + " " + title, re.I):
+            if "#" not in href and re.search(r"\.pdf|2026|2025|earnings|quarter|results|광고|제휴|미디어|요금|OTT|stream|advertis", href + " " + title, re.I):
                 seen.add(href)
                 result["links"].append({"text": title[:180], "url": href})
             if len(result["links"]) >= 40:
@@ -72,10 +79,36 @@ def probe(entry):
     return result
 
 
+def browser_documents():
+    from playwright.sync_api import sync_playwright
+    output = []
+    with sync_playwright() as p:
+        browser = p.chromium.launch(executable_path=os.environ["MEDIA_PROBE_CHROMIUM"], headless=True,
+                                    args=["--no-sandbox", "--disable-dev-shm-usage"])
+        for source, url in SOURCES:
+            if source not in {"netflix_ir", "amazon_ir"}:
+                continue
+            page = browser.new_page()
+            try:
+                page.goto(url, wait_until="domcontentloaded", timeout=40000)
+                page.wait_for_timeout(6000)
+                links = page.locator('a[href]').evaluate_all("nodes => nodes.map(a=>({text:a.innerText,url:a.href})).filter(a=> /\\.pdf|\\.xlsx|2026|2025/i.test(a.url) && a.text.trim())")
+                output.append({"id": source, "status": "ok", "links": links[:50],
+                               "excerpt": page.locator('body').inner_text()[-14000:]})
+            except Exception:
+                output.append({"id": source, "status": "unavailable"})
+            finally:
+                page.close()
+        browser.close()
+    return output
+
+
 def main():
     with ThreadPoolExecutor(max_workers=5) as executor:
         sources = list(executor.map(probe, SOURCES))
     report = {"checked_at": datetime.now(timezone.utc).isoformat(), "sources": sources}
+    if os.getenv("MEDIA_PROBE_CHROMIUM"):
+        report["browser_documents"] = browser_documents()
     path = ROOT / "artifacts/media_source_probe.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
