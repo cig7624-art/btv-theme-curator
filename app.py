@@ -40,6 +40,7 @@ from ott_view import render_ott_page
 from ai_director_view import activate_director_tab, render_ai_director_page
 from theme_provenance import director_theme_mask, is_director_theme, weekly_recommendation_runs
 from api_usage_view import render_api_cost_control
+from media_insights_runtime import render_media_insights_tab
 from issue_selection_copy import SOURCE_CONFIG, SOURCE_DETAIL_LOGIC, SELECTION_STEPS
 
 from theme_content_manager import (
@@ -1794,8 +1795,8 @@ else:
             unsafe_allow_html=True,
         )
 
-    story_tab, recommendation_tab, ott_tab, director_tab = st.tabs(
-        ["지금 주목할 이야기", "추천 테마", "OTT는 지금", "AI 디렉터"],
+    story_tab, recommendation_tab, ott_tab, director_tab, media_tab = st.tabs(
+        ["지금 주목할 이야기", "추천 테마", "OTT는 지금", "AI 디렉터", "미디어 인사이트"],
         key="home_sections", on_change="rerun",
         default=st.session_state.get("home_tab_default", "지금 주목할 이야기"),
     )
@@ -2011,6 +2012,12 @@ else:
             content_path=THEME_CONTENT_PATH, existing_candidates=load_content_candidate_frame(),
             find_saved_themes=lambda intent: rank_themes_by_ai_intent(themes, intent).head(5).fillna("").to_dict("records"),
         )
+
+    with media_tab:
+        media_github_config = dict(github_config)
+        media_github_config["media_insights_path"] = get_runtime_secret("MEDIA_INSIGHTS_GITHUB_PATH", "media_insights_snapshot.json")
+        render_media_insights_tab(api_key=openai_api_key, model=openai_model,
+                                  github_config=media_github_config)
 
 with st.container(key="app_footer"):
     footer_brand, footer_cost = st.columns([3, 2], vertical_alignment="center", gap="small")

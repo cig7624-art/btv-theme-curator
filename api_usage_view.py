@@ -17,6 +17,7 @@ _CACHE_KEY = "api_project_cost_cache"
 _FEATURE_NAMES = {
     "director": "AI 디렉터", "weekly_themes": "추천 테마 기획",
     "content_candidates": "콘텐츠 후보 생성", "theme_search": "AI 검색",
+    "media_analysis": "미디어 분석", "media_research": "미디어 리서치 질문",
 }
 
 
@@ -85,7 +86,8 @@ def render_api_cost_control(get_secret):
             st.markdown("**비용이 발생하는 작업**")
             st.markdown("- AI 디렉터에 질문·생성·수정 요청\n"
                         "- 추천 테마 생성: 테마 기획 + 작품 후보 생성\n"
-                        "- 콘텐츠 새로고침·라이브러리 작품 연결 및 업데이트")
+                        "- 콘텐츠 새로고침·라이브러리 작품 연결 및 업데이트\n"
+                        "- 미디어 인사이트 분석·리서치 질문")
             st.caption("화면 열람·빠른 검색·필터·채택·저장·버전 복구 버튼은 AI를 호출하지 않습니다. 이슈·OTT 정기 수집은 OpenAI를 사용하지 않으며 YouTube 등 각 서비스의 API 할당량을 사용합니다.")
             st.markdown(f"**이번 접속: 응답 {usage['response_count']:,}회 · {usage['total_tokens']:,}토큰**")
             if usage['response_count']:

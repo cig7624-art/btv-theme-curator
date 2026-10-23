@@ -7,6 +7,9 @@ on:
     paths:
       - VERSION
       - app.py
+      - media_insights_view.py
+      - media_insights_styles.css
+      - media_insights_runtime.py
       - ott_editorial.py
       - ott_view.py
       - ott_styles.css

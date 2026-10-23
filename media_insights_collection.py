@@ -54,7 +54,12 @@ SOURCES = (
      "allowed_hosts": ["thewaltdisneycompany.com", "www.thewaltdisneycompany.com"]},
     {"id": "amazon_news", "name": "About Amazon: Entertainment", "company": "Amazon",
      "url": "https://www.aboutamazon.com/news/entertainment", "source_type": "official_announcement", "country": "",
-     "allowed_hosts": ["www.aboutamazon.com", "aboutamazon.com"]},
+     "allowed_hosts": ["www.aboutamazon.com", "aboutamazon.com"],
+     # A verified, maintained business/sports explainer can leave the first
+     # listing page when routine film promotions arrive. Refetch its source;
+     # its publication and revision dates remain those actually in the article.
+     "document_urls": [{"url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
+                        "title": "How to watch the 2026-27 NBA season on Prime Video"}]},
     {"id": "skt_news", "name": "SK텔레콤 뉴스룸", "company": "SKT",
      "url": "https://news.sktelecom.com/feed", "source_type": "official_announcement", "country": "KR",
      "require_media_subject": True, "allowed_hosts": ["news.sktelecom.com", "news-static.sktelecom.com"]},
@@ -356,7 +361,10 @@ def parse_html_document(html, source, *, url=None, collected_at=None, title_hint
     # Artwork is optional and never used as factual evidence. Accept only an
     # official-host asset; unknown CDN artwork remains absent.
     image_url = _official_url(image.get("content", ""), source, url) if image else ""
-    return _make_item(source, url, title, paragraphs, published, _timestamp(collected_at), image_url=image_url)
+    item = _make_item(source, url, title, paragraphs, published, _timestamp(collected_at), image_url=image_url)
+    if item and (modified := _date(structured.get("dateModified"))):
+        item["source_updated_at"] = modified
+    return item
 
 
 def parse_pdf_document(content, source, *, url, collected_at=None, title_hint="", pdf_reader=None):
@@ -454,6 +462,12 @@ def _collect_source(source, previous_source, *, fetcher, observed, limit):
         if direct:
             items.append(direct)
         links = _discover_documents(root, source)
+        known_urls = {link["url"] for link in links}
+        for configured_document in source.get("document_urls", []):
+            seed_url = _official_url(configured_document.get("url", ""), source)
+            if seed_url and seed_url not in known_urls:
+                links.append({"url": seed_url, "title": _text(configured_document.get("title", ""), 300)})
+                known_urls.add(seed_url)
         for link in links[:max(0, limit - len(items))]:
             try:
                 item = None
@@ -527,6 +541,11 @@ def collect_media_insights(previous=None, *, fetcher=None, now=None, sources=Non
                 merged["collected_at"] = old.get("collected_at") or item["collected_at"]
                 merged["published_at"] = (item.get("published_at", "") if item.get("published_at_source") == "pdf_publication_unconfirmed"
                                           else item.get("published_at") or old.get("published_at", ""))
+                if old.get("published_at") and not merged["published_at"]:
+                    # An older parser may have mistaken a PDF reporting period
+                    # for publication; analysis using that metadata needs a
+                    # fresh review even though the document text is unchanged.
+                    merged.pop("analysis", None)
                 merged["last_checked_at"] = observed
                 old_items[item["id"]] = merged
             else:

@@ -15,7 +15,7 @@ CONTROL_FILES = {
     "VERSION", "CHANGELOG.md", "ROLLBACK.md", "release_state.json",
     "scripts/rollback_release.py", "tests/test_rollback_release.py",
 }
-DATA_FILES = {"collection_status.json", "ott_home_snapshot.json"}
+DATA_FILES = {"collection_status.json", "ott_home_snapshot.json", "media_insights_snapshot.json"}
 DATA_SUFFIXES = {".csv", ".sqlite", ".sqlite3", ".parquet", ".db"}
 CODE_DIRECTORIES = ("scripts/", "tests/", ".github/workflows/", ".streamlit/", ".devcontainer/")
 CODE_FILES = {"requirements.txt", "packages.txt", ".gitignore", ".dockerignore",

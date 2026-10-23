@@ -62,13 +62,16 @@ class DocumentExtractionTests(unittest.TestCase):
 
     def test_structured_article_metadata_is_used_but_other_document_metadata_is_not(self):
         data = {"@type": "NewsArticle", "url": "https://official.example/news/current",
-                "headline": "Company expands streaming distribution partnership", "datePublished": "2026-10-20T10:30:00Z"}
+                "headline": "Company expands streaming distribution partnership", "datePublished": "2026-10-20T10:30:00Z",
+                "dateModified": "2026-10-22T11:20:00Z"}
         html = article(date="").replace("<head>", '<head><script type="application/ld+json">' + json.dumps(data) + "</script>")
         item = collection.parse_html_document(html, SOURCE, url=data["url"], collected_at=NOW)
         self.assertEqual(item["published_at"], "2026-10-20")
         self.assertEqual(item["title"], data["headline"])
+        self.assertEqual(item["source_updated_at"], "2026-10-22")
         other = collection.parse_html_document(html, SOURCE, url="https://official.example/news/other", collected_at=NOW)
         self.assertEqual(other["published_at"], "")
+        self.assertNotIn("source_updated_at", other)
 
     def test_navigation_movie_promotion_and_schedule_are_not_business_documents(self):
         for title in ("Newsroom", "A closer look at the new summer movie", "Company to Announce Third Quarter Financial Results"):
@@ -194,6 +197,20 @@ class TransportAndDiscoveryTests(unittest.TestCase):
         self.assertEqual(len(requests_seen), 4)
         self.assertEqual(len(snapshot["items"]), 1)
 
+    def test_verified_official_seed_is_refetched_when_promotions_push_it_off_listing(self):
+        seed_url = "https://official.example/news/nba"
+        source = {**SOURCE, "document_urls": [{"url": seed_url, "title": "NBA streaming partnership"},
+                                             {"url": "https://evil.example/news/nba", "title": "NBA partnership"}]}
+        calls = []
+        def fetcher(url):
+            calls.append(url)
+            return '<h1>Entertainment</h1><a href="/news/movie">A movie premiere</a>' if url == SOURCE["url"] else article("NBA streaming partnership")
+        snapshot = collection.collect_media_insights(fetcher=fetcher, now=NOW, sources=[source])
+        self.assertEqual(calls, [SOURCE["url"], seed_url])
+        self.assertEqual(snapshot["items"][0]["url"], seed_url)
+        self.assertEqual(snapshot["items"][0]["topic"], "sports_content")
+        self.assertEqual(snapshot["sources"][0]["status"], "ok")
+
 
 class SnapshotPreservationTests(unittest.TestCase):
     def collect(self, html=None, previous=None, now=NOW):
@@ -228,13 +245,16 @@ class SnapshotPreservationTests(unittest.TestCase):
     def test_pdf_unconfirmed_publication_clears_previously_misread_fiscal_end(self):
         before = self.collect()
         before["items"][0]["published_at"] = "2026-06-27"
+        before["items"][0]["analysis"] = {"summary": "A summary using the wrong date"}
         parsed = deepcopy(before["items"][0])
+        parsed.pop("analysis")
         parsed.update(published_at="", published_at_source="pdf_publication_unconfirmed", collected_at=LATER)
         with patch.object(collection, "parse_pdf_document", return_value=parsed):
             after = collection.collect_media_insights(before, fetcher=lambda _: b"%PDF-fixture", now=LATER,
                                                        sources=[{**SOURCE, "url": "https://official.example/news/article"}])
         self.assertEqual(after["items"][0]["published_at"], "")
         self.assertEqual(after["items"][0]["collected_at"], NOW)
+        self.assertNotIn("analysis", after["items"][0])
 
     def test_failure_preserves_items_and_success_date_without_leaking_exception_text(self):
         before = self.collect()

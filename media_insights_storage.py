@@ -77,7 +77,7 @@ def _time(value):
 
 
 def _document_time(row):
-    return max(_time(row.get(key)) for key in ("collected_at", "last_seen_at", "updated_at"))
+    return max(_time(row.get(key)) for key in ("collected_at", "last_checked_at", "last_seen_at", "updated_at"))
 
 
 def _evidence_index(snapshot):

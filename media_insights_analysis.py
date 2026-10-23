@@ -87,6 +87,35 @@ def _url(value):
         return ""
 
 
+_MEDIA_SPECIFIC = re.compile(
+    r"prime\s*video|netflix|disney\s*\+|hulu|peacock|paramount\s*\+|streaming|"
+    r"\bOTT\b|\bIPTV\b|B\s*tv|media\s+rights|ad[- ]supported|ad[- ]tier|"
+    r"advertising\s+(?:plan|sales|business|services)|Ads\s+Agent|스트리밍|중계권|광고\s*(?:요금제|매출|사업)", re.I)
+_MEDIA_RELATED = re.compile(r"\bNBA\b|\bNFL\b|\bNASCAR\b|sports|viewership|viewers|subscribers|"
+                            r"box\s*office|영화|드라마|스포츠|가입자|시청자|시청률", re.I)
+
+
+def _relevant_evidence(rows, limit):
+    """Keep opening context and media paragraphs even in long conglomerate filings.
+
+    A paragraph's position is preserved in its original citation ID/locator. This
+    is evidence selection, never a fabricated summary or company attribution.
+    """
+    rows = [row for row in rows if isinstance(row, Mapping)]
+    if len(rows) <= limit:
+        return rows
+    context_count = min(2, max(1, limit // 3))
+    chosen = set(range(context_count))
+    ranked = []
+    for position, row in enumerate(rows[context_count:], context_count):
+        text = _text(row.get("text"), MAX_EVIDENCE_CHARS)
+        score = 8 * len(_MEDIA_SPECIFIC.findall(text)) + 3 * len(_MEDIA_RELATED.findall(text))
+        ranked.append((score, -position, position))
+    for _, _, position in sorted(ranked, reverse=True)[:limit - context_count]:
+        chosen.add(position)
+    return [row for position, row in enumerate(rows) if position in chosen]
+
+
 def _documents(item, context_items):
     """Preserve collector IDs and cap the actual excerpts sent to the model."""
     if not isinstance(item, Mapping) or not item.get("content_hash"):
@@ -112,7 +141,7 @@ def _documents(item, context_items):
         doc["url"] = _url(source.get("url"))
         doc["evidence"] = []
         limit = MAX_SELECTED_EVIDENCE if position == 0 else 4
-        for row in source.get("evidence", []):
+        for row in _relevant_evidence(source.get("evidence", []), limit):
             if not isinstance(row, Mapping):
                 continue
             key = _text(row.get("id"), 200)
@@ -155,6 +184,16 @@ _NUMBER = re.compile(
     r"(?P<scale>thousand(?![A-Za-z])|million(?![A-Za-z])|billion(?![A-Za-z])|trillion(?![A-Za-z])|[kmb](?![A-Za-z])|천|만|억|조)?\s*"
     r"(?P<unit>percentage\s+points?(?![A-Za-z])|percent(?![A-Za-z])|%p|%|퍼센트포인트|퍼센트|달러|원|USD(?![A-Za-z])|KRW(?![A-Za-z])|EUR(?![A-Za-z])|GBP(?![A-Za-z])|분기|명|회|년|개월|월|일)?", re.I)
 _DATE = re.compile(r"(?<!\d)(20\d{2}|19\d{2})\s*(?:[-/.]|년)\s*(\d{1,2})\s*(?:[-/.]|월)\s*(\d{1,2})(?:\s*일)?(?!\d)")
+_MONTHS = {name: position for position, names in enumerate([
+    ("january", "jan"), ("february", "feb"), ("march", "mar"), ("april", "apr"),
+    ("may",), ("june", "jun"), ("july", "jul"), ("august", "aug"),
+    ("september", "sep", "sept"), ("october", "oct"), ("november", "nov"),
+    ("december", "dec")], 1) for name in names}
+_MONTH_PATTERN = "(?:" + "|".join(sorted(_MONTHS, key=len, reverse=True)) + r")\.?"
+_EN_DATE = re.compile(r"(?<![A-Za-z0-9])(?P<month>" + _MONTH_PATTERN +
+    r")\s+(?P<day>\d{1,2})(?:st|nd|rd|th)?\s*,?\s+(?P<year>20\d{2}|19\d{2})(?!\d)", re.I)
+_EN_DATE_DAY_FIRST = re.compile(r"(?<![A-Za-z0-9])(?P<day>\d{1,2})(?:st|nd|rd|th)?\s+(?P<month>" +
+    _MONTH_PATTERN + r")\s*,?\s+(?P<year>20\d{2}|19\d{2})(?!\d)", re.I)
 
 
 def _quantities(text):
@@ -168,6 +207,17 @@ def _quantities(text):
         result.add((Decimal(year * 10000 + month * 100 + day), "date"))
         result.add((Decimal(year), "year"))
         return " "
+    def english_date_value(match):
+        year, month, day = int(match["year"]), _MONTHS[match["month"].lower().rstrip(".")], int(match["day"])
+        try:
+            datetime(year, month, day)
+        except ValueError:
+            return match.group(0)
+        result.add((Decimal(year * 10000 + month * 100 + day), "date"))
+        result.add((Decimal(year), "year"))
+        return " "
+    text = _EN_DATE.sub(english_date_value, text)
+    text = _EN_DATE_DAY_FIRST.sub(english_date_value, text)
     text = _DATE.sub(date_value, text)
     for match in _NUMBER.finditer(text):
         try:
@@ -254,7 +304,13 @@ def _check_company(company, ids, index, owners):
     key = _company_key(company)
     supported = { _company_key(owners[value].get("company")) for value in ids }
     excerpt = " ".join(_company_key(index[value]["text"]) for value in ids)
-    if not key or (key not in supported and key not in excerpt):
+    # Short Latin company names (for example KT) must not be inferred from
+    # unrelated words such as TikTok after punctuation/whitespace removal.
+    short_name = bool(re.fullmatch(r"[a-z0-9]{1,3}", key))
+    mentioned = (bool(re.search(r"(?<![A-Za-z0-9])" + re.escape(key) + r"(?![A-Za-z0-9])",
+                              " ".join(index[value]["text"] for value in ids), re.I))
+                 if short_name else key in excerpt)
+    if not key or (key not in supported and not mentioned):
         raise MediaInsightError("비교 대상 사업자를 원문에서 확인하지 못했습니다.")
 
 
@@ -324,21 +380,22 @@ def analyze_media_item(item, context_items=None, *, api_key="", model="gpt-5.6-l
         all_ids.extend(ids)
     if not facts:
         raise MediaInsightError("원문에서 분석할 사실을 확인하지 못했습니다.")
+    fact_ids = list(all_ids)
     for row in plan.comparison[:6]:
         ids = _validated_ids(row.evidence_ids, index)
         text = _text(row.detail, 700)
         _check_company(row.company, ids, index, owners)
-        _check_numbers(text, ids, index, owners)
-        _check_scope(text, ids, index)
+        _check_numbers(_text(row.aspect, 180) + " " + text, ids, index, owners)
+        _check_scope(_text(row.aspect, 180) + " " + text, ids, index)
         comparison.append({"company": _text(row.company, 100), "aspect": _text(row.aspect, 180),
                            "detail": text, "evidence_ids": ids})
         all_ids.extend(ids)
     summary = _text(plan.summary, 800)
-    _check_numbers(summary, all_ids, index, owners)
-    _check_scope(summary, all_ids, index)
+    _check_numbers(summary, fact_ids, index, owners)
+    _check_scope(summary, fact_ids, index)
     headline = _text(plan.headline, 110)
-    _check_numbers(headline, all_ids, index, owners)
-    _check_scope(headline, all_ids, index)
+    _check_numbers(headline, fact_ids, index, owners)
+    _check_scope(headline, fact_ids, index)
     return {"headline": headline, "summary": summary, "facts": facts, "interpretation": _text(plan.interpretation, 1_400),
             "btv_options": [_text(value, 500) for value in plan.btv_options[:3] if _text(value)],
             "questions": [_text(value, 400) for value in plan.questions[:3] if _text(value)],

@@ -63,11 +63,11 @@ class DirectorCardTests(unittest.TestCase):
 
 
 class DirectorAppTests(unittest.TestCase):
-    def test_four_tabs_render_both_workflows_without_starting_either_generator(self):
+    def test_five_tabs_render_both_workflows_without_starting_either_generator(self):
         with patch('ai_director_view.run_director_turn') as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
             app = state['app']
             self.assertFalse(app.exception)
-            self.assertEqual([tab.label for tab in app.tabs], ['지금 주목할 이야기', '추천 테마', 'OTT는 지금', 'AI 디렉터'])
+            self.assertEqual([tab.label for tab in app.tabs], ['지금 주목할 이야기', '추천 테마', 'OTT는 지금', 'AI 디렉터', '미디어 인사이트'])
             self.assertTrue(any(button.key == 'generate_weekly_themes' for button in app.button))
             self.assertTrue(any(button.key == 'load_weekly_contents' for button in app.button))
             self.assertTrue(any(button.key == 'open_theme_library' for button in app.button))

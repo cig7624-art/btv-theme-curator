@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "four_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork")
+CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow")
 
 
 def normalized_version(value):
@@ -133,9 +133,9 @@ def _load_version(page, args, report, label):
 def _check_editorial(frame, report, label, screenshots):
     page = frame.page
     tab_names = frame.get_by_role("tab").all_text_contents()
-    report["tests"][f"{label}_four_tabs"] = [name.strip() for name in tab_names] == ["지금 주목할 이야기", "추천 테마", "OTT는 지금", "AI 디렉터"]
-    if not report["tests"][f"{label}_four_tabs"]:
-        raise VerificationIssue("four_tabs_missing", retry=True)
+    report["tests"][f"{label}_five_tabs"] = [name.strip() for name in tab_names] == ["지금 주목할 이야기", "추천 테마", "OTT는 지금", "AI 디렉터", "미디어 인사이트"]
+    if not report["tests"][f"{label}_five_tabs"]:
+        raise VerificationIssue("five_tabs_missing", retry=True)
     frame.get_by_role("tab", name="추천 테마", exact=True).click()
     frame.locator(".st-key-curation_section").wait_for(state="visible", timeout=20000)
     report["tests"][f"{label}_weekly_actions"] = frame.get_by_role("button", name="테마 생성하기", exact=True).count() == 1 and frame.locator('.st-key-load_weekly_contents').count() == 1
@@ -255,6 +255,27 @@ def _check_editorial(frame, report, label, screenshots):
         raise VerificationIssue('coupang_artwork_unavailable')
     frame.get_by_role('radio', name='주요 소식', exact=True).click()
     frame.locator('.ott-magazine').wait_for(state='visible')
+    frame.get_by_role('tab', name='미디어 인사이트', exact=True).click()
+    frame.locator('.media-insights-heading').wait_for(state='visible', timeout=30000)
+    frame.locator('.media-story-meta').first.wait_for(state='visible', timeout=30000)
+    report['tests'][f'{label}_media_insights'] = frame.locator('.media-story-meta').count() > 0
+    report['tests'][f'{label}_media_evidence'] = (frame.get_by_role('link', name='공식 원문 열기 ↗', exact=True).count() == 1
+        and frame.locator('.media-evidence-row').count() > 0)
+    media_dimensions = frame.evaluate("""() => {
+      const main = document.querySelector('[data-testid="stMain"]');
+      return {viewport:innerWidth, document_scroll:document.documentElement.scrollWidth,
+              main_width:main ? main.clientWidth : innerWidth,
+              main_scroll:main ? main.scrollWidth : document.documentElement.scrollWidth};
+    }""")
+    report['tests'][f'{label}_media_no_overflow'] = no_horizontal_overflow(media_dimensions)
+    if not all(report['tests'][f'{label}_{check}'] for check in ('media_insights','media_evidence','media_no_overflow')):
+        raise VerificationIssue('media_insights_verification_failed')
+    if has_app_exception(page):
+        raise VerificationIssue('media_insights_exception')
+    screenshots.mkdir(parents=True, exist_ok=True)
+    frame.locator('.media-insights-heading').scroll_into_view_if_needed()
+    page.screenshot(path=str(screenshots / f'{label}-media.png'), full_page=False)
+    frame.get_by_role('tab', name='OTT는 지금', exact=True).click()
     screenshots.mkdir(parents=True, exist_ok=True)
     frame.locator(".ott-magazine").first.scroll_into_view_if_needed()
     page.screenshot(path=str(screenshots / f"{label}.png"), full_page=False)

@@ -118,6 +118,21 @@ class MediaInsightsStorageTests(unittest.TestCase):
         self.assertEqual([row["id"] for row in merged["items"]], ["two", "three", "one", "unknown"])
         self.assertNotIn("published_at", merged["items"][-1])
 
+    def test_newer_same_hash_observation_clears_unconfirmed_date_preserving_analysis(self):
+        note = analysis(self.first)
+        prior = {**self.first, "published_at": "2026-06-27T00:00:00+00:00",
+                 "published_at_source": "pdf_dateline", "last_checked_at": "2026-10-23T08:00:00+00:00",
+                 "analysis": note}
+        corrected = {**self.first, "published_at": "", "published_at_source": "pdf_publication_unconfirmed",
+                     "last_checked_at": "2026-10-24T08:00:00+00:00"}
+        merged = merge_media_snapshots(snapshot(prior), snapshot(corrected))
+        item = merged["items"][0]
+        self.assertEqual(item["published_at"], "")
+        self.assertEqual(item["published_at_source"], "pdf_publication_unconfirmed")
+        self.assertEqual(item["collected_at"], self.first["collected_at"])
+        self.assertEqual(item["last_checked_at"], corrected["last_checked_at"])
+        self.assertEqual(item["analysis"], note)
+
     def test_sha_conflict_rereads_new_docs_and_analysis_before_one_retry(self):
         remote = Remote(self.initial)
         def concurrent_update(store, updated):
