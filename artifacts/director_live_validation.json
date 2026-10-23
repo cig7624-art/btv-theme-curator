@@ -1,23 +1,22 @@
 {
   "schema_version": 1,
   "status": "passed",
-  "expected_version": "1.2.2",
-  "observed_version": "1.2.2",
-  "started_at": "2026-10-23T00:33:46.030206+00:00",
-  "finished_at": "2026-10-23T00:36:58.833021+00:00",
+  "expected_version": "1.2.3",
+  "observed_version": "1.2.3",
+  "started_at": "2026-10-23T01:00:24.607660+00:00",
+  "finished_at": "2026-10-23T01:02:17.559420+00:00",
   "tests": {
     "desktop_version": true,
+    "desktop_immediate_chat_without_starters": true,
     "desktop_empty_director": true,
     "mobile_version": true,
+    "mobile_immediate_chat_without_starters": true,
     "mobile_empty_director": true,
-    "open_ideation_without_forced_drafts": true,
-    "free_prompt_three_drafts": true,
-    "second_title_only_preserved_others": true,
+    "direct_brief_creates_one_theme_with_titles": true,
+    "title_only_preserves_recommended_works": true,
+    "conversational_mood_edit_preserves_other_fields": true,
     "content_exclusion_preserved_metadata": true,
     "undo_restored_previous_drafts": true,
-    "library_search_section": true,
-    "library_search_moved_into_conversation": true,
-    "saved_theme_rework_adds_draft_preserves_others": true,
     "mobile_drafts_no_overflow": true,
     "no_app_exception": true,
     "adoption_not_invoked": true
@@ -25,30 +24,18 @@
   "errors": [],
   "warnings": [],
   "counts": {
-    "drafts": 3,
+    "drafts": 1,
     "contents_per_draft": [
-      6,
-      6,
-      6
+      8
     ],
     "poster_loading": [
       {
-        "checked": 6,
-        "loaded": 6
-      },
-      {
-        "checked": 5,
-        "loaded": 5
-      },
-      {
-        "checked": 5,
-        "loaded": 5
+        "checked": 8,
+        "loaded": 8
       }
     ],
-    "matched_saved_themes": 5,
-    "final_drafts": 4,
-    "submitted_requests": 7
+    "submitted_requests": 5
   },
-  "source_commit": "508a86211319af4b6c4ff5faca4d3d405940bfbb",
+  "source_commit": "90ad9226c639fdb5f379a02570bfa2ab94d3685a",
   "frame_state": "matched_release"
 }
