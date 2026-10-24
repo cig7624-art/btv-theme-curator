@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-10-24T01:56:22+00:00",
+  "collected_at": "2026-10-24T02:47:51+00:00",
   "sources": [
     {
       "id": "netflix_ir",
@@ -8,8 +8,8 @@
       "company": "Netflix",
       "url": "https://ir.netflix.net/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
-      "last_success_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_success_at": "2026-10-24T02:47:51+00:00",
       "error_code": "",
       "item_count": 3,
       "retained_item_count": 3
@@ -20,8 +20,8 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/investor-relations/",
       "status": "partial",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
-      "last_success_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_success_at": "2026-10-24T02:47:51+00:00",
       "error_code": "some_documents_unavailable",
       "item_count": 2,
       "retained_item_count": 2
@@ -32,8 +32,8 @@
       "company": "Amazon",
       "url": "https://ir.aboutamazon.com/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
-      "last_success_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_success_at": "2026-10-24T02:47:51+00:00",
       "error_code": "",
       "item_count": 3,
       "retained_item_count": 3
@@ -44,7 +44,7 @@
       "company": "Comcast",
       "url": "https://www.cmcsa.com/financial-information/quarterly-results",
       "status": "unavailable",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
       "last_success_at": "",
       "error_code": "http_403",
       "item_count": 0,
@@ -56,8 +56,8 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/feed/",
       "status": "ok",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
-      "last_success_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_success_at": "2026-10-24T02:47:51+00:00",
       "error_code": "",
       "item_count": 3,
       "retained_item_count": 3
@@ -68,8 +68,8 @@
       "company": "Amazon",
       "url": "https://www.aboutamazon.com/news/entertainment",
       "status": "ok",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
-      "last_success_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_success_at": "2026-10-24T02:47:51+00:00",
       "error_code": "",
       "item_count": 1,
       "retained_item_count": 1
@@ -80,7 +80,7 @@
       "company": "SKT",
       "url": "https://news.sktelecom.com/feed",
       "status": "unavailable",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
       "last_success_at": "",
       "error_code": "no_business_documents",
       "item_count": 0,
@@ -162,7 +162,7 @@
       ],
       "content_hash": "60d467a44a6681d8ea04718c3c902263342ae875d7de373d944293b956a16986",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
       "analysis": {
         "headline": "디즈니, Dude Perfect와 전사적 콘텐츠·유통 파트너십 발표",
         "summary": "디즈니는 Dude Perfect와 협력해 디즈니 프랜차이즈·이벤트를 활용한 오리지널 콘텐츠를 제작하고, 일부 콘텐츠를 Disney+에 선보일 계획이다. 또한 Dude Perfect의 기존 숏폼 라이브러리를 Disney+, ESPN 및 디즈니 소셜 플랫폼에 유통할 수 있게 됐다.",
@@ -346,7 +346,7 @@
       ],
       "content_hash": "fe5ff5da4381a11de5a7966d2e4ecae91e79baded2dfbc8c260fb74d700637df",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
       "analysis": {
         "headline": "Disney+, 2027년 슈퍼볼 LXI 스트리밍 예정",
         "summary": "Disney+는 2027년 2월 14일 슈퍼볼 LXI를 미국의 모든 Disney+ 가입자에게 스트리밍하고, 미국 외 55개국 이상에서도 ESPN의 슈퍼볼 중계를 제공할 예정입니다. 미국에서는 정규시즌 Monday Night Football 두 경기도 Disney+에서 시청할 수 있습니다.",
@@ -553,7 +553,7 @@
       ],
       "content_hash": "497b1ab9073b544dc6a232378cab1f28d3f4075019d510c24c8a30b6df3e1dc1",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-24T01:56:22+00:00"
+      "last_checked_at": "2026-10-24T02:47:51+00:00"
     },
     {
       "id": "mi-f225fce079cd30efb6",
@@ -958,7 +958,7 @@
         }
       ],
       "content_hash": "c2b345f02d73b7330cc03ae0d0a4a354a1091ce21eb936974e40a8821caffcf3",
-      "last_checked_at": "2026-10-24T01:56:22+00:00"
+      "last_checked_at": "2026-10-24T02:47:51+00:00"
     },
     {
       "id": "mi-5f320346020eccf5b8",
@@ -1363,7 +1363,7 @@
         }
       ],
       "content_hash": "10f11121079894d5e410635c297e2bd2fe9c2be36687347a7420dfee8c012654",
-      "last_checked_at": "2026-10-24T01:56:22+00:00"
+      "last_checked_at": "2026-10-24T02:47:51+00:00"
     },
     {
       "id": "mi-7cb4165a48c7bf427a",
@@ -1768,7 +1768,7 @@
         }
       ],
       "content_hash": "4825da0b4b4b5cddabe6f859cf349400c3e17c6e26260ba335c2060c0cfb356f",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
       "published_at_source": "official_feed"
     },
     {
@@ -1863,7 +1863,7 @@
       ],
       "content_hash": "05ac069470d7041d12fa2cd31a7bf06eb3632ffdfb0be9b462915040cb192920",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
       "versions": [
         {
           "content_hash": "504d2b339cc29a608621f06a549fb39d53e851375fe0edcbe39bce7a1d79c630",
@@ -2177,7 +2177,7 @@
       ],
       "content_hash": "4a2b8c2217143371b92bc9097abe1eb31059fed756ba2f1ae36438389bc84fc3",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
       "versions": [
         {
           "content_hash": "8e3908e1efc308b6d1611c3112c14fe94bf0baaad0daad49fac8440701a5157d",
@@ -2575,7 +2575,7 @@
       ],
       "content_hash": "317445884687100e21d6e4df531c49a79ce80af82bbd250ddf35e1c36f7091f9",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
       "versions": [
         {
           "content_hash": "5f3f1574ff6ed065c706ddfa634a9ac58e20dfd11ddd04306765dc007e72d50e",
@@ -3147,7 +3147,7 @@
       ],
       "content_hash": "baa38c6950155ed542f0ab2a1c12a07707f1c370fa5bb38ae89fba1ea8c1d38c",
       "source_updated_at": "2026-10-14",
-      "last_checked_at": "2026-10-24T01:56:22+00:00"
+      "last_checked_at": "2026-10-24T02:47:51+00:00"
     },
     {
       "id": "mi-80909bc46e109903db",
@@ -3552,7 +3552,7 @@
         }
       ],
       "content_hash": "d5eed575231d5cf16dae13543385bcbda71ba4d2178ed1d732d90858850e4d48",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
       "published_at_source": "pdf_publication_unconfirmed"
     },
     {
@@ -3736,7 +3736,7 @@
         }
       ],
       "content_hash": "cc64576f1e9ad7812785a28bb7f37659fc937b2746c65ea702d9f6da13e1fcfb",
-      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "last_checked_at": "2026-10-24T02:47:51+00:00",
       "published_at_source": "pdf_publication_unconfirmed"
     }
   ]
