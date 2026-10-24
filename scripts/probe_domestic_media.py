@@ -13,19 +13,19 @@ from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = [
-    ("skb", "https://blog.skbroadband.com/rss"),
-    ("kt_blog", "https://blog.kt.com/rss"),
-    ("kt_news", "https://corp.kt.com/html/promote/news/report.html"),
-    ("lgu_news", "https://news.lguplus.com/"),
-    ("lgu_feed", "https://news.lguplus.com/feed/"),
-    ("coupang_news", "https://news.coupang.com/feed/"),
-    ("cjenm_news", "https://www.cjenm.com/ko/news/"),
-    ("disney_feed", "https://thewaltdisneycompany.com/feed/"),
-    ("disney_creator", "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/"),
-    ("disney_sports", "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/"),
-    ("disney_ai", "https://thewaltdisneycompany.com/news/ai-powered-search-espn-disney-plus/"),
-    ("amazon_sports", "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video"),
+    ("skb_new_feed", "https://blog.bworld.co.kr/feed/"),
+    ("skb_new", "https://blog.bworld.co.kr/"),
+    ("skb_news", "https://news.skbroadband.com/"),
+    ("kt_newsroom", "https://newsroom.kt.com/"),
+    ("kt_news_list", "https://corp.kt.com/html/promote/news/report_list.html"),
+    ("kt_news_site", "https://corp.kt.com/html/promote/news/report.html"),
+    ("lgu_rss", "https://news.lguplus.com/?feed=rss2"),
+    ("lgu_sitemap", "https://news.lguplus.com/post-sitemap.xml"),
+    ("lgu_products", "https://news.lguplus.com/category/newsroom/service/"),
+    ("coupang_home", "https://news.coupang.com/"),
+    ("coupang_play", "https://news.coupang.com/archives/category/coupang-play"),
 ]
+
 BUSINESS = re.compile(r"B\s*tv|IPTV|OTT|티빙|TVING|웨이브|wavve|쿠팡플레이|디즈니|넷플릭스|지니\s*TV|U\+\s*tv|요금|구독|결합|번들|출시|제휴", re.I)
 
 
@@ -95,7 +95,7 @@ def main():
     with ThreadPoolExecutor(max_workers=6) as pool:
         details = list(pool.map(probe, followups))
     report = {"checked_at": datetime.now(timezone.utc).isoformat(), "sources": results, "article_details": details}
-    path = ROOT / "artifacts/domestic_media_probe.json"
+    path = ROOT / "artifacts/domestic_media_probe_current.json"
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps({"sources": len(results), "ok": sum(r["status"] == "ok" for r in results), "details": len(details)}))
 
