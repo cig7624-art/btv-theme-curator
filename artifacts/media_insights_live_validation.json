@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "expected_version": "1.3.1",
-  "observed_version": "1.3.1",
+  "expected_version": "1.3.2",
+  "observed_version": "1.3.2",
   "passed": false,
   "blocked": false,
   "checks": {
@@ -18,12 +18,12 @@
     "release_load_attempts": 1,
     "analysis_clicks": 2,
     "question_clicks": 0,
-    "requested_analyses": 3,
+    "requested_analyses": 2,
     "visible_documents": 12,
     "analysis_1_clicks": 1,
     "analysis_1_sections": 4,
-    "analysis_1_confirmed_facts": 5,
+    "analysis_1_confirmed_facts": 3,
     "analysis_2_clicks": 1
   },
-  "failure_code": "media_numbers_unverified"
+  "failure_code": "media_no_verified_facts"
 }
