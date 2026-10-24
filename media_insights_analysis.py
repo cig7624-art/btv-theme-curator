@@ -31,6 +31,10 @@ MAX_EVIDENCE_CHARS = 1_400
 class MediaInsightError(RuntimeError):
     """A safe user-facing error that never contains provider response details."""
 
+    def __init__(self, message, *, code="validation_failed"):
+        super().__init__(message)
+        self.code = code
+
 
 class _StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -194,6 +198,41 @@ _EN_DATE = re.compile(r"(?<![A-Za-z0-9])(?P<month>" + _MONTH_PATTERN +
     r")\s+(?P<day>\d{1,2})(?:st|nd|rd|th)?\s*,?\s+(?P<year>20\d{2}|19\d{2})(?!\d)", re.I)
 _EN_DATE_DAY_FIRST = re.compile(r"(?<![A-Za-z0-9])(?P<day>\d{1,2})(?:st|nd|rd|th)?\s+(?P<month>" +
     _MONTH_PATTERN + r")\s*,?\s+(?P<year>20\d{2}|19\d{2})(?!\d)", re.I)
+_EN_DURATION = re.compile(
+    r"(?<![A-Za-z0-9_.])(?P<value>\d+(?:,\d{3})*(?:\.\d+)?)\s*"
+    r"(?:[-‐‑‒–—]\s*)?(?P<unit>years?|months?|days?)(?![A-Za-z0-9])", re.I)
+_NEXT_YEAR_DURATION = re.compile(r"\bover\s+the\s+next\s+year\b(?!['’]s\b)", re.I)
+_KOREAN_COMPOUND = re.compile(
+    r"(?<![A-Za-z0-9_.])(?P<sign>[+\-−]?)(?P<prefix>US\$|USD\s*|KRW\s*|EUR\s*|GBP\s*|[$€£₩])?\s*"
+    r"(?P<amount>\d+(?:,\d{3})*(?:\.\d+)?\s*[조억만천백십]"
+    r"(?:\s*(?:\d+(?:,\d{3})*(?:\.\d+)?\s*)?[조억만천백십])+)", re.I)
+_KOREAN_SCALES = {"조": Decimal(10**12), "억": Decimal(10**8), "만": Decimal(10**4),
+                  "천": Decimal(1000), "백": Decimal(100), "십": Decimal(10)}
+
+
+def _normalize_korean_compound(match):
+    """Read 1억3000만 / 1억3천만 as one quantity, retaining currency and sign."""
+    total, section, number = Decimal(0), Decimal(0), None
+    last_large, last_small = Decimal(10**16), Decimal(10000)
+    tokens = re.findall(r"\d+(?:,\d{3})*(?:\.\d+)?|[조억만천백십]", match["amount"])
+    for token in tokens:
+        if token not in _KOREAN_SCALES:
+            number = Decimal(token.replace(",", ""))
+            continue
+        scale = _KOREAN_SCALES[token]
+        if scale >= 10000:
+            if scale >= last_large:
+                return match.group(0)
+            total += (section + (number if number is not None else Decimal(0))) * scale
+            section, number = Decimal(0), None
+            last_large, last_small = scale, Decimal(10000)
+        else:
+            if scale >= last_small:
+                return match.group(0)
+            section += (number if number is not None else Decimal(1)) * scale
+            number, last_small = None, scale
+    total += section + (number if number is not None else Decimal(0))
+    return (match["sign"] or "") + (match["prefix"] or "") + format(total, "f")
 
 
 def _quantities(text):
@@ -219,6 +258,12 @@ def _quantities(text):
     text = _EN_DATE.sub(english_date_value, text)
     text = _EN_DATE_DAY_FIRST.sub(english_date_value, text)
     text = _DATE.sub(date_value, text)
+    # Explicit durations share units across languages. Bare "next year" is a
+    # calendar reference and must never invent a one-year duration.
+    text = _NEXT_YEAR_DURATION.sub("1년", text)
+    text = _EN_DURATION.sub(lambda match: match["value"] +
+                            {"year": "년", "month": "개월", "day": "일"}[match["unit"].lower().rstrip("s")], text)
+    text = _KOREAN_COMPOUND.sub(_normalize_korean_compound, text)
     for match in _NUMBER.finditer(text):
         try:
             value = Decimal(match["value"].replace(",", ""))
@@ -295,8 +340,12 @@ def _check_scope(text, ids, index):
 def _company_key(value):
     value = re.sub(r"[^0-9a-z가-힣]", "", _text(value).lower())
     aliases = {"넷플릭스": "netflix", "디즈니": "disney", "디즈니플러스": "disney",
-               "disneyplus": "disney", "thewaltdisneycompany": "disney", "아마존": "amazon",
-               "컴캐스트": "comcast", "프라임비디오": "primevideo"}
+               "disneyplus": "disney", "thewaltdisneycompany": "disney",
+               "더월트디즈니컴퍼니": "disney", "월트디즈니컴퍼니": "disney", "월트디즈니": "disney",
+               "아마존": "amazon", "컴캐스트": "comcast", "프라임비디오": "primevideo",
+               "듀드퍼펙트": "dudeperfect", "워너브라더스디스커버리": "warnerbrosdiscovery",
+               "워너브러더스디스커버리": "warnerbrosdiscovery", "wbd": "warnerbrosdiscovery",
+               "워너브라더스": "warnerbros", "워너브러더스": "warnerbros", "warnerbrothers": "warnerbros"}
     return aliases.get(value, value)
 
 
@@ -310,6 +359,9 @@ def _check_company(company, ids, index, owners):
     mentioned = (bool(re.search(r"(?<![A-Za-z0-9])" + re.escape(key) + r"(?![A-Za-z0-9])",
                               " ".join(index[value]["text"] for value in ids), re.I))
                  if short_name else key in excerpt)
+    if key == "warnerbrosdiscovery":
+        mentioned = mentioned or bool(re.search(r"(?<![A-Za-z0-9])WBD(?![A-Za-z0-9])",
+                                                " ".join(index[value]["text"] for value in ids), re.I))
     if not key or (key not in supported and not mentioned):
         raise MediaInsightError("비교 대상 사업자를 원문에서 확인하지 못했습니다.")
 
@@ -349,7 +401,19 @@ def _call(plan_type, payload, *, api_key, model, client, feature, instruction):
     except MediaInsightError:
         raise
     except Exception as error:
-        raise MediaInsightError("미디어 분석 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.") from error
+        # SDK code is a provider-controlled field. Only these exact, fixed
+        # values may affect the public message; never copy a response body.
+        messages = {
+            "invalid_api_key": "AI 연결 키를 확인해 주세요. 관리자 설정이 필요합니다.",
+            "insufficient_quota": "AI 사용 한도나 충전 잔액을 확인해 주세요. 기존 자료는 유지됩니다.",
+            "model_not_found": "설정된 AI 모델을 사용할 수 없습니다. 관리자 설정을 확인해 주세요.",
+            "unsupported_parameter": "설정된 AI 모델과 분석 요청이 맞지 않습니다. 관리자 설정을 확인해 주세요.",
+        }
+        code = getattr(error, "code", None)
+        if not isinstance(code, str) or code not in messages:
+            code = "provider_error"
+        message = messages.get(code, "미디어 분석 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.")
+        raise MediaInsightError(message, code=code) from error
 
 
 def _metadata(item, ids, index, owners, model):

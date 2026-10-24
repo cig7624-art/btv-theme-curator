@@ -94,6 +94,74 @@ class MediaInsightsAnalysisTests(unittest.TestCase):
         self.assertTrue(analyze_media_item(document(), [], api_key="test",
                                          client=client_with(MediaAnalysisPlan(**plan)))["facts"])
 
+    def test_korean_compound_counts_and_currencies_preserve_the_full_quantity(self):
+        for korean in ["1억3000만 명", "1억 3000만 명", "1억3천만 명", "1억 3천만 명"]:
+            with self.subTest(korean=korean):
+                self.assertEqual(_quantities(korean), _quantities("130M followers"))
+        self.assertEqual(_quantities("1억3천만 달러"), _quantities("$130 million"))
+        self.assertEqual(_quantities("USD 1억3000만"), _quantities("$130 million"))
+        self.assertEqual(_quantities("-1억3000만 원"), _quantities("-130000000원"))
+        self.assertEqual(_quantities("1조2억3천만 원"), _quantities("1000230000000원"))
+        self.assertNotEqual(_quantities("1억3000만 원"), _quantities("$130 million"))
+        self.assertNotEqual(_quantities("1억3000만 명"), _quantities("$130 million"))
+        item = document(text="Dude Perfect boasts 130M followers and 22B+ lifetime views.")
+        plan = analysis_plan(facts=[{"text": "팔로워는 1억3000만 명입니다.", "evidence_ids": ["netflix-p001"]}])
+        self.assertTrue(analyze_media_item(item, [], api_key="test",
+                                         client=client_with(MediaAnalysisPlan(**plan)))["facts"])
+
+    def test_explicit_english_durations_match_korean_without_inventing_calendar_counts(self):
+        for english, korean in [("11-year contract", "11년 계약"), ("11 years", "11년"),
+                                ("3 months", "3개월"), ("3-month trial", "3개월 체험"),
+                                ("14-day availability", "14일 이용"), ("14 days", "14일"),
+                                ("over the next year", "향후 1년")]:
+            with self.subTest(english=english):
+                self.assertEqual(_quantities(english), _quantities(korean))
+        self.assertEqual(_quantities("next year"), set())
+        self.assertEqual(_quantities("next year, 2027"), _quantities("2027년"))
+        self.assertEqual(_quantities("over the next year's schedule"), set())
+        self.assertEqual(_quantities("October 11, 2027"), _quantities("2027년 10월 11일"))
+        self.assertEqual(_quantities("$130 million over the next year"), _quantities("1억3천만 달러, 향후 1년"))
+
+    def test_translated_company_names_still_require_the_cited_company(self):
+        item = document("disney", "Disney", text="The Walt Disney Company and Dude Perfect announced a partnership.")
+        for company in ["듀드 퍼펙트", "더 월트 디즈니 컴퍼니"]:
+            plan = analysis_plan(facts=[{"text": "제휴를 발표했습니다.", "evidence_ids": ["disney-p001"]}],
+                                 comparison=[{"company": company, "aspect": "제휴", "detail": "제휴를 발표했습니다.",
+                                              "evidence_ids": ["disney-p001"]}])
+            self.assertTrue(analyze_media_item(item, [], api_key="test",
+                                             client=client_with(MediaAnalysisPlan(**plan)))["comparison"])
+        for excerpt in ["Warner Bros. Discovery announced a transaction.", "WBD announced a transaction."]:
+            context = document(text=excerpt)
+            plan = analysis_plan(facts=[{"text": "거래를 발표했습니다.", "evidence_ids": ["netflix-p001"]}],
+                                 comparison=[{"company": "워너브라더스 디스커버리", "aspect": "거래", "detail": "거래를 발표했습니다.",
+                                              "evidence_ids": ["netflix-p001"]}])
+            self.assertTrue(analyze_media_item(context, [], api_key="test",
+                                             client=client_with(MediaAnalysisPlan(**plan)))["comparison"])
+        absent = document(text="The company announced an advertising plan.")
+        for company in ["듀드 퍼펙트", "워너브라더스 디스커버리"]:
+            plan = analysis_plan(facts=[{"text": "광고 상품을 발표했습니다.", "evidence_ids": ["netflix-p001"]}],
+                                 comparison=[{"company": company, "aspect": "제휴", "detail": "제휴를 발표했습니다.",
+                                              "evidence_ids": ["netflix-p001"]}])
+            with self.assertRaises(MediaInsightError):
+                analyze_media_item(absent, [], api_key="test", client=client_with(MediaAnalysisPlan(**plan)))
+
+    def test_provider_error_codes_are_whitelisted_without_provider_text(self):
+        for supplied, expected in [("invalid_api_key", "invalid_api_key"),
+                                   ("insufficient_quota", "insufficient_quota"),
+                                   ("model_not_found", "model_not_found"),
+                                   ("unsupported_parameter", "unsupported_parameter"),
+                                   ("SECRET_PROVIDER_BODY", "provider_error"),
+                                   ({"key": "SECRET_PROVIDER_BODY"}, "provider_error")]:
+            error = RuntimeError("SECRET_PROVIDER_BODY")
+            error.code = supplied
+            sdk = client_with(None)
+            sdk.responses.parse.side_effect = error
+            with self.subTest(code=supplied), self.assertRaises(MediaInsightError) as caught:
+                analyze_media_item(document(), [], api_key="test", client=sdk)
+            self.assertEqual(caught.exception.code, expected)
+            self.assertNotIn("SECRET_PROVIDER_BODY", str(caught.exception))
+            sdk.responses.parse.assert_called_once()
+
     def test_comparison_cannot_supply_unrelated_headline_numbers_or_a_short_company_substring(self):
         selected, context = document(), document("disney", "Disney", text="Revenue was $900 million.")
         comparison = {"company": "Disney", "aspect": "실적", "detail": "매출은 $900 million입니다.",

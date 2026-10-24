@@ -173,12 +173,37 @@ def submit_once(button, report, action, *, action_index=None):
     button.click(timeout=15000)
 
 
+def media_alert_code(value):
+    """Only fixed categories leave the browser, never arbitrary alert text."""
+    for phrase, code in (
+        ("분석의 수치를", "media_numbers_unverified"),
+        ("비교 대상 사업자를", "media_company_unverified"),
+        ("사업 범위를", "media_scope_unverified"),
+        ("지표의 정의를", "media_metric_unverified"),
+        ("잔액", "provider_insufficient_quota"),
+        ("AI 연결 키", "provider_invalid_api_key"),
+        ("API 키", "provider_invalid_api_key"),
+        ("AI 모델을 사용할 수", "provider_model_unavailable"),
+        ("모델 설정", "provider_model_unavailable"),
+        ("분석 요청이 맞지", "provider_unsupported_parameter"),
+        ("요청 설정", "provider_unsupported_parameter"),
+        ("분석 연결에 실패", "media_provider_failure"),
+        ("GitHub", "media_github_save_failed"),
+        ("저장", "media_save_failed"),
+        ("원문 근거를", "media_citations_unverified"),
+    ):
+        if phrase in value:
+            return code
+    return "media_action_failed"
+
+
 def _wait_result(frame, selector, timeout):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         _require(not has_app_exception(frame.page), 'app_exception')
-        if frame.locator('.st-key-media_insights_section [data-testid="stAlert"]').count():
-            raise VerificationIssue('media_action_failed')
+        alert = frame.locator('.st-key-media_insights_section [data-testid="stAlert"]')
+        if alert.count():
+            raise VerificationIssue(media_alert_code(alert.first.inner_text()))
         result = frame.locator(selector)
         if result.count() and not frame.locator('[data-stale=true]').count():
             return result
@@ -288,8 +313,10 @@ def verify(args):
                 browser.close()
     except VerificationIssue as error:
         report['blocked'] = bool(error.blocked)
+        report['failure_code'] = error.code
         report['checks']['verification_completed'] = False
     except Exception:
+        report['failure_code'] = 'browser_verification_failed'
         report['checks']['verification_completed'] = False
     else:
         report['checks']['verification_completed'] = True

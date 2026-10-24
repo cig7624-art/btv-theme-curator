@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 
 from scripts.verify_deployment import VerificationIssue
 from scripts.verify_media_insights_live import (
-    _load_media, _public_url, answer_distinguishes_unknown, saved_note_valid, submit_once,
+    _load_media, _public_url, answer_distinguishes_unknown, saved_note_valid, submit_once, media_alert_code,
 )
 
 
@@ -20,6 +20,10 @@ def snapshot():
 
 
 class MediaInsightsLiveVerificationTests(unittest.TestCase):
+    def test_alert_diagnostics_export_only_fixed_categories(self):
+        self.assertEqual(media_alert_code("분석의 수치를 원문에서 확인하지 못했습니다."), "media_numbers_unverified")
+        self.assertEqual(media_alert_code("PRIVATE provider body sk-do-not-log"), "media_action_failed")
+
     def test_uncertain_click_is_counted_before_error_and_never_repeated(self):
         button = Mock()
         button.is_enabled.return_value = True
