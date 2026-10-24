@@ -1,0 +1,42 @@
+name: Diagnose public Streamlit loading
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/media-insights-diagnostics]
+    paths:
+      - scripts/probe_streamlit_release.py
+      - .github/workflows/probe_streamlit_release.yml
+
+jobs:
+  inspect-public-wrapper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install playwright
+      - name: Select installed Chrome
+        run: |
+          release_probe_browser="$(command -v google-chrome || command -v chromium || true)"
+          if [ -n "$release_probe_browser" ]; then
+            echo "DEPLOYMENT_CHROMIUM_PATH=$release_probe_browser" >> "$GITHUB_ENV"
+          else
+            python -m playwright install --with-deps chromium
+          fi
+      - run: python scripts/probe_streamlit_release.py
+      - name: Record only public anonymous loading evidence
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- artifacts/streamlit_release_probe.json
+          if [ -f artifacts/streamlit_release_probe.png ]; then git add -- artifacts/streamlit_release_probe.png; fi
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Record public application loading diagnosis [skip ci]'
+          git push origin HEAD:"$TARGET_BRANCH"
