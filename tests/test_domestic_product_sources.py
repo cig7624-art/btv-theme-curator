@@ -3,8 +3,9 @@ from copy import deepcopy
 import unittest
 
 from domestic_product_sources import (
-    DOMESTIC_PRODUCT_SOURCES, classify_domestic_product, domestic_product_candidate,
-    domestic_product_topic, is_domestic_product_item,
+    DOMESTIC_MEDIA_SOURCES, DOMESTIC_PRODUCT_SOURCES, classify_domestic_product, domestic_media_candidate,
+    domestic_media_topic, domestic_product_candidate, domestic_product_topic,
+    is_domestic_media_item, is_domestic_product_item,
 )
 
 
@@ -54,8 +55,8 @@ class DomesticProductSourcesTests(unittest.TestCase):
 
     def test_registration_never_supplies_a_price_or_available_date(self):
         for source in DOMESTIC_PRODUCT_SOURCES:
-            self.assertTrue(source["require_domestic_product"])
-            self.assertEqual(source["market_scope"], "domestic_product")
+            self.assertTrue(source["require_domestic_media"])
+            self.assertEqual(source["market_scope"], "domestic_media")
             self.assertTrue(source["url"].startswith("https://"))
             for field in ["price", "effective_at", "available", "published_at"]:
                 self.assertNotIn(field, source)
@@ -85,6 +86,54 @@ class DomesticProductSourcesTests(unittest.TestCase):
         self.assertFalse(is_domestic_product_item({"source_id": "skb_products", "country": "US", "title": "B tv 요금제 출시"}))
         self.assertFalse(is_domestic_product_item({"country": "KR", "title": "국내 미디어 실적 발표"}))
         self.assertFalse(is_domestic_product_item(None))
+
+
+class DomesticMediaSourcesTests(unittest.TestCase):
+    def test_existing_registry_identity_is_preserved_while_scope_is_broadened(self):
+        self.assertIs(DOMESTIC_MEDIA_SOURCES, DOMESTIC_PRODUCT_SOURCES)
+        self.assertEqual({row["id"] for row in DOMESTIC_MEDIA_SOURCES},
+                         {"skb_products", "kt_products", "lgu_products", "coupang_products", "cjenm_products"})
+
+    def test_media_content_and_industry_subjects_are_not_limited_to_products(self):
+        cases = {
+            "티빙, 가을 오리지널 시리즈 라인업 공개": "sports_content",
+            "쿠팡플레이, 새로운 드라마 첫 공개": "sports_content",
+            "CJ ENM 콘텐츠, 韓·美·日 글로벌서 날았다… 영화·시리즈 잇단 성과": "sports_content",
+            "CJ ENM, 글로벌 OTT에 티빙 브랜드관 론칭 계약": "partnership_distribution",
+            "넷플릭스, 한국 영화 제작 확대 발표": "sports_content",
+            "티빙, 가입자 증가로 매출 실적 개선": "earnings_strategy",
+            "B tv, AI 검색 기술 도입": "ai_technology",
+            "B tv, 광고형 요금제 신설": "advertising_pricing",
+        }
+        for title, expected in cases.items():
+            with self.subTest(title=title):
+                self.assertEqual(domestic_media_topic(title, "방송과 콘텐츠 사업에 관한 공식 발표입니다."), expected)
+
+    def test_provider_program_headline_needs_real_media_body_confirmation(self):
+        title = "SKB, 여행·미식·세대 공감 담은 가을 시즌 신작 프로그램 3편 선보여"
+        self.assertTrue(domestic_media_candidate(title))
+        self.assertEqual(domestic_media_topic(title), "")
+        self.assertEqual(domestic_media_topic(title, "B tv 지역채널이 새로운 프로그램을 방송합니다."), "sports_content")
+        self.assertEqual(domestic_media_topic(title, "지역 주민의 건강과 복지를 위한 활동을 안내합니다."), "")
+        self.assertEqual(domestic_product_topic(title, "B tv 지역채널에서 방송합니다."), "")
+
+    def test_phone_broadband_nonmedia_corporate_and_guides_stay_excluded(self):
+        titles = ["KT 휴대폰 요금제 출시", "SK브로드밴드 인터넷 요금제 출시",
+                  "SK브로드밴드, 인적자원개발 우수기관 인증", "CJ ENM, 신입 공개 채용 시작",
+                  "SKB, 지역 어린이 대상 방송 제작 체험 진행", "U+tv 셋톱박스 설정 방법",
+                  "OTT 요금제 활용하는 방법", "SKB, 디지털 복지 서비스 혁신"]
+        for title in titles:
+            with self.subTest(title=title):
+                self.assertEqual(domestic_media_topic(title, "B tv는 방송과 콘텐츠를 제공합니다."), "")
+                self.assertFalse(domestic_media_candidate(title))
+
+    def test_domestic_media_filter_includes_both_markers_without_turning_content_into_product(self):
+        media = {"market_scope": "domestic_media", "title": "티빙 신규 드라마 공개"}
+        product = {"market_scope": "domestic_product"}
+        self.assertTrue(is_domestic_media_item(media))
+        self.assertTrue(is_domestic_media_item(product))
+        self.assertFalse(is_domestic_product_item(media))
+        self.assertFalse(is_domestic_media_item({"country": "US", "title": "외국 미디어 기사"}))
 
 
 if __name__ == "__main__":

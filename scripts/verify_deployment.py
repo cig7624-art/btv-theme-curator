@@ -279,15 +279,15 @@ def _check_editorial(frame, report, label, screenshots):
         and frame.locator('img.media-story-image').count() >= 2)
     if not report['tests'][f'{label}_media_magazine']:
         raise VerificationIssue('media_magazine_missing', retry=True)
-    frame.get_by_role('radio', name='국내 상품 이슈', exact=True).click()
+    frame.get_by_role('radio', name='국내 이슈', exact=True).click()
     frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
     domestic_cards = frame.locator('.st-key-media_insights_workspace [class*="st-key-media_story_"]')
     report['tests'][f'{label}_media_domestic'] = (
         domestic_cards.count() > 0 and not has_app_exception(page)
-        and frame.get_by_text('최근 6개월 국내 공식 발표', exact=False).count() > 0)
+        and frame.get_by_text('국내 콘텐츠·상품·미디어', exact=False).count() > 0)
     if not report['tests'][f'{label}_media_domestic']:
         raise VerificationIssue('media_domestic_missing', retry=True)
-    frame.get_by_role('radio', name='주요 이슈', exact=True).click()
+    frame.locator('.st-key-media_insight_topic').get_by_role('radio', name='전체', exact=True).click()
     frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
     if has_app_exception(page):
         raise VerificationIssue('media_insights_exception')

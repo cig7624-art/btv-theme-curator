@@ -24,7 +24,10 @@ import xml.etree.ElementTree as ET
 import requests
 from bs4 import BeautifulSoup
 
-from domestic_product_sources import DOMESTIC_PRODUCT_SOURCES, domestic_product_candidate, domestic_product_topic
+from domestic_product_sources import (
+    DOMESTIC_PRODUCT_SOURCES, domestic_media_candidate, domestic_media_topic,
+    domestic_product_candidate, domestic_product_topic,
+)
 
 
 SNAPSHOT_PATH = Path(__file__).with_name("media_insights_snapshot.json")
@@ -67,7 +70,7 @@ SOURCES = (
                         "title": "How to watch the 2026-27 NBA season on Prime Video"}]},
     {"id": "skt_news", "name": "SK텔레콤 뉴스룸", "company": "SKT",
      "url": "https://news.sktelecom.com/feed", "source_type": "official_announcement", "country": "KR",
-     "require_media_subject": True, "allowed_hosts": ["news.sktelecom.com", "news-static.sktelecom.com"]},
+     "require_domestic_media": True, "allowed_hosts": ["news.sktelecom.com", "news-static.sktelecom.com"]},
 ) + DOMESTIC_PRODUCT_SOURCES
 
 TOPIC_LABELS = {
@@ -364,6 +367,8 @@ def _json_articles(soup):
 
 
 def _classify(title, body, source):
+    if source.get("require_domestic_media"):
+        return domestic_media_topic(title, body, source)
     if source.get("require_domestic_product"):
         return domestic_product_topic(title, body, source)
     if _SCHEDULE_ONLY.search(title):
@@ -411,7 +416,10 @@ def _make_item(source, url, title, paragraphs, published_at, collected_at, *, im
             "source_name": source["name"], "source_type": source.get("source_type", "official_announcement"),
             "excerpt": body[:420], "body_text": body, "image_url": image_url,
             "evidence": evidence, "content_hash": sha256((title + "\n" + body).encode()).hexdigest()}
-    if source.get("require_domestic_product"):
+    if source.get("require_domestic_media"):
+        item["market_scope"] = ("domestic_product" if domestic_product_topic(title, body, source)
+                                else "domestic_media")
+    elif source.get("require_domestic_product"):
         item["market_scope"] = "domestic_product"
     return item
 
@@ -537,7 +545,8 @@ def _discover_documents(payload, source):
                 node = next((node for node in nodes if node.get("rel", "alternate") == "alternate"), None)
                 raw = (node.get("href") or node.text) if node is not None else ""
                 url = _official_url(raw, source, payload["url"])
-                if url and url not in seen and _classify(title, "", source):
+                if (url and url not in seen and (_classify(title, "", source)
+                        or (source.get("require_domestic_media") and domestic_media_candidate(title)))):
                     published = _date(entry.findtext("pubDate") or entry.findtext("{*}published") or entry.findtext("{*}updated"))
                     body_node = entry.find("{http://purl.org/rss/1.0/modules/content/}encoded")
                     if body_node is None:
@@ -563,10 +572,11 @@ def _discover_documents(payload, source):
         title = _text(node.get_text(" ", strip=True) or node.get("aria-label", ""), 300)
         if not url or url in seen or url == payload["url"] or _EXCLUDED_LINK.search(url + " " + title):
             continue
-        if not (source.get("require_domestic_product") or _DOCUMENT_LINK.search(url)
+        if not (source.get("require_domestic_product") or source.get("require_domestic_media") or _DOCUMENT_LINK.search(url)
                 or any(pattern.search(title) for _, pattern in _TOPICS)):
             continue
         if not (_classify(title, "", source)
+                or (source.get("require_domestic_media") and domestic_media_candidate(title))
                 or (source.get("require_domestic_product") and domestic_product_candidate(title))):
             continue
         seen.add(url)
@@ -591,6 +601,18 @@ def _collect_source(source, previous_source, *, fetcher, observed, limit):
         if direct:
             items.append(direct)
         links = _discover_documents(root, source)
+        known_urls = {link["url"] for link in links}
+        for extra_url in source.get("discovery_urls", [])[:2]:
+            official = _official_url(extra_url, source)
+            if not official or official == root["url"]:
+                continue
+            try:
+                for link in _discover_documents(_fetch(official, source, fetcher), source):
+                    if link["url"] not in known_urls:
+                        links.append(link)
+                        known_urls.add(link["url"])
+            except Exception:
+                errors.append("some_documents_unavailable")
         seeded_links, seeded_urls = [], set()
         for configured_document in source.get("document_urls", []):
             seed_url = _official_url(configured_document.get("url", ""), source)

@@ -11,7 +11,7 @@ import ipaddress
 import json
 from pathlib import Path
 import re
-from urllib.parse import urlsplit
+from urllib.parse import quote, urlsplit
 
 import streamlit as st
 
@@ -24,8 +24,6 @@ from media_insights_localization import valid_localization, MediaLocalizationErr
 _SELECTED = "media_insight_selected_id"
 _NOTES = "media_insight_session_notes"
 _QUESTIONS = "media_insight_questions"
-_SCOPE = "media_insight_scope"
-_SELECTIONS = "media_insight_scope_selections"
 _COMPANIES = {"Netflix": "넷플릭스", "Disney": "디즈니", "Amazon": "아마존", "Comcast": "컴캐스트",
               "SKT": "SK텔레콤", "SK Broadband": "SK브로드밴드", "KT": "KT", "LG U+": "LG유플러스",
               "TVING": "티빙", "Wavve": "웨이브", "Coupang Play": "쿠팡플레이"}
@@ -124,6 +122,11 @@ def insight_items(snapshot):
     """Only real, named source links become stories. Inputs remain unchanged."""
     rows = _rows(snapshot.get("items")) if isinstance(snapshot, Mapping) else []
     return [dict(row) for row in rows if _text(row.get("id")) and _text(row.get("title")) and _url(row.get("url"))]
+
+
+def _is_domestic_item(item):
+    return (_text(item.get("country")).upper() in {"KR", "한국"}
+            or item.get("market_scope") in {"domestic_media", "domestic_product"})
 
 
 def filter_insight_items(items, *, topic="전체", country="전체", lookback_days=None, now=None):
@@ -250,8 +253,6 @@ def _item_analysis(item, context_items):
 
 def _select_item(item_id):
     st.session_state[_SELECTED] = item_id
-    scope = st.session_state.get(_SCOPE, "주요 이슈")
-    st.session_state.setdefault(_SELECTIONS, {})[scope] = item_id
 
 
 def _toggle_questions():
@@ -345,11 +346,16 @@ def artwork_html(item, *, lead=False):
     brand = _company(item) or "미디어 인사이트"
     fallback = ('<div class="media-art-fallback"><span>' + _escape(_topic(item))
                 + '</span><strong>' + _escape(brand) + '</strong><small>공식 발표</small></div>')
+    # Background images fail transparently, so typography remains visible even
+    # when a CDN is unavailable. Streamlit strips inline JavaScript handlers.
     image_class = "media-story-image" + (" media-story-image-logo" if item.get("image_kind") == "company_logo" else "")
-    image = ('<img class="' + image_class + '" src="' + _escape(image_url, 6000)
-             + '" alt="' + _escape(brand + " 공식 발표 관련 이미지")
-             + '" loading="lazy" decoding="async" referrerpolicy="no-referrer" '
-             + 'onerror="this.style.display=\'none\';">') if image_url else ''
+    visual_class = "media-story-visual" + (" media-story-visual-logo" if item.get("image_kind") == "company_logo" else "")
+    background_url = quote(image_url, safe=":/?#[]@!$&*+,;=%~-_.")
+    image = ('<div class="' + visual_class + '" role="img" aria-label="'
+             + _escape(brand + " 공식 발표 관련 이미지") + '" style="background-image:url(&quot;'
+             + _escape(background_url, 8000) + '&quot;)"></div>'
+             + '<img class="' + image_class + '" src="' + _escape(image_url, 6000)
+             + '" alt="" aria-hidden="true" loading="lazy" decoding="async" referrerpolicy="no-referrer">') if image_url else ''
     attribution = _text(item.get("image_attribution") or item.get("image_source_name") or _source_label(item), 200)
     return '<div class="' + classes + '">' + fallback + image + ('<span class="media-image-credit">' + _escape(attribution) + '</span>' if image else '') + '</div>'
 
@@ -607,12 +613,9 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
             st.info("공식 발표와 실적 자료를 확인하면 주요 변화와 원문이 이곳에 표시됩니다.")
             _render_collection_sources(snapshot)
             return
-        scope = st.segmented_control("이슈 범위", ["주요 이슈", "국내 상품 이슈"],
-                                     default="주요 이슈", selection_mode="single",
-                                     key=_SCOPE, label_visibility="collapsed") or "주요 이슈"
-        domestic = scope == "국내 상품 이슈"
-        scope_items = [item for item in items if not domestic or item.get("market_scope") == "domestic_product"]
-        pending_translations = [item for item in scope_items if valid_localization(item) is None]
+        domestic = st.session_state.get("media_insight_topic", "전체") == "국내 이슈"
+        scope_items = [item for item in items if not domestic or _is_domestic_item(item)]
+        pending_translations = [item for item in items if valid_localization(item) is None]
         if pending_translations:
             st.markdown(''.join('<span class="media-pending-translation" hidden aria-hidden="true" data-item-id="'
                                 + _escape(item["id"], 500) + '"></span>' for item in pending_translations), unsafe_allow_html=True)
@@ -622,7 +625,7 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
             else:
                 explanation, translate = st.container(), None
             with explanation:
-                st.caption("최근 6개월 국내 공식 발표에서 상품·결합·이용 조건의 변화를 추립니다. 상품 조건은 발표 당시 기준입니다." if domestic else
+                st.caption("국내 콘텐츠·상품·미디어의 주요 소식을 공식 자료에서 추립니다. 상품·혜택 조건은 발표 당시 기준입니다." if domestic else
                            "최근 공식 발표 중 상품·유통·AI·사업 실적의 주요 변화를 추립니다.")
             if pending_translations:
                 with translate:
@@ -634,13 +637,13 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                             if isinstance(refreshed, Mapping) and "items" in refreshed:
                                 snapshot = refreshed
                                 items = insight_items(snapshot)
-                                scope_items = [item for item in items if not domestic or item.get("market_scope") == "domestic_product"]
+                                scope_items = [item for item in items if not domestic or _is_domestic_item(item)]
                         except (MediaLocalizationError, MediaInsightsStorageError) as error:
                             st.warning(str(error))
                         except Exception:
                             st.warning("한글 정리를 완료하지 못했습니다. 저장된 자료와 원문은 유지됩니다.")
-        topic_values = {_topic(item) for item in scope_items}
-        topics = ["전체", *[topic for topic in _TOPIC_ORDER if topic in topic_values],
+        topic_values = {_topic(item) for item in items}
+        topics = ["전체", "국내 이슈", *[topic for topic in _TOPIC_ORDER if topic in topic_values],
                   *sorted(topic_values - set(_TOPIC_ORDER))]
         countries = ["전체", *sorted({_country(item) for item in scope_items if _country(item)})]
         with st.container(key="media_insights_filters"):
@@ -656,18 +659,16 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                                        format_func=lambda value: "전체 지역" if value == "전체" else value)
             with period_col:
                 period = st.selectbox("발표 기간", list(_PERIODS), key="media_insight_period", label_visibility="collapsed")
-        filtered = filter_insight_items(scope_items, topic=topic, country=country, lookback_days=_PERIODS[period])
+        domestic = topic == "국내 이슈"
+        scope_items = [item for item in items if not domestic or _is_domestic_item(item)]
+        filtered = filter_insight_items(scope_items, topic="전체" if domestic else topic, country=country, lookback_days=_PERIODS[period])
         major = select_major_insights(filtered, scope="domestic" if domestic else "all", limit=6)
         if not filtered:
-            st.info("확인된 국내 상품 발표가 아직 없습니다. 공식 출처에서 확인된 새 상품·조건 변경만 이곳에 추가합니다." if domestic else
+            st.info("선택한 조건에 맞는 국내 소식이 아직 없습니다. 공식 출처에서 확인한 콘텐츠·상품·미디어 소식을 이곳에 추가합니다." if domestic else
                     "선택한 조건에 맞는 발표가 없습니다. 기간이나 주제를 바꾸면 저장된 자료를 확인할 수 있어요.")
             _render_collection_sources(snapshot)
             return
         known_ids = {item["id"] for item in filtered}
-        previous_scope = st.session_state.get("media_insight_previous_scope")
-        if previous_scope != scope:
-            st.session_state[_SELECTED] = st.session_state.get(_SELECTIONS, {}).get(scope)
-        st.session_state["media_insight_previous_scope"] = scope
         if st.session_state.get(_SELECTED) not in known_ids:
             st.session_state[_SELECTED] = (major or filtered)[0]["id"]
         selected = next(item for item in [*major, *filtered] if item["id"] == st.session_state[_SELECTED])
@@ -676,7 +677,7 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
         with st.container(key="media_insights_workspace"):
             stories, detail = st.columns([1.7, 1], gap="large")
             with stories:
-                st.markdown('<div class="media-section-label">' + ("국내 상품의 변화" if domestic else "이번에 주목할 변화")
+                st.markdown('<div class="media-section-label">' + ("국내에서 주목할 소식" if domestic else "이번에 주목할 변화")
                             + '<span>' + str(len(major)) + '건</span></div>', unsafe_allow_html=True)
                 if major:
                     _render_story(major[0], index=0, selected=major[0]["id"] == selected["id"],

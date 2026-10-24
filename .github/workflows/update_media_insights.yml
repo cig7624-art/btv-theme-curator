@@ -77,9 +77,9 @@ jobs:
       - name: Cache new English titles once through the deployed app
         run: |
           if [ -n "${MEDIA_CHROMIUM_PATH:-}" ]; then
-            python scripts/localize_media_live.py --executable "$MEDIA_CHROMIUM_PATH"
+            python scripts/localize_media_live.py --executable "$MEDIA_CHROMIUM_PATH" ${{ github.event_name == 'push' && '--max-batches 2' || '' }}
           else
-            python scripts/localize_media_live.py
+            python scripts/localize_media_live.py ${{ github.event_name == 'push' && '--max-batches 2' || '' }}
           fi
       - name: Record translation action outcome
         if: always()

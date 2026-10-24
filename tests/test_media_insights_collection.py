@@ -312,6 +312,21 @@ class SnapshotPreservationTests(unittest.TestCase):
 
 
 class OfficialImageryAndDomesticTests(unittest.TestCase):
+    def test_domestic_media_feed_collects_new_programs_without_mislabeling_as_product(self):
+        source = {**next(row for row in collection.SOURCES if row["id"] == "skb_products"), "document_urls": []}
+        title = "SKB, 여행·미식·세대 공감 담은 가을 시즌 신작 프로그램 3편 선보여"
+        paragraphs = ["SK브로드밴드는 B tv 지역채널에서 여행과 미식, 세대의 공감을 담은 가을 시즌의 새로운 프로그램 세 편을 방송한다고 밝혔습니다. 이번에 선보이는 프로그램은 각 지역의 이야기와 사람들의 일상을 다룹니다.",
+                      "새 프로그램의 구체적인 편성과 방영 일정은 공식 발표에 기재돼 있으며, B tv 지역채널의 시청자들이 콘텐츠를 만나볼 수 있도록 구성했습니다. 상품의 구독료 변경이나 새로운 요금제를 발표한 내용은 아닙니다."]
+        inline = ''.join(f'<p>{text}</p>' for text in paragraphs)
+        rss = feed([{"url": "https://blog.bworld.co.kr/2026/10/19/skb-fall-new-programs-2026/",
+                     "title": title, "body": inline}]).replace("Wed, 21 Oct 2026", "Mon, 19 Oct 2026")
+        result = collection.collect_media_insights(sources=[source], fetcher=lambda _: rss, now=NOW)
+        self.assertEqual(len(result["items"]), 1)
+        item = result["items"][0]
+        self.assertEqual(item["market_scope"], "domestic_media")
+        self.assertEqual(item["topic"], "sports_content")
+        self.assertEqual(item["published_at"], "2026-10-19")
+
     def test_publisher_revision_metadata_does_not_replace_publication(self):
         html = article().replace('<head>', '<head><meta property="article:modified_time" content="2026-10-22T11:20:00Z">')
         item = collection.parse_html_document(html, SOURCE, collected_at=NOW)

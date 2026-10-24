@@ -58,6 +58,15 @@ _PARTNERSHIP = re.compile(r"partnership|partners? with|acquisition|acquire|merge
 _LAUNCH = re.compile(r"launch|introduc|debut|release|출시|도입|신설|개편|확대|변경", re.I)
 _CORPORATE_ONLY = re.compile(r"기부|봉사|사회공헌|보이스피싱|휴대폰|아이폰|iPhone|갤럭시|채용|cruise ship", re.I)
 _SEASON = re.compile(r"\b(20\d{2})\s*[-–/]\s*(20\d{2}|\d{2})\b")
+_CONTENT_SUBJECT = re.compile(
+    r"콘텐츠|드라마|영화|예능|오리지널|시리즈|프로그램|라인업|편성|채널|중계|방송", re.I)
+_CONTENT_RELEASE = re.compile(
+    r"신작|신규|라인업|공개|첫\s*방송|첫선|편성|개편|선보|방영|출시|확대|시작", re.I)
+_CONTENT_DISTRIBUTION = re.compile(r"유통|판권|공급|수출|진출|제휴|계약|배급|동시\s*공개", re.I)
+_CONTENT_IMPACT = re.compile(r"성과|흥행|돌파|기록|1위|시청률|시청\s*시간|수출|매출|수상", re.I)
+_ROUTINE_GUIDE = re.compile(
+    r"알아보[기자]|총정리|(?:가입|이용|설정|활용)(?:하는)?\s*방법|사용법|리뷰|"
+    r"추천\s*(?:영화|드라마|요금제)|정주행\s*추천|해결\s*방법", re.I)
 
 
 def _text(value, limit=100000):
@@ -107,7 +116,7 @@ def _evidence(item):
 
 
 def _domestic_product(item, title):
-    if item.get("market_scope") != "domestic_product":
+    if not _domestic_market(item):
         return False
     # The registry identifies the intended market, while positive headline
     # classification still prevents movie premieres and phone-only plans from
@@ -119,8 +128,44 @@ def _domestic_product(item, title):
     if re.search(r"휴대폰|아이폰|iPhone|갤럭시|인터넷", title, re.I) and not (
             _MEDIA.search(title) or re.search(r"TV\s*결합", title, re.I)):
         return False
-    return country in {"", "KR", "한국"} and bool(domestic_product_topic(
+    return country in {"", "KR", "한국", "대한민국"} and bool(domestic_product_topic(
         title, item.get("body_text", "")))
+
+
+def _domestic_market(item):
+    country = _text(item.get("country")).upper()
+    if country and country not in {"KR", "한국", "대한민국"}:
+        return False
+    return country in {"KR", "한국", "대한민국"} or item.get("market_scope") in {
+        "domestic_media", "domestic_product"}
+
+
+def _domestic_content_classification(item, title, rows):
+    """Keep substantive domestic content news as well as retail products.
+
+    A newsroom registry is not enough: the title and actual source paragraphs
+    must both describe a content event. Navigation/footer media words cannot
+    turn phone plans, guides or unrelated corporate notices into major news.
+    """
+    if (not _domestic_market(item) or not _CONTENT_SUBJECT.search(title)
+            or _ROUTINE_GUIDE.search(title) or _CORPORATE_ONLY.search(title)):
+        return None
+    evidence = []
+    for row in rows:
+        text = _text(row["text"])
+        if _CONTENT_SUBJECT.search(text) and (
+                _CONTENT_RELEASE.search(text) or _CONTENT_DISTRIBUTION.search(text)
+                or _CONTENT_IMPACT.search(text)):
+            evidence.append(row["id"])
+    if not evidence:
+        return None
+    if _CONTENT_DISTRIBUTION.search(title):
+        return "콘텐츠 유통·제휴", 1, "국내 콘텐츠의 공급·유통 경로 변화를 확인한 공식 발표", evidence
+    if _CONTENT_IMPACT.search(title):
+        return "콘텐츠·미디어 성과", 1, "국내 콘텐츠의 흥행·시청·사업 성과를 원문에서 확인한 공식 발표", evidence
+    if _CONTENT_RELEASE.search(title):
+        return "콘텐츠 공개·편성", 1, "국내 콘텐츠 공개·편성·신작 라인업 변화를 확인한 공식 발표", evidence
+    return None
 
 
 def _media_earnings_evidence(item, rows):
@@ -216,9 +261,11 @@ def select_major_insights(items, *, scope="all", now=None, limit=6):
     """Return at most six material, dated stories; retain every original input.
 
     ``scope='all'`` means all *major topics*, not the entire collected archive.
-    The domestic page uses the same relevance rules and an explicit source
-    ``market_scope='domestic_product'`` flag, with a 180-day product-announcement
-    window. The general edition keeps its 90-day news window. Inclusion records
+    The domestic page accepts verified Korean-market media stories, including
+    content releases, programming, distribution and industry performance. Its
+    content-news window is 90 days; only verified retail product announcements
+    use a 180-day window. The general edition keeps its 90-day news window.
+    Inclusion records
     the historical announcement, not current product availability or terms.
     No inferred home country is used.
     """
@@ -240,11 +287,15 @@ def select_major_insights(items, *, scope="all", now=None, limit=6):
         if _GENERIC.fullmatch(title) or _SCHEDULE.search(title) or _DISCLOSURE.search(title):
             continue
         domestic = _domestic_product(item, title)
-        if item.get("market_scope") == "domestic_product" and not domestic:
+        domestic_content = _domestic_content_classification(item, title, rows)
+        if item.get("market_scope") == "domestic_product" and not domestic and not domestic_content:
             continue
-        if scope == "domestic" and not domestic:
+        if scope == "domestic" and not _domestic_market(item):
             continue
-        classification = _classification(item, title, rows, domestic)
+        if _domestic_market(item) and _ROUTINE_GUIDE.search(title) and not domestic:
+            continue
+        classification = (_classification(item, title, rows, domestic) if domestic else
+                          domestic_content or _classification(item, title, rows, False))
         if classification is None:
             continue
         category, priority, reason, evidence_ids = classification

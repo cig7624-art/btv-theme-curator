@@ -192,17 +192,25 @@ class MagazinePresentationTests(unittest.TestCase):
         self.assertIn("media-story-art-lead", markup)
         self.assertIn("주목한 이유", markup)
 
-    def test_domestic_tab_excludes_foreign_stories_and_does_not_call_ai(self):
+    def test_domestic_option_shares_topic_row_and_includes_media_and_products(self):
         data = snapshot()
         domestic = {**document("domestic", country="KR"), "company": "SK브로드밴드",
                     "title": "B tv 신규 결합 상품 출시", "market_scope": "domestic_product"}
-        data["items"].append(domestic)
+        domestic_content = {**document("content", country="KR"), "company": "티빙",
+                            "title": "티빙 스포츠 독점 중계 발표", "topic": "sports_content",
+                            "market_scope": "domestic_media"}
+        data["items"].extend([domestic, domestic_content])
         app = app_fixture(data)
-        app.get("button_group")[0].set_value("국내 상품 이슈").run()
+        self.assertEqual(app.radio(key="media_insight_topic").options[:2], ["전체", "국내 이슈"])
+        self.assertEqual(len(app.get("button_group")), 0)
+        app.radio(key="media_insight_topic").set_value("국내 이슈").run()
         self.assertFalse(app.exception)
-        self.assertEqual(app.session_state["media_insight_selected_id"], "domestic")
+        self.assertIn(app.session_state["media_insight_selected_id"], {"domestic", "content"})
         markup = " ".join(row.value for row in app.markdown)
-        self.assertIn("국내 상품의 변화", markup)
+        self.assertIn("국내에서 주목할 소식", markup)
+        self.assertIn("티빙 스포츠 독점 중계 발표", " ".join(button.label for button in app.button))
+        self.assertIn("B tv 신규 결합 상품 출시", " ".join(button.label for button in app.button))
+        self.assertIn('data-item-id="one"', markup)
         self.assertNotIn("Test Media one", markup)
         self.assertEqual(app.session_state["test_callbacks"], {"refresh": 0, "analyze": 0, "ask": 0})
 

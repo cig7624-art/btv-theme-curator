@@ -1,8 +1,9 @@
 """Cache Korean titles through one explicit action in the deployed app.
 
 Uses the app's existing AI/storage configuration without exporting credentials.
-Loading/filtering is free. A paid button is submitted at most once per run;
-an ambiguous timeout never resubmits. The source-hash cache avoids repeat work.
+Loading/filtering is free. Daily runs submit at most one batch;
+an ambiguous timeout never resubmits. Initial backlog can use two distinct batches.
+The source-hash cache avoids repeat work.
 """
 from __future__ import annotations
 
@@ -49,19 +50,25 @@ def run(args):
                 if not action.is_enabled():
                     report["error_code"] = "translation_connection_unavailable"
                     return report
-                before = frame.locator(".media-pending-translation").count()
-                action.click()
-                report["button_submitted"] = True
-                # Stop after this one submission, including partial/failed batches.
-                page.wait_for_timeout(1000)
-                frame.locator('[data-testid="stSpinner"]').wait_for(state="hidden", timeout=150000)
-                frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
-                report["visible_pending_before"] = before
-                report["visible_pending_after"] = frame.locator(".media-pending-translation").count()
-                if frame.locator('[data-testid="stException"], [data-testid="stAlert"]').count():
-                    report["status"] = "review_needed"
-                else:
+                report["batches"] = []
+                for _ in range(args.max_batches):
+                    before = frame.locator(".media-pending-translation").count()
+                    action.click()
+                    report["button_submitted"] = True
+                    # An uncertain or partial submission is never repeated.
+                    page.wait_for_timeout(1000)
+                    frame.locator('[data-testid="stSpinner"]').wait_for(state="hidden", timeout=150000)
+                    frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
+                    after = frame.locator(".media-pending-translation").count()
+                    report["batches"].append({"pending_before": before, "pending_after": after})
+                    if (frame.locator('.st-key-media_insights_section [data-testid="stException"], .st-key-media_insights_section [data-testid="stAlert"]').count()
+                            or after >= before):
+                        report["status"] = "review_needed"
+                        break
                     report["status"] = "completed"
+                    action = frame.locator(".st-key-media_insights_localize button")
+                    if not after or action.count() == 0 or not action.is_enabled():
+                        break
             finally:
                 browser.close()
     except VerificationIssue as error:
@@ -78,6 +85,8 @@ def main():
     parser.add_argument("--expected-version", default=(ROOT / "VERSION").read_text().strip())
     parser.add_argument("--timeout", type=float, default=360)
     parser.add_argument("--executable")
+    parser.add_argument("--max-batches", type=int, choices=(1, 2), default=1,
+                        help="One daily batch; optionally finish a two-batch initial backlog.")
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/media_localization_validation.json")
     args = parser.parse_args()
     report = run(args)

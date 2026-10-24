@@ -1,0 +1,269 @@
+{
+  "sources": [
+    {
+      "url": "https://blog.skbroadband.com/rss",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "SK브로드밴드 (구)블로그",
+      "feed_items": 30
+    },
+    {
+      "url": "https://blog.kt.com/rss",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "unavailable",
+      "http_status": null,
+      "title": null,
+      "feed_items": 0
+    },
+    {
+      "url": "https://corp.kt.com/html/promote/news/report.html",
+      "checked_at": "2026-10-24T08:03:08.279341+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "페이지 오류 안내 | KT",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "LG유플러스 뉴스룸 – LG유플러스 뉴스룸에 오신것을 환영합니다.",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/feed/",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "LG유플러스 뉴스룸 – LG유플러스 뉴스룸에 오신것을 환영합니다.",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.coupang.com/feed/",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "unavailable",
+      "http_status": 403,
+      "title": null,
+      "feed_items": 0
+    },
+    {
+      "url": "https://www.cjenm.com/ko/news/",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "모든 뉴스 | Newsroom | CJ ENM",
+      "feed_items": 0
+    },
+    {
+      "url": "https://thewaltdisneycompany.com/feed/",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "The Walt Disney Company",
+      "feed_items": 30
+    },
+    {
+      "url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "Disney and Dude Perfect Announce Company-Wide Creative Partnership | The Walt Disney Company",
+      "feed_items": 0
+    },
+    {
+      "url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "Disney+ to Stream Super Bowl LXI, Joining ESPN and ABC | The Walt Disney Company",
+      "feed_items": 0
+    },
+    {
+      "url": "https://thewaltdisneycompany.com/news/ai-powered-search-espn-disney-plus/",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "Beta Testing AI-Powered Search and Discovery on ESPN and Disney+ | The Walt Disney Company",
+      "feed_items": 0
+    },
+    {
+      "url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
+      "checked_at": "2026-10-24T03:30:41.091373+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "How to watch the 2026-27 NBA season on Prime Video",
+      "feed_items": 0
+    },
+    {
+      "url": "https://blog.bworld.co.kr/feed/",
+      "checked_at": "2026-10-24T08:03:08.279341+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "SK브로드밴드 공식블로그",
+      "feed_items": 10
+    },
+    {
+      "url": "https://blog.bworld.co.kr/",
+      "checked_at": "2026-10-24T08:03:08.279341+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "SK브로드밴드 공식블로그 - SK브로드밴드 공식블로그",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.skbroadband.com/",
+      "checked_at": "2026-10-24T08:03:08.279341+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "B tv news",
+      "feed_items": 0
+    },
+    {
+      "url": "https://newsroom.kt.com/",
+      "checked_at": "2026-10-24T08:03:08.279341+00:00",
+      "status": "unavailable",
+      "http_status": null,
+      "title": null,
+      "feed_items": 0
+    },
+    {
+      "url": "https://corp.kt.com/html/promote/news/report_list.html",
+      "checked_at": "2026-10-24T08:07:57.581255+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "보도자료 | KT",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/?feed=rss2",
+      "checked_at": "2026-10-24T08:03:08.279341+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "LG유플러스 뉴스룸 – LG유플러스 뉴스룸에 오신것을 환영합니다.",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/post-sitemap.xml",
+      "checked_at": "2026-10-24T08:03:08.279341+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/category/newsroom/service/",
+      "checked_at": "2026-10-24T08:03:08.279341+00:00",
+      "status": "unavailable",
+      "http_status": 404,
+      "title": null,
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.coupang.com/",
+      "checked_at": "2026-10-24T08:03:08.279341+00:00",
+      "status": "unavailable",
+      "http_status": 403,
+      "title": null,
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.coupang.com/archives/category/coupang-play",
+      "checked_at": "2026-10-24T08:03:08.279341+00:00",
+      "status": "unavailable",
+      "http_status": 403,
+      "title": null,
+      "feed_items": 0
+    },
+    {
+      "url": "https://blog.bworld.co.kr/category/보도자료/feed/",
+      "checked_at": "2026-10-24T08:06:32.789014+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "보도자료 – SK브로드밴드 공식블로그",
+      "feed_items": 10
+    },
+    {
+      "url": "https://blog.bworld.co.kr/?s=B+tv&feed=rss2",
+      "checked_at": "2026-10-24T08:06:32.789014+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "“B tv”에 대한 검색 결과 – SK브로드밴드 공식블로그",
+      "feed_items": 10
+    },
+    {
+      "url": "https://blog.bworld.co.kr/wp-json/wp/v2/posts?search=B%20tv&per_page=30&_embed=1",
+      "checked_at": "2026-10-24T08:06:32.789014+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": null,
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/category/프레스센터/보도자료",
+      "checked_at": "2026-10-24T08:06:32.789014+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "보도자료 – LG유플러스 뉴스룸",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/category/uplus-인사이드/상품-서비스",
+      "checked_at": "2026-10-24T08:06:32.789014+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "상품/서비스 – LG유플러스 뉴스룸",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/wp-json/wp/v2/posts?search=tv&per_page=30",
+      "checked_at": "2026-10-24T08:06:32.789014+00:00",
+      "status": "unavailable",
+      "http_status": 403,
+      "title": null,
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/sitemap_index.xml",
+      "checked_at": "2026-10-24T08:06:32.789014+00:00",
+      "status": "unavailable",
+      "http_status": 404,
+      "title": null,
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/22099",
+      "checked_at": "2026-10-24T08:07:57.581255+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "유독에서 구글 AI Pro와 YouTube Premium 더욱 합리적으로 즐기세요 – LG유플러스 뉴스룸",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/category/프레스센터/보도자료/feed/",
+      "checked_at": "2026-10-24T08:07:57.581255+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "LG유플러스 뉴스룸 – LG유플러스 뉴스룸에 오신것을 환영합니다.",
+      "feed_items": 0
+    },
+    {
+      "url": "https://news.lguplus.com/category/uplus-인사이드/상품-서비스/page/2/",
+      "checked_at": "2026-10-24T08:07:57.581255+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "상품/서비스 – 페이지 2 – LG유플러스 뉴스룸",
+      "feed_items": 0
+    },
+    {
+      "url": "https://blog.bworld.co.kr/category/보도자료/page/2/",
+      "checked_at": "2026-10-24T08:07:57.581255+00:00",
+      "status": "ok",
+      "http_status": 200,
+      "title": "보도자료 - SK브로드밴드 공식블로그",
+      "feed_items": 0
+    }
+  ],
+  "note": "Observed official endpoints; availability alone does not establish story eligibility."
+}

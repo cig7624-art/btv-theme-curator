@@ -1,4 +1,4 @@
-"""Official domestic IPTV/OTT product sources and conservative story selection.
+"""Official domestic media sources with separate media and product selection.
 
 Registration is not proof that an endpoint is available. The collector records
 actual retrieval results, publication dates and source paragraphs independently.
@@ -12,35 +12,40 @@ import re
 
 # Provider-owned public newsrooms/blogs, not third-party product comparison sites.
 # The source collector must still verify the returned document before publishing.
-DOMESTIC_PRODUCT_SOURCES = (
+DOMESTIC_MEDIA_SOURCES = (
     {"id": "skb_products", "name": "SK브로드밴드 공식 블로그", "company": "SK브로드밴드",
-     "url": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/", "source_type": "official_product_announcement",
-     "country": "KR", "market_scope": "domestic_product", "require_domestic_product": True,
+     "url": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/", "source_type": "official_media_announcement",
+     "country": "KR", "market_scope": "domestic_media", "require_domestic_media": True,
      "allowed_hosts": ["blog.bworld.co.kr"],
      "image_hosts": ["blog.bworld.co.kr", "i0.wp.com", "i1.wp.com", "i2.wp.com"],
      "article_selector": ".elementor-widget-theme-post-content",
      "document_urls": [{"url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/",
                         "title": "SKB, 지상파·실시간 채널 모은 올인원 구독상품 ‘B tv+ max’ 출시"}]},
     {"id": "kt_products", "name": "KT 공식 보도자료", "company": "KT",
-     "url": "https://corp.kt.com/html/promote/news/report_list.html", "source_type": "official_product_announcement",
-     "country": "KR", "market_scope": "domestic_product", "require_domestic_product": True,
+     "url": "https://corp.kt.com/html/promote/news/report_list.html", "source_type": "official_media_announcement",
+     "country": "KR", "market_scope": "domestic_media", "require_domestic_media": True,
      "allowed_hosts": ["corp.kt.com"], "image_hosts": ["corp.kt.com"]},
     {"id": "lgu_products", "name": "LG유플러스 뉴스룸", "company": "LG유플러스",
-     "url": "https://news.lguplus.com/category/uplus-%EC%9D%B8%EC%82%AC%EC%9D%B4%EB%93%9C/%EC%83%81%ED%92%88-%EC%84%9C%EB%B9%84%EC%8A%A4", "source_type": "official_product_announcement",
-     "country": "KR", "market_scope": "domestic_product", "require_domestic_product": True,
+     "url": "https://news.lguplus.com/category/%ED%94%84%EB%A0%88%EC%8A%A4%EC%84%BC%ED%84%B0/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C", "source_type": "official_media_announcement",
+     "country": "KR", "market_scope": "domestic_media", "require_domestic_media": True,
      "allowed_hosts": ["news.lguplus.com"], "image_hosts": ["news.lguplus.com"],
      "article_selector": ".entry-body-wrap", "title_selector": ".entry-header-title",
+     "discovery_urls": ["https://news.lguplus.com/category/uplus-%EC%9D%B8%EC%82%AC%EC%9D%B4%EB%93%9C/%EC%83%81%ED%92%88-%EC%84%9C%EB%B9%84%EC%8A%A4"],
      "document_urls": [{"url": "https://news.lguplus.com/22099",
                         "title": "유독에서 구글 AI Pro와 YouTube Premium 더욱 합리적으로 즐기세요"}]},
     {"id": "coupang_products", "name": "쿠팡 뉴스룸", "company": "쿠팡플레이",
-     "url": "https://news.coupang.com/feed/", "source_type": "official_product_announcement",
-     "country": "KR", "market_scope": "domestic_product", "require_domestic_product": True,
+     "url": "https://news.coupang.com/feed/", "source_type": "official_media_announcement",
+     "country": "KR", "market_scope": "domestic_media", "require_domestic_media": True,
      "allowed_hosts": ["news.coupang.com"], "image_hosts": ["news.coupang.com"]},
-    {"id": "cjenm_products", "name": "CJ ENM 공식 뉴스", "company": "티빙",
-     "url": "https://www.cjenm.com/ko/news/", "source_type": "official_product_announcement",
-     "country": "KR", "market_scope": "domestic_product", "require_domestic_product": True,
-     "allowed_hosts": ["www.cjenm.com", "cjenm.com"], "image_hosts": ["www.cjenm.com", "cjenm.com"]},
+    {"id": "cjenm_products", "name": "CJ ENM 공식 뉴스", "company": "CJ ENM",
+     "url": "https://www.cjenm.com/ko/news/", "source_type": "official_media_announcement",
+     "country": "KR", "market_scope": "domestic_media", "require_domestic_media": True,
+     "allowed_hosts": ["www.cjenm.com", "cjenm.com"], "image_hosts": ["www.cjenm.com", "cjenm.com", "web2-cf-image.cjenm.com"]},
 )
+
+
+# Keep stored source IDs and the original registry import compatible.
+DOMESTIC_PRODUCT_SOURCES = DOMESTIC_MEDIA_SOURCES
 
 
 _MEDIA = re.compile(
@@ -66,6 +71,13 @@ _DOMESTIC = re.compile(r"한국|국내|대한민국|한국\s*가입자", re.I)
 _SPECULATIVE = re.compile(r"될까|오를까|할까|가능성|전망|예상|루머|미정|추측", re.I)
 _NON_MEDIA_PRODUCT = re.compile(r"휴대폰|스마트폰|아이폰|갤럭시|(?<![a-z])(?:5G|LTE)(?![a-z])|(?:기가\s*)?인터넷|와이파이|Wi-?Fi", re.I)
 _LAUNCH_BODY = re.compile(r"국내\s*최초|새롭게\s*(?:선보|출시)|신규\s*(?:상품|구독|이용권|패키지)|(?:상품|패키지|이용권|구독)\S*\s*(?:출시|선보)", re.I)
+_MEDIA_COMPANY = re.compile(r"CJ\s*ENM|스튜디오\s*드래곤|SLL|tvN|JTBC|MBC|SBS|KBS|ENA|EBS", re.I)
+_MEDIA_CONTENT = re.compile(r"미디어|콘텐츠|방송|영화|드라마|시리즈|예능|다큐|프로그램|중계|채널|VOD|\bIP\b", re.I)
+_CONTENT_EVENT = re.compile(r"신작|라인업|편성|공개|첫\s*방송|첫\s*공개|개봉|제작|론칭|런칭|선보|시즌\s*\d|성과|흥행|수상|후보|노미네이트|노미니|차트|제공|신설", re.I)
+_MEDIA_PARTNERSHIP = re.compile(r"제휴|파트너십|파트너쉽|협력|공급|수출|유통|합병|인수|계약|브랜드관", re.I)
+_MEDIA_EARNINGS = re.compile(r"실적|매출|영업\s*이익|수익|판매액|거래액|가입자|시청\s*시간|시청률|관객|박스\s*오피스", re.I)
+_MEDIA_TECH = re.compile(r"\bAI\b|인공지능|검색|추천\s*기술|화질|멀티뷰|셋톱|접근성|스트리밍\s*기술", re.I)
+_NON_MEDIA_CORPORATE = re.compile(r"채용|인적\s*자원|우수\s*기관|사회\s*공헌|봉사|어린이\s*(?:대상|체험)|제작\s*체험|보이스피싱|보안\s*인증|기부|임직원|조직\s*개편|CEO\s*선임|경영진\s*선임", re.I)
 
 
 def _text(value, limit=18000):
@@ -153,6 +165,75 @@ def domestic_product_candidate(title):
                    or re.search(r"YouTube\s*Premium|유튜브\s*프리미엄|유독(?:에서|\s|,)", title, re.I))
     return bool(product and (_MEDIA.search(title) or _PROVIDER.search(title))
                 and (not _CONTENT.search(title) or _PRICING.search(title) or _BUNDLE.search(title)))
+
+
+def domestic_media_topic(title, body="", source=None):
+    """Classify actual domestic media news, including content and industry.
+
+    A domestic publisher may announce overseas distribution of Korean content;
+    that is still a domestic media-company issue. This flag describes the
+    source/story, never the country in which a subscription can be purchased.
+    Product eligibility remains a separate, stricter decision above.
+    """
+    title, body = _text(title, 600), _text(body)
+    if not title or _SPECULATIVE.search(title) or _NON_MEDIA_CORPORATE.search(title):
+        return ""
+    product = domestic_product_topic(title, body, source)
+    if product:
+        return product
+    if _GUIDE.search(title):
+        return ""
+    headline_service = bool(_MEDIA.search(title) or _MEDIA_COMPANY.search(title))
+    headline_content = bool(_MEDIA_CONTENT.search(title))
+    if _NON_MEDIA_PRODUCT.search(title) and not headline_service:
+        return ""
+    if not (headline_service or headline_content):
+        return ""
+    # A provider-led 'new programs' headline needs the fetched opening article
+    # paragraphs to confirm actual media distribution, not a welfare program.
+    confirmed_context = headline_service or bool((_MEDIA.search(body[:2400]) or _MEDIA_COMPANY.search(body[:2400]))
+                                                  and _MEDIA_CONTENT.search(body[:2400]))
+    if not confirmed_context:
+        return ""
+    if _MEDIA_PARTNERSHIP.search(title):
+        return "partnership_distribution"
+    if _MEDIA_EARNINGS.search(title):
+        return "earnings_strategy"
+    if _MEDIA_TECH.search(title):
+        return "ai_technology"
+    if ((headline_content or _MEDIA_CONTENT.search(body[:1200]))
+            and _CONTENT_EVENT.search(title)):
+        return "sports_content"
+    if headline_service and re.search(r"중계권|스포츠|KBO|NBA|NFL|프리미어\s*리그|월드컵|올림픽", title, re.I):
+        return "sports_content"
+    return ""
+
+
+def domestic_media_candidate(title):
+    """Permit fetching a media headline; never use a listing as final proof."""
+    title = _text(title, 600)
+    if not title or _GUIDE.search(title) or _SPECULATIVE.search(title) or _NON_MEDIA_CORPORATE.search(title):
+        return False
+    if domestic_product_candidate(title):
+        return True
+    headline_service = bool(_MEDIA.search(title) or _MEDIA_COMPANY.search(title))
+    if _NON_MEDIA_PRODUCT.search(title) and not headline_service:
+        return False
+    subject = headline_service or bool(_MEDIA_CONTENT.search(title))
+    event = bool(_CONTENT_EVENT.search(title) or _MEDIA_PARTNERSHIP.search(title)
+                 or _MEDIA_EARNINGS.search(title) or _MEDIA_TECH.search(title))
+    return bool(subject and event)
+
+
+def is_domestic_media_item(item):
+    """Source-grounded domestic media and genuine product announcements."""
+    if not isinstance(item, Mapping):
+        return False
+    if item.get("market_scope") in {"domestic_media", "domestic_product"} or item.get("domestic_product") is True:
+        return True
+    source_ids = {source["id"] for source in DOMESTIC_MEDIA_SOURCES}
+    return bool(item.get("source_id") in source_ids and item.get("country") == "KR"
+                and domestic_media_topic(item.get("title"), item.get("body_text", "")))
 
 
 def is_domestic_product_item(item):
