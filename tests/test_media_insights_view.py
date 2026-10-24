@@ -239,6 +239,7 @@ class MagazinePresentationTests(unittest.TestCase):
         self.assertFalse(app.exception)
         self.assertEqual(app.session_state["translate_calls"], 1)
         self.assertIn("새로운 광고 제휴를 발표한 미디어 기업", " ".join(row.value for row in app.markdown))
+        self.assertFalse(any("media-pending-translation" in row.value for row in app.markdown))
         app.run()
         self.assertFalse(any(button.key == "media_insights_localize" for button in app.button))
         self.assertEqual(app.session_state["translate_calls"], 1)

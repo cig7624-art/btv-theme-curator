@@ -616,8 +616,9 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
         domestic = st.session_state.get("media_insight_topic", "전체") == "국내 이슈"
         scope_items = [item for item in items if not domestic or _is_domestic_item(item)]
         pending_translations = [item for item in items if valid_localization(item) is None]
+        pending_marker = st.empty()
         if pending_translations:
-            st.markdown(''.join('<span class="media-pending-translation" hidden aria-hidden="true" data-item-id="'
+            pending_marker.markdown(''.join('<span class="media-pending-translation" hidden aria-hidden="true" data-item-id="'
                                 + _escape(item["id"], 500) + '"></span>' for item in pending_translations), unsafe_allow_html=True)
         with st.container(key="media_insights_edition_caption"):
             if pending_translations:
@@ -638,6 +639,12 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                                 snapshot = refreshed
                                 items = insight_items(snapshot)
                                 scope_items = [item for item in items if not domestic or _is_domestic_item(item)]
+                                pending_translations = [item for item in items if valid_localization(item) is None]
+                                if pending_translations:
+                                    pending_marker.markdown(''.join('<span class="media-pending-translation" hidden aria-hidden="true" data-item-id="'
+                                        + _escape(item["id"], 500) + '"></span>' for item in pending_translations), unsafe_allow_html=True)
+                                else:
+                                    pending_marker.empty()
                         except (MediaLocalizationError, MediaInsightsStorageError) as error:
                             st.warning(str(error))
                         except Exception:

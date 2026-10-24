@@ -297,6 +297,7 @@ def _check_editorial(frame, report, label, screenshots):
     if sum(media_images) < 2:
         raise VerificationIssue('media_artwork_unavailable', retry=True)
     frame.locator('.st-key-media_insight_topic').get_by_text('국내 이슈', exact=True).click()
+    frame.get_by_text('국내 콘텐츠·상품·미디어', exact=False).wait_for(state='visible', timeout=30000)
     frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
     domestic_cards = frame.locator('.st-key-media_insights_workspace [class*="st-key-media_story_"]')
     report['tests'][f'{label}_media_domestic'] = (

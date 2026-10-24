@@ -39,9 +39,9 @@ def run(args):
                         frame.get_by_role("tab", name="미디어 인사이트", exact=True).click()
                         frame.locator(".media-insights-heading").wait_for(state="visible", timeout=30000)
                         report["stage"] = "media_open"
-                        frame.get_by_role('link', name='공식 원문 열기 ↗', exact=True).wait_for(state='visible', timeout=30000)
-                        frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
-                        action = frame.locator(".st-key-media_insights_localize button")
+                        frame.locator('.media-section-label').first.wait_for(state='visible', timeout=30000)
+                        action = frame.get_by_role('button', name='한글 정리', exact=True)
+                        report['translation_control_count'] = action.count()
                         if action.count() == 0:
                             report["status"] = "already_cached"
                             return report
@@ -58,6 +58,14 @@ def run(args):
                         page.wait_for_timeout(15000)
                     except Exception as error:
                         report["prepare_failure_type"] = type(error).__name__
+                        message = str(error).lower()
+                        report['prepare_diagnostic'] = next((code for phrase, code in (
+                            ('strict mode violation', 'multiple_controls'),
+                            ('execution context was destroyed', 'context_reloaded'),
+                            ('frame was detached', 'frame_detached'),
+                            ('has been closed', 'browser_closed'),
+                            ('is not a valid selector', 'invalid_selector'),
+                        ) if phrase in message), 'unavailable')
                         if time.monotonic() >= deadline:
                             raise
                         page.wait_for_timeout(15000)
@@ -71,7 +79,7 @@ def run(args):
                     # An uncertain or partial submission is never repeated.
                     page.wait_for_timeout(1000)
                     frame.locator('[data-testid="stSpinner"]').wait_for(state="hidden", timeout=150000)
-                    frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
+                    frame.wait_for_function("() => !document.querySelector('.st-key-media_insights_section [data-stale=true]')", timeout=30000)
                     after = frame.locator(".media-pending-translation").count()
                     report["batches"].append({"pending_before": before, "pending_after": after})
                     if (frame.locator('.st-key-media_insights_section [data-testid="stException"], .st-key-media_insights_section [data-testid="stAlert"]').count()
@@ -79,7 +87,7 @@ def run(args):
                         report["status"] = "review_needed"
                         break
                     report["status"] = "completed"
-                    action = frame.locator(".st-key-media_insights_localize button")
+                    action = frame.get_by_role('button', name='한글 정리', exact=True)
                     if not after or action.count() == 0 or not action.is_enabled():
                         break
             finally:
