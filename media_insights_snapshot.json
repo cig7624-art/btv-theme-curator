@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-10-24T02:47:51+00:00",
+  "collected_at": "2026-10-24T08:13:02+00:00",
   "sources": [
     {
       "id": "netflix_ir",
@@ -8,11 +8,11 @@
       "company": "Netflix",
       "url": "https://ir.netflix.net/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
-      "last_success_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "last_success_at": "2026-10-24T08:13:02+00:00",
       "error_code": "",
-      "item_count": 3,
-      "retained_item_count": 3
+      "item_count": 4,
+      "retained_item_count": 4
     },
     {
       "id": "disney_ir",
@@ -20,8 +20,8 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/investor-relations/",
       "status": "partial",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
-      "last_success_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "last_success_at": "2026-10-24T08:13:02+00:00",
       "error_code": "some_documents_unavailable",
       "item_count": 2,
       "retained_item_count": 2
@@ -32,11 +32,11 @@
       "company": "Amazon",
       "url": "https://ir.aboutamazon.com/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
-      "last_success_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "last_success_at": "2026-10-24T08:13:02+00:00",
       "error_code": "",
-      "item_count": 3,
-      "retained_item_count": 3
+      "item_count": 4,
+      "retained_item_count": 4
     },
     {
       "id": "comcast_ir",
@@ -44,7 +44,7 @@
       "company": "Comcast",
       "url": "https://www.cmcsa.com/financial-information/quarterly-results",
       "status": "unavailable",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
       "last_success_at": "",
       "error_code": "http_403",
       "item_count": 0,
@@ -56,11 +56,11 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/feed/",
       "status": "ok",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
-      "last_success_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "last_success_at": "2026-10-24T08:13:02+00:00",
       "error_code": "",
-      "item_count": 3,
-      "retained_item_count": 3
+      "item_count": 4,
+      "retained_item_count": 4
     },
     {
       "id": "amazon_news",
@@ -68,8 +68,8 @@
       "company": "Amazon",
       "url": "https://www.aboutamazon.com/news/entertainment",
       "status": "ok",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
-      "last_success_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "last_success_at": "2026-10-24T08:13:02+00:00",
       "error_code": "",
       "item_count": 1,
       "retained_item_count": 1
@@ -80,7 +80,67 @@
       "company": "SKT",
       "url": "https://news.sktelecom.com/feed",
       "status": "unavailable",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "last_success_at": "",
+      "error_code": "no_business_documents",
+      "item_count": 0,
+      "retained_item_count": 0
+    },
+    {
+      "id": "skb_products",
+      "name": "SK브로드밴드 공식 블로그",
+      "company": "SK브로드밴드",
+      "url": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
+      "status": "ok",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "last_success_at": "2026-10-24T08:13:02+00:00",
+      "error_code": "",
+      "item_count": 1,
+      "retained_item_count": 1
+    },
+    {
+      "id": "kt_products",
+      "name": "KT 공식 보도자료",
+      "company": "KT",
+      "url": "https://corp.kt.com/html/promote/news/report_list.html",
+      "status": "unavailable",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "last_success_at": "",
+      "error_code": "no_business_documents",
+      "item_count": 0,
+      "retained_item_count": 0
+    },
+    {
+      "id": "lgu_products",
+      "name": "LG유플러스 뉴스룸",
+      "company": "LG유플러스",
+      "url": "https://news.lguplus.com/category/uplus-%EC%9D%B8%EC%82%AC%EC%9D%B4%EB%93%9C/%EC%83%81%ED%92%88-%EC%84%9C%EB%B9%84%EC%8A%A4",
+      "status": "partial",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "last_success_at": "2026-10-24T08:13:02+00:00",
+      "error_code": "some_documents_unavailable",
+      "item_count": 1,
+      "retained_item_count": 1
+    },
+    {
+      "id": "coupang_products",
+      "name": "쿠팡 뉴스룸",
+      "company": "쿠팡플레이",
+      "url": "https://news.coupang.com/feed/",
+      "status": "unavailable",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "last_success_at": "",
+      "error_code": "http_403",
+      "item_count": 0,
+      "retained_item_count": 0
+    },
+    {
+      "id": "cjenm_products",
+      "name": "CJ ENM 공식 뉴스",
+      "company": "티빙",
+      "url": "https://www.cjenm.com/ko/news/",
+      "status": "unavailable",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
       "last_success_at": "",
       "error_code": "no_business_documents",
       "item_count": 0,
@@ -103,7 +163,7 @@
       "source_type": "official_announcement",
       "excerpt": "Collaboration Spans Entertainment, Sports, Consumer Products, Parks and Experiences Across Some of Disney’s Biggest Franchises and Cultural Moments\nThe Walt Disney Company and Dude Perfect today announced an integrated creative partnership combining Dude Perfect’s signature sports and comedy entertainment with some of Disney’s most beloved franchises and biggest cultural moments. As part of the partnership, Dude Perf",
       "body_text": "Collaboration Spans Entertainment, Sports, Consumer Products, Parks and Experiences Across Some of Disney’s Biggest Franchises and Cultural Moments\nThe Walt Disney Company and Dude Perfect today announced an integrated creative partnership combining Dude Perfect’s signature sports and comedy entertainment with some of Disney’s most beloved franchises and biggest cultural moments. As part of the partnership, Dude Perfect will develop original content for its own channels inspired by Disney franchises and events, with select Dude Perfect content also featured on Disney+ .\nPlanned collaborations over the next year include Super Bowl LXI , the 50th anniversary of Star Wars , and Marvel Studios’ Avengers: Doomsday , one of the year’s most anticipated films — including Avengers -themed content for its popular series Overtime .\nThe partnership additionally gives Disney access to a selection of Dude Perfect’s existing short-form library for distribution across Disney+, ESPN , and Disney social platforms .\n“Disney has always been a place where great storytellers come to create, and Dude Perfect brings a distinctive voice and an inventive approach to everything they do,” said Asad Ayaz , Chief Marketing and Brand Officer, The Walt Disney Company. “By building on our longstanding relationship, we’re able to give fans even more ways to experience and be part of the Disney stories they love.”\n“We’ve been Disney kids forever, from wearing out the VHS tape of The Lion King to making core memories as a family at Disney World ,” said Dude Perfect co-founder Garrett Hilbert . “Disney taught us to go big and dream, and that has shaped everything we’ve built. Now, we get to make more of those dreams come to life with the Disney team, and we can’t wait to bring our fans along for the ride.”\nDisney and Dude Perfect’s past collaborations include last year’s challenge to visit all 12 Disney Parks around the world in under 75 hours in an attempt to break the world record. The adventure became the channel’s #2 best-performing YouTube upload in its first 24 hours, generating more than 13M views . The video had a meaningful impact beyond the content itself, with a fundraising campaign that drove more than $1.2M in donations to Make-A-Wish .\nDude Perfect boasts 130M followers and 22B+ lifetime views , with a growing entertainment business that includes original content, live touring, its Almost Athletes podcast and consumer products. Today’s announcement marks the latest expansion for the company, as it extends into major franchises, live experiences and new forms of entertainment.\nThe post The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership appeared first on The Walt Disney Company .",
-      "image_url": "",
+      "image_url": "https://thewaltdisneycompany.com/app/uploads/2026/10/Disney_Dude-Perfect-1024x683.jpeg",
       "evidence": [
         {
           "id": "mi-525e4bb84089078f44-p002",
@@ -162,7 +222,7 @@
       ],
       "content_hash": "60d467a44a6681d8ea04718c3c902263342ae875d7de373d944293b956a16986",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
       "analysis": {
         "headline": "디즈니, Dude Perfect와 전사적 콘텐츠·유통 파트너십 발표",
         "summary": "디즈니는 Dude Perfect와 협력해 디즈니 프랜차이즈·이벤트를 활용한 오리지널 콘텐츠를 제작하고, 일부 콘텐츠를 Disney+에 선보일 계획이다. 또한 Dude Perfect의 기존 숏폼 라이브러리를 Disney+, ESPN 및 디즈니 소셜 플랫폼에 유통할 수 있게 됐다.",
@@ -246,7 +306,13 @@
             "title": "The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership"
           }
         ]
-      }
+      },
+      "image_alt": "",
+      "image_source_url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
+      "image_attribution": "디즈니 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00",
+      "image_fetched_from": "https://thewaltdisneycompany.com/feed/"
     },
     {
       "id": "mi-e5577dde5187375575",
@@ -263,7 +329,7 @@
       "source_type": "official_announcement",
       "excerpt": "Disney+ and ESPN, in collaboration with the NFL, today announced that Disney+ will livestream Super Bowl LXI on Sunday, Feb. 14, 2027, providing another platform for fans to watch ESPN’s first-ever Super Bowl production. All Disney+ subscribers in the United States can stream the traditional game presentation airing on ESPN and ABC, with Joe Buck , Troy Aikman , Lisa Salters and Laura Rutledge on the call, as well as",
       "body_text": "Disney+ and ESPN, in collaboration with the NFL, today announced that Disney+ will livestream Super Bowl LXI on Sunday, Feb. 14, 2027, providing another platform for fans to watch ESPN’s first-ever Super Bowl production. All Disney+ subscribers in the United States can stream the traditional game presentation airing on ESPN and ABC, with Joe Buck , Troy Aikman , Lisa Salters and Laura Rutledge on the call, as well as the Spanish-language telecast on ESPN Deportes.\nOutside of the U.S., Disney+ will stream ESPN’s Super Bowl in more than 55 international markets, including Spanish-speaking Latin America, Brazil, the Caribbean, South Africa and Australia/New Zealand. In conjunction, ESPN’s linear platforms will carry the Super Bowl in more than 130 countries and territories.\nTwo Monday Night Football Games on ESPN and ABC Available to Disney+ Subscribers This Season\nIn addition to Super Bowl LXI, two Monday Night Football regular-season games will be available to Disney+ subscribers in the lead-up to the big game. The first is the Dallas Cowboys at Philadelphia Eagles on Monday, Oct. 26 (Week 7), with a second game to be announced. Both games will continue to air as scheduled on ESPN/ABC and ESPN Deportes, with the option to stream both the English- and Spanish-language broadcasts on Disney+. These add to the expanding roster of domestic and global live sports available on Disney+.\nESPN App Streams Every Monday Night Football Game and Super Bowl LXI\nAll of ESPN’s Monday Night Football games and its Super Bowl programming will remain available on the ESPN App in the United States. In addition to the traditional and Spanish-language Super Bowl LXI presentations, the platform will carry the ManningCast with Peyton and Eli on ESPN2 and all other Super Bowl Sunday studio programming. The ESPN App will also carry programming throughout the week leading up to the game, as well as all season long.\nBuilding on a Season of Disney and ESPN Collaboration\nAs first announced at Disney’s Upfront presentation in May , ESPN will transform Santa Monica Beach into ESPN Beach leading into Super Bowl Sunday, a week-long broadcast hub for both ESPN and ABC beginning February 8, alongside a free fan experience on the Santa Monica Pier. The fan activation will feature interactive games, immersive experiences and family-friendly entertainment tied to ESPN, ABC and Disney, alongside themed merchandise and food offerings.\nESPN and Disney’s “We’re Going,” a marketing campaign for ESPN’s inaugural Super Bowl , reimagines the iconic “I’m Going to Disney World” tradition including the debut spot featuring more than 60 characters from across Disney, Marvel, Star Wars and Pixar . Disney has also unveiled the Disney | Champion NFL collection , debuted at Fanatics Fest NYC with a Fan Draft featuring Tom Brady, Emmitt Smith, Rob Gronkowski and Fernando Mendoza.\nThe Disney+ Super Bowl stream marks the latest step in ESPN and Disney’s yearlong build toward Super Bowl LXI.\nInterest in Super Bowl LXI has already set a new bar. As Disney shared on its fiscal Q3 2026 earnings call in August, ABC and ESPN sold out all commercial inventory for the telecast , the earliest sellout by a network in Super Bowl history. Fifty-eight brands across 34 categories, including nine first-time Super Bowl advertisers, secured units for the game.\nA version of this article also appears on ESPN Press Room\nThe post Disney+ to Stream Super Bowl LXI, Joining ESPN and ABC to Give Fans More Ways to Watch appeared first on The Walt Disney Company .",
-      "image_url": "",
+      "image_url": "https://thewaltdisneycompany.com/app/uploads/2026/10/SBLXI_AttributionCard_16x9-0-00-01-01-1024x576.jpeg",
       "evidence": [
         {
           "id": "mi-e5577dde5187375575-p002",
@@ -346,7 +412,7 @@
       ],
       "content_hash": "fe5ff5da4381a11de5a7966d2e4ecae91e79baded2dfbc8c260fb74d700637df",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
       "analysis": {
         "headline": "Disney+, 2027년 슈퍼볼 LXI 스트리밍 예정",
         "summary": "Disney+는 2027년 2월 14일 슈퍼볼 LXI를 미국의 모든 Disney+ 가입자에게 스트리밍하고, 미국 외 55개국 이상에서도 ESPN의 슈퍼볼 중계를 제공할 예정입니다. 미국에서는 정규시즌 Monday Night Football 두 경기도 Disney+에서 시청할 수 있습니다.",
@@ -477,7 +543,13 @@
             "title": "How to watch the 2026-27 NBA season on Prime Video"
           }
         ]
-      }
+      },
+      "image_alt": "",
+      "image_source_url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
+      "image_attribution": "디즈니 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00",
+      "image_fetched_from": "https://thewaltdisneycompany.com/feed/"
     },
     {
       "id": "mi-80a30a5f266d73b1a5",
@@ -494,7 +566,7 @@
       "source_type": "official_announcement",
       "excerpt": "Traditionally, people find information and discover content in one of two ways: searching for something specific or browsing when they’re open to exploring. But what if someone can describe what they’re looking for but can’t pinpoint exactly what it is?\nTo address this use case, ESPN and Disney+ are beta testing AI-powered features designed to help fans find information and content with intent built into the experien",
       "body_text": "Traditionally, people find information and discover content in one of two ways: searching for something specific or browsing when they’re open to exploring. But what if someone can describe what they’re looking for but can’t pinpoint exactly what it is?\nTo address this use case, ESPN and Disney+ are beta testing AI-powered features designed to help fans find information and content with intent built into the experience. These experiments will help us gain valuable insights from user interactions to inform future improvements over time across navigation, results, recommendations, and content discovery for sports and entertainment.\nAt ESPN, this concept is being tested through ESPN Search, an AI-assisted search capability currently in beta with a subset of users. The experience allows fans to ask sports questions in natural language and receive answers, related content, stats, and recommendations drawn from ESPN’s vast sports knowledge ecosystem.\nESPN Search sources from decades of ESPN’s trusted content and data to help fans get to insights faster while uncovering more of ESPN’s deep sports expertise. This includes published articles and videos, stats and info from ESPN Research, sports metadata, internal knowledge repositories, and structured sports data systems.\nPersonalization, which relies on past viewing behavior, remains an integral part of the Disney+ experience. Sometimes, however, what a subscriber wants in a given moment doesn’t align with their usual viewing habits. For example, someone who regularly watches crime dramas may suddenly be in the mood for something more lighthearted.\nAt Disney+, teams are testing a limited beta experiment with a small group of select subscribers to explore a more natural way for users to express what they’re looking for. The AI-powered tool is designed to help viewers move from “I don’t know what to watch” to relevant recommendations based on their immediate context and viewing needs. Through natural language or voice input, or suggested prompts, subscribers can describe what they want in their own words, allowing Disney+ to recommend content that fits the moment, not just their viewing history.\nThese beta experiments represent early efforts to explore how AI can enhance the user experience across ESPN and Disney+. User feedback will help us evolve and improve how they find information and content over time.\nBy reducing friction and better understanding what fans are looking for, we’re creating more seamless ways for them to engage with the sports and entertainment they love.\nThe post Beta Testing AI-Powered Search and Discovery on ESPN and Disney+ appeared first on The Walt Disney Company .",
-      "image_url": "",
+      "image_url": "https://thewaltdisneycompany.com/app/uploads/2026/08/google-docs-image-4-1024x576.jpg",
       "evidence": [
         {
           "id": "mi-80a30a5f266d73b1a5-p002",
@@ -553,7 +625,263 @@
       ],
       "content_hash": "497b1ab9073b544dc6a232378cab1f28d3f4075019d510c24c8a30b6df3e1dc1",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-24T02:47:51+00:00"
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "image_alt": "",
+      "image_source_url": "https://thewaltdisneycompany.com/news/ai-powered-search-espn-disney-plus/",
+      "image_attribution": "디즈니 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00",
+      "image_fetched_from": "https://thewaltdisneycompany.com/feed/"
+    },
+    {
+      "id": "mi-15674e74de373a7bff",
+      "source_id": "disney_news",
+      "company": "Disney",
+      "topic": "earnings_strategy",
+      "title": "Disney Q3 FY26 Earnings: Commentary from CEO Josh D’Amaro",
+      "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/",
+      "published_at": "2026-08-05",
+      "collected_at": "2026-10-24T08:13:02+00:00",
+      "country": "",
+      "period": "",
+      "source_name": "The Walt Disney Company News",
+      "source_type": "official_announcement",
+      "excerpt": "The Walt Disney Company reported its third-quarter earnings on Wednesday ( available here ), with CEO Josh D’Amaro addressing investors on the results and his first five months in the role.\n“During my first five months as CEO, I’ve been focused on ensuring that we execute as one company around a unified strategy,” D’Amaro said on the earnings call. “And what we’re seeing this quarter is proof that coordinating our fr",
+      "body_text": "The Walt Disney Company reported its third-quarter earnings on Wednesday ( available here ), with CEO Josh D’Amaro addressing investors on the results and his first five months in the role.\n“During my first five months as CEO, I’ve been focused on ensuring that we execute as one company around a unified strategy,” D’Amaro said on the earnings call. “And what we’re seeing this quarter is proof that coordinating our franchises, sharing data and technology, and building seamless fan experiences works.”\nHe noted that Disney’s “fundamental advantage is the depth of our fan relationships , and that translates directly to durable financial returns.”\nD’Amaro mentioned that “we find ourselves in an environment where consumers have more options than ever for their time,” but that the company’s results show that “they keep choosing to spend their time with Disney.”\n“This success reflects our continued execution across three strategic priorities: First, investing in creative excellence and world-class IP. Second, leveraging technology to accelerate growth and drive returns. And third, deepening our direct relationships with fans by creating a more connected Disney experience.” he said. “Anchoring these strategic priorities is our One Disney operating model, which will allow us to fully capture the value of our portfolio for both fans and shareholders.”\nBefore walking investors through the quarter’s performance, D’Amaro paused to highlight a few examples that “demonstrate how the strength of our consumer connections and the power of our IP are expanding our reach and our relevance.”\nStarting with Disney Experiences, D’Amaro said that Disney is “proud of the growth that we’ve had this year, and we’re investing to sustain that growth .”\n“The pipeline includes major attractions at every site, including Villains Land in Orlando and the Avengers Campus expansion in Anaheim, amongst others in the U.S., and our previously announced cruise ship expansion,” he said.\n“At our studios, the blockbuster success of the latest Toy Story installment shows exactly why Disney is different from the competition, and how our stories translate into recurring earnings power,” D’Amaro said.\nHe noted that the five Toy Story films have delivered more than $4 billion at the global box office and over 2 billion hours streamed on Disney+ . Across all retailers, the franchise generates more than $1 billion in annual global retail sales *² and reaches fans at every Disney park and cruise ship — spanning four immersive lands, 19 attractions, and two hotels.\n“Now, that’s the Disney flywheel in action ,” he said. “One powerful and enduring story, told across theaters, streaming, retail, and physical experiences. That integration creates a structure no one else has been able to replicate.”\nHe added that “even when our franchise films don’t meet our box office expectations, as with The Mandalorian and Grogu and the live-action Moana , our investments in these core properties fuel other parts of our company.” The Mandalorian and Grogu , for instance, drove healthy growth in Star Wars retail sales, drew guests to the updated Millennium Falcon attraction at Disneyland and Walt Disney World, and led to significant engagement in gaming .\nAs for the live-action Moana , D’Amaro said it’s expected to be a strong performer on Disney+, building on the success of the original — one of the most-streamed films of all time.*³\nD’Amaro said “ the appeal of our IP across multiple consumer touchpoints is central to our strategy, and Disney+ is the digital centerpiece for that.”\nDuring the quarter, he noted, “we passed an important milestone in app unification, allowing Hulu standalone and bundle subscribers to link profiles and manage subscriptions on Disney+.”\nStill, he acknowledged the company has “work to do scaling Disney+ outside the U.S. , and we’re focused on driving growth and returns over the long term in under-monetized markets.”\n“Our strategy is clear,” D’Amaro added. “Leverage regional relationships and bring regional content onto Disney+ at scale. And that’s how we will grow internationally.”\nHe explained that Disney’s long-term streaming strategy rests on two pillars: “make the core streaming experience the best in the marketplace and connect our businesses into a single digital ecosystem.”\n“Beyond our films and series, Disney+ will continue to evolve, bringing together games, merchandise, and other experiences, while offering increased personalization, exclusivity, and benefits for subscribers,” he said. “All of this is designed to deepen engagement, improve the value proposition, lower churn, and – most importantly – increase lifetime fan value. We expect to introduce elements of this expanded ecosystem beginning in Spring of 2027.”\nD’Amaro concluded by saying that “Disney+ provides the global reach to develop new fans and the consumer data to drive personalization, which are both core to our long-term strategy.”\nThat same strategy extends to sports, where, according to D’Amaro, “ESPN gives us another powerful way to deepen our relationship with fans .”\nAs Disney+ evolves, he added, “we’ll continue to bring select premium sports events to the platform.”\n“At the same time, ESPN remains the primary destination for daily sports content,” he said. “Live sports aren’t just a viewership play; they’re a fan engagement and ecosystem play. When a sports fan engages with ESPN, Disney+, or our parks, their lifetime value increases.”\nBefore wrapping the call, D’Amaro turned to the emerging technology underpinning all of this work.\n“Our company was founded on the convergence of creativity and breakthrough technology – and continuing that tradition is a priority for me and this leadership team,” he said. “That’s why we’re leveraging AI to bring the most innovative tools to our storytellers. As I’ve said before, AI isn’t simply about efficiency – it’s about enhancing a creative process that will always be human-centered, artist-driven, and creator-led.”\nHe continued, “AI lets us work faster and smarter, particularly in areas of pre- and post-production. Our teams can personalize content and experiences for fans around the world at scale. And we are doing all of this while keeping human creativity at the center. AI amplifies what our storytellers can do – it doesn’t replace them.”\n“This efficiency, it matters financially, too,” he said. “When our teams work smarter, we can serve more people across our parks and digital platforms and do it more cost-effectively. That frees up capital to reinvest aggressively in what drives long-term value: new content and next-generation guest experiences, as well as technology infrastructure that keeps Disney at the forefront of entertainment.”\nWrapping up his commentary, D’Amaro said that “there is clarity of purpose inside this company right now.”\n“We know what Disney is: a storyteller with an unmatched ability to reach fans across every format and every geography. We know how technology amplifies that power. And we know that when we operate in an integrated fashion with speed, discipline, and efficiency, we can create long-term shareholder value,” he said concluding the call.\n¹ Includes viewership of TNT sports coverage of the Stanley Cup Finals in 2025\n² Includes third party retail sales\nThe information above should be read together with Disney’s Q3 FY26 earnings release, Form 10-Q and earnings webcast ( available here ), which discuss additional information, including additional challenges and risks the company’s businesses face and additional information about Q3 FY26 performance.\nCertain statements in this communication may constitute “forward ‐looking statements ” within the meaning of the Private Securities Litigation Reform Act of 1995, including statements regarding our expectations, business plans or prospects; future benefits of our strategic priorities, opportunities and investments and technology; plans, expectations and drivers for the growth of our products and services; and other statements that are not historical in nature. Any information that is not historical in nature is subject to change. These statements are made on the basis of management’s views and assumptions regarding future events and business performance as of the time the statements are made. Management does not undertake any obligation to update these statements.\nActual results may differ materially from those expressed or implied. Such differences may result from actions taken by the company, including our business decisions and execution of our business plans, as well as from developments beyond the company’s control, including: the occurrence of subsequent events; domestic and global economic, geopolitical and operating conditions; competitive conditions; consumer preferences; and legal and regulatory developments.\nAdditional factors are set forth in the company’s most recent Annual Report on Form 10-K, including under the captions “Risk Factors,” “Management’s Discussion and Analysis of Financial Condition and Results of Operations,” and “Business,” subsequent quarterly reports on Form 10-Q, including under the captions “Risk Factors” and “Management’s Discussion and Analysis of Financial Condition and Results of Operations,” and subsequent filings with the Securities and Exchange Commission.\nThe terms “company,” “Disney,” “we,” and “our” are used in this communication to refer collectively to the parent company and the subsidiaries through which our various businesses are actually conducted.\nThe post Disney Q3 FY26 Earnings: Commentary from CEO Josh D’Amaro appeared first on The Walt Disney Company .",
+      "image_url": "https://thewaltdisneycompany.com/app/uploads/2026/05/20220811_DL1_3853-1024x683.jpg",
+      "evidence": [
+        {
+          "id": "mi-15674e74de373a7bff-p002",
+          "text": "The Walt Disney Company reported its third-quarter earnings on Wednesday ( available here ), with CEO Josh D’Amaro addressing investors on the results and his first five months in the role.",
+          "locator": "p002",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p003",
+          "text": "“During my first five months as CEO, I’ve been focused on ensuring that we execute as one company around a unified strategy,” D’Amaro said on the earnings call. “And what we’re seeing this quarter is proof that coordinating our franchises, sharing data and technology, and building seamless fan experiences works.”",
+          "locator": "p003",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p004",
+          "text": "He noted that Disney’s “fundamental advantage is the depth of our fan relationships , and that translates directly to durable financial returns.”",
+          "locator": "p004",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p005",
+          "text": "D’Amaro mentioned that “we find ourselves in an environment where consumers have more options than ever for their time,” but that the company’s results show that “they keep choosing to spend their time with Disney.”",
+          "locator": "p005",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p006",
+          "text": "“This success reflects our continued execution across three strategic priorities: First, investing in creative excellence and world-class IP. Second, leveraging technology to accelerate growth and drive returns. And third, deepening our direct relationships with fans by creating a more connected Disney experience.” he said. “Anchoring these strategic priorities is our One Disney operating model, which will allow us to fully capture the value of our portfolio for both fans and shareholders.”",
+          "locator": "p006",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p007",
+          "text": "Before walking investors through the quarter’s performance, D’Amaro paused to highlight a few examples that “demonstrate how the strength of our consumer connections and the power of our IP are expanding our reach and our relevance.”",
+          "locator": "p007",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p009",
+          "text": "Starting with Disney Experiences, D’Amaro said that Disney is “proud of the growth that we’ve had this year, and we’re investing to sustain that growth .”",
+          "locator": "p009",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p010",
+          "text": "“The pipeline includes major attractions at every site, including Villains Land in Orlando and the Avengers Campus expansion in Anaheim, amongst others in the U.S., and our previously announced cruise ship expansion,” he said.",
+          "locator": "p010",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p011",
+          "text": "“At our studios, the blockbuster success of the latest Toy Story installment shows exactly why Disney is different from the competition, and how our stories translate into recurring earnings power,” D’Amaro said.",
+          "locator": "p011",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p012",
+          "text": "He noted that the five Toy Story films have delivered more than $4 billion at the global box office and over 2 billion hours streamed on Disney+ . Across all retailers, the franchise generates more than $1 billion in annual global retail sales *² and reaches fans at every Disney park and cruise ship — spanning four immersive lands, 19 attractions, and two hotels.",
+          "locator": "p012",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p013",
+          "text": "“Now, that’s the Disney flywheel in action ,” he said. “One powerful and enduring story, told across theaters, streaming, retail, and physical experiences. That integration creates a structure no one else has been able to replicate.”",
+          "locator": "p013",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p014",
+          "text": "He added that “even when our franchise films don’t meet our box office expectations, as with The Mandalorian and Grogu and the live-action Moana , our investments in these core properties fuel other parts of our company.” The Mandalorian and Grogu , for instance, drove healthy growth in Star Wars retail sales, drew guests to the updated Millennium Falcon attraction at Disneyland and Walt Disney World, and led to significant engagement in gaming .",
+          "locator": "p014",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p015",
+          "text": "As for the live-action Moana , D’Amaro said it’s expected to be a strong performer on Disney+, building on the success of the original — one of the most-streamed films of all time.*³",
+          "locator": "p015",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p016",
+          "text": "D’Amaro said “ the appeal of our IP across multiple consumer touchpoints is central to our strategy, and Disney+ is the digital centerpiece for that.”",
+          "locator": "p016",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p017",
+          "text": "During the quarter, he noted, “we passed an important milestone in app unification, allowing Hulu standalone and bundle subscribers to link profiles and manage subscriptions on Disney+.”",
+          "locator": "p017",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p018",
+          "text": "Still, he acknowledged the company has “work to do scaling Disney+ outside the U.S. , and we’re focused on driving growth and returns over the long term in under-monetized markets.”",
+          "locator": "p018",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p019",
+          "text": "“Our strategy is clear,” D’Amaro added. “Leverage regional relationships and bring regional content onto Disney+ at scale. And that’s how we will grow internationally.”",
+          "locator": "p019",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p020",
+          "text": "He explained that Disney’s long-term streaming strategy rests on two pillars: “make the core streaming experience the best in the marketplace and connect our businesses into a single digital ecosystem.”",
+          "locator": "p020",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p021",
+          "text": "“Beyond our films and series, Disney+ will continue to evolve, bringing together games, merchandise, and other experiences, while offering increased personalization, exclusivity, and benefits for subscribers,” he said. “All of this is designed to deepen engagement, improve the value proposition, lower churn, and – most importantly – increase lifetime fan value. We expect to introduce elements of this expanded ecosystem beginning in Spring of 2027.”",
+          "locator": "p021",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p022",
+          "text": "D’Amaro concluded by saying that “Disney+ provides the global reach to develop new fans and the consumer data to drive personalization, which are both core to our long-term strategy.”",
+          "locator": "p022",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p023",
+          "text": "That same strategy extends to sports, where, according to D’Amaro, “ESPN gives us another powerful way to deepen our relationship with fans .”",
+          "locator": "p023",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p024",
+          "text": "As Disney+ evolves, he added, “we’ll continue to bring select premium sports events to the platform.”",
+          "locator": "p024",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p025",
+          "text": "“At the same time, ESPN remains the primary destination for daily sports content,” he said. “Live sports aren’t just a viewership play; they’re a fan engagement and ecosystem play. When a sports fan engages with ESPN, Disney+, or our parks, their lifetime value increases.”",
+          "locator": "p025",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p026",
+          "text": "Before wrapping the call, D’Amaro turned to the emerging technology underpinning all of this work.",
+          "locator": "p026",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p027",
+          "text": "“Our company was founded on the convergence of creativity and breakthrough technology – and continuing that tradition is a priority for me and this leadership team,” he said. “That’s why we’re leveraging AI to bring the most innovative tools to our storytellers. As I’ve said before, AI isn’t simply about efficiency – it’s about enhancing a creative process that will always be human-centered, artist-driven, and creator-led.”",
+          "locator": "p027",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p028",
+          "text": "He continued, “AI lets us work faster and smarter, particularly in areas of pre- and post-production. Our teams can personalize content and experiences for fans around the world at scale. And we are doing all of this while keeping human creativity at the center. AI amplifies what our storytellers can do – it doesn’t replace them.”",
+          "locator": "p028",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p029",
+          "text": "“This efficiency, it matters financially, too,” he said. “When our teams work smarter, we can serve more people across our parks and digital platforms and do it more cost-effectively. That frees up capital to reinvest aggressively in what drives long-term value: new content and next-generation guest experiences, as well as technology infrastructure that keeps Disney at the forefront of entertainment.”",
+          "locator": "p029",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p030",
+          "text": "Wrapping up his commentary, D’Amaro said that “there is clarity of purpose inside this company right now.”",
+          "locator": "p030",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p031",
+          "text": "“We know what Disney is: a storyteller with an unmatched ability to reach fans across every format and every geography. We know how technology amplifies that power. And we know that when we operate in an integrated fashion with speed, discipline, and efficiency, we can create long-term shareholder value,” he said concluding the call.",
+          "locator": "p031",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p032",
+          "text": "¹ Includes viewership of TNT sports coverage of the Stanley Cup Finals in 2025",
+          "locator": "p032",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p033",
+          "text": "² Includes third party retail sales",
+          "locator": "p033",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p035",
+          "text": "The information above should be read together with Disney’s Q3 FY26 earnings release, Form 10-Q and earnings webcast ( available here ), which discuss additional information, including additional challenges and risks the company’s businesses face and additional information about Q3 FY26 performance.",
+          "locator": "p035",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p036",
+          "text": "Certain statements in this communication may constitute “forward ‐looking statements ” within the meaning of the Private Securities Litigation Reform Act of 1995, including statements regarding our expectations, business plans or prospects; future benefits of our strategic priorities, opportunities and investments and technology; plans, expectations and drivers for the growth of our products and services; and other statements that are not historical in nature. Any information that is not historical in nature is subject to change. These statements are made on the basis of management’s views and assumptions regarding future events and business performance as of the time the statements are made. Management does not undertake any obligation to update these statements.",
+          "locator": "p036",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p037",
+          "text": "Actual results may differ materially from those expressed or implied. Such differences may result from actions taken by the company, including our business decisions and execution of our business plans, as well as from developments beyond the company’s control, including: the occurrence of subsequent events; domestic and global economic, geopolitical and operating conditions; competitive conditions; consumer preferences; and legal and regulatory developments.",
+          "locator": "p037",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p038",
+          "text": "Additional factors are set forth in the company’s most recent Annual Report on Form 10-K, including under the captions “Risk Factors,” “Management’s Discussion and Analysis of Financial Condition and Results of Operations,” and “Business,” subsequent quarterly reports on Form 10-Q, including under the captions “Risk Factors” and “Management’s Discussion and Analysis of Financial Condition and Results of Operations,” and subsequent filings with the Securities and Exchange Commission.",
+          "locator": "p038",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p039",
+          "text": "The terms “company,” “Disney,” “we,” and “our” are used in this communication to refer collectively to the parent company and the subsidiaries through which our various businesses are actually conducted.",
+          "locator": "p039",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        },
+        {
+          "id": "mi-15674e74de373a7bff-p040",
+          "text": "The post Disney Q3 FY26 Earnings: Commentary from CEO Josh D’Amaro appeared first on The Walt Disney Company .",
+          "locator": "p040",
+          "url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/"
+        }
+      ],
+      "content_hash": "b434b29bd91dd17968f1e4aa362d32f7238fd9c43ea51d23f4d259175391b6e5",
+      "fetched_from": "https://thewaltdisneycompany.com/feed/",
+      "image_alt": "",
+      "image_source_url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/",
+      "image_attribution": "디즈니 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00",
+      "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
+      "last_checked_at": "2026-10-24T08:13:02+00:00"
     },
     {
       "id": "mi-f225fce079cd30efb6",
@@ -958,7 +1286,201 @@
         }
       ],
       "content_hash": "c2b345f02d73b7330cc03ae0d0a4a354a1091ce21eb936974e40a8821caffcf3",
-      "last_checked_at": "2026-10-24T02:47:51+00:00"
+      "last_checked_at": "2026-10-24T08:13:02+00:00"
+    },
+    {
+      "id": "mi-8eb352c71b06ac9ae5",
+      "source_id": "skb_products",
+      "company": "SK브로드밴드",
+      "topic": "advertising_pricing",
+      "title": "SKB, 지상파·실시간 채널 모은 올인원 구독상품 ‘B tv+ max’ 출시 - SK브로드밴드 공식블로그",
+      "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/",
+      "published_at": "2026-07-01",
+      "collected_at": "2026-10-24T08:13:02+00:00",
+      "country": "KR",
+      "period": "",
+      "source_name": "SK브로드밴드 공식 블로그",
+      "source_type": "official_product_announcement",
+      "excerpt": "서울에 사는 40대 남성 김 씨는 요즘 잘 나가는 OTT 3개를 모두 구독 중이다. 재미 있는 예능은 ‘A’ OTT에만 있고, 관심 있는 시사 프로는 ‘B’ OTT에만 있고, 유행하는 드라마는 ‘C’ OTT에만 있기 때문이다. OTT 3개를 구독하다 보니 매달 나가는 비용도 만만치 않다. 하지만 김 씨는 SK브로드밴드의 ‘B tv+ max’로 OTT 구독을 정리하고 이런 고민이 싹 사라졌다. 255개의 실시간 채널과 최신 인기 영화, 지상파부터 종편까지 다 볼 수 있어 콘텐츠 시청 고민을 한 번에 끝냈기 때문이다.\nSK브로드밴드(대표이사 사장 김성수, http://www.skbroadband.com )는 기존 B tv 월정액 구독상품 ‘B tv+’에 지상파 3사 콘텐츠를 더해 한층 진화한 ‘B tv+ max’를 출시한다고 1일 밝혔다.\nB t",
+      "body_text": "서울에 사는 40대 남성 김 씨는 요즘 잘 나가는 OTT 3개를 모두 구독 중이다. 재미 있는 예능은 ‘A’ OTT에만 있고, 관심 있는 시사 프로는 ‘B’ OTT에만 있고, 유행하는 드라마는 ‘C’ OTT에만 있기 때문이다. OTT 3개를 구독하다 보니 매달 나가는 비용도 만만치 않다. 하지만 김 씨는 SK브로드밴드의 ‘B tv+ max’로 OTT 구독을 정리하고 이런 고민이 싹 사라졌다. 255개의 실시간 채널과 최신 인기 영화, 지상파부터 종편까지 다 볼 수 있어 콘텐츠 시청 고민을 한 번에 끝냈기 때문이다.\nSK브로드밴드(대표이사 사장 김성수, http://www.skbroadband.com )는 기존 B tv 월정액 구독상품 ‘B tv+’에 지상파 3사 콘텐츠를 더해 한층 진화한 ‘B tv+ max’를 출시한다고 1일 밝혔다.\nB tv의 VOD 월정액 구독상품 ‘B tv+’는 2024년 7월 출시 후 가입자가 70% 이상 가파르게 성장하는 등 미디어 플랫폼으로서 확고한 기반을 구축했다. 시청시간 역시 기존 대비 56% 이상 증가하며 가입자 규모, 이용시간, 수익성 모두 견고한 성장세를 보이고 있다.\nSK브로드밴드는 이러한 성장을 바탕으로 고객 선호도가 가장 높은 지상파 방송 콘텐츠를 강화해 경쟁력을 높인 ‘B tv+ max’를 내놓았다. 요즘 미디어 시청 행태를 감안할 때 ‘B tv+ max’ 하나만으로 오리지널 콘텐츠 위주의 OTT와 병행 구독 시 최대의 시너지를 낼 수 있을 것이란 전망이다.\n‘B tv+ max’는 KBS, MBC, SBS 지상파 3사의 모든 콘텐츠를 비롯해 종편 4사, 케이블, 영화, 키즈, 애니, 다큐 등 IPTV 업계 최고 수준인 30만 편 이상의 국내외 주요 콘텐츠와 B tv가 제공하는 모든 실시간 채널 255개를 한 번에 제공하는 올인원 구독상품이다.\n최근 원하는 콘텐츠를 보기 위해 여러 OTT를 구독하는 이른바 ‘스트림플레이션(Streaming+Inflation)’으로 비용 부담이 커지는 가운데, ‘B tv+ max’는 여러 플랫폼을 오가는 번거로움과 구독 부담을 확 줄임으로써 쉽고 저렴하게 다양한 콘텐츠를 즐길 수 있다.\n‘B tv+ max’는 TV 전원을 켜면 바로 전용 홈으로 연결돼 추가 결제 부담 없이 다양한 콘텐츠를 한 곳에서 이용할 수 있어 고객 편의성을 높였다. 또한 TV로 시청하던 콘텐츠를 최대 4대의 모바일 B tv 앱으로도 시청할 수 있어 언제 어디서나 스마트폰이나 태블릿에서 즐길 수 있다.\n실시간 채널 요금(B tv All)에 월 6,600원만 더한 ‘B tv+ max’는 기존 대비 최대 78% 할인된 월 22,000원(3년 약정, 인터넷 및 SKT 이동전화 결합 시)에 이용할 수 있으며, 유튜브 프리미엄 월정액 2천원 할인 혜택도 함께 제공한다.\nSK브로드밴드는 ‘B tv+ max’ 출시를 기념해 오는 9월 말까지 신규 가입 고객을 대상으로 추첨을 통해 대한항공 100만원 기프트카드(1명), 롯데호텔 숙박권(5명), 롯데월드 자유이용권(30명), ‘투썸플레이스 커피 쿠폰(2,000명) 등 푸짐한 경품을 제공하는 프로모션을 진행한다.\n박참솔 SK브로드밴드 플랫폼담당은 “’B tv+ max’는 원하는 콘텐츠를 찾아 여러 OTT를 중복 구독해야 하는 불편함과 비용 부담을 해소하고 고객이 원하는 콘텐츠를 한 번에 제공하고자 기획한 완성형 구독상품”이라며 “앞으로도 고객의 콘텐츠 경험을 극대화해 ‘B tv+ max’가 대표적인 콘텐츠 플랫폼으로 발전할 수 있도록 최선을 다하겠다”고 말했다.",
+      "image_url": "https://i0.wp.com/blog.bworld.co.kr/wp-content/uploads/2026/07/260701-ai-Btv-%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg",
+      "evidence": [
+        {
+          "id": "mi-8eb352c71b06ac9ae5-p001",
+          "text": "서울에 사는 40대 남성 김 씨는 요즘 잘 나가는 OTT 3개를 모두 구독 중이다. 재미 있는 예능은 ‘A’ OTT에만 있고, 관심 있는 시사 프로는 ‘B’ OTT에만 있고, 유행하는 드라마는 ‘C’ OTT에만 있기 때문이다. OTT 3개를 구독하다 보니 매달 나가는 비용도 만만치 않다. 하지만 김 씨는 SK브로드밴드의 ‘B tv+ max’로 OTT 구독을 정리하고 이런 고민이 싹 사라졌다. 255개의 실시간 채널과 최신 인기 영화, 지상파부터 종편까지 다 볼 수 있어 콘텐츠 시청 고민을 한 번에 끝냈기 때문이다.",
+          "locator": "p001",
+          "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/"
+        },
+        {
+          "id": "mi-8eb352c71b06ac9ae5-p002",
+          "text": "SK브로드밴드(대표이사 사장 김성수, http://www.skbroadband.com )는 기존 B tv 월정액 구독상품 ‘B tv+’에 지상파 3사 콘텐츠를 더해 한층 진화한 ‘B tv+ max’를 출시한다고 1일 밝혔다.",
+          "locator": "p002",
+          "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/"
+        },
+        {
+          "id": "mi-8eb352c71b06ac9ae5-p003",
+          "text": "B tv의 VOD 월정액 구독상품 ‘B tv+’는 2024년 7월 출시 후 가입자가 70% 이상 가파르게 성장하는 등 미디어 플랫폼으로서 확고한 기반을 구축했다. 시청시간 역시 기존 대비 56% 이상 증가하며 가입자 규모, 이용시간, 수익성 모두 견고한 성장세를 보이고 있다.",
+          "locator": "p003",
+          "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/"
+        },
+        {
+          "id": "mi-8eb352c71b06ac9ae5-p004",
+          "text": "SK브로드밴드는 이러한 성장을 바탕으로 고객 선호도가 가장 높은 지상파 방송 콘텐츠를 강화해 경쟁력을 높인 ‘B tv+ max’를 내놓았다. 요즘 미디어 시청 행태를 감안할 때 ‘B tv+ max’ 하나만으로 오리지널 콘텐츠 위주의 OTT와 병행 구독 시 최대의 시너지를 낼 수 있을 것이란 전망이다.",
+          "locator": "p004",
+          "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/"
+        },
+        {
+          "id": "mi-8eb352c71b06ac9ae5-p005",
+          "text": "‘B tv+ max’는 KBS, MBC, SBS 지상파 3사의 모든 콘텐츠를 비롯해 종편 4사, 케이블, 영화, 키즈, 애니, 다큐 등 IPTV 업계 최고 수준인 30만 편 이상의 국내외 주요 콘텐츠와 B tv가 제공하는 모든 실시간 채널 255개를 한 번에 제공하는 올인원 구독상품이다.",
+          "locator": "p005",
+          "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/"
+        },
+        {
+          "id": "mi-8eb352c71b06ac9ae5-p006",
+          "text": "최근 원하는 콘텐츠를 보기 위해 여러 OTT를 구독하는 이른바 ‘스트림플레이션(Streaming+Inflation)’으로 비용 부담이 커지는 가운데, ‘B tv+ max’는 여러 플랫폼을 오가는 번거로움과 구독 부담을 확 줄임으로써 쉽고 저렴하게 다양한 콘텐츠를 즐길 수 있다.",
+          "locator": "p006",
+          "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/"
+        },
+        {
+          "id": "mi-8eb352c71b06ac9ae5-p007",
+          "text": "‘B tv+ max’는 TV 전원을 켜면 바로 전용 홈으로 연결돼 추가 결제 부담 없이 다양한 콘텐츠를 한 곳에서 이용할 수 있어 고객 편의성을 높였다. 또한 TV로 시청하던 콘텐츠를 최대 4대의 모바일 B tv 앱으로도 시청할 수 있어 언제 어디서나 스마트폰이나 태블릿에서 즐길 수 있다.",
+          "locator": "p007",
+          "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/"
+        },
+        {
+          "id": "mi-8eb352c71b06ac9ae5-p008",
+          "text": "실시간 채널 요금(B tv All)에 월 6,600원만 더한 ‘B tv+ max’는 기존 대비 최대 78% 할인된 월 22,000원(3년 약정, 인터넷 및 SKT 이동전화 결합 시)에 이용할 수 있으며, 유튜브 프리미엄 월정액 2천원 할인 혜택도 함께 제공한다.",
+          "locator": "p008",
+          "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/"
+        },
+        {
+          "id": "mi-8eb352c71b06ac9ae5-p015",
+          "text": "SK브로드밴드는 ‘B tv+ max’ 출시를 기념해 오는 9월 말까지 신규 가입 고객을 대상으로 추첨을 통해 대한항공 100만원 기프트카드(1명), 롯데호텔 숙박권(5명), 롯데월드 자유이용권(30명), ‘투썸플레이스 커피 쿠폰(2,000명) 등 푸짐한 경품을 제공하는 프로모션을 진행한다.",
+          "locator": "p015",
+          "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/"
+        },
+        {
+          "id": "mi-8eb352c71b06ac9ae5-p016",
+          "text": "박참솔 SK브로드밴드 플랫폼담당은 “’B tv+ max’는 원하는 콘텐츠를 찾아 여러 OTT를 중복 구독해야 하는 불편함과 비용 부담을 해소하고 고객이 원하는 콘텐츠를 한 번에 제공하고자 기획한 완성형 구독상품”이라며 “앞으로도 고객의 콘텐츠 경험을 극대화해 ‘B tv+ max’가 대표적인 콘텐츠 플랫폼으로 발전할 수 있도록 최선을 다하겠다”고 말했다.",
+          "locator": "p016",
+          "url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/"
+        }
+      ],
+      "content_hash": "b6a655ae932011c72eb2dd1bcdb9bc60f931be47267279bbf2abcf3db19a16e7",
+      "market_scope": "domestic_product",
+      "image_alt": "",
+      "image_source_url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/",
+      "image_attribution": "SK브로드밴드 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00",
+      "source_updated_at": "2026-07-01",
+      "last_checked_at": "2026-10-24T08:13:02+00:00"
+    },
+    {
+      "id": "mi-e0f0c296689441b0ae",
+      "source_id": "lgu_products",
+      "company": "LG유플러스",
+      "topic": "partnership_distribution",
+      "title": "유독에서 구글 AI Pro와 YouTube Premium 더욱 합리적으로 즐기세요",
+      "url": "https://news.lguplus.com/22099",
+      "published_at": "2026-06-19",
+      "collected_at": "2026-10-24T08:13:02+00:00",
+      "country": "KR",
+      "period": "",
+      "source_name": "LG유플러스 뉴스룸",
+      "source_type": "official_product_announcement",
+      "excerpt": "YouTube Premium과 Google AI Pro, 이미 많은 분들이 일상에서 활용하고 계시죠.\n영상은 광고 없이 편하게 보고, AI는 업무와 일상을 더 스마트하게 만들어주니 하나도 놓치고 싶지 않은 서비스들인데요!\n하지만 막상 모두 구독하려고 하면 매달 나가는 비용이 부담스러운 것도 사실입니다.\n그래서 유플러스가 국내 최초로 준비했습니다. 자주 사용하는 서비스를 더 합리적으로 이용할 수 있는 특별한 혜택을요!\n유독에서는 Google AI Pro와 YouTube Premium을 결합한 상품을 선보였습니다. Google AI Pro는 Gemini, Google Workspace, Google 클라우드 스토리지까지 함께 이용할 수 있는 AI 구독 서비스인데요.\n이 두 서비스를 각각 구독하면 월 43,900원이 들지만, 유독 결합 상품을 이용",
+      "body_text": "YouTube Premium과 Google AI Pro, 이미 많은 분들이 일상에서 활용하고 계시죠.\n영상은 광고 없이 편하게 보고, AI는 업무와 일상을 더 스마트하게 만들어주니 하나도 놓치고 싶지 않은 서비스들인데요!\n하지만 막상 모두 구독하려고 하면 매달 나가는 비용이 부담스러운 것도 사실입니다.\n그래서 유플러스가 국내 최초로 준비했습니다. 자주 사용하는 서비스를 더 합리적으로 이용할 수 있는 특별한 혜택을요!\n유독에서는 Google AI Pro와 YouTube Premium을 결합한 상품을 선보였습니다. Google AI Pro는 Gemini, Google Workspace, Google 클라우드 스토리지까지 함께 이용할 수 있는 AI 구독 서비스인데요.\n이 두 서비스를 각각 구독하면 월 43,900원이 들지만, 유독 결합 상품을 이용하면 월 29,000원 에 이용할 수 있습니다.\n7월 19일까지 진행되는 ‘유독 특급 어시스트’ 프로모션은 유독 고객이라면 통신사와 관계없이 누구나 참여할 수 있는데요. Google AI Pro와 YouTube Premium 결합 상품을 4개월 간 매월 4천원 할인된 가격인 월 25,000원에 이용할 수 있습니다.\n평소 Google AI Pro를 월 19,800원에 이용하고 있었다면, 이번 결합 상품은 월 5,200원만 추가하면 YouTube Premium까지 함께 이용할 수 있는 셈이에요.\nYouTube Premium을 별도로 구독할 경우 월 14,900원이 필요한 점을 고려하면, 부담은 줄이고 혜택은 더 크게 누릴 수 있는 합리적인 선택이라고 할 수 있죠!\n게다가 U+ VIP/VVIP 고객님이라면 추가 할인 혜택까지 더해져 4개월간 월 21,000원에 이용할 수 있어요 💜\n유독은 OTT와 라이프 혜택을 넘어 AI 분야의 대표 구독 플랫폼으로 자리매김하고 있습니다.\n이미 Google AI Pro, Canva, 라이너 등 국내 최다 수준의 AI 서비스를 제공하고 있으며,\n앞으로도 고객들이 필요로 하는 다양한 AI 서비스를 지속적으로 확대해 나갈 예정입니다. 더 많은 혜택과 새로운 서비스도 기대해 주세요!",
+      "image_url": "https://news.lguplus.com/wp-content/uploads/2026/06/유독프로모션_썸네일.png",
+      "evidence": [
+        {
+          "id": "mi-e0f0c296689441b0ae-p002",
+          "text": "YouTube Premium과 Google AI Pro, 이미 많은 분들이 일상에서 활용하고 계시죠.",
+          "locator": "p002",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p003",
+          "text": "영상은 광고 없이 편하게 보고, AI는 업무와 일상을 더 스마트하게 만들어주니 하나도 놓치고 싶지 않은 서비스들인데요!",
+          "locator": "p003",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p004",
+          "text": "하지만 막상 모두 구독하려고 하면 매달 나가는 비용이 부담스러운 것도 사실입니다.",
+          "locator": "p004",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p005",
+          "text": "그래서 유플러스가 국내 최초로 준비했습니다. 자주 사용하는 서비스를 더 합리적으로 이용할 수 있는 특별한 혜택을요!",
+          "locator": "p005",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p007",
+          "text": "유독에서는 Google AI Pro와 YouTube Premium을 결합한 상품을 선보였습니다. Google AI Pro는 Gemini, Google Workspace, Google 클라우드 스토리지까지 함께 이용할 수 있는 AI 구독 서비스인데요.",
+          "locator": "p007",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p008",
+          "text": "이 두 서비스를 각각 구독하면 월 43,900원이 들지만, 유독 결합 상품을 이용하면 월 29,000원 에 이용할 수 있습니다.",
+          "locator": "p008",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p010",
+          "text": "7월 19일까지 진행되는 ‘유독 특급 어시스트’ 프로모션은 유독 고객이라면 통신사와 관계없이 누구나 참여할 수 있는데요. Google AI Pro와 YouTube Premium 결합 상품을 4개월 간 매월 4천원 할인된 가격인 월 25,000원에 이용할 수 있습니다.",
+          "locator": "p010",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p011",
+          "text": "평소 Google AI Pro를 월 19,800원에 이용하고 있었다면, 이번 결합 상품은 월 5,200원만 추가하면 YouTube Premium까지 함께 이용할 수 있는 셈이에요.",
+          "locator": "p011",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p012",
+          "text": "YouTube Premium을 별도로 구독할 경우 월 14,900원이 필요한 점을 고려하면, 부담은 줄이고 혜택은 더 크게 누릴 수 있는 합리적인 선택이라고 할 수 있죠!",
+          "locator": "p012",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p013",
+          "text": "게다가 U+ VIP/VVIP 고객님이라면 추가 할인 혜택까지 더해져 4개월간 월 21,000원에 이용할 수 있어요 💜",
+          "locator": "p013",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p015",
+          "text": "유독은 OTT와 라이프 혜택을 넘어 AI 분야의 대표 구독 플랫폼으로 자리매김하고 있습니다.",
+          "locator": "p015",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p016",
+          "text": "이미 Google AI Pro, Canva, 라이너 등 국내 최다 수준의 AI 서비스를 제공하고 있으며,",
+          "locator": "p016",
+          "url": "https://news.lguplus.com/22099"
+        },
+        {
+          "id": "mi-e0f0c296689441b0ae-p017",
+          "text": "앞으로도 고객들이 필요로 하는 다양한 AI 서비스를 지속적으로 확대해 나갈 예정입니다. 더 많은 혜택과 새로운 서비스도 기대해 주세요!",
+          "locator": "p017",
+          "url": "https://news.lguplus.com/22099"
+        }
+      ],
+      "content_hash": "bf017e490433dc81a7d2662961beeaf88a50343cb5428f758556ed75a3c1401b",
+      "market_scope": "domestic_product",
+      "image_alt": "",
+      "image_source_url": "https://news.lguplus.com/22099",
+      "image_attribution": "LG유플러스 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00",
+      "source_updated_at": "2026-06-19",
+      "last_checked_at": "2026-10-24T08:13:02+00:00"
     },
     {
       "id": "mi-5f320346020eccf5b8",
@@ -1363,7 +1885,7 @@
         }
       ],
       "content_hash": "10f11121079894d5e410635c297e2bd2fe9c2be36687347a7420dfee8c012654",
-      "last_checked_at": "2026-10-24T02:47:51+00:00"
+      "last_checked_at": "2026-10-24T08:13:02+00:00"
     },
     {
       "id": "mi-7cb4165a48c7bf427a",
@@ -1768,7 +2290,7 @@
         }
       ],
       "content_hash": "4825da0b4b4b5cddabe6f859cf349400c3e17c6e26260ba335c2060c0cfb356f",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
       "published_at_source": "official_feed"
     },
     {
@@ -1786,7 +2308,7 @@
       "source_type": "earnings",
       "excerpt": "HOLLYWOOD, Calif. , Feb. 26, 2026 /PRNewswire/ -- Netflix, Inc. today announced that it has declined to raise its offer for Warner Bros. Netflix had earlier received notice from Warner Bros. Discovery (WBD) that its Board of Directors has determined Paramount Skydance's (PSKY) latest proposal constitutes a \"Superior Proposal\" under the terms of WBD's existing merger agreement with Netflix. Netflix issued the followin",
       "body_text": "HOLLYWOOD, Calif. , Feb. 26, 2026 /PRNewswire/ -- Netflix, Inc. today announced that it has declined to raise its offer for Warner Bros. Netflix had earlier received notice from Warner Bros. Discovery (WBD) that its Board of Directors has determined Paramount Skydance's (PSKY) latest proposal constitutes a \"Superior Proposal\" under the terms of WBD's existing merger agreement with Netflix. Netflix issued the following statement in response from co-CEOs Ted Sarandos and Greg Peters:\nThe transaction we negotiated would have created shareholder value with a clear path to regulatory approval. However, we've always been disciplined, and at the price required to match Paramount Skydance's latest offer, the deal is no longer financially attractive, so we are declining to match the Paramount Skydance bid.\nWarner Bros. is a world-class organization, and we want to thank David Zaslav, Gunnar Wiedenfels, Bruce Campbell, Brad Singer and the WBD Board for running a fair and rigorous process. We believe we would have been strong stewards of Warner Bros.' iconic brands, and that our deal would have strengthened the entertainment industry and preserved and created more production jobs in the U.S. But this transaction was always a 'nice to have' at the right price, not a 'must have' at any price.\nNetflix's business is healthy, strong and growing organically, powered by our slate and best-in-class streaming service. This year, we'll invest approximately $20 billion in quality films and series and will expand our entertainment offering. Consistent with our capital allocation policy, we'll also resume our share repurchase program.\nWe will continue to do what we've done for more than 20 years as a public company: delight our members, profitably grow our business, and drive long-term shareholder value.\nNetflix is one of the world's leading entertainment services offering TV series, films, games and live programming across a wide variety of genres and languages. Members can play, pause and resume watching as much as they want, anytime, anywhere, and can change their plans at any time.\nImportant Information and Where to Find It\nIn connection with the proposed transaction between Netflix and WBD, WBD filed a definitive proxy statement on Schedule 14A (the \"Proxy Statement\") with the U.S. Securities and Exchange Commission (the \"SEC\"). The Proxy Statement was first mailed to WBD stockholders on or around February 17, 2026. Each of Netflix and WBD may also file with or furnish to the SEC other relevant documents regarding the proposed transaction. This communication is not a substitute for the Proxy Statement or any other document that Netflix or WBD may file with the SEC or mail to WBD's stockholders in connection with the proposed transaction. INVESTORS AND SECURITY HOLDERS OF NETFLIX AND WBD ARE URGED TO READ THE PROXY STATEMENT, AS WELL AS ANY OTHER RELEVANT DOCUMENTS FILED WITH THE SEC IN CONNECTION WITH THE PROPOSED TRANSACTION OR INCORPORATED BY REFERENCE INTO THE PROXY STATEMENT (INCLUDING ANY AMENDMENTS OR SUPPLEMENTS THERETO), BECAUSE THEY WILL CONTAIN IMPORTANT INFORMATION REGARDING NETFLIX, WBD, THE PROPOSED TRANSACTION AND RELATED MATTERS. Investors and security holders may obtain free copies of the Proxy Statement as well as other filings containing information about Netflix and WBD, without charge, at the SEC's website, https://www.sec.gov . The documents filed by Netflix with the SEC also may be obtained free of charge at Netflix's website at https://ir.netflix.net/home/default.aspx . The documents filed by WBD with the SEC also may be obtained free of charge at WBD's website at https:/\nNetflix, WBD and certain of their respective directors and executive officers may be deemed to be participants in the solicitation of proxies from the stockholders of WBD in connection with the proposed transaction under the rules of the SEC. Information about the interests of the directors and executive officers of WBD and other persons who may be deemed to be participants in the solicitation of stockholders of WBD in connection with the proposed transaction and a description of their direct and indirect interests, by security holdings or otherwise, is included in the Proxy Statement, which has been filed by WBD with the SEC. Information about WBD's directors and executive officers is set forth in WBD's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 23, 2025, WBD's Annual Report on Form 10-K for the year ended December 31, 2024, and any subsequent filings with the SEC. Information about Netflix's directors and executive officers is set forth in Netflix's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 17, 2025, and any subsequent filings with the SEC. Additional information regarding the direct and indirect interests of those persons and other persons who may be deemed participants in the proposed transaction may be obtained by reading the Proxy Statement regarding the proposed transaction. Free copies of these documents may be obtained as described above.\nCautionary Statement Regarding Forward-Looking Statements\nThis document contains \"forward-looking statements\" within the meaning of the federal securities laws, including Section 27A of the U.S. Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended. These forward-looking statements are based on Netflix's and WBD's current expectations, estimates and projections about the expected date of closing of the proposed transaction and the potential benefits thereof, their respective businesses and industries, management's beliefs and certain assumptions made by Netflix and WBD, all of which are subject to change. In this context, forward-looking statements often address expected future business and financial performance and financial condition, and often contain words such as \"expect,\" \"anticipate,\" \"intend,\" \"plan,\" \"believe,\" \"could,\" \"seek,\" \"see,\" \"will,\" \"may,\" \"would,\" \"might,\" \"potentially,\" \"estimate,\" \"continue,\" \"expect,\" \"target,\" similar expressions or the negatives of these words or other comparable terminology that convey uncertainty of future events or outcomes. All forward-looking statements by their nature address matters that involve risks and uncertainties, many of which are beyond our control and are not guarantees of future results, such as statements about the consummation of the proposed transaction and the anticipated benefits thereof. These and other forward-looking statements, including the failure to consummate the proposed transaction or to make or take any filing\nView original content to download multimedia: https://www.prnewswire.com/news-releases/netflix-declines-to-raise-offer-for-warner-bros-302699059.html",
-      "image_url": "",
+      "image_url": "https://mma.prnewswire.com/media/133154/netflix__inc__logo.jpg",
       "evidence": [
         {
           "id": "mi-9067619953f803ee73-p001",
@@ -1863,7 +2385,7 @@
       ],
       "content_hash": "05ac069470d7041d12fa2cd31a7bf06eb3632ffdfb0be9b462915040cb192920",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
       "versions": [
         {
           "content_hash": "504d2b339cc29a608621f06a549fb39d53e851375fe0edcbe39bce7a1d79c630",
@@ -1945,7 +2467,12 @@
             }
           ]
         }
-      ]
+      ],
+      "image_alt": "",
+      "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx",
+      "image_attribution": "넷플릭스 공식 자료",
+      "image_kind": "company_logo",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00"
     },
     {
       "id": "mi-8129e4a29e655e18c2",
@@ -1962,7 +2489,7 @@
       "source_type": "earnings",
       "excerpt": "The WBD-Netflix Transaction Delivers Incredible Value and Certainty to WBD Stockholders with Clear Path to Timely Regulatory Approval\nNetflix is the Superior Deal and the Only Deal Before WBD Stockholders\nTogether WBD and Netflix will Protect U.S. Jobs, Bring Great Value to Consumers and Assure Growth of the Broader Entertainment Industry\nA PSKY transaction does not have an easier or faster path to regulatory approva",
       "body_text": "The WBD-Netflix Transaction Delivers Incredible Value and Certainty to WBD Stockholders with Clear Path to Timely Regulatory Approval\nNetflix is the Superior Deal and the Only Deal Before WBD Stockholders\nTogether WBD and Netflix will Protect U.S. Jobs, Bring Great Value to Consumers and Assure Growth of the Broader Entertainment Industry\nA PSKY transaction does not have an easier or faster path to regulatory approval and PSKY's financing challenges and rapid deleveraging plans pose tremendous risk to the entertainment industry\nHOLLYWOOD, Calif. , Feb. 17, 2026 /PRNewswire/ -- Netflix, Inc. today issued the following statement regarding its fully financed definitive agreement with Warner Bros. Discovery, Inc. (WBD) to acquire Warner Bros., including its film and television studios, HBO Max and HBO:\nToday marks another important milestone for our transaction with WBD. WBD has filed and commenced the mailing of its definitive proxy statement for the special meeting to be held on March 20, 2026, to approve our Board-recommended transaction and superior offer.\nThroughout the robust and highly competitive strategic review process, Netflix has consistently taken a constructive, responsive approach with WBD, in stark contrast to Paramount Skydance (PSKY). While we are confident that our transaction provides superior value and certainty, we recognize the ongoing distraction for WBD stockholders and the broader entertainment industry caused by PSKY's antics. Accordingly, we granted WBD a narrow seven-day waiver of certain obligations under our merger agreement to allow them to engage with PSKY to fully and finally resolve this matter.\nThis does not change the fact that we have the only signed, board-recommended agreement with WBD, and ours is the only certain path to delivering value to WBD's stockholders. In its press release today, WBD reaffirmed its recommendation that WBD stockholders vote to approve the Netflix transaction at WBD's special meeting.\nTogether, Netflix and Warner Bros. will deliver more choice and greater value to audiences worldwide with expanded access to exceptional films and series – both at home and in theaters. Our transaction also expands production capacity and increases investment in original content, leading to long-term job creation. The Netflix transaction is centered on growth, opportunity, and a reinforced commitment to creating world-class films and television – not consolidation and layoffs.\nNetflix is confident that our transaction, a largely vertical merger of complementary assets, has a clear path to timely regulatory approval. Netflix and WBD have each submitted their Hart-Scott-Rodino (HSR) filings and are engaged constructively with competition authorities across the world, including the U.S. Department of Justice (DOJ), state Attorneys General, the European Commission, and the U.K. Competition and Markets Authority (CMA). Netflix and WBD are driving the regulatory process forward — collaboratively and constructively and focused on a clear path to closing.\nBy contrast, PSKY has repeatedly mischaracterized the regulatory review process by suggesting its proposal will sail through, misleading WBD stockholders about the real risk of their regulatory challenges around the world. WBD stockholders should not be misled into thinking that PSKY has an easier or faster path to regulatory approval – it does not.\nPSKY is also quick to publicize routine checkpoints to exaggerate \"progress.\" For example, PSKY cited securing German FDI clearance on January 27, 2026, as evidence of their \"regulatory certainty.\" In fact, Netflix received German FDI clearance on the very same day.\nSeparately, the foreign funding behind PSKY's bid is already raising serious national security concerns . We expect government reviewers globally, including CFIUS and Team Telecom in the U.S., as well as European authorities, to scrutinize the Middle Eastern investors in PSKY's consortium and to be skeptical of claims that they are purely passive investors.\nIn reality, PSKY is far from obtaining all of the regulatory clearances required. Enforcers will focus on the impact of PSKY's proposal on competition, job losses, reduced output, and downward pressure on wages for film and television workers. PSKY's offer results in significant horizontal overlaps that will concern antitrust enforcers globally by combining:\ntwo of the five major Hollywood studios, two major theatrical distribution channels, two of the major TV studios, two major news networks, and two major sports distributors.\ntwo of the five major Hollywood studios,\ntwo major theatrical distribution channels,\nBeyond their regulatory hurdles, PSKY's aggressive financing package, rapid deleveraging plans, and performance track record pose tremendous risks to both the completion of their proposed deal and the industry.\nPSKY has promised to rapidly de-lever following its proposed transaction which can only be achieved through unprecedented job cuts (on top of the previous PSKY layoffs ):\nPost-merger, PSKY would be over-leveraged with approximately $84 billion of total proforma debt — the largest proposed leveraged buyout in history — and an estimated ~7x leverage ratio (Debt / 2026 LTM EBITDA). PSKY has promised its concerned investors that it \"will be below, call it, at closing with accounting for synergies around 4x. And [will] de-lever quickly to below 3x and almost 2x over the convening 2 years to 2.5 years.\" 1 This means PSKY would need to realize ~$16 billion of cost savings in order to meet the midpoint of its leverage target range, far in excess of the $6+ billion synergy figure PSKY has publicly communicated 2 . The only way to achieve this would be through greater, even deeper job cuts that would irreparably harm the entertainment industry. PSKY is already undershooting its financial projections. Based on their most recent published \"Adjusted OIBDA\" guidance for 2026, they have underperformed their initial Paramount acquisition business plan by 15% 3 , which could mean even more cost cuts. This extraordinary execution risk and track record of operational underperformance could impact PSKY's ability to fund and close a transaction.\nPost-merger, PSKY would be over-leveraged with approximately $84 billion of total proforma debt — the largest proposed leveraged buyout in history — and an estimated ~7x leverage ratio (Debt / 2026 LTM EBITDA).\nPSKY has promised its concerned investors that it \"will be below, call it, at closing with accounting for synergies around 4x. And [will] de-lever quickly to below 3x and almost 2x over the convening 2 years to 2.5 years.\" 1\nThis means PSKY would need to realize ~$16 billion of cost savings in order to meet the midpoint of its leverage target range, far in excess of the $6+ billion synergy figure PSKY has publicly communicated 2 . The only way to achieve this would be through greater, even deeper job cuts that would irreparably harm the entertainment industry. PSKY is already undershooting its financial projections. Based on their most recent published \"Adjusted OIBDA\" guidance for 2026, they have underperformed their initial Paramount acquisition business plan by 15% 3 , which could mean even more cost cuts. This extraordinary execution risk and track record of operational underperformance could impact PSKY's ability to fund and close a transaction.\nThe only way to achieve this would be through greater, even deeper job cuts that would irreparably harm the entertainment industry.\nPSKY is already undershooting its financial projections. Based on their most recent published \"Adjusted OIBDA\" guidance for 2026, they have underperformed their initial Paramount acquisition business plan by 15% 3 , which could mean even more cost cuts.\nThis extraordinary execution risk and track record of operational underperformance could impact PSKY's ability to fund and close a transaction.\nA business plan that is dependent upon $16 billion in cost savings should be an unmistakable red flag for regulators, policymakers, union leaders and creatives.\nNetflix's strong cash flow generation supports our all-cash transaction structure while preserving a healthy balance sheet and flexibility to capitalize on future strategic priorities. A combined Netflix and Warner Bros. will strengthen the entertainment industry, preserve choice and value for consumers, and give creators more opportunities.\nWBD Stockholders — your vote is crucial. Vote FOR the Netflix and Warner Bros. deal at votewbdnetflix.com . A dedicated website providing ongoing information and resources about the transaction is available at netflixwbtogether.com .\nAbout Netflix, Inc. Netflix (NASDAQ:NFLX) is one of the world's leading entertainment services offering TV series, films, games and live programming across a wide variety of genres and languages. Members can play, pause and resume watching as much as they want, anytime, anywhere, and can change their plans at any time.\nImportant Information and Where to Find It In connection with the proposed transaction between Netflix and WBD, WBD filed a definitive proxy statement on Schedule 14A (the \"Proxy Statement\") with the U.S. Securities and Exchange Commission (the \"SEC\"). The Proxy Statement was first mailed to WBD stockholders on or around February 17, 2026. Each of Netflix and WBD may also file with or furnish to the SEC other relevant documents regarding the proposed transaction. This communication is not a substitute for the Proxy Statement or any other document that Netflix or WBD may file with the SEC or mail to WBD's stockholders in connection with the proposed transaction. INVESTORS AND SECURITY HOLDERS OF NETFLIX AND WBD ARE URGED TO READ THE PROXY STATEMENT, AS WELL AS ANY OTHER RELEVANT DOCUMENTS FILED WITH THE SEC IN CONNECTION WITH THE PROPOSED TRANSACTION OR INCORPORATED BY REFERENCE INTO THE PROXY STATEMENT (INCLUDING ANY AMENDMENTS OR SUPPLEMENTS THERETO), BECAUSE THEY WILL CONTAIN IMPORTANT INFORMATION REGARDING NETFLIX, WBD, THE PROPOSED TRANSACTION AND RELATED MATTERS. Investors and security holders may obtain free copies of the Proxy Statement as well as other filings containing information about Netflix and WBD, without charge, at the SEC's website, https://www.sec.gov . The documents filed by Netflix with the SEC also may be obtained free of charge at Netflix's website at https://ir.netflix.net/home/default.aspx . The documents filed by WBD with the SEC also may be obtained\nParticipants in the Solicitation Netflix, WBD and certain of their respective directors and executive officers may be deemed to be participants in the solicitation of proxies from the stockholders of WBD in connection with the proposed transaction under the rules of the SEC. Information about the interests of the directors and executive officers of WBD and other persons who may be deemed to be participants in the solicitation of stockholders of WBD in connection with the proposed transaction and a description of their direct and indirect interests, by security holdings or otherwise, is included in the Proxy Statement, which has been filed by WBD with the SEC. Information about WBD's directors and executive officers is set forth in WBD's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 23, 2025, WBD's Annual Report on Form 10-K for the year ended December 31, 2024, and any subsequent filings with the SEC. Information about Netflix's directors and executive officers is set forth in Netflix's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 17, 2025, and any subsequent filings with the SEC. Additional information regarding the direct and indirect interests of those persons and other persons who may be deemed participants in the proposed transaction may be obtained by reading the Proxy Statement regarding the proposed transaction. Free copies of these documents may be obt\nCautionary Statement Regarding Forward-Looking Statements This document contains \"forward-looking statements\" within the meaning of the federal securities laws, including Section 27A of the U.S. Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended. These forward-looking statements are based on Netflix's and WBD's current expectations, estimates and projections about the expected date of closing of the proposed transaction and the potential benefits thereof, their respective businesses and industries, management's beliefs and certain assumptions made by Netflix and WBD, all of which are subject to change. In this context, forward-looking statements often address expected future business and financial performance and financial condition, and often contain words such as \"expect,\" \"anticipate,\" \"intend,\" \"plan,\" \"believe,\" \"could,\" \"seek,\" \"see,\" \"will,\" \"may,\" \"would,\" \"might,\" \"potentially,\" \"estimate,\" \"continue,\" \"expect,\" \"target,\" similar expressions or the negatives of these words or other comparable terminology that convey uncertainty of future events or outcomes. All forward-looking statements by their nature address matters that involve risks and uncertainties, many of which are beyond our control and are not guarantees of future results, such as statements about the consummation of the proposed transaction and the anticipated benefits thereof. These and other forward-looking statements, including the failure to consumma\n1 Paramount Skydance Corporation M&A Call on 12/08/2025 2 Paramount Skydance 12/08/2025 Press Release 3 Creating a Next Generation Leading Entertainment Company and PSKY Q3'25 Shareholder Letter .\nView original content to download multimedia: https://www.prnewswire.com/news-releases/wbd-files-definitive-proxy-statement-and-schedules-special-meeting-for-march-20-2026-to-approve-the-wbd-netflix-transaction-302689458.html",
-      "image_url": "",
+      "image_url": "https://mma.prnewswire.com/media/133154/netflix__inc__logo.jpg",
       "evidence": [
         {
           "id": "mi-8129e4a29e655e18c2-p001",
@@ -2177,7 +2704,7 @@
       ],
       "content_hash": "4a2b8c2217143371b92bc9097abe1eb31059fed756ba2f1ae36438389bc84fc3",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
       "versions": [
         {
           "content_hash": "8e3908e1efc308b6d1611c3112c14fe94bf0baaad0daad49fac8440701a5157d",
@@ -2397,7 +2924,417 @@
             }
           ]
         }
-      ]
+      ],
+      "image_alt": "",
+      "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx",
+      "image_attribution": "넷플릭스 공식 자료",
+      "image_kind": "company_logo",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00"
+    },
+    {
+      "id": "mi-73d86b62b3d116ac5f",
+      "source_id": "amazon_ir",
+      "company": "Amazon",
+      "topic": "earnings_strategy",
+      "title": "Amazon.com Announces Fourth Quarter Results",
+      "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx",
+      "published_at": "2026-02-05",
+      "collected_at": "2026-10-24T08:13:02+00:00",
+      "country": "global",
+      "period": "",
+      "source_name": "Amazon Investor Relations",
+      "source_type": "earnings",
+      "excerpt": "SEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its fourth quarter ended December 31, 2025.\nNet sales increased 14% to $213.4 billion in the fourth quarter, compared with $187.8 billion in fourth quarter 2024. Excluding the $2.8 billion favorable impact from year-over-year changes in foreign exchange rates throughout the quarter, net sales increased 12% compared with f",
+      "body_text": "SEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its fourth quarter ended December 31, 2025.\nNet sales increased 14% to $213.4 billion in the fourth quarter, compared with $187.8 billion in fourth quarter 2024. Excluding the $2.8 billion favorable impact from year-over-year changes in foreign exchange rates throughout the quarter, net sales increased 12% compared with fourth quarter 2024. North America segment sales increased 10% year-over-year to $127.1 billion. International segment sales increased 17% year-over-year to $50.7 billion, or increased 11% excluding changes in foreign exchange rates. AWS segment sales increased 24% year-over-year to $35.6 billion.\nNorth America segment sales increased 10% year-over-year to $127.1 billion.\nInternational segment sales increased 17% year-over-year to $50.7 billion, or increased 11% excluding changes in foreign exchange rates.\nAWS segment sales increased 24% year-over-year to $35.6 billion.\nOperating income increased to $25.0 billion in the fourth quarter, compared with $21.2 billion in fourth quarter 2024. Fourth quarter 2025 operating income includes three special charges—$1.1 billion for the resolution of tax disputes associated with our stores business in Italy, and the settlement of a lawsuit, $730 million in estimated severance costs, and $610 million in asset impairments primarily related to physical stores. Without these charges, operating income would have been $27.4 billion. North America segment operating income was $11.5 billion, compared with $9.3 billion in fourth quarter 2024. International segment operating income was $1.0 billion, compared with $1.3 billion in fourth quarter 2024. AWS segment operating income was $12.5 billion, compared with $10.6 billion in fourth quarter 2024.\nNorth America segment operating income was $11.5 billion, compared with $9.3 billion in fourth quarter 2024.\nInternational segment operating income was $1.0 billion, compared with $1.3 billion in fourth quarter 2024.\nAWS segment operating income was $12.5 billion, compared with $10.6 billion in fourth quarter 2024.\nNet income increased to $21.2 billion in the fourth quarter, or $1.95 per diluted share, compared with $20.0 billion, or $1.86 per diluted share, in fourth quarter 2024.\nNet sales increased 12% to $716.9 billion in 2025, compared with $638.0 billion in 2024. Excluding the $4.4 billion favorable impact from year-over-year changes in foreign exchange rates throughout the year, net sales increased 12% compared with 2024. North America segment sales increased 10% year-over-year to $426.3 billion. International segment sales increased 13% year-over-year to $161.9 billion, or increased 10% excluding changes in foreign exchange rates. AWS segment sales increased 20% year-over-year to $128.7 billion.\nNorth America segment sales increased 10% year-over-year to $426.3 billion.\nInternational segment sales increased 13% year-over-year to $161.9 billion, or increased 10% excluding changes in foreign exchange rates.\nAWS segment sales increased 20% year-over-year to $128.7 billion.\nOperating income increased to $80.0 billion in 2025, compared with $68.6 billion in 2024. North America segment operating income was $29.6 billion, compared with operating income of $25.0 billion in 2024. International segment operating income was $4.7 billion, compared with an operating income of $3.8 billion in 2024. AWS segment operating income was $45.6 billion, compared with operating income of $39.8 billion in 2024.\nNorth America segment operating income was $29.6 billion, compared with operating income of $25.0 billion in 2024.\nInternational segment operating income was $4.7 billion, compared with an operating income of $3.8 billion in 2024.\nAWS segment operating income was $45.6 billion, compared with operating income of $39.8 billion in 2024.\nNet income increased to $77.7 billion in 2025, or $7.17 per diluted share, compared with $59.2 billion, or $5.53 per diluted share, in 2024.\nOperating cash flow increased 20% to $139.5 billion for the trailing twelve months, compared with $115.9 billion for the trailing twelve months ended December 31, 2024.\nFree cash flow decreased to $11.2 billion for the trailing twelve months, driven primarily by a year-over-year increase of $50.7 billion in purchases of property and equipment, net of proceeds from sales and incentives. This increase primarily reflects investments in artificial intelligence. This compares to free cash flow of $38.2 billion for the trailing twelve months ended December 31, 2024.\n“AWS growing 24% (our fastest growth in 13 quarters), Advertising growing 22%, Stores growing briskly across North America and International, our chips business growing triple digit percentages year-over-year—this growth is happening because we’re continuing to innovate at a rapid rate, and identify and knock down customer problems,” said Andy Jassy, President and CEO, Amazon. “With such strong demand for our existing offerings and seminal opportunities like AI, chips, robotics, and low earth orbit satellites, we expect to invest about $200 billion in capital expenditures across Amazon in 2026, and anticipate strong long-term return on invested capital.”\nSome other highlights since the company’s last earnings announcement include that Amazon:\nAnnounced new AWS agreements with OpenAI, Visa, the NBA, BlackRock, Perplexity, Lyft, United Airlines, DoorDash, Salesforce, U.S. Air Force, Adobe, Thomson Reuters, AT&T, S&P Global, National Bank of Canada, London Stock Exchange Group, Choice Hotels, Accenture, Indeed, HSBC, CrowdStrike, and more.\nContinued gaining significant momentum with AWS custom chips: Trainium and Graviton now have a combined annual revenue run rate of over $10 billion and growing at a triple digit percentage year-over-year. Trainium2 is fully subscribed with 1.4 million chips landed, and powers the majority of inference on Bedrock, a service used by 100,000+ companies. Trainium2 powers Project Rainier, the world’s largest operational AI compute cluster with 500,000+ Trainium2 chips, which Anthropic is using to train its industry-leading AI model, Claude. Trainium3 is now delivering production workloads and seeing strong demand, with nearly all Trainium3 supply of chips expected to be committed by mid-2026. Trainium4 is expected to start delivering in 2027, with 6 times the FP4 compute performance, 4 times more memory bandwidth, and 2 times more high memory bandwidth capacity than Trainium3. Introduced Graviton5, AWS’s most powerful and advanced CPU for a broad set of cloud workloads. Used by over 90% of the top 1,000 AWS customers, Graviton is up to 40% more price-performant than leading x86 processors, and enables applications to run faster, reduce costs, and meet sustainability goals.\nTrainium and Graviton now have a combined annual revenue run rate of over $10 billion and growing at a triple digit percentage year-over-year.\nTrainium2 is fully subscribed with 1.4 million chips landed, and powers the majority of inference on Bedrock, a service used by 100,000+ companies.\nTrainium2 powers Project Rainier, the world’s largest operational AI compute cluster with 500,000+ Trainium2 chips, which Anthropic is using to train its industry-leading AI model, Claude.\nTrainium3 is now delivering production workloads and seeing strong demand, with nearly all Trainium3 supply of chips expected to be committed by mid-2026.\nTrainium4 is expected to start delivering in 2027, with 6 times the FP4 compute performance, 4 times more memory bandwidth, and 2 times more high memory bandwidth capacity than Trainium3.\nIntroduced Graviton5, AWS’s most powerful and advanced CPU for a broad set of cloud workloads. Used by over 90% of the top 1,000 AWS customers, Graviton is up to 40% more price-performant than leading x86 processors, and enables applications to run faster, reduce costs, and meet sustainability goals.\nAdded 20+ fully-managed models on Amazon Bedrock, including from Amazon Nova as well as Anthropic, Google, OpenAI, NVIDIA, Qwen, Mistral AI, Stability AI, Cohere, MiniMax AI, and Moonshot AI—enabling customers to test and switch between models without rewriting code while accessing breakthrough capabilities in coding, reasoning, and agentic workflows.\nExpanded its family of Nova models, including Nova 2 Lite and Nova 2 Pro for frontier intelligence with lower costs and latency, and Nova 2 Sonic for multilingual conversational AI.\nIntroduced Nova Forge, a first-of-its-kind service that empowers organizations to build their own optimized variants of Nova by pre-training the model with their own proprietary data early in the process.\nIntroduced Nova Act for building and managing reliable AI agents for UI-based workflows.\nIntroduced new capabilities for Amazon Bedrock AgentCore, AWS’s pioneering set of infrastructure building blocks for developers and companies to build secure, scalable agents, including: AgentCore Policy to help block unauthorized agent actions that operate outside the agent code and check agent actions against policies in milliseconds. AgentCore Evaluations to trigger immediate alerts if a customer service agent’s satisfaction scores drop rapidly, helping enable swift response. AgentCore Memory to help agents learn from experiences and improve decision-making, reducing processing time and the need for extensive custom instructions.\nAgentCore Policy to help block unauthorized agent actions that operate outside the agent code and check agent actions against policies in milliseconds.\nAgentCore Evaluations to trigger immediate alerts if a customer service agent’s satisfaction scores drop rapidly, helping enable swift response.\nAgentCore Memory to help agents learn from experiences and improve decision-making, reducing processing time and the need for extensive custom instructions.\nLaunched a new class of AI agents, called frontier agents, to solve tasks more autonomously and over longer durations, including: Kiro agent that can autonomously handle a range of tasks—from triaging bugs to improving code coverage. Customers can ask it questions, describe a task, and assign tasks in their backlog, and the agent will independently figure it out and get the work done. AWS Security Agent that embeds deep security expertise throughout the development lifecycle, proactively reviewing design documents and scanning pull requests against organizational security requirements and common vulnerabilities. It also transforms penetration testing from a slow, manual process into an on-demand capability, matching the team’s development velocity. AWS DevOps Agent that helps resolve and proactively prevent incidents.\nKiro agent that can autonomously handle a range of tasks—from triaging bugs to improving code coverage. Customers can ask it questions, describe a task, and assign tasks in their backlog, and the agent will independently figure it out and get the work done.\nAWS Security Agent that embeds deep security expertise throughout the development lifecycle, proactively reviewing design documents and scanning pull requests against organizational security requirements and common vulnerabilities. It also transforms penetration testing from a slow, manual process into an on-demand capability, matching the team’s development velocity.\nAWS DevOps Agent that helps resolve and proactively prevent incidents.\nAnnounced new agentic capabilities in AWS Transform to accelerate organization-wide code and application modernization across any code, API, framework, runtime, architecture, language, and even company-specific programming languages and frameworks. AWS Transform has also helped customers analyze 1.8 billion lines of mainframe code since launch.\nLaunched new agentic AI capabilities for Amazon Connect—an AI tool that enables contact centers to provide consistent, personalized customer experiences—including advanced speech models, agentic assistance, AI-powered recommendations, and AI agent observability. Connect is a $1 billion annualized revenue run rate business growing over 30%, and has an average of 20 million+ interactions happening on it each day.\nIntroduced AWS AI Factories to transform customers’ existing data centers into high-performance AI environments, which accelerates AI buildouts by months or years compared to building independently.\nDelivered at fastest speeds ever for Prime members globally in 2025.\nContinued increasing speed for rural customers in the U.S., with the average number of monthly customers receiving same-day delivery in rural areas nearly doubling year-over-year.\nDelivered nearly 70% more items same day in the U.S. than the year before, with Same-Day Delivery used by nearly 100 million customers.\nExpanded Amazon Now ultra-fast delivery, which offers delivery on thousands of items in 30 minutes or less. Amazon Now is now available in various cities in India, Mexico, and the UAE, and is being tested in several communities in the U.S. and UK.\nExpanded Same-Day grocery delivery to 2,300+ cities and towns across the U.S., making fresh groceries more accessible and transforming how customers shop for food, with perishables making up 9 of the top 10 most-ordered items in areas where the service is available.\nExpanded Amazon Pharmacy Same-Day Delivery, with same-day delivery of prescriptions now available in 3,000+ U.S. cities and towns.\nMade Rufus—Amazon’s agentic AI shopping assistant—smarter, more capable, and more helpful. Rufus can shop tens of millions of items in other online stores directly and make purchases on behalf of customers using its agentic Buy For Me feature. Rufus was used by 300 million+ customers and saw an even stronger response than anticipated, helping deliver nearly $12 billion in incremental annualized sales last year.\nSaw strong adoption of Lens—an AI tool that helps customers find products with a phone camera, screen shot, or bar code—with customers using it 45% more year-over-year.\nWas named the lowest-priced U.S. retailer by Profitero for the ninth year in a row, with online prices on average 14% lower than other major U.S. retailers.\nIncreased selection on Amazon Haul in the U.S. to 1 million+ items under $10, with many under $5, and expanded to serve customers in 25+ countries and regions.\nBroke several records with the fourth season of Thursday Night Football on Prime Video, the most-watched season of Thursday Night Football ever, averaging 15 million+ viewers—a 16% increase year-over-year and third consecutive year of double-digit growth.\nHad the most-streamed NFL game in history with 31 million+ viewers watching the Packers vs. Bears Wild Card Playoff game, clearing the prior record by 4 million+.\nDebuted NBA on Prime in more than 200 countries, including streaming exclusive coverage of the Emirates NBA Cup, culminating with the Spurs vs. Knicks Championship, which averaged 3 million+ viewers and attracted the youngest-ever audience for a Cup Championship, according to Nielsen.\nExtended broadcast rights for UEFA Champions League in Germany, Ireland, Italy, and the UK through 2030/31 season. This follows continued strong viewership, including a record-breaking 10 million+ viewers streaming League Phase matches on Prime Video in Germany, Ireland, and the UK in a single evening.\nAnnounced that Alexa+ is available to all customers in the U.S. for $19.99 per month as a standalone subscription, and free for Prime members. Customers without Prime can try the Alexa+ chat experience for free at Alexa.com.\nAdded new capabilities to Alexa+, including answering a Ring doorbell, more ways to shop, and more ways to manage a home.\nIntroduced new ways for customers to interact with Alexa+, including Alexa.com, a new mobile app, and third-party devices like Samsung TVs and BMW cars.\nUnveiled Leo Ultra, an enterprise-grade customer terminal for Amazon Leo and the fastest satellite internet antenna ever built, delivering simultaneous download speeds up to 1 Gbps and upload speeds up to 400 Mbps, powered by custom Leo silicon.",
+      "image_url": "",
+      "evidence": [
+        {
+          "id": "mi-73d86b62b3d116ac5f-p001",
+          "text": "SEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its fourth quarter ended December 31, 2025.",
+          "locator": "p001",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p003",
+          "text": "Net sales increased 14% to $213.4 billion in the fourth quarter, compared with $187.8 billion in fourth quarter 2024. Excluding the $2.8 billion favorable impact from year-over-year changes in foreign exchange rates throughout the quarter, net sales increased 12% compared with fourth quarter 2024. North America segment sales increased 10% year-over-year to $127.1 billion. International segment sales increased 17% year-over-year to $50.7 billion, or increased 11% excluding changes in foreign exchange rates. AWS segment sales increased 24% year-over-year to $35.6 billion.",
+          "locator": "p003",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p004",
+          "text": "North America segment sales increased 10% year-over-year to $127.1 billion.",
+          "locator": "p004",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p005",
+          "text": "International segment sales increased 17% year-over-year to $50.7 billion, or increased 11% excluding changes in foreign exchange rates.",
+          "locator": "p005",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p006",
+          "text": "AWS segment sales increased 24% year-over-year to $35.6 billion.",
+          "locator": "p006",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p007",
+          "text": "Operating income increased to $25.0 billion in the fourth quarter, compared with $21.2 billion in fourth quarter 2024. Fourth quarter 2025 operating income includes three special charges—$1.1 billion for the resolution of tax disputes associated with our stores business in Italy, and the settlement of a lawsuit, $730 million in estimated severance costs, and $610 million in asset impairments primarily related to physical stores. Without these charges, operating income would have been $27.4 billion. North America segment operating income was $11.5 billion, compared with $9.3 billion in fourth quarter 2024. International segment operating income was $1.0 billion, compared with $1.3 billion in fourth quarter 2024. AWS segment operating income was $12.5 billion, compared with $10.6 billion in fourth quarter 2024.",
+          "locator": "p007",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p008",
+          "text": "North America segment operating income was $11.5 billion, compared with $9.3 billion in fourth quarter 2024.",
+          "locator": "p008",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p009",
+          "text": "International segment operating income was $1.0 billion, compared with $1.3 billion in fourth quarter 2024.",
+          "locator": "p009",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p010",
+          "text": "AWS segment operating income was $12.5 billion, compared with $10.6 billion in fourth quarter 2024.",
+          "locator": "p010",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p011",
+          "text": "Net income increased to $21.2 billion in the fourth quarter, or $1.95 per diluted share, compared with $20.0 billion, or $1.86 per diluted share, in fourth quarter 2024.",
+          "locator": "p011",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p013",
+          "text": "Net sales increased 12% to $716.9 billion in 2025, compared with $638.0 billion in 2024. Excluding the $4.4 billion favorable impact from year-over-year changes in foreign exchange rates throughout the year, net sales increased 12% compared with 2024. North America segment sales increased 10% year-over-year to $426.3 billion. International segment sales increased 13% year-over-year to $161.9 billion, or increased 10% excluding changes in foreign exchange rates. AWS segment sales increased 20% year-over-year to $128.7 billion.",
+          "locator": "p013",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p014",
+          "text": "North America segment sales increased 10% year-over-year to $426.3 billion.",
+          "locator": "p014",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p015",
+          "text": "International segment sales increased 13% year-over-year to $161.9 billion, or increased 10% excluding changes in foreign exchange rates.",
+          "locator": "p015",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p016",
+          "text": "AWS segment sales increased 20% year-over-year to $128.7 billion.",
+          "locator": "p016",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p017",
+          "text": "Operating income increased to $80.0 billion in 2025, compared with $68.6 billion in 2024. North America segment operating income was $29.6 billion, compared with operating income of $25.0 billion in 2024. International segment operating income was $4.7 billion, compared with an operating income of $3.8 billion in 2024. AWS segment operating income was $45.6 billion, compared with operating income of $39.8 billion in 2024.",
+          "locator": "p017",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p018",
+          "text": "North America segment operating income was $29.6 billion, compared with operating income of $25.0 billion in 2024.",
+          "locator": "p018",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p019",
+          "text": "International segment operating income was $4.7 billion, compared with an operating income of $3.8 billion in 2024.",
+          "locator": "p019",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p020",
+          "text": "AWS segment operating income was $45.6 billion, compared with operating income of $39.8 billion in 2024.",
+          "locator": "p020",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p021",
+          "text": "Net income increased to $77.7 billion in 2025, or $7.17 per diluted share, compared with $59.2 billion, or $5.53 per diluted share, in 2024.",
+          "locator": "p021",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p022",
+          "text": "Operating cash flow increased 20% to $139.5 billion for the trailing twelve months, compared with $115.9 billion for the trailing twelve months ended December 31, 2024.",
+          "locator": "p022",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p023",
+          "text": "Free cash flow decreased to $11.2 billion for the trailing twelve months, driven primarily by a year-over-year increase of $50.7 billion in purchases of property and equipment, net of proceeds from sales and incentives. This increase primarily reflects investments in artificial intelligence. This compares to free cash flow of $38.2 billion for the trailing twelve months ended December 31, 2024.",
+          "locator": "p023",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p024",
+          "text": "“AWS growing 24% (our fastest growth in 13 quarters), Advertising growing 22%, Stores growing briskly across North America and International, our chips business growing triple digit percentages year-over-year—this growth is happening because we’re continuing to innovate at a rapid rate, and identify and knock down customer problems,” said Andy Jassy, President and CEO, Amazon. “With such strong demand for our existing offerings and seminal opportunities like AI, chips, robotics, and low earth orbit satellites, we expect to invest about $200 billion in capital expenditures across Amazon in 2026, and anticipate strong long-term return on invested capital.”",
+          "locator": "p024",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p025",
+          "text": "Some other highlights since the company’s last earnings announcement include that Amazon:",
+          "locator": "p025",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p026",
+          "text": "Announced new AWS agreements with OpenAI, Visa, the NBA, BlackRock, Perplexity, Lyft, United Airlines, DoorDash, Salesforce, U.S. Air Force, Adobe, Thomson Reuters, AT&T, S&P Global, National Bank of Canada, London Stock Exchange Group, Choice Hotels, Accenture, Indeed, HSBC, CrowdStrike, and more.",
+          "locator": "p026",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p027",
+          "text": "Continued gaining significant momentum with AWS custom chips: Trainium and Graviton now have a combined annual revenue run rate of over $10 billion and growing at a triple digit percentage year-over-year. Trainium2 is fully subscribed with 1.4 million chips landed, and powers the majority of inference on Bedrock, a service used by 100,000+ companies. Trainium2 powers Project Rainier, the world’s largest operational AI compute cluster with 500,000+ Trainium2 chips, which Anthropic is using to train its industry-leading AI model, Claude. Trainium3 is now delivering production workloads and seeing strong demand, with nearly all Trainium3 supply of chips expected to be committed by mid-2026. Trainium4 is expected to start delivering in 2027, with 6 times the FP4 compute performance, 4 times more memory bandwidth, and 2 times more high memory bandwidth capacity than Trainium3. Introduced Graviton5, AWS’s most powerful and advanced CPU for a broad set of cloud workloads. Used by over 90% of the top 1,000 AWS customers, Graviton is up to 40% more price-performant than leading x86 processors, and enables applications to run faster, reduce costs, and meet sustainability goals.",
+          "locator": "p027",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p028",
+          "text": "Trainium and Graviton now have a combined annual revenue run rate of over $10 billion and growing at a triple digit percentage year-over-year.",
+          "locator": "p028",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p029",
+          "text": "Trainium2 is fully subscribed with 1.4 million chips landed, and powers the majority of inference on Bedrock, a service used by 100,000+ companies.",
+          "locator": "p029",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p030",
+          "text": "Trainium2 powers Project Rainier, the world’s largest operational AI compute cluster with 500,000+ Trainium2 chips, which Anthropic is using to train its industry-leading AI model, Claude.",
+          "locator": "p030",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p031",
+          "text": "Trainium3 is now delivering production workloads and seeing strong demand, with nearly all Trainium3 supply of chips expected to be committed by mid-2026.",
+          "locator": "p031",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p032",
+          "text": "Trainium4 is expected to start delivering in 2027, with 6 times the FP4 compute performance, 4 times more memory bandwidth, and 2 times more high memory bandwidth capacity than Trainium3.",
+          "locator": "p032",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p033",
+          "text": "Introduced Graviton5, AWS’s most powerful and advanced CPU for a broad set of cloud workloads. Used by over 90% of the top 1,000 AWS customers, Graviton is up to 40% more price-performant than leading x86 processors, and enables applications to run faster, reduce costs, and meet sustainability goals.",
+          "locator": "p033",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p034",
+          "text": "Added 20+ fully-managed models on Amazon Bedrock, including from Amazon Nova as well as Anthropic, Google, OpenAI, NVIDIA, Qwen, Mistral AI, Stability AI, Cohere, MiniMax AI, and Moonshot AI—enabling customers to test and switch between models without rewriting code while accessing breakthrough capabilities in coding, reasoning, and agentic workflows.",
+          "locator": "p034",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p035",
+          "text": "Expanded its family of Nova models, including Nova 2 Lite and Nova 2 Pro for frontier intelligence with lower costs and latency, and Nova 2 Sonic for multilingual conversational AI.",
+          "locator": "p035",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p036",
+          "text": "Introduced Nova Forge, a first-of-its-kind service that empowers organizations to build their own optimized variants of Nova by pre-training the model with their own proprietary data early in the process.",
+          "locator": "p036",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p037",
+          "text": "Introduced Nova Act for building and managing reliable AI agents for UI-based workflows.",
+          "locator": "p037",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p038",
+          "text": "Introduced new capabilities for Amazon Bedrock AgentCore, AWS’s pioneering set of infrastructure building blocks for developers and companies to build secure, scalable agents, including: AgentCore Policy to help block unauthorized agent actions that operate outside the agent code and check agent actions against policies in milliseconds. AgentCore Evaluations to trigger immediate alerts if a customer service agent’s satisfaction scores drop rapidly, helping enable swift response. AgentCore Memory to help agents learn from experiences and improve decision-making, reducing processing time and the need for extensive custom instructions.",
+          "locator": "p038",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p039",
+          "text": "AgentCore Policy to help block unauthorized agent actions that operate outside the agent code and check agent actions against policies in milliseconds.",
+          "locator": "p039",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p040",
+          "text": "AgentCore Evaluations to trigger immediate alerts if a customer service agent’s satisfaction scores drop rapidly, helping enable swift response.",
+          "locator": "p040",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p041",
+          "text": "AgentCore Memory to help agents learn from experiences and improve decision-making, reducing processing time and the need for extensive custom instructions.",
+          "locator": "p041",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p042",
+          "text": "Launched a new class of AI agents, called frontier agents, to solve tasks more autonomously and over longer durations, including: Kiro agent that can autonomously handle a range of tasks—from triaging bugs to improving code coverage. Customers can ask it questions, describe a task, and assign tasks in their backlog, and the agent will independently figure it out and get the work done. AWS Security Agent that embeds deep security expertise throughout the development lifecycle, proactively reviewing design documents and scanning pull requests against organizational security requirements and common vulnerabilities. It also transforms penetration testing from a slow, manual process into an on-demand capability, matching the team’s development velocity. AWS DevOps Agent that helps resolve and proactively prevent incidents.",
+          "locator": "p042",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p043",
+          "text": "Kiro agent that can autonomously handle a range of tasks—from triaging bugs to improving code coverage. Customers can ask it questions, describe a task, and assign tasks in their backlog, and the agent will independently figure it out and get the work done.",
+          "locator": "p043",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p044",
+          "text": "AWS Security Agent that embeds deep security expertise throughout the development lifecycle, proactively reviewing design documents and scanning pull requests against organizational security requirements and common vulnerabilities. It also transforms penetration testing from a slow, manual process into an on-demand capability, matching the team’s development velocity.",
+          "locator": "p044",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p045",
+          "text": "AWS DevOps Agent that helps resolve and proactively prevent incidents.",
+          "locator": "p045",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p046",
+          "text": "Announced new agentic capabilities in AWS Transform to accelerate organization-wide code and application modernization across any code, API, framework, runtime, architecture, language, and even company-specific programming languages and frameworks. AWS Transform has also helped customers analyze 1.8 billion lines of mainframe code since launch.",
+          "locator": "p046",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p047",
+          "text": "Launched new agentic AI capabilities for Amazon Connect—an AI tool that enables contact centers to provide consistent, personalized customer experiences—including advanced speech models, agentic assistance, AI-powered recommendations, and AI agent observability. Connect is a $1 billion annualized revenue run rate business growing over 30%, and has an average of 20 million+ interactions happening on it each day.",
+          "locator": "p047",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p048",
+          "text": "Introduced AWS AI Factories to transform customers’ existing data centers into high-performance AI environments, which accelerates AI buildouts by months or years compared to building independently.",
+          "locator": "p048",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p049",
+          "text": "Delivered at fastest speeds ever for Prime members globally in 2025.",
+          "locator": "p049",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p050",
+          "text": "Continued increasing speed for rural customers in the U.S., with the average number of monthly customers receiving same-day delivery in rural areas nearly doubling year-over-year.",
+          "locator": "p050",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p051",
+          "text": "Delivered nearly 70% more items same day in the U.S. than the year before, with Same-Day Delivery used by nearly 100 million customers.",
+          "locator": "p051",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p052",
+          "text": "Expanded Amazon Now ultra-fast delivery, which offers delivery on thousands of items in 30 minutes or less. Amazon Now is now available in various cities in India, Mexico, and the UAE, and is being tested in several communities in the U.S. and UK.",
+          "locator": "p052",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p053",
+          "text": "Expanded Same-Day grocery delivery to 2,300+ cities and towns across the U.S., making fresh groceries more accessible and transforming how customers shop for food, with perishables making up 9 of the top 10 most-ordered items in areas where the service is available.",
+          "locator": "p053",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p054",
+          "text": "Expanded Amazon Pharmacy Same-Day Delivery, with same-day delivery of prescriptions now available in 3,000+ U.S. cities and towns.",
+          "locator": "p054",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p055",
+          "text": "Made Rufus—Amazon’s agentic AI shopping assistant—smarter, more capable, and more helpful. Rufus can shop tens of millions of items in other online stores directly and make purchases on behalf of customers using its agentic Buy For Me feature. Rufus was used by 300 million+ customers and saw an even stronger response than anticipated, helping deliver nearly $12 billion in incremental annualized sales last year.",
+          "locator": "p055",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p056",
+          "text": "Saw strong adoption of Lens—an AI tool that helps customers find products with a phone camera, screen shot, or bar code—with customers using it 45% more year-over-year.",
+          "locator": "p056",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p057",
+          "text": "Was named the lowest-priced U.S. retailer by Profitero for the ninth year in a row, with online prices on average 14% lower than other major U.S. retailers.",
+          "locator": "p057",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p058",
+          "text": "Increased selection on Amazon Haul in the U.S. to 1 million+ items under $10, with many under $5, and expanded to serve customers in 25+ countries and regions.",
+          "locator": "p058",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p059",
+          "text": "Broke several records with the fourth season of Thursday Night Football on Prime Video, the most-watched season of Thursday Night Football ever, averaging 15 million+ viewers—a 16% increase year-over-year and third consecutive year of double-digit growth.",
+          "locator": "p059",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p060",
+          "text": "Had the most-streamed NFL game in history with 31 million+ viewers watching the Packers vs. Bears Wild Card Playoff game, clearing the prior record by 4 million+.",
+          "locator": "p060",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p061",
+          "text": "Debuted NBA on Prime in more than 200 countries, including streaming exclusive coverage of the Emirates NBA Cup, culminating with the Spurs vs. Knicks Championship, which averaged 3 million+ viewers and attracted the youngest-ever audience for a Cup Championship, according to Nielsen.",
+          "locator": "p061",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p062",
+          "text": "Extended broadcast rights for UEFA Champions League in Germany, Ireland, Italy, and the UK through 2030/31 season. This follows continued strong viewership, including a record-breaking 10 million+ viewers streaming League Phase matches on Prime Video in Germany, Ireland, and the UK in a single evening.",
+          "locator": "p062",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p063",
+          "text": "Announced that Alexa+ is available to all customers in the U.S. for $19.99 per month as a standalone subscription, and free for Prime members. Customers without Prime can try the Alexa+ chat experience for free at Alexa.com.",
+          "locator": "p063",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p064",
+          "text": "Added new capabilities to Alexa+, including answering a Ring doorbell, more ways to shop, and more ways to manage a home.",
+          "locator": "p064",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p065",
+          "text": "Introduced new ways for customers to interact with Alexa+, including Alexa.com, a new mobile app, and third-party devices like Samsung TVs and BMW cars.",
+          "locator": "p065",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-73d86b62b3d116ac5f-p066",
+          "text": "Unveiled Leo Ultra, an enterprise-grade customer terminal for Amazon Leo and the fastest satellite internet antenna ever built, delivering simultaneous download speeds up to 1 Gbps and upload speeds up to 400 Mbps, powered by custom Leo silicon.",
+          "locator": "p066",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/default.aspx"
+        }
+      ],
+      "content_hash": "7302c3f25e1f6eec6f270b3559d8d0f0f5c3ca50f8d5da94b178baa3718b7e24",
+      "last_checked_at": "2026-10-24T08:13:02+00:00"
     },
     {
       "id": "mi-794e58b4f8209e8d01",
@@ -2414,7 +3351,7 @@
       "source_type": "earnings",
       "excerpt": "All-Cash Structure Increases Value Certainty for WBD Stockholders, Accelerates WBD Stockholder Vote and Underscores Netflix's Financial Strength\nWBD Files Preliminary Proxy Statement for Transaction Approval\nHOLLYWOOD, Calif. and NEW YORK , Jan. 20, 2026 /PRNewswire/ -- Netflix, Inc. (NASDAQ:NFLX) (\"Netflix\") and Warner Bros. Discovery, Inc. (\"WBD\" or \"Warner Bros. Discovery\") announced they have amended their defini",
       "body_text": "All-Cash Structure Increases Value Certainty for WBD Stockholders, Accelerates WBD Stockholder Vote and Underscores Netflix's Financial Strength\nWBD Files Preliminary Proxy Statement for Transaction Approval\nHOLLYWOOD, Calif. and NEW YORK , Jan. 20, 2026 /PRNewswire/ -- Netflix, Inc. (NASDAQ:NFLX) (\"Netflix\") and Warner Bros. Discovery, Inc. (\"WBD\" or \"Warner Bros. Discovery\") announced they have amended their definitive agreement for Netflix's pending acquisition of Warner Bros. to an all-cash transaction. The revised agreement simplifies the transaction structure, provides greater certainty of value for WBD stockholders, and accelerates the path to a WBD stockholder vote.\nThe all-cash transaction continues to be valued at $27.75 per WBD share, unchanged from the prior transaction structure. WBD stockholders will also receive the additional value of shares of Discovery Global following its separation from WBD. The transaction will be financed through a combination of cash on hand, available credit facilities and committed financing.\nThe revised structure enhances execution certainty, aligns with Netflix's disciplined capital allocation framework and provides clear benefits, including:\nGreater Value Certainty: The all-cash transaction provides enhanced certainty around the value WBD stockholders will receive at closing, eliminating market-based variability.\nFaster Path to Stockholder Vote: The revised transaction structure is expected to enable WBD stockholders to vote on the proposed transaction by April 2026. To support this accelerated timeline, WBD has today filed its preliminary proxy statement with the SEC.\nNetflix's strong cash flow generation supports the revised all-cash transaction structure while preserving a healthy balance sheet and flexibility to capitalize on future strategic priorities.\n\"Today's revised merger agreement brings us even closer to combining two of the greatest storytelling companies in the world and with it even more people enjoying the entertainment they love to watch the most,\" said David Zaslav, President and CEO of Warner Bros. Discovery. \"By coming together with Netflix, we will combine the stories Warner Bros. has told that have captured the world's attention for more than a century and ensure audiences continue to enjoy them for generations to come.\"\n\"The WBD Board continues to support and unanimously recommend our transaction, and we are confident that it will deliver the best outcome for stockholders, consumers, creators and the broader entertainment community,\" said Ted Sarandos, co-CEO of Netflix. \"Our revised all-cash agreement will enable an expedited timeline to a stockholder vote and provide greater financial certainty at $27.75 per share in cash, plus the value from the planned separation of Discovery Global. Together, Netflix and Warner Bros. will deliver broader choice and greater value to audiences worldwide, enhancing access to world-class television and film both at home and in theaters. The acquisition will also significantly expand U.S. production capacity and investment in original programming, driving job creation and long-term industry growth.\"\n\"Over the last decade, when much of the entertainment industry has contracted, Netflix has grown and invested tremendously in the business of film and television in the U.S. and abroad. This transaction will further fuel that growth and investment,\" said Greg Peters, co-CEO of Netflix. \"By amending our agreement today, we are underscoring what we have believed all along: not only does our transaction provide superior stockholder value, it is also fundamentally pro-consumer, pro-innovation, pro-creator and pro-growth. Our revised all-cash agreement demonstrates our commitment to the transaction with Warner Bros. and provides WBD stockholders with an accelerated process and the financial certainty of cash consideration, while maintaining our commitment to a healthy balance sheet and our solid investment grade ratings. We will continue to work closely with WBD to successfully complete the transaction as we remain focused on our mission to entertain the world and, together, define the next century of storytelling.\"\n\"Our amended agreement with Netflix is a testament to the Board's unrelenting focus on representing and advancing our stockholders' interests,\" said Samuel A. Di Piazza, Jr., Chair of the Warner Bros. Discovery Board of Directors. \"By transitioning to all-cash consideration, we can now deliver the incredible value of our combination with Netflix at even greater levels of certainty, while providing our stockholders the opportunity to participate in management's strategic plans to realize the value of Discovery Global's iconic brands and global reach. We look forward to continuing to engage with our investors about the compelling benefits of the transaction as we progress toward our stockholder vote on an accelerated timeline.\"\nAs previously announced, WBD will separate Warner Bros. and Discovery Global into two separate publicly traded companies. This separation is expected to be completed in six to nine months, prior to the closing of the proposed Netflix and Warner Bros. transaction.\nThe amended, all-cash transaction was unanimously approved by the Boards of Directors of both Netflix and WBD. Closing remains subject to completion of the Discovery Global separation, receipt of required regulatory approvals, approval of WBD stockholders and other customary closing conditions. The financing structure is not subject to review by the Committee on Foreign Investment in the United States (CFIUS).\nNetflix and WBD have each submitted their Hart-Scott-Rodino (HSR) filings and are engaging with competition authorities, including the U.S. Department of Justice and European Commission. Netflix and WBD remain committed to working closely with regulators and all stakeholders to ensure a smooth and successful transaction. As previously disclosed, the transaction is expected to close 12-18 months from the date that Netflix and WBD originally entered into their merger agreement.\nAdvisors Moelis & Company LLC is acting as Netflix's financial advisor and Skadden, Arps, Slate, Meagher & Flom LLP is serving as legal counsel. Wells Fargo is acting as an additional financial advisor and, along with BNP and HSBC, are serving as lead arrangers for the debt financing related to the transaction.\nAllen & Company, J.P. Morgan and Evercore are serving as financial advisors to Warner Bros. Discovery and Wachtell, Lipton, Rosen & Katz and Debevoise & Plimpton LLP are serving as legal counsel.\nA dedicated website providing ongoing information and resources about the transaction is available at netflixwbtogether.com .\nAbout Netflix, Inc. Netflix is one of the world's leading entertainment services offering TV series, films, games and live programming across a wide variety of genres and languages. Members can play, pause and resume watching as much as they want, anytime, anywhere, and can change their plans at any time.\nAbout Warner Bros. Discovery Warner Bros. Discovery is a leading global media and entertainment company that creates and distributes the world's most differentiated and complete portfolio of branded content across television, film, streaming and gaming. Warner Bros. Discovery inspires, informs and entertains audiences worldwide through its iconic brands and products including: Discovery Channel, HBO Max, discovery+, CNN, DC, TNT Sports, Eurosport, HBO, HGTV, Food Network, OWN, Investigation Discovery, TLC, Magnolia Network, TNT, TBS, truTV, Travel Channel, Animal Planet, Science Channel, Warner Bros. Motion Picture Group, Warner Bros. Television Group, Warner Bros. Pictures Animation, Warner Bros. Games, New Line Cinema, Cartoon Network, Adult Swim, Turner Classic Movies, Discovery en Español, Hogar de HGTV and others. For more information, please visit www.wbd.com .\nImportant Information About the Transaction and Where to Find It\nThis communication may be deemed to be solicitation material in respect of the proposed transaction between WBD and Netflix (the \"proposed transaction\"). In connection with the proposed transaction between Netflix and WBD, WBD filed a preliminary proxy statement on Schedule 14A (the \"Proxy Statement\") with the U.S. Securities and Exchange Commission (the \"SEC\") on January 20, 2026. The preliminary Proxy Statement is not final and may be amended, and the definitive Proxy Statement (if and when available) will be mailed to stockholders of WBD. WBD also intends to file a registration statement for the newly formed subsidiary of WBD (\"Discovery Global\") that will be spun off from WBD prior to the closing of the proposed transaction. Each of Netflix and WBD may also file with or furnish to the SEC other relevant documents regarding the proposed transaction. This communication is not a substitute for the Proxy Statement or any other document that Netflix or WBD may file with the SEC or mail to WBD's stockholders in connection with the proposed transaction. INVESTORS AND SECURITY HOLDERS OF NETFLIX AND WBD ARE URGED TO READ THE PROXY STATEMENT, AS WELL AS ANY OTHER RELEVANT DOCUMENTS FILED WITH THE SEC IN CONNECTION WITH THE PROPOSED TRANSACTION OR INCORPORATED BY REFERENCE INTO THE PROXY STATEMENT (INCLUDING ANY AMENDMENTS OR SUPPLEMENTS THERETO), BECAUSE THEY WILL CONTAIN IMPORTANT INFORMATION REGARDING NETFLIX, WBD, THE PROPOSED TRANSACTION AND RELATED MATTERS. The documents file\nNetflix, WBD and certain of their respective directors and executive officers may be deemed to be participants in the solicitation of proxies from the stockholders of WBD in connection with the proposed transaction under the rules of the SEC. Information about the interests of the directors and executive officers of WBD and other persons who may be deemed to be participants in the solicitation of stockholders of WBD in connection with the proposed transaction and a description of their direct and indirect interests, by security holdings or otherwise, will be included in the Proxy Statement, which will be filed by WBD with the SEC. Information about WBD's directors and executive officers is set forth in WBD's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 23, 2025, WBD's Annual Report on Form 10-K for the year ended December 31, 2024, and any subsequent filings with the SEC. Information about Netflix's directors and executive officers is set forth in Netflix's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 17, 2025, and any subsequent filings with the SEC. Additional information regarding the direct and indirect interests of those persons and other persons who may be deemed participants in the proposed transaction may be obtained by reading the Proxy Statement regarding the proposed transaction when it becomes available. Free copies of these documents may be obtain\nCautionary Statement Regarding Forward-Looking Statements\nThis document contains \"forward-looking statements\" within the meaning of the federal securities laws, including Section 27A of the U.S. Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended. These forward-looking statements are based on Netflix's and WBD's current expectations, estimates and projections about the expected date of closing of the proposed transaction and the potential benefits thereof, their respective businesses and industries, management's beliefs and certain assumptions made by Netflix and WBD, all of which are subject to change. In this context, forward-looking statements often address expected future business and financial performance and financial condition, and often contain words such as \"expect,\" \"anticipate,\" \"intend,\" \"plan,\" \"believe,\" \"could,\" \"seek,\" \"see,\" \"will,\" \"may,\" \"would,\" \"might,\" \"potentially,\" \"estimate,\" \"continue,\" \"expect,\" \"target,\" similar expressions or the negatives of these words or other comparable terminology that convey uncertainty of future events or outcomes. All forward-looking statements by their nature address matters that involve risks and uncertainties, many of which are beyond our control and are not guarantees of future results, such as statements about the consummation of the proposed transaction and the anticipated benefits thereof. These and other forward-looking statements, including the failure to consummate the proposed transaction or to make or take any filing\nView original content to download multimedia: https://www.prnewswire.com/news-releases/netflix-and-warner-bros-discovery-amend-agreement-to-all-cash-transaction-302665337.html",
-      "image_url": "",
+      "image_url": "https://mma.prnewswire.com/media/2865011/NFX_WBD_Combo_Emblem_Logo.jpg",
       "evidence": [
         {
           "id": "mi-794e58b4f8209e8d01-p001",
@@ -2575,7 +3512,7 @@
       ],
       "content_hash": "317445884687100e21d6e4df531c49a79ce80af82bbd250ddf35e1c36f7091f9",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
       "versions": [
         {
           "content_hash": "5f3f1574ff6ed065c706ddfa634a9ac58e20dfd11ddd04306765dc007e72d50e",
@@ -2741,7 +3678,128 @@
             }
           ]
         }
-      ]
+      ],
+      "image_alt": "",
+      "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx",
+      "image_attribution": "넷플릭스 공식 자료",
+      "image_kind": "company_logo",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00"
+    },
+    {
+      "id": "mi-7ab89eef9abedd9392",
+      "source_id": "netflix_ir",
+      "company": "Netflix",
+      "topic": "partnership_distribution",
+      "title": "Netflix Supports Warner Bros. Discovery Board's Commitment to Merger Agreement",
+      "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx",
+      "published_at": "2025-12-05",
+      "collected_at": "2026-10-24T08:13:02+00:00",
+      "country": "global",
+      "period": "",
+      "source_name": "Netflix Investor Relations",
+      "source_type": "earnings",
+      "excerpt": "Following Comprehensive and Rigorous Review, Warner Bros. Discovery Board Continues to Recommend Stockholders Approve Netflix Agreement\nMore Information on How Netflix and Warner Bros. Will Define the Next Century of Storytelling Available at NetflixWBtogether.com\nHOLLYWOOD, Calif. , Jan. 7, 2026 /PRNewswire/ -- Netflix, Inc. today welcomed the Warner Bros. Discovery (WBD) Board of Directors' continued commitment to ",
+      "body_text": "Following Comprehensive and Rigorous Review, Warner Bros. Discovery Board Continues to Recommend Stockholders Approve Netflix Agreement\nMore Information on How Netflix and Warner Bros. Will Define the Next Century of Storytelling Available at NetflixWBtogether.com\nHOLLYWOOD, Calif. , Jan. 7, 2026 /PRNewswire/ -- Netflix, Inc. today welcomed the Warner Bros. Discovery (WBD) Board of Directors' continued commitment to the merger agreement between Netflix and WBD, and its unanimous recommendation that stockholders reject the revised offer from Paramount Skydance Corporation (PSKY), announced December 22, 2025.\nAfter a comprehensive and rigorous review process with its independent financial and legal advisors, the WBD Board reaffirmed its conclusion that the transaction with Netflix is in the best interests of WBD stockholders.\n\"The WBD Board remains fully supportive of and continues to recommend Netflix's merger agreement, recognizing it as the superior proposal that will deliver the greatest value to its stockholders, as well as consumers, creators and the broader entertainment industry,\" said Ted Sarandos and Greg Peters, co-CEOs of Netflix. \"Netflix and Warner Bros. will bring together highly complementary strengths and a shared passion for storytelling. By joining forces, we will offer audiences even more of the series and films they love—at home and in theaters—expand opportunities for creators, and help foster a dynamic, competitive, and thriving entertainment industry.\"\nUnder the terms of the agreement announced December 5, 2025 , Netflix will acquire Warner Bros., including its film and television studios, HBO Max and HBO, in a cash-and-stock transaction valued at $27.75 per WBD share, with a total enterprise value of approximately $82.7 billion (equity value of $72.0 billion). The financing structure is not subject to review by the Committee on Foreign Investment in the United States (CFIUS). The transaction preserves the planned separation of WBD's Global Linear Networks business, Discovery Global, which is expected to be completed in Q3 2026.\nNetflix has submitted its Hart-Scott-Rodino (HSR) filing and is engaging with competition authorities, including the U.S. Department of Justice and European Commission. Netflix remains committed to working closely with WBD, regulators, and all stakeholders to ensure a smooth and successful transaction. As previously disclosed, the transaction is expected to close in 12-18 months from the date that Netflix and WBD originally entered into their merger agreement.\nA dedicated website providing ongoing information and resources about the transaction is available at netflixwbtogether.com .\nImportant Information and Where to Find It\nIn connection with the proposed transaction between WBD and Netflix, Netflix intends to file with the U.S. Securities and Exchange Commission (the \"SEC\") a registration statement on Form S-4 (the \"Registration Statement\"), which will include a prospectus with respect to the shares of Netflix's common stock to be issued in the proposed transaction and a proxy statement for WBD's stockholders (the \"Proxy Statement/Prospectus\"), and WBD intends to file with the SEC the proxy statement. WBD also intends to file a registration statement for the newly formed subsidiary of WBD that will be spun off from WBD prior to the closing of the proposed transaction. The definitive proxy statement (if and when available) will be mailed to stockholders of WBD. Each of Netflix and WBD may also file with or furnish to the SEC other relevant documents regarding the proposed transaction. This communication is not a substitute for the Registration Statement, the Proxy Statement/Prospectus or any other document that Netflix or WBD may file with the SEC or mail to WBD's stockholders in connection with the proposed transaction. INVESTORS AND SECURITY HOLDERS OF NETFLIX AND WBD ARE URGED TO READ THE REGISTRATION STATEMENT AND THE PROXY STATEMENT/PROSPECTUS INCLUDED WITHIN THE REGISTRATION STATEMENT WHEN THEY BECOME AVAILABLE, AS WELL AS ANY OTHER RELEVANT DOCUMENTS FILED WITH THE SEC IN CONNECTION WITH THE PROPOSED TRANSACTION OR INCORPORATED BY REFERENCE INTO THE REGISTRATION STATEMENT AND THE PROXY ST\nNetflix, WBD and certain of their respective directors and executive officers may be deemed to be participants in the solicitation of proxies from the stockholders of WBD in connection with the proposed transaction under the rules of the SEC. Information about the interests of the directors and executive officers of Netflix and WBD and other persons who may be deemed to be participants in the solicitation of stockholders of WBD in connection with the proposed transaction and a description of their direct and indirect interests, by security holdings or otherwise, will be included in the Proxy Statement/Prospectus, which will be filed with the SEC. Information about WBD's directors and executive officers is set forth in WBD's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 23, 2025, WBD's Annual Report on Form 10-K for the year ended December 31, 2024, and any subsequent filings with the SEC. Information about Netflix's directors and executive officers is set forth in Netflix's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 17, 2025, and any subsequent filings with the SEC. Additional information regarding the direct and indirect interests of those persons and other persons who may be deemed participants in the proposed transaction may be obtained by reading the Proxy Statement/Prospectus regarding the proposed transaction when it becomes available. Free copies of th\nThis communication is for informational purposes only and does not constitute, or form a part of, an offer to sell or the solicitation of an offer to buy any securities or a solicitation of any vote or approval, nor shall there be any sale of securities in any jurisdiction in which such offer, solicitation or sale would be unlawful prior to registration or qualification under the securities laws of any such jurisdiction. No offer of securities shall be made except by means of a prospectus meeting the requirements of Section 10 of the Securities Act of 1933, as amended, and otherwise in accordance with applicable law.\nCautionary Statement Regarding Forward-Looking Statements\nThis document contains \"forward-looking statements\" within the meaning of the federal securities laws, including Section 27A of the U.S. Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended. These forward-looking statements are based on Netflix's and WBD's current expectations, estimates and projections about the expected date of closing of the proposed transaction and the potential benefits thereof, their respective businesses and industries, management's beliefs and certain assumptions made by Netflix and WBD, all of which are subject to change. In this context, forward-looking statements often address expected future business and financial performance and financial condition, and often contain words such as \"expect,\" \"anticipate,\" \"intend,\" \"plan,\" \"believe,\" \"could,\" \"seek,\" \"see,\" \"will,\" \"may,\" \"would,\" \"might,\" \"potentially,\" \"estimate,\" \"continue,\" \"expect,\" \"target,\" similar expressions or the negatives of these words or other comparable terminology that convey uncertainty of future events or outcomes. All forward-looking statements by their nature address matters that involve risks and uncertainties, many of which are beyond our control and are not guarantees of future results, such as statements about the consummation of the proposed transaction and the anticipated benefits thereof. These and other forward-looking statements, including the failure to consummate the proposed transaction or to make or take any filing\nView original content to download multimedia: https://www.prnewswire.com/news-releases/netflix-supports-warner-bros-discovery-boards-commitment-to-merger-agreement-302655137.html",
+      "image_url": "https://mma.prnewswire.com/media/133154/netflix__inc__logo.jpg",
+      "evidence": [
+        {
+          "id": "mi-7ab89eef9abedd9392-p001",
+          "text": "Following Comprehensive and Rigorous Review, Warner Bros. Discovery Board Continues to Recommend Stockholders Approve Netflix Agreement",
+          "locator": "p001",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p002",
+          "text": "More Information on How Netflix and Warner Bros. Will Define the Next Century of Storytelling Available at NetflixWBtogether.com",
+          "locator": "p002",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p003",
+          "text": "HOLLYWOOD, Calif. , Jan. 7, 2026 /PRNewswire/ -- Netflix, Inc. today welcomed the Warner Bros. Discovery (WBD) Board of Directors' continued commitment to the merger agreement between Netflix and WBD, and its unanimous recommendation that stockholders reject the revised offer from Paramount Skydance Corporation (PSKY), announced December 22, 2025.",
+          "locator": "p003",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p004",
+          "text": "After a comprehensive and rigorous review process with its independent financial and legal advisors, the WBD Board reaffirmed its conclusion that the transaction with Netflix is in the best interests of WBD stockholders.",
+          "locator": "p004",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p005",
+          "text": "\"The WBD Board remains fully supportive of and continues to recommend Netflix's merger agreement, recognizing it as the superior proposal that will deliver the greatest value to its stockholders, as well as consumers, creators and the broader entertainment industry,\" said Ted Sarandos and Greg Peters, co-CEOs of Netflix. \"Netflix and Warner Bros. will bring together highly complementary strengths and a shared passion for storytelling. By joining forces, we will offer audiences even more of the series and films they love—at home and in theaters—expand opportunities for creators, and help foster a dynamic, competitive, and thriving entertainment industry.\"",
+          "locator": "p005",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p006",
+          "text": "Under the terms of the agreement announced December 5, 2025 , Netflix will acquire Warner Bros., including its film and television studios, HBO Max and HBO, in a cash-and-stock transaction valued at $27.75 per WBD share, with a total enterprise value of approximately $82.7 billion (equity value of $72.0 billion). The financing structure is not subject to review by the Committee on Foreign Investment in the United States (CFIUS). The transaction preserves the planned separation of WBD's Global Linear Networks business, Discovery Global, which is expected to be completed in Q3 2026.",
+          "locator": "p006",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p007",
+          "text": "Netflix has submitted its Hart-Scott-Rodino (HSR) filing and is engaging with competition authorities, including the U.S. Department of Justice and European Commission. Netflix remains committed to working closely with WBD, regulators, and all stakeholders to ensure a smooth and successful transaction. As previously disclosed, the transaction is expected to close in 12-18 months from the date that Netflix and WBD originally entered into their merger agreement.",
+          "locator": "p007",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p008",
+          "text": "A dedicated website providing ongoing information and resources about the transaction is available at netflixwbtogether.com .",
+          "locator": "p008",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p009",
+          "text": "Important Information and Where to Find It",
+          "locator": "p009",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p010",
+          "text": "In connection with the proposed transaction between WBD and Netflix, Netflix intends to file with the U.S. Securities and Exchange Commission (the \"SEC\") a registration statement on Form S-4 (the \"Registration Statement\"), which will include a prospectus with respect to the shares of Netflix's common stock to be issued in the proposed transaction and a proxy statement for WBD's stockholders (the \"Proxy Statement/Prospectus\"), and WBD intends to file with the SEC the proxy statement. WBD also intends to file a registration statement for the newly formed subsidiary of WBD that will be spun off from WBD prior to the closing of the proposed transaction. The definitive proxy statement (if and when available) will be mailed to stockholders of WBD. Each of Netflix and WBD may also file with or furnish to the SEC other relevant documents regarding the proposed transaction. This communication is not a substitute for the Registration Statement, the Proxy Statement/Prospectus or any other document that Netflix or WBD may file with the SEC or mail to WBD's stockholders in connection with the proposed transaction. INVESTORS AND SECURITY HOLDERS OF NETFLIX AND WBD ARE URGED TO READ THE REGISTRATION STATEMENT AND THE PROXY STATEMENT/PROSPECTUS INCLUDED WITHIN THE REGISTRATION STATEMENT WHEN THEY BECOME AVAILABLE, AS WELL AS ANY OTHER RELEVANT DOCUMENTS FILED WITH THE SEC IN CONNECTION WITH THE PROPOSED TRANSACTION OR INCORPORATED BY REFERENCE INTO THE REGISTRATION STATEMENT AND THE PROXY ST",
+          "locator": "p010",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p012",
+          "text": "Netflix, WBD and certain of their respective directors and executive officers may be deemed to be participants in the solicitation of proxies from the stockholders of WBD in connection with the proposed transaction under the rules of the SEC. Information about the interests of the directors and executive officers of Netflix and WBD and other persons who may be deemed to be participants in the solicitation of stockholders of WBD in connection with the proposed transaction and a description of their direct and indirect interests, by security holdings or otherwise, will be included in the Proxy Statement/Prospectus, which will be filed with the SEC. Information about WBD's directors and executive officers is set forth in WBD's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 23, 2025, WBD's Annual Report on Form 10-K for the year ended December 31, 2024, and any subsequent filings with the SEC. Information about Netflix's directors and executive officers is set forth in Netflix's proxy statement for its 2025 Annual Meeting of Stockholders on Schedule 14A filed with the SEC on April 17, 2025, and any subsequent filings with the SEC. Additional information regarding the direct and indirect interests of those persons and other persons who may be deemed participants in the proposed transaction may be obtained by reading the Proxy Statement/Prospectus regarding the proposed transaction when it becomes available. Free copies of th",
+          "locator": "p012",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p014",
+          "text": "This communication is for informational purposes only and does not constitute, or form a part of, an offer to sell or the solicitation of an offer to buy any securities or a solicitation of any vote or approval, nor shall there be any sale of securities in any jurisdiction in which such offer, solicitation or sale would be unlawful prior to registration or qualification under the securities laws of any such jurisdiction. No offer of securities shall be made except by means of a prospectus meeting the requirements of Section 10 of the Securities Act of 1933, as amended, and otherwise in accordance with applicable law.",
+          "locator": "p014",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p015",
+          "text": "Cautionary Statement Regarding Forward-Looking Statements",
+          "locator": "p015",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p016",
+          "text": "This document contains \"forward-looking statements\" within the meaning of the federal securities laws, including Section 27A of the U.S. Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended. These forward-looking statements are based on Netflix's and WBD's current expectations, estimates and projections about the expected date of closing of the proposed transaction and the potential benefits thereof, their respective businesses and industries, management's beliefs and certain assumptions made by Netflix and WBD, all of which are subject to change. In this context, forward-looking statements often address expected future business and financial performance and financial condition, and often contain words such as \"expect,\" \"anticipate,\" \"intend,\" \"plan,\" \"believe,\" \"could,\" \"seek,\" \"see,\" \"will,\" \"may,\" \"would,\" \"might,\" \"potentially,\" \"estimate,\" \"continue,\" \"expect,\" \"target,\" similar expressions or the negatives of these words or other comparable terminology that convey uncertainty of future events or outcomes. All forward-looking statements by their nature address matters that involve risks and uncertainties, many of which are beyond our control and are not guarantees of future results, such as statements about the consummation of the proposed transaction and the anticipated benefits thereof. These and other forward-looking statements, including the failure to consummate the proposed transaction or to make or take any filing",
+          "locator": "p016",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        },
+        {
+          "id": "mi-7ab89eef9abedd9392-p017",
+          "text": "View original content to download multimedia: https://www.prnewswire.com/news-releases/netflix-supports-warner-bros-discovery-boards-commitment-to-merger-agreement-302655137.html",
+          "locator": "p017",
+          "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx"
+        }
+      ],
+      "content_hash": "9ae3b12d8eef65fae74cd919daa5513940ae6d36e682b0d1cce5d14b559354ee",
+      "image_alt": "Netflix, Inc. Logo. (PRNewsfoto/Netflix, Inc.)",
+      "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx",
+      "image_attribution": "넷플릭스 공식 자료",
+      "image_kind": "company_logo",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00"
     },
     {
       "id": "mi-5b80871e69b160f1a3",
@@ -2758,7 +3816,7 @@
       "source_type": "official_announcement",
       "excerpt": "Prime Video streams 67 games during the regular season, including the Emirates NBA Cup Championship.\nThe New York Knicks, Los Angeles Lakers, San Antonio Spurs, and Philadelphia 76ers appear in 10 games each.\nNew broadcast features include AI-powered Prime 360 highlights and personalized fantasy basketball integration with Yahoo! Sports.\nNBA and AWS announce a partnership that will enhance broadcasts and provide fans",
       "body_text": "Prime Video streams 67 games during the regular season, including the Emirates NBA Cup Championship.\nThe New York Knicks, Los Angeles Lakers, San Antonio Spurs, and Philadelphia 76ers appear in 10 games each.\nNew broadcast features include AI-powered Prime 360 highlights and personalized fantasy basketball integration with Yahoo! Sports.\nNBA and AWS announce a partnership that will enhance broadcasts and provide fans with live stats to help them dive deeper into the game.\nFriday, October 23: New York Knicks at Boston Celtics—7 p.m.\nFriday, October 23: Houston Rockets at San Antonio Spurs—9:30 p.m.\nFriday, October 30: New York Knicks at Philadelphia 76ers—7:30 p.m.\nFriday, October 30: Los Angeles Lakers at Golden State Warriors—10 p.m.\nFriday, November 6: Philadelphia 76ers at Cleveland Cavaliers—7:30 p.m.\nFriday, November 6: Portland Trail Blazers at Los Angeles Lakers—10 p.m.\nFriday, November 13: New York Knicks at Indiana Pacers—7 p.m.\nFriday, November 13: Golden State Warriors at San Antonio Spurs—9:30 p.m.\nFriday, November 20: Toronto Raptors at Detroit Pistons—7:30 p.m.\nFriday, November 20: Houston Rockets at Denver Nuggets—10 p.m.\nFriday, November 27: Miami Heat at New York Knicks—7 p.m.\nFriday, November 27: Los Angeles Lakers at San Antonio Spurs—9:30 p.m.\nFriday, December 4 (Emirates NBA Cup knockout stage): TBD at TBD\nSaturday, December 5 (Emirates NBA Cup knockout stage): TBD at TBD\nTuesday, December 8 (Emirates NBA Cup knockout stage): TBD at TBD\nFriday, December 11 (Emirates NBA Cup championship game): TBD at TBD\nFriday, December 18: Los Angeles Clippers at Miami Heat—7 p.m.\nWednesday, December 23: Houston Rockets at Philadelphia 76ers—7:30 p.m.\nWednesday, December 23: Denver Nuggets at Los Angeles Lakers—10 p.m.\nThursday, December 31: Denver Nuggets at Minnesota Timberwolves—4 p.m.\nThursday, January 7: Minnesota Timberwolves at Toronto Raptors—7:30 p.m.\nThursday, January 7: Boston Celtics at Los Angeles Lakers—10 p.m.\nThursday, January 14 (Paris game): New Orleans Pelicans at San Antonio Spurs—2 p.m.\nSunday, January 17 (Manchester game): San Antonio Spurs at New Orleans Pelicans—10:30 a.m.\nThursday, January 21: Philadelphia 76ers at Boston Celtics—7:30 p.m.\nThursday, January 21: Los Angeles Lakers at Golden State Warriors—10 p.m.\nThursday, January 28: Atlanta Hawks at New York Knicks—7 p.m.\nThursday, January 28: Miami Heat at Milwaukee Bucks—9:30 p.m.\nThursday, February 4: Boston Celtics at Charlotte Hornets—7:30 p.m.\nThursday, February 4: Dallas Mavericks at Denver Nuggets—10 p.m.\nFriday, February 5: Detroit Pistons at Philadelphia 76ers—7 p.m.\nFriday, February 5: Indiana Pacers at Oklahoma City Thunder—9:30 p.m.\nSaturday, February 6: Miami Heat at Minnesota Timberwolves—3 p.m.\nSaturday, February 6: Portland Trail Blazers at Memphis Grizzlies—5:30 p.m.\nThursday, February 11: New York Knicks at Philadelphia 76ers—7 p.m.\nThursday, February 11: San Antonio Spurs at Oklahoma City Thunder—9:30 p.m.\nFriday, February 12: Minnesota Timberwolves at Boston Celtics—8 p.m.\nSaturday, February 13: Dallas Mavericks at Charlotte Hornets—3 p.m.\nSaturday, February 13: Philadelphia 76ers at Oklahoma City Thunder—5:30 p.m.\nThursday, February 18: San Antonio Spurs at Minnesota Timberwolves—7:30 p.m.\nThursday, February 18: Houston Rockets at Los Angeles Lakers—10 p.m.\nThursday, February 25: Oklahoma City Thunder at New York Knicks—7:30 p.m.\nThursday, February 25: Dallas Mavericks at Golden State Warriors—10 p.m.\nSaturday, February 27: Washington Wizards at Utah Jazz—3 p.m.\nSaturday, February 27: Oklahoma City Thunder at Detroit Pistons—5:30 p.m.\nThursday, March 4: Los Angeles Lakers at Philadelphia 76ers—7 p.m.\nThursday, March 4: New York Knicks at Dallas Mavericks—9:30 p.m.\nSaturday, March 6: Indiana Pacers at Miami Heat—3 p.m.\nSaturday, March 6: Atlanta Hawks at Cleveland Cavaliers—5:30 p.m.\nThursday, March 11: Philadelphia 76ers at San Antonio Spurs—7:30 p.m.\nThursday, March 11: New York Knicks at Los Angeles Lakers—10 p.m.\nFriday, March 12: Oklahoma City Thunder at Boston Celtics—7:30 p.m.\nFriday, March 12: Golden State Warriors at Denver Nuggets—10 p.m.\nSaturday, March 13: Orlando Magic at Atlanta Hawks—3 p.m.\nSaturday, March 13: Indiana Pacers at Houston Rockets—5:30 p.m.\nSaturday, March 27: San Antonio Spurs at Detroit Pistons—3 p.m.\nThursday, April 1: Boston Celtics at Cleveland Cavaliers—7 p.m.\nThursday, April 1: Los Angeles Lakers at Oklahoma City Thunder—9:30 p.m.\nFriday, April 2: Golden State Warriors at Minnesota Timberwolves—7:30 p.m.\nFriday, April 2: Denver Nuggets at Phoenix Suns—10 p.m.",
-      "image_url": "",
+      "image_url": "https://assets.aboutamazon.com/dims4/default/22401e4/2147483647/strip/true/crop/2000x1000+0+63/resize/1200x600!/quality/90/?url=https%3A%2F%2Fassets.aboutamazon.com%2Ffc%2F42%2F865e84524c3fb5f23814f662da69%2Funtitled-13-august-2026-at-14-04-48.png",
       "evidence": [
         {
           "id": "mi-5b80871e69b160f1a3-p001",
@@ -3147,7 +4205,12 @@
       ],
       "content_hash": "baa38c6950155ed542f0ab2a1c12a07707f1c370fa5bb38ae89fba1ea8c1d38c",
       "source_updated_at": "2026-10-14",
-      "last_checked_at": "2026-10-24T02:47:51+00:00"
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
+      "image_alt": "",
+      "image_source_url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
+      "image_attribution": "아마존 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-24T08:13:02+00:00"
     },
     {
       "id": "mi-80909bc46e109903db",
@@ -3552,7 +4615,7 @@
         }
       ],
       "content_hash": "d5eed575231d5cf16dae13543385bcbda71ba4d2178ed1d732d90858850e4d48",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
       "published_at_source": "pdf_publication_unconfirmed"
     },
     {
@@ -3736,7 +4799,7 @@
         }
       ],
       "content_hash": "cc64576f1e9ad7812785a28bb7f37659fc937b2746c65ea702d9f6da13e1fcfb",
-      "last_checked_at": "2026-10-24T02:47:51+00:00",
+      "last_checked_at": "2026-10-24T08:13:02+00:00",
       "published_at_source": "pdf_publication_unconfirmed"
     }
   ]
