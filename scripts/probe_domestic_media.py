@@ -13,13 +13,10 @@ from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = [
-    ("skb_press_feed", "https://blog.bworld.co.kr/category/보도자료/feed/"),
-    ("skb_search", "https://blog.bworld.co.kr/?s=B+tv&feed=rss2"),
-    ("skb_api", "https://blog.bworld.co.kr/wp-json/wp/v2/posts?search=B%20tv&per_page=30&_embed=1"),
-    ("lgu_press", "https://news.lguplus.com/category/프레스센터/보도자료"),
-    ("lgu_product", "https://news.lguplus.com/category/uplus-인사이드/상품-서비스"),
-    ("lgu_api", "https://news.lguplus.com/wp-json/wp/v2/posts?search=tv&per_page=30"),
-    ("lgu_sitemaps", "https://news.lguplus.com/sitemap_index.xml"),
+    ("lgu_bundle", "https://news.lguplus.com/22099"),
+    ("lgu_press_feed", "https://news.lguplus.com/category/프레스센터/보도자료/feed/"),
+    ("lgu_product_page2", "https://news.lguplus.com/category/uplus-인사이드/상품-서비스/page/2/"),
+    ("skb_press_page2", "https://blog.bworld.co.kr/category/보도자료/page/2/"),
     ("kt_news_list", "https://corp.kt.com/html/promote/news/report_list.html"),
 ]
 
@@ -101,7 +98,7 @@ def main():
     with ThreadPoolExecutor(max_workers=6) as pool:
         details = list(pool.map(probe, followups))
     report = {"checked_at": datetime.now(timezone.utc).isoformat(), "sources": results, "article_details": details}
-    path = ROOT / "artifacts/domestic_media_probe_products.json"
+    path = ROOT / "artifacts/domestic_media_probe_bundles.json"
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps({"sources": len(results), "ok": sum(r["status"] == "ok" for r in results), "details": len(details)}))
 
