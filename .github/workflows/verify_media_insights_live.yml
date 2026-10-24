@@ -1,8 +1,8 @@
 name: Verify real media insights analysis
 
-# Launch continuation: one remaining source analysis and one research question.
+# Verify two previously generated real notes and one new research question.
 # Validate real source notes after waking the app and confirming the deployed version.
-# Previously saved source analyses are retained; this check generates only the remaining note.
+# Existing analyses are reused; this run never regenerates or replaces them.
 # No schedules, ordinary deployment triggers, or retries after paid clicks.
 on:
   workflow_dispatch:
@@ -51,10 +51,10 @@ jobs:
           fi
       - name: Verify paid-action and public-persistence rules without model calls
         run: python -m unittest discover -s tests -p 'test_media_insights_live_verification.py' -v
-      - name: Exercise one genuine document analysis and one cited research answer
+      - name: Verify saved genuine analyses and one cited research answer
         id: verify
         continue-on-error: true
-        run: python scripts/verify_media_insights_live.py --analysis-limit 1
+        run: python scripts/verify_media_insights_live.py --analysis-limit 2 --reuse-analyses
       - name: Preserve sanitized counts and checks
         if: always()
         uses: actions/upload-artifact@v4

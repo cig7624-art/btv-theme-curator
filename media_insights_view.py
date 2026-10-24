@@ -50,6 +50,18 @@ def _preview(value, limit):
     return text[:cut if cut > limit * 0.7 else limit].rstrip() + "…"
 
 
+def _show_action_error(error):
+    st.warning(str(error))
+    if isinstance(error, MediaInsightError):
+        code = getattr(error, "code", "validation_failed")
+        if not re.fullmatch(r"[a-z_]{1,64}", code):
+            code = "validation_failed"
+        st.markdown('<span class="media-action-error" hidden aria-hidden="true" data-code="'
+                    + _escape(code) + '" data-engine-version="' + _escape(error.engine_revision)
+                    + '" data-diagnostics="' + _escape(json.dumps(error.diagnostics), 4000) + '"></span>',
+                    unsafe_allow_html=True)
+
+
 def _url(value):
     value = _text(value, 6000)
     if not value or any(ord(char) < 32 or ord(char) == 127 for char in value):
@@ -331,7 +343,7 @@ def _render_detail(item, analysis, *, on_analyze, context_items):
             else:
                 st.warning("분석 근거를 확인하지 못했어요. 원문은 계속 확인할 수 있습니다.")
         except (MediaInsightError, MediaInsightsStorageError) as error:
-            st.warning(str(error))
+            _show_action_error(error)
         except Exception:
             st.warning("분석 노트를 만들지 못했어요. 잠시 후 다시 시도해 주세요.")
     if analysis:
@@ -385,6 +397,9 @@ def validated_answer(answer, items, selected_id=None):
             return None
         context_hashes[selected_id] = hashes[selected_id]
     metadata = {"context_hashes": context_hashes}
+    revision = _text(answer.get("source_engine_revision"), 40)
+    if re.fullmatch(r"\d+\.\d+\.\d+", revision):
+        metadata["source_engine_revision"] = revision
     if source_hash:
         metadata["source_hash"] = source_hash
     if selected_id:
@@ -435,7 +450,7 @@ def _render_research(on_ask, selected_id, items):
                 else:
                     st.info("저장된 자료에서 답의 근거를 확인하지 못했어요. 질문을 더 구체적으로 적어 주세요.")
             except (MediaInsightError, MediaInsightsStorageError) as error:
-                st.warning(str(error))
+                _show_action_error(error)
             except Exception:
                 st.warning("질문을 처리하지 못했어요. 기존 자료는 계속 확인할 수 있습니다.")
         for result in reversed(st.session_state.get(_QUESTIONS, [])[-3:]):
@@ -445,7 +460,8 @@ def _render_research(on_ask, selected_id, items):
                 st.markdown('<div class="media-research-answer"><strong>' + _escape(result.get("question"))
                             + '</strong><p>공식 자료가 갱신됐어요. 현재 자료로 다시 질문해 주세요.</p></div>', unsafe_allow_html=True)
                 continue
-            st.markdown('<div class="media-research-answer"><strong>' + _escape(result["question"]) + '</strong><p>'
+            st.markdown('<div class="media-research-answer" data-engine-version="'
+                        + _escape(answer.get("source_engine_revision", "")) + '"><strong>' + _escape(result["question"]) + '</strong><p>'
                         + _escape(answer.get("answer"), 10000) + '</p></div>', unsafe_allow_html=True)
             links = []
             for source in _rows(answer.get("sources"), 12):
@@ -495,7 +511,7 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                         if isinstance(refreshed, Mapping) and "items" in refreshed:
                             snapshot = refreshed
                     except (MediaInsightError, MediaInsightsStorageError) as error:
-                        st.warning(str(error))
+                        _show_action_error(error)
                     except Exception:
                         st.warning("새 자료를 확인하지 못했어요. 마지막으로 저장된 자료를 보여드립니다.")
         items = insight_items(snapshot)

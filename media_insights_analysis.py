@@ -26,14 +26,24 @@ MAX_INPUT_CHARS = 25_000
 MAX_SELECTED_EVIDENCE = 12
 MAX_CONTEXT_DOCUMENTS = 5
 MAX_EVIDENCE_CHARS = 1_400
+ENGINE_REVISION = "1.3.4"
 
 
 class MediaInsightError(RuntimeError):
     """A safe user-facing error that never contains provider response details."""
 
-    def __init__(self, message, *, code="validation_failed"):
+    def __init__(self, message, *, code="validation_failed", diagnostics=None):
         super().__init__(message)
         self.code = code
+        self.engine_revision = ENGINE_REVISION
+        allowed_counts = {"facts_proposed", "facts_rejected_citation", "facts_rejected_number",
+                          "facts_rejected_scope", "facts_rejected_empty"}
+        supplied = diagnostics if isinstance(diagnostics, Mapping) else {}
+        self.diagnostics = {key: value for key, value in supplied.items()
+                            if key in allowed_counts and type(value) is int and value >= 0}
+        source_hash = supplied.get("selected_item_hash")
+        if isinstance(source_hash, str) and re.fullmatch(r"[0-9a-f]{64}", source_hash):
+            self.diagnostics["selected_item_hash"] = source_hash
 
 
 class _StrictModel(BaseModel):
@@ -447,6 +457,7 @@ def _metadata(item, ids, index, owners, model):
         owner = owners[key]
         hashes[_text(owner.get("id"), 160)] = _text(owner.get("content_hash"), 200)
     return {"generated_at": datetime.now(timezone.utc).isoformat(), "model": model,
+            "source_engine_revision": ENGINE_REVISION,
             "source_hash": _text(item.get("content_hash"), 200), "context_hashes": hashes,
             "evidence": [dict(index[key]) for key in dict.fromkeys(ids)]}
 
@@ -458,24 +469,45 @@ def analyze_media_item(item, context_items=None, *, api_key="", model="gpt-5.6-l
                  api_key=api_key, model=model, client=client, feature="media_analysis",
                  instruction="선택한 문서를 분석한다. facts는 1~5개, btv_options와 questions는 각각 최대 3개. 비교할 실제 원문이 없으면 comparison은 빈 목록으로 둔다.")
     facts, comparison, all_ids = [], [], []
+    diagnostics = {"facts_proposed": len(plan.facts[:5]), "facts_rejected_citation": 0,
+                   "facts_rejected_number": 0, "facts_rejected_scope": 0, "facts_rejected_empty": 0,
+                   "selected_item_hash": item.get("content_hash")}
     verification = {"facts_omitted": 0, "comparisons_omitted": 0,
                     "summary_fallback": False, "headline_fallback": False,
                     "interpretation_omitted": False, "btv_options_omitted": 0, "questions_omitted": 0}
     for fact in plan.facts[:5]:
+        stage = "citation"
         try:
             ids = _validated_ids(fact.evidence_ids, index, allowed=selected_ids)
             text = _model_text(fact.text, 600)
             if not text:
+                stage = "empty"
                 raise MediaInsightError("원문에 근거한 사실을 확인하지 못했습니다.")
+            stage = "number"
             _check_numbers(text, ids, index, owners)
+            stage = "scope"
             _check_scope(text, ids, index)
         except MediaInsightError:
+            diagnostics["facts_rejected_" + stage] += 1
             verification["facts_omitted"] += 1
             continue
         facts.append({"text": text, "evidence_ids": ids})
         all_ids.extend(ids)
     if not facts:
-        raise MediaInsightError("원문에서 분석할 사실을 확인하지 못했습니다.")
+        if not diagnostics["facts_proposed"]:
+            code, message = "empty_facts", "AI가 원문에서 확인할 사실을 정리하지 못했습니다. 기존 자료는 유지됩니다."
+        else:
+            reasons = {
+                "citation": "분석에 연결된 원문 근거를 확인하지 못했습니다. 기존 자료는 유지됩니다.",
+                "number": "분석의 수치를 원문과 대조하지 못했습니다. 기존 자료는 유지됩니다.",
+                "scope": "분석의 사업·지표 범위를 원문과 대조하지 못했습니다. 기존 자료는 유지됩니다.",
+                "empty": "AI가 원문에서 확인할 사실을 정리하지 못했습니다. 기존 자료는 유지됩니다.",
+            }
+            reason = next((key for key in reasons
+                           if diagnostics["facts_rejected_" + key] == diagnostics["facts_proposed"]), None)
+            code = "facts_rejected_" + (reason or "mixed")
+            message = reasons.get(reason, "원문에 근거한 분석 내용을 확인하지 못했습니다. 기존 자료는 유지됩니다.")
+        raise MediaInsightError(message, code=code, diagnostics=diagnostics)
     fact_ids = list(all_ids)
     for row in plan.comparison[:6]:
         try:

@@ -10,7 +10,7 @@ from unittest.mock import Mock, patch
 from openai.lib._pydantic import to_strict_json_schema
 
 from media_insights_analysis import (
-    MAX_INPUT_CHARS, MediaAnalysisPlan, MediaInsightError, MediaResearchPlan,
+    ENGINE_REVISION, MAX_INPUT_CHARS, MediaAnalysisPlan, MediaInsightError, MediaResearchPlan,
     _documents, _quantities, analyze_media_item, answer_media_question,
 )
 
@@ -273,6 +273,45 @@ class MediaInsightsAnalysisTests(unittest.TestCase):
         with self.assertRaises(MediaInsightError):
             analyze_media_item(document(), [], api_key="test", client=client_with(
                 MediaAnalysisPlan(**analysis_plan(facts=bad))))
+
+    def test_no_fact_failures_expose_only_fixed_stage_counts_and_source_hash(self):
+        item = document()
+        item["content_hash"] = "ab" * 32
+        citation = {"text": "SECRET_CLAIM", "evidence_ids": ["SECRET_ID"]}
+        number = {"text": "SECRET_CLAIM $999 million", "evidence_ids": ["netflix-p001"]}
+        scope = {"text": "Prime Video 매출은 $100 million입니다.", "evidence_ids": ["netflix-p001"]}
+        blank = {"text": "", "evidence_ids": ["netflix-p001"]}
+        for rows, code, counts in [
+            ([], "empty_facts", {}),
+            ([citation], "facts_rejected_citation", {"facts_rejected_citation": 1}),
+            ([number], "facts_rejected_number", {"facts_rejected_number": 1}),
+            ([scope], "facts_rejected_scope", {"facts_rejected_scope": 1}),
+            ([blank], "facts_rejected_empty", {"facts_rejected_empty": 1}),
+            ([citation, number], "facts_rejected_mixed", {"facts_rejected_citation": 1, "facts_rejected_number": 1}),
+        ]:
+            with self.subTest(code=code), self.assertRaises(MediaInsightError) as caught:
+                analyze_media_item(item, [], api_key="test", client=client_with(
+                    MediaAnalysisPlan(**analysis_plan(facts=rows))))
+            error = caught.exception
+            self.assertEqual(error.code, code)
+            self.assertEqual(error.engine_revision, ENGINE_REVISION)
+            self.assertEqual(error.diagnostics["facts_proposed"], len(rows))
+            self.assertEqual(error.diagnostics["selected_item_hash"], item["content_hash"])
+            for key, value in counts.items():
+                self.assertEqual(error.diagnostics[key], value)
+            self.assertNotIn("SECRET", str(error) + repr(error.__dict__))
+            self.assertTrue(all(type(value) is int for key, value in error.diagnostics.items() if key != "selected_item_hash"))
+        sanitized = MediaInsightError("안전한 안내", diagnostics={"raw_text": "SECRET", "ids": ["SECRET"],
+            "selected_item_hash": "SECRET", "facts_proposed": True, "facts_rejected_number": -1})
+        self.assertEqual(sanitized.diagnostics, {})
+
+    def test_successful_analysis_and_research_report_the_current_source_engine_revision(self):
+        note = analyze_media_item(document(), [], api_key="test", client=client_with(MediaAnalysisPlan(**analysis_plan())))
+        self.assertEqual(note["source_engine_revision"], ENGINE_REVISION)
+        for plan in [MediaResearchPlan(status="supported", answer="광고형 상품을 안내했습니다.", evidence_ids=["netflix-p001"]),
+                     MediaResearchPlan(status="not_found", answer="확인되지 않았습니다.", evidence_ids=[])]:
+            result = answer_media_question("무엇인가요?", document(), [], api_key="test", client=client_with(plan))
+            self.assertEqual(result["source_engine_revision"], ENGINE_REVISION)
 
     def test_aggregate_amazon_revenue_and_ad_viewers_are_not_relabelled(self):
         for item, text in [

@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install official document and optional analysis packages
-        run: python -m pip install requests beautifulsoup4 pypdf openai pydantic
+        run: python -m pip install requests beautifulsoup4 pypdf==6.21.2 openai pydantic
       - name: Verify collection and concurrent snapshot preservation
         run: |
           python -m unittest discover -s tests -p 'test_media_insights_collection.py' -v

@@ -59,6 +59,14 @@ def app_fixture(data=None, note=None, answer=None):
 
 
 class SourceGuardsTests(unittest.TestCase):
+    def test_answer_retains_only_a_safe_engine_revision(self):
+        data = snapshot()["items"]
+        value = {"status": "supported", "answer": "공식 발표를 확인했습니다.", "evidence_ids": ["one:e1"],
+                 "source_engine_revision": "1.3.4"}
+        self.assertEqual(validated_answer(value, data)["source_engine_revision"], "1.3.4")
+        value["source_engine_revision"] = '<script>unsafe</script>'
+        self.assertNotIn("source_engine_revision", validated_answer(value, data))
+
     def test_dates_filter_publication_not_collection_and_default_keeps_older_records(self):
         data = snapshot(); data["items"].append(document("unknown", published=None))
         before = deepcopy(data)

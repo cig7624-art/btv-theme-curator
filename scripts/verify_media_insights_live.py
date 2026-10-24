@@ -136,7 +136,7 @@ def _wait_ready(page, args, report):
         page.wait_for_timeout(15000)
 
 
-def _choose_unanalysed(frame, excluded_selectors=()):
+def _choose_unanalysed(frame, excluded_selectors=(), *, reuse=False):
     cards = frame.locator('[class*="st-key-media_story_"]')
     for position in range(min(cards.count(), 12)):
         card = cards.nth(position)
@@ -151,11 +151,21 @@ def _choose_unanalysed(frame, excluded_selectors=()):
         frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
         button = frame.locator('.st-key-media_insights_analyze button')
         button.wait_for(state='visible', timeout=30000)
-        if button.inner_text().strip() == '분석 노트 만들기' and button.is_enabled():
+        wanted = '분석 노트 다시 만들기' if reuse else '분석 노트 만들기'
+        if button.inner_text().strip() == wanted and button.is_enabled():
             source = frame.get_by_role('link', name='공식 원문 열기 ↗', exact=True).get_attribute('href')
             _require(_public_url(source), 'official_link_missing')
             return selector, source
     raise VerificationIssue('unanalysed_document_unavailable')
+
+
+def prepare_note(frame, report, position, *, reuse=False):
+    if reuse:
+        _require(frame.locator('.media-note-section').count() > 0, 'saved_analysis_missing')
+        report['checks'][f'analysis_{position}_reused_without_model_call'] = True
+        return
+    _require(frame.locator('.media-note-section').count() == 0, 'existing_analysis_selected')
+    submit_once(frame.locator('.st-key-media_insights_analyze button'), report, 'analysis', action_index=position)
 
 
 def submit_once(button, report, action, *, action_index=None):
@@ -204,7 +214,22 @@ def _wait_result(frame, selector, timeout):
         _require(not has_app_exception(frame.page), 'app_exception')
         alert = frame.locator('.st-key-media_insights_section [data-testid="stAlert"]')
         if alert.count():
-            raise VerificationIssue(media_alert_code(alert.first.inner_text()))
+            trace = frame.locator('.media-action-error')
+            try:
+                trace.first.wait_for(state='attached', timeout=1000)
+            except Exception:
+                pass
+            code = trace.first.get_attribute('data-code') if trace.count() else ''
+            allowed = {'empty_facts', 'facts_rejected_citation', 'facts_rejected_number', 'facts_rejected_scope',
+                       'facts_rejected_empty', 'facts_rejected_mixed', 'invalid_api_key', 'insufficient_quota',
+                       'model_not_found', 'unsupported_parameter', 'provider_error', 'validation_failed'}
+            issue = VerificationIssue(code if code in allowed else media_alert_code(alert.first.inner_text()))
+            if trace.count():
+                raw = json.loads(trace.first.get_attribute('data-diagnostics') or '{}')
+                issue.diagnostics = {key: value for key, value in raw.items()
+                    if key in {'facts_proposed', 'facts_rejected_citation', 'facts_rejected_number',
+                               'facts_rejected_scope', 'facts_rejected_empty'} and type(value) is int and value >= 0}
+            raise issue
         result = frame.locator(selector)
         if result.count() and not frame.locator('[data-stale=true]').count():
             return result
@@ -226,12 +251,11 @@ def exercise(page, args, report, browser):
     report['counts']['visible_documents'] = frame.locator('.media-story-meta').count()
     selected_documents = []
     for position in range(1, args.analysis_limit + 1):
-        selector, source_url = _choose_unanalysed(frame, {row[0] for row in selected_documents})
+        selector, source_url = _choose_unanalysed(frame, {row[0] for row in selected_documents}, reuse=args.reuse_analyses)
         _require(source_url not in {row[1] for row in selected_documents}, 'duplicate_document_selected')
-        _require(frame.locator('.media-note-section').count() == 0, 'existing_analysis_selected')
         prefix = 'analysis_' + str(position)
-        report['checks'][prefix + '_unanalysed_official_document_selected'] = True
-        submit_once(frame.locator('.st-key-media_insights_analyze button'), report, 'analysis', action_index=position)
+        report['checks'][prefix + ('_saved_official_document_selected' if args.reuse_analyses else '_unanalysed_official_document_selected')] = True
+        prepare_note(frame, report, position, reuse=args.reuse_analyses)
         _wait_result(frame, '.media-note-section', args.turn_timeout)
         report['counts'][prefix + '_sections'] = frame.locator('.media-note-section').count()
         report['counts'][prefix + '_confirmed_facts'] = frame.locator('.media-note-section').filter(
@@ -241,7 +265,7 @@ def exercise(page, args, report, browser):
         report['checks'][prefix + '_has_original_evidence'] = frame.locator('.media-evidence-row').count() > 0
         _require(report['checks'][prefix + '_has_original_evidence'], 'analysis_citations_missing')
         selected_documents.append((selector, source_url))
-    report['counts']['unique_analysed_documents'] = len(selected_documents)
+    report['counts']['unique_verified_notes'] = len(selected_documents)
     report['checks']['requested_analysis_count_completed'] = len(selected_documents) == args.analysis_limit
     frame.get_by_role('button', name='리서치 질문하기', exact=True).click()
     panel = frame.locator('.st-key-media_research_panel')
@@ -250,6 +274,9 @@ def exercise(page, args, report, browser):
     field.fill(QUESTION)
     submit_once(panel.get_by_role('button', name='근거 찾아 답하기', exact=True), report, 'question')
     answers = _wait_result(frame, '.media-research-answer', args.turn_timeout)
+    revision = answers.first.get_attribute('data-engine-version')
+    report['checks']['research_engine_version_matches'] = revision == args.expected_version
+    _require(report['checks']['research_engine_version_matches'], 'research_engine_outdated')
     report['counts']['research_answers'] = answers.count()
     answer_text = answers.first.locator('p').inner_text()
     report['checks']['answer_distinguishes_unknown'] = answer_distinguishes_unknown(answer_text)
@@ -295,7 +322,8 @@ def verify(args):
     report = {'schema_version': 1, 'expected_version': args.expected_version, 'observed_version': None,
               'passed': False, 'blocked': False, 'checks': {},
               'counts': {'release_load_attempts': 0, 'analysis_clicks': 0, 'question_clicks': 0,
-                         'requested_analyses': args.analysis_limit}}
+                         'requested_analyses': 0 if args.reuse_analyses else args.analysis_limit,
+                         'requested_saved_notes': args.analysis_limit if args.reuse_analyses else 0}}
     try:
         from playwright.sync_api import sync_playwright
         with sync_playwright() as playwright:
@@ -315,6 +343,8 @@ def verify(args):
     except VerificationIssue as error:
         report['blocked'] = bool(error.blocked)
         report['failure_code'] = error.code
+        if getattr(error, 'diagnostics', None):
+            report['failure_diagnostics'] = error.diagnostics
         report['checks']['verification_completed'] = False
     except Exception:
         report['failure_code'] = 'browser_verification_failed'
@@ -330,6 +360,7 @@ def main(argv=None):
     parser.add_argument('--expected-version')
     parser.add_argument('--analysis-limit', type=int, choices=range(1, 4), default=1,
                         help='Analyse 1 to 3 distinct documents once each; default 1')
+    parser.add_argument('--reuse-analyses', action='store_true', help='Verify saved real notes without regenerating them')
     parser.add_argument('--deploy-timeout', type=float, default=480)
     parser.add_argument('--turn-timeout', type=float, default=240)
     parser.add_argument('--executable', default=os.environ.get('MEDIA_INSIGHTS_CHROMIUM_PATH'))
