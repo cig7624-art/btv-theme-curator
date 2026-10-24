@@ -37,7 +37,14 @@ def main():
         page.on("response", response)
         try:
             page.goto(APP, wait_until="domcontentloaded", timeout=45000)
-            page.wait_for_timeout(20000)
+            page.wait_for_timeout(3000)
+            wake = page.get_by_role("button", name=re.compile(r"get this app back up|wake up", re.I))
+            report["wake_button_found"] = wake.count() > 0
+            report["buttons"] = page.get_by_role("button").all_text_contents()[:10]
+            if wake.count() and wake.first.is_visible():
+                wake.first.click()
+                report["wake_clicked"] = True
+            page.wait_for_timeout(30000)
             report["loaded"] = True
             for frame in page.frames:
                 parsed = urlsplit(frame.url)

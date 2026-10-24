@@ -104,12 +104,16 @@ def _access_check(page, status=None):
 def _load_version(page, args, report, label):
     response = page.goto(args.url, wait_until="domcontentloaded", timeout=45000)
     _access_check(page, response.status if response else None)
-    wake = page.get_by_role("button", name=re.compile(r"^(?:yes, get this app back up!?|wake up)$", re.I))
-    if wake.count():
-        wake.first.click()
+    wake = page.get_by_role("button", name=re.compile(r"get this app back up|wake up", re.I))
+    wake_clicked = False
     marker_deadline = time.monotonic() + 20
     frame = None
     while time.monotonic() < marker_deadline:
+        # Cloud's React sleep screen appears after DOMContentLoaded. Check
+        # throughout the unpaid loading phase, rather than only on navigation.
+        if not wake_clicked and wake.count() and wake.first.is_visible():
+            wake.first.click()
+            wake_clicked = True
         frame = resolve_app_frame(page)
         if frame and frame.locator(".magazine-footer[data-version]").count():
             break

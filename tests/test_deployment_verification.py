@@ -1,7 +1,7 @@
 """A pushed revision or anonymous auth redirect is not a verified deployment."""
 import unittest
 from types import SimpleNamespace
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from scripts.verify_deployment import (
     VerificationIssue, _load_version, access_problem, exact_version, has_app_exception,
@@ -25,6 +25,20 @@ def fake_frame(*, version=None, app=False, exception=False):
 
 
 class DeploymentVerificationTests(unittest.TestCase):
+    def test_sleep_button_can_appear_after_initial_page_navigation(self):
+        app = fake_frame(version="1.3.0", app=True)
+        page = Mock(frames=[app], url="https://public-app.streamlit.app/")
+        page.goto.return_value.status = 200
+        wake = page.get_by_role.return_value
+        wake.count.side_effect = [0, 1]
+        wake.first.is_visible.return_value = True
+        report = {"tests": {}}
+        args = SimpleNamespace(url=page.url, expected_version="1.3.0")
+        with patch("scripts.verify_deployment.resolve_app_frame", side_effect=[None, app]):
+            self.assertIs(_load_version(page, args, report, "desktop"), app)
+        wake.first.click.assert_called_once()
+        self.assertTrue(report["tests"]["desktop_version"])
+
     def test_actual_release_is_found_in_nested_public_iframe_not_wrapper(self):
         wrapper, intermediate, app = fake_frame(), fake_frame(), fake_frame(version="1.1.0", app=True)
         page = Mock(frames=[wrapper, intermediate, app])
