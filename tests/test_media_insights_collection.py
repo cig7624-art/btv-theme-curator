@@ -414,5 +414,23 @@ class OfficialImageryAndDomesticTests(unittest.TestCase):
         self.assertEqual(item["market_scope"], "domestic_product")
         self.assertEqual(item["country"], "KR")
 
+class DomesticNewsroomLayoutTests(unittest.TestCase):
+    def test_cjenm_article_date_and_body_are_not_taken_from_related_news(self):
+        from domestic_product_sources import DOMESTIC_MEDIA_SOURCES
+        source = next(row for row in DOMESTIC_MEDIA_SOURCES if row["id"] == "cjenm_products")
+        # Actual official newsroom uses sections/divs, not article/main tags.
+        html = '''<div class="con-header"><h1>CJ ENM 콘텐츠, 글로벌 OTT 영화·시리즈 흥행 성과</h1>
+        <div class="date"><span class="tb1">2026.10.21</span></div></div>
+        <div class="detail-panel"><div class="cont-area tb2">
+        <p>CJ ENM이 미국 제작 영화와 시리즈, K-드라마와 티빙 오리지널 등 국가와 장르를 넘나드는 작품으로 글로벌 OTT 흥행을 이어가며 콘텐츠 제작 역량을 확인했습니다.</p>
+        <p>공식 발표는 국내외 스튜디오가 제작한 콘텐츠의 유통과 시청 성과를 설명하며, 개별 서비스의 가입 요금이나 현재 판매 조건을 확정하지 않습니다. 영화와 시리즈의 실제 성과를 발표한 기사입니다.</p>
+        </div></div><aside><span class="tb3">2026.10.22</span><p>무관한 다음 기사입니다.</p></aside>'''
+        item = collection.parse_html_document(html, source,
+            url="https://www.cjenm.com/ko/news/media-results/", collected_at=LATER)
+        self.assertEqual(item["published_at"], "2026-10-21")
+        self.assertEqual(item["market_scope"], "domestic_media")
+        self.assertNotIn("무관한 다음 기사", item["body_text"])
+
+
 if __name__ == "__main__":
     unittest.main()

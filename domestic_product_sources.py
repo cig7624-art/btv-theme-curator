@@ -40,7 +40,9 @@ DOMESTIC_MEDIA_SOURCES = (
     {"id": "cjenm_products", "name": "CJ ENM 공식 뉴스", "company": "CJ ENM",
      "url": "https://www.cjenm.com/ko/news/", "source_type": "official_media_announcement",
      "country": "KR", "market_scope": "domestic_media", "require_domestic_media": True,
-     "allowed_hosts": ["www.cjenm.com", "cjenm.com"], "image_hosts": ["www.cjenm.com", "cjenm.com", "web2-cf-image.cjenm.com"]},
+     "allowed_hosts": ["www.cjenm.com", "cjenm.com"], "image_hosts": ["www.cjenm.com", "cjenm.com", "web2-cf-image.cjenm.com"],
+     "article_selector": ".detail-panel .cont-area", "title_selector": ".con-header h1",
+     "date_selector": ".con-header .date .tb1"},
 )
 
 
