@@ -78,8 +78,7 @@ def run(args):
                     report["stage"] = "submitted"
                     # An uncertain or partial submission is never repeated.
                     page.wait_for_timeout(1000)
-                    frame.locator('[data-testid="stSpinner"]').wait_for(state="hidden", timeout=150000)
-                    frame.wait_for_function("() => !document.querySelector('.st-key-media_insights_section [data-stale=true]')", timeout=30000)
+                    frame.locator('.st-key-media_insights_section [data-testid="stSpinner"]').first.wait_for(state="hidden", timeout=150000)
                     after = frame.locator(".media-pending-translation").count()
                     report["batches"].append({"pending_before": before, "pending_after": after})
                     if (frame.locator('.st-key-media_insights_section [data-testid="stException"], .st-key-media_insights_section [data-testid="stAlert"]').count()

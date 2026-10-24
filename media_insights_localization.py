@@ -89,6 +89,12 @@ def _source_index(item, rows=None):
     counts = Counter(_text(row["id"]) for row in records)
     index = {_text(row["id"]): {"text": _text(row["text"], 12_000)}
              for row in records if counts[_text(row["id"])] == 1}
+    # The exact title/excerpt/date are also supplied to the translator. Facts
+    # in that opening excerpt must not be rejected just because the three
+    # separately selected paragraphs cover different business subjects.
+    metadata = " ".join(_text(item.get(key)) for key in ("title", "excerpt", "published_at", "period"))
+    if metadata.strip():
+        index["source-metadata"] = {"text": metadata}
     if not index:
         text = _text(item.get("body_text") or item.get("excerpt"), 12_000)
         if text:
@@ -195,6 +201,7 @@ _SYSTEM = """당신은 공식 미디어 사업 자료를 한국어로 정리하�
 원문의 숫자·기호·통화·단위를 그대로 유지한다. 숫자 환산·성장률 계산·순서 번호를 추가하지 않는다.
 지역과 시기를 유지하고 베타·발표·출시예정·현재판매를 구분한다. 국가 미상을 한국이나 글로벌 적용으로 바꾸지 않는다.
 Amazon 전체 실적을 Prime Video 실적으로 바꾸지 않는다. 기업 인수·실적·상품 제휴를 구분한다.
+실적·주주서한·재무조정표 문서는 숫자·금액·비율·분기 번호를 나열하지 말고 문서의 성격과 원문에서 확인한 사업의 변화에 집중한다. 분기와 연도는 화면의 발표일·원문에서 확인할 수 있으므로 제목에 새 숫자 표현으로 변환하지 않는다.
 제목은 간결하게, 요약은 확인된 핵심만 두 문장 이내로 쓴다. 문서 ID는 제공된 값 그대로 사용한다."""
 
 

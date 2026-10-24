@@ -105,6 +105,18 @@ class MediaInsightsLocalizationTests(unittest.TestCase):
                 self.assertEqual(result["localizations"], {})
                 self.assertEqual(result["failed_ids"], [item["id"]])
 
+    def test_the_supplied_opening_excerpt_is_valid_evidence_for_its_own_document(self):
+        item = source(text="The company announced an advertising partnership for its streaming service.")
+        item["excerpt"] = "Revenue was $123.4 million."
+        good = row(summary="공식 발표에서 매출은 $123.4 million으로 제시했습니다.")
+        result = localize_media_items([item], client=sdk_with([good]), now=NOW)
+        self.assertEqual(result["failed_ids"], [])
+        item["localization"] = result["localizations"][item["id"]]
+        self.assertIsNotNone(valid_localization(item))
+        bad = row(summary="공식 발표에서 매출은 $999 million으로 제시했습니다.")
+        item.pop("localization")
+        self.assertEqual(localize_media_items([item], client=sdk_with([bad]), now=NOW)["failed_ids"], [item["id"]])
+
     def test_unknown_duplicate_missing_or_malformed_rows_do_not_discard_good_siblings(self):
         a, b, c = source(), source("source-b"), source("source-c")
         result = localize_media_items([a, b, c], client=sdk_with([
