@@ -1,0 +1,84 @@
+name: Benchmark public app performance
+
+on:
+  workflow_dispatch:
+    inputs:
+      label:
+        description: Baseline before deployment or optimized after deployment
+        type: choice
+        options: [baseline, optimized]
+        default: optimized
+      expected_version:
+        description: Exact public release version (blank uses VERSION)
+        type: string
+        default: ''
+  push:
+    branches: [codex/performance]
+    paths:
+      - scripts/benchmark_app_performance.py
+      - .github/workflows/benchmark_app_performance.yml
+
+concurrency:
+  group: public-app-performance-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  public-browser-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install browser driver and deployed Streamlit protocol
+        run: python -m pip install playwright streamlit==1.66.0
+      - name: Prefer the runner's existing Chrome
+        run: |
+          performance_browser="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -n "$performance_browser" ]; then
+            echo "PERFORMANCE_CHROMIUM_PATH=$performance_browser" >> "$GITHUB_ENV"
+          else
+            python -m playwright install --with-deps chromium
+          fi
+      - name: Measure safe public navigation and quick searches
+        id: benchmark
+        continue-on-error: true
+        env:
+          BENCHMARK_LABEL: ${{ inputs.label || 'baseline' }}
+          EXPECTED_VERSION: ${{ inputs.expected_version }}
+        run: |
+          performance_args=(--label "$BENCHMARK_LABEL" --timeout 480)
+          if [ -n "$EXPECTED_VERSION" ]; then
+            performance_args+=(--expected-version "$EXPECTED_VERSION")
+          fi
+          python scripts/benchmark_app_performance.py "${performance_args[@]}"
+      - name: Preserve sanitized timing evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-app-performance-${{ inputs.label || 'baseline' }}
+          path: artifacts/performance_*.json
+          retention-days: 7
+      - name: Record sanitized report on this branch
+        if: ${{ always() && !cancelled() && github.ref == 'refs/heads/codex/performance' }}
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+          BENCHMARK_LABEL: ${{ inputs.label || 'baseline' }}
+        run: |
+          performance_report="artifacts/performance_${BENCHMARK_LABEL}.json"
+          if [ ! -f "$performance_report" ]; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$performance_report"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Record public app ${BENCHMARK_LABEL} timings [skip ci]"
+          git pull --rebase origin "$TARGET_BRANCH"
+          git push origin HEAD:"$TARGET_BRANCH"
+      - name: Require complete measurements
+        if: ${{ steps.benchmark.outcome != 'success' }}
+        run: exit 1
