@@ -1238,7 +1238,15 @@
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
       "image_recorded_at": "2026-10-24T09:17:02+00:00",
-      "image_fetched_from": "https://thewaltdisneycompany.com/feed/"
+      "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
+      "localization": {
+        "title": "ESPN·Disney+, AI 기반 검색·콘텐츠 탐색 기능 베타 테스트",
+        "summary": "ESPN과 Disney+가 사용자의 의도를 반영해 정보와 콘텐츠를 찾도록 돕는 AI 기반 기능을 베타 테스트한다. Disney+는 일부 가입자를 대상으로 자연어·음성 입력이나 추천 프롬프트를 활용해 시청 상황에 맞는 콘텐츠를 추천하는 제한적 베타를 진행한다.",
+        "source_hash": "497b1ab9073b544dc6a232378cab1f28d3f4075019d510c24c8a30b6df3e1dc1",
+        "generated_at": "2026-10-24T09:18:27+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-15674e74de373a7bff",
@@ -2898,7 +2906,15 @@
       ],
       "content_hash": "4825da0b4b4b5cddabe6f859cf349400c3e17c6e26260ba335c2060c0cfb356f",
       "last_checked_at": "2026-10-24T09:17:02+00:00",
-      "published_at_source": "official_feed"
+      "published_at_source": "official_feed",
+      "localization": {
+        "title": "Amazon 2025년 주주 서한",
+        "summary": "Amazon의 2025년 주주 서한은 창업자의 스포츠 방송인 지망 경험과 Amazon의 사업 발전 과정을 소개한다. AWS는 스토리지·컴퓨팅·결제·인적 지능에 대한 초기 구상에서 출발했으며, 데이터베이스와 EC2 등 서비스가 개발과 개선을 거쳐 핵심 사업으로 성장했다고 설명한다.",
+        "source_hash": "4825da0b4b4b5cddabe6f859cf349400c3e17c6e26260ba335c2060c0cfb356f",
+        "generated_at": "2026-10-24T09:18:27+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-9067619953f803ee73",
@@ -3079,7 +3095,15 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-24T09:17:02+00:00"
+      "image_recorded_at": "2026-10-24T09:17:02+00:00",
+      "localization": {
+        "title": "Netflix, Warner Bros. 인수 제안 증액 거부",
+        "summary": "Netflix가 Warner Bros.에 대한 제안 금액을 인상하지 않기로 결정했다. Warner Bros. Discovery 이사회가 Paramount Skydance의 최신 제안을 기존 Netflix 합병 계약상 ‘Superior Proposal’로 판단했다는 통지를 받은 데 따른 발표다.",
+        "source_hash": "05ac069470d7041d12fa2cd31a7bf06eb3632ffdfb0be9b462915040cb192920",
+        "generated_at": "2026-10-24T09:18:27+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-8129e4a29e655e18c2",
@@ -3536,7 +3560,15 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-24T09:17:02+00:00"
+      "image_recorded_at": "2026-10-24T09:17:02+00:00",
+      "localization": {
+        "title": "WBD, Netflix 거래 최종 위임장 제출 및 2026년 3월 20일 특별 주주총회 예정",
+        "summary": "Warner Bros. Discovery가 Netflix와의 거래 승인을 위한 최종 위임장 설명서를 제출하고 2026년 3월 20일 특별 주주총회를 예정했다. Netflix와 WBD는 미국 DOJ, 주 법무장관, 유럽연합 집행위원회, 영국 CMA 등 경쟁 당국과 규제 절차를 진행 중이라고 밝혔다.",
+        "source_hash": "4a2b8c2217143371b92bc9097abe1eb31059fed756ba2f1ae36438389bc84fc3",
+        "generated_at": "2026-10-24T09:18:27+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-73d86b62b3d116ac5f",
@@ -4290,7 +4322,15 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-24T09:17:02+00:00"
+      "image_recorded_at": "2026-10-24T09:17:02+00:00",
+      "localization": {
+        "title": "Netflix와 Warner Bros. Discovery, 거래를 전액 현금 방식으로 변경",
+        "summary": "Netflix와 Warner Bros. Discovery가 Netflix의 Warner Bros. 인수에 관한 최종 계약을 전액 현금 거래로 수정했다. 변경된 계약은 거래 구조를 단순화하고 WBD 주주에게 가치의 확실성을 높이며 주주 투표 절차를 앞당긴다.",
+        "source_hash": "317445884687100e21d6e4df531c49a79ce80af82bbd250ddf35e1c36f7091f9",
+        "generated_at": "2026-10-24T09:18:27+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-7ab89eef9abedd9392",
@@ -4406,7 +4446,15 @@
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
       "image_recorded_at": "2026-10-24T09:17:02+00:00",
-      "last_checked_at": "2026-10-24T09:17:02+00:00"
+      "last_checked_at": "2026-10-24T09:17:02+00:00",
+      "localization": {
+        "title": "Netflix, Warner Bros. Discovery 이사회의 합병 계약 지지 표명",
+        "summary": "Netflix가 Warner Bros. Discovery 이사회의 Netflix 계약 승인 권고를 지지한다고 밝혔다. 양사는 거래와 관련해 SEC 제출 서류와 WBD 주주 대상 위임장·투자설명서 절차를 진행할 예정이다.",
+        "source_hash": "9ae3b12d8eef65fae74cd919daa5513940ae6d36e682b0d1cce5d14b559354ee",
+        "generated_at": "2026-10-24T09:18:27+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-5b80871e69b160f1a3",
@@ -4817,7 +4865,15 @@
       "image_source_url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
       "image_attribution": "아마존 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-24T09:17:02+00:00"
+      "image_recorded_at": "2026-10-24T09:17:02+00:00",
+      "localization": {
+        "title": "Prime Video에서 2026-27 NBA 시즌 시청 방법",
+        "summary": "Prime Video는 정규 시즌 67경기를 중계하며 Emirates NBA Cup Championship도 포함한다. AI 기반 Prime 360 하이라이트, Yahoo! Sports와 연동한 맞춤형 판타지 농구 기능이 도입되고, NBA와 AWS는 실시간 통계 제공을 위한 파트너십을 발표했다.",
+        "source_hash": "baa38c6950155ed542f0ab2a1c12a07707f1c370fa5bb38ae89fba1ea8c1d38c",
+        "generated_at": "2026-10-24T09:18:27+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-80909bc46e109903db",
@@ -5223,7 +5279,15 @@
       ],
       "content_hash": "d5eed575231d5cf16dae13543385bcbda71ba4d2178ed1d732d90858850e4d48",
       "last_checked_at": "2026-10-24T09:17:02+00:00",
-      "published_at_source": "pdf_publication_unconfirmed"
+      "published_at_source": "pdf_publication_unconfirmed",
+      "localization": {
+        "title": "Disney Q3 2026 주주 서한",
+        "summary": "Disney는 강한 회계연도 3분기 실적과 연간 전망 재확인을 통해 사업 입지를 강조했다. Experiences의 글로벌 게스트 증가, Toy Story 5의 극장·소비재 성과, ESPN 시청률 증가가 분기 중 소비자 도달 범위를 확대했다고 밝혔다.",
+        "source_hash": "d5eed575231d5cf16dae13543385bcbda71ba4d2178ed1d732d90858850e4d48",
+        "generated_at": "2026-10-24T09:18:27+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-667b17944eef11e106",
