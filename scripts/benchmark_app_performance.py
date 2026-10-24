@@ -33,7 +33,7 @@ TABS = (
 SEARCHES = (("horror", "공포"), ("summer_night", "여름밤"), ("healing", "힐링"))
 FLOW_ORDER = [f"tab_{key}" for key, _, _ in TABS] + [
     "library_open", *[f"library_search_{key}" for key, _ in SEARCHES],
-    "library_reset", "library_source_director",
+    "library_clear_query", "library_source_director",
 ]
 
 
@@ -278,8 +278,11 @@ def benchmark(args):
                                     box.press("Enter")
                                 record(f"library_search_{key}", session.action(search,
                                        selector=".st-key-theme_quick_search_input", query=query, source="전체"), sample)
-                            record("library_reset", session.action(
-                                lambda: resolve_app_frame(page).get_by_role("button", name="검색 초기화", exact=True).click(),
+                            # Clear through the same text-input interaction on
+                            # both releases; the old reset button keeps a stale
+                            # browser value after deleting its session-state key.
+                            record("library_clear_query", session.action(
+                                lambda: search(""),
                                 selector=".st-key-theme_quick_search_input", query="", source="전체"), sample)
 
                             def source_filter(value):
