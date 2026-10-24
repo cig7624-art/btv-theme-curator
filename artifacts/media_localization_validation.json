@@ -4,12 +4,14 @@
     "localization_version": true
   },
   "expected_version": "1.4.0",
-  "button_submitted": false,
-  "stage": "media_open",
-  "checked_at": "2026-10-24T09:08:59.134611+00:00",
+  "button_submitted": true,
+  "stage": "submitted",
+  "checked_at": "2026-10-24T09:17:29.299156+00:00",
   "observed_version": "1.4.0",
   "frame_state": "matched_release",
-  "prepare_failure_type": "Error",
-  "failure_type": "Error",
-  "error_code": "public_app_unavailable"
+  "translation_control_count": 1,
+  "control_visible": true,
+  "batches": [],
+  "failure_type": "TimeoutError",
+  "error_code": "submission_outcome_unconfirmed"
 }
