@@ -1,0 +1,57 @@
+{
+  "scenarios": {
+    "story_warm": {
+      "baseline_wall_median": 2.0057677479999256,
+      "optimized_wall_median": 0.14473062000070058,
+      "wall_reduction_percent": 92.78427823236163,
+      "baseline_cpu_median": 2.02299144,
+      "optimized_cpu_median": 0.14594621600000002
+    },
+    "recommendation_warm": {
+      "baseline_wall_median": 2.1466349599995738,
+      "optimized_wall_median": 0.49079418900146266,
+      "wall_reduction_percent": 77.13657896442905,
+      "baseline_cpu_median": 2.1652704999999983,
+      "optimized_cpu_median": 0.4978985029999996
+    },
+    "library_all": {
+      "baseline_wall_median": 1.9223794050012657,
+      "optimized_wall_median": 0.24213417200007825,
+      "wall_reduction_percent": 87.40445453326531,
+      "baseline_cpu_median": 1.9328415569999997,
+      "optimized_cpu_median": 0.24465170200000053
+    },
+    "library_search_공포": {
+      "baseline_wall_median": 1.1707791440003348,
+      "optimized_wall_median": 0.38628823199906037,
+      "wall_reduction_percent": 67.00588373318769,
+      "baseline_cpu_median": 1.1835185509999988,
+      "optimized_cpu_median": 0.38990035000000134
+    },
+    "library_search_여름밤": {
+      "baseline_wall_median": 0.9343926170004124,
+      "optimized_wall_median": 0.2492314630017063,
+      "wall_reduction_percent": 73.32690151150923,
+      "baseline_cpu_median": 0.9425599149999968,
+      "optimized_cpu_median": 0.2511592339999993
+    },
+    "library_search_힐링": {
+      "baseline_wall_median": 1.3020622659987566,
+      "optimized_wall_median": 0.4091372370003228,
+      "wall_reduction_percent": 68.57775179541886,
+      "baseline_cpu_median": 1.3138751209999953,
+      "optimized_cpu_median": 0.4172584359999991
+    }
+  },
+  "cold_start": {
+    "baseline": 2.6393844279991754,
+    "optimized": 1.0244180379995669
+  },
+  "original_csv_unchanged": true,
+  "parity_pages": 40,
+  "version": "1.4.2",
+  "method": "Local AppTest, identical saved data, no network/model calls, three warm samples",
+  "checked_at": "2026-10-24T15:32:32.505992+00:00",
+  "full_tests_passed": 618,
+  "unsent_director_and_research_retained": true
+}

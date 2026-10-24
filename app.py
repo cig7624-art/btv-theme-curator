@@ -1,10 +1,12 @@
 import html
+import hashlib
 import json
 import os
 import re
 import shutil
 import unicodedata
 from difflib import SequenceMatcher
+from copy import deepcopy
 from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
 
@@ -41,6 +43,8 @@ from ai_director_view import activate_director_tab, render_ai_director_page
 from theme_provenance import director_theme_mask, is_director_theme, weekly_recommendation_runs
 from api_usage_view import render_api_cost_control
 from media_insights_runtime import render_media_insights_tab
+from app_data_cache import cached_csv, cached_prepared_issues, cached_core_issues
+from theme_search import rank_themes_by_ai_intent as _rank_theme_intent
 from issue_selection_copy import SOURCE_CONFIG, SOURCE_DETAIL_LOGIC, SELECTION_STEPS
 
 from theme_content_manager import (
@@ -156,8 +160,59 @@ def go_page(page):
         st.session_state["home_tab_default"] = "지금 주목할 이야기"
 
 
+def preserve_inactive_inputs():
+    """Keep view selections while Streamlit removes inactive view widgets."""
+    page = st.session_state.get("page", "home")
+    active = st.session_state.get("home_sections", st.session_state.get("home_tab_default", "지금 주목할 이야기"))
+    groups = {
+        "추천 테마": ("weekly_theme_count",),
+        "OTT는 지금": ("ott_selected_platform",),
+        "미디어 인사이트": ("media_insight_topic", "media_insight_country", "media_insight_period"),
+        "theme_db": ("theme_quick_search_input", "theme_library_source_filter", "theme_library_page"),
+    }
+    for view, keys in groups.items():
+        showing = page == view if view == "theme_db" else page == "home" and active == view
+        if not showing:
+            for key in keys:
+                if key in st.session_state:
+                    st.session_state[key] = st.session_state[key]
+
+
+def paged_rows(frame, *, namespace, filters, per_page=24):
+    """Search the full result set, then render a bounded page of its cards."""
+    signature_key, page_key = f"_{namespace}_page_filters", f"{namespace}_page"
+    if st.session_state.get(signature_key) != filters:
+        st.session_state[signature_key] = filters
+        st.session_state[page_key] = 1
+    total = len(frame)
+    pages = max(1, (total + per_page - 1) // per_page)
+    page = min(pages, max(1, int(st.session_state.get(page_key, 1))))
+    st.session_state[page_key] = page
+    start = (page - 1) * per_page
+    shown = frame.iloc[start:start + per_page]
+    meta_class = "library-page-meta" if namespace == "theme_library" else "issue-page-meta"
+    st.markdown(f'<div class="{meta_class} small" data-visible-count="{len(shown)}" '
+                f'data-total-results="{total}">{start + 1 if total else 0}–{start + len(shown)}개 · 총 {total}개</div>',
+                unsafe_allow_html=True)
+    if pages > 1:
+        previous, selector, following = st.columns([1, 2, 1], gap="small", vertical_alignment="bottom")
+        def move(offset):
+            st.session_state[page_key] = min(pages, max(1, int(st.session_state.get(page_key, 1)) + offset))
+        with previous:
+            st.button("← 이전", key=f"{namespace}_previous", disabled=page <= 1,
+                      on_click=move, args=(-1,), width="stretch")
+        with selector:
+            st.selectbox("페이지", range(1, pages + 1), key=page_key,
+                         format_func=lambda value: f"{value} / {pages} 페이지", label_visibility="collapsed")
+        with following:
+            st.button("다음 →", key=f"{namespace}_next", disabled=page >= pages,
+                      on_click=move, args=(1,), width="stretch")
+    return shown
+
+
 if "page" not in st.session_state:
     st.session_state["page"] = "home"
+preserve_inactive_inputs()
 
 
 @st.cache_data(ttl=900, max_entries=1, show_spinner=False)
@@ -183,6 +238,9 @@ def clear_theme_ai_search_state():
         "ai_suggestion_content_map", "ai_suggestion_content_meta",
     ]:
         st.session_state.pop(key, None)
+    # Assign the value so Streamlit also clears the already mounted browser
+    # input; deleting only the backend key can leave the old text visible.
+    st.session_state["theme_quick_search_input"] = ""
 
 
 def _detail_box(title, text):
@@ -210,12 +268,12 @@ def _detail_list(title, items):
 
 def load_data():
     sync_persistent_storage_once()
-    issues = pd.read_csv(ISSUE_PATH, sep="|").fillna("")
+    issues = cached_csv(ISSUE_PATH)
 
     if THEME_DB_PATH.exists():
-        themes = pd.read_csv(THEME_DB_PATH, sep="|").fillna("")
+        themes = cached_csv(THEME_DB_PATH)
     elif OLD_THEME_PATH.exists():
-        themes = pd.read_csv(OLD_THEME_PATH, sep="|").fillna("")
+        themes = cached_csv(OLD_THEME_PATH)
     else:
         raise FileNotFoundError("theme_db.csv 또는 theme_pool.csv 파일이 없습니다.")
     themes = ensure_theme_schema(themes)
@@ -223,7 +281,7 @@ def load_data():
     # AI 디렉터는 이 실제 콘텐츠 목록을 사용해 작품의 존재를 대조합니다.
     # 작품 정보가 있다는 사실만으로 B tv 서비스 가능 여부를 확정하지 않습니다.
     if CONTENT_DB_PATH.exists():
-        contents = pd.read_csv(CONTENT_DB_PATH, sep="|").fillna("")
+        contents = cached_csv(CONTENT_DB_PATH)
     else:
         contents = pd.DataFrame(columns=[
             "content_id", "title", "type", "genre", "year", "actors", "director", "tags"
@@ -426,69 +484,25 @@ def _search_term_score(term, field_value, exact_weight):
 
 
 def rank_themes_by_ai_intent(themes, intent):
-    if not intent:
-        return themes.copy()
+    return _rank_theme_intent(themes, intent)
 
-    weighted_terms = []
-    for key, weight in [
-        ("genres", 12),
-        ("subjects", 11),
-        ("narrative_elements", 10),
-        ("moods", 8),
-        ("positive_keywords", 8),
-        ("anchor_titles", 3),
-    ]:
-        for value in intent.get(key, []) or []:
-            if str(value).strip():
-                weighted_terms.append((str(value).strip(), weight))
 
-    negative_terms = [str(value).strip() for value in (intent.get("negative_keywords", []) or []) if str(value).strip()]
-    scored_rows = []
-
-    for _, row in themes.iterrows():
-        fields = {
-            "theme_name": row.get("theme_name", ""),
-            "copy": row.get("copy", ""),
-            "trigger_keywords": row.get("trigger_keywords", ""),
-            "genre": row.get("genre", ""),
-            "mood": row.get("mood", ""),
-            "source_issue": row.get("source_issue", ""),
-        }
-        score = 0.0
-        matched = []
-        for term, base_weight in weighted_terms:
-            term_score = max(
-                _search_term_score(term, fields["theme_name"], base_weight * 1.35),
-                _search_term_score(term, fields["copy"], base_weight * 1.15),
-                _search_term_score(term, fields["trigger_keywords"], base_weight * 1.25),
-                _search_term_score(term, fields["genre"], base_weight),
-                _search_term_score(term, fields["mood"], base_weight * 0.85),
-                _search_term_score(term, fields["source_issue"], base_weight * 0.55),
-            )
-            if term_score > 0:
-                score += term_score
-                matched.append(term)
-
-        combined_text = " ".join(str(value) for value in fields.values()).lower()
-        for negative in negative_terms:
-            if _normalize_search_text(negative) in _normalize_search_text(combined_text):
-                score -= 25
-
-        # 여러 서로 다른 의도 축이 동시에 맞는 테마를 우선합니다.
-        unique_matches = len({_normalize_search_text(value) for value in matched if value})
-        score += min(18, unique_matches * 3)
-
-        if score > 0:
-            item = row.copy()
-            item["ai_search_score"] = round(score, 2)
-            item["ai_matched_terms"] = ",".join(dict.fromkeys(matched))
-            scored_rows.append(item)
-
-    if not scored_rows:
-        return themes.iloc[0:0].copy()
-
-    result = pd.DataFrame(scored_rows)
-    return result.sort_values(["ai_search_score", "theme_name"], ascending=[False, True])
+def find_saved_theme_matches(intent):
+    """Keep one local library lookup per intent/database version in this session."""
+    intent_key = hashlib.sha256(json.dumps(intent, ensure_ascii=False, sort_keys=True, default=str).encode()).hexdigest()
+    # Match the frame actually loaded for this run, rather than a later file
+    # stat: another session may save while the current script is rendering.
+    frame_hash = hashlib.sha256(
+        repr((tuple(themes.columns), tuple(map(str, themes.dtypes)))).encode()
+        + pd.util.hash_pandas_object(themes, index=True).values.tobytes()
+    ).hexdigest()
+    revision = (APP_VERSION, frame_hash, intent_key)
+    previous = st.session_state.get("_director_saved_matches_cache", {})
+    if previous.get("revision") == revision:
+        return deepcopy(previous["items"])
+    items = rank_themes_by_ai_intent(themes, intent).head(5).fillna("").to_dict("records")
+    st.session_state["_director_saved_matches_cache"] = {"revision": revision, "items": deepcopy(items)}
+    return items
 
 
 def render_ai_search_intent(intent, usage=None):
@@ -1553,13 +1567,18 @@ def render_collection_health(assessed, expanded=False):
 
 try:
     all_issues, themes, contents = load_data()
-    recent_issues, issue_start_date, issue_end_date = filter_recent_issues(
-        all_issues,
-        days=ISSUE_LOOKBACK_DAYS
-    )
-    assessed_issues = assess_issues(apply_collection_context(all_issues, read_collection_status()))
-    issues = assessed_issues[assessed_issues["eligible"]].copy()
-    review_issues = assessed_issues[assessed_issues.index.isin(recent_issues.index) & ~assessed_issues["eligible"]].copy()
+    active_home = st.session_state.get("home_sections", st.session_state.get("home_tab_default", "지금 주목할 이야기"))
+    needs_issues = st.session_state["page"] == "issue_db" or (
+        st.session_state["page"] == "home" and active_home in {"지금 주목할 이야기", "추천 테마"})
+    if needs_issues:
+        recent_issues, issue_start_date, issue_end_date = filter_recent_issues(all_issues, days=ISSUE_LOOKBACK_DAYS)
+        assessed_issues = cached_prepared_issues(ISSUE_PATH, Path("collection_status.json"), release_version=APP_VERSION)
+        issues = assessed_issues[assessed_issues["eligible"]].copy()
+        review_issues = assessed_issues[assessed_issues.index.isin(recent_issues.index) & ~assessed_issues["eligible"]].copy()
+    else:
+        assessed_issues = issues = review_issues = all_issues.iloc[0:0].copy()
+        issue_start_date = issue_end_date = ""
+
 except Exception as e:
     st.error(f"CSV 로드 실패: {e}")
     st.stop()
@@ -1597,13 +1616,13 @@ if st.session_state["page"] == "issue_db":
 
     view = st.radio("선정 상태", ["선정된 작품", "검토·제외 후보"], horizontal=True)
     filtered = issues.copy() if view == "선정된 작품" else review_issues.copy()
-    total_count = len(build_core_issues(issues)) if view == "선정된 작품" else len(filtered)
+    total_count = len(cached_core_issues(issues, release_version=APP_VERSION)) if view == "선정된 작품" else len(filtered)
 
     if selected_source != "전체":
         filtered = filtered[filtered["source_group"] == selected_source]
 
     if view == "선정된 작품":
-        filtered = build_core_issues(filtered, news_pool=issues)
+        filtered = cached_core_issues(filtered, news_pool=issues, release_version=APP_VERSION)
 
     if search:
         s = search.strip()
@@ -1617,7 +1636,8 @@ if st.session_state["page"] == "issue_db":
 
     st.markdown(f"### 전체 {total_count}개 중 {len(filtered)}개 표시")
 
-    for _, issue in filtered.iterrows():
+    visible_issues = paged_rows(filtered, namespace="issue_browser", filters=(selected_source, view, search))
+    for _, issue in visible_issues.iterrows():
         render_issue_card(issue)
         keyword_tags = "".join(
             f'<span class="tag">{html.escape(kw)}</span>'
@@ -1773,7 +1793,8 @@ elif st.session_state["page"] == "theme_db":
         shown = filtered.copy()
         st.markdown(f"### 전체 {len(themes)}개 중 {len(shown)}개 표시")
 
-    for _, row in shown.iterrows():
+    visible_themes = paged_rows(shown, namespace="theme_library", filters=(str(quick_query or ""), selected_status))
+    for _, row in visible_themes.iterrows():
         if director_mask.loc[row.name]:
             row = row.copy()
             row["source_status"] = "AI_DIRECTOR"
@@ -1795,229 +1816,241 @@ else:
             unsafe_allow_html=True,
         )
 
+    openai_api_key = get_runtime_secret("OPENAI_API_KEY")
+    openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
+    github_config = get_github_writeback_config()
+
     story_tab, recommendation_tab, director_tab, ott_tab, media_tab = st.tabs(
         ["지금 주목할 이야기", "추천 테마", "AI 디렉터", "OTT는 지금", "미디어 인사이트"],
         key="home_sections", on_change="rerun",
         default=st.session_state.get("home_tab_default", "지금 주목할 이야기"),
     )
     with story_tab:
-        st.markdown(
-            '<section class="magazine-hero">'
-            '<div class="hero-copy"><div class="eyebrow">THE WEEKLY EDIT</div>'
-            '<h1>이슈를 읽고, 취향을 큐레이션하다.</h1>'
-            '<p class="hero-description">이번 주의 이슈에서 새로운 테마를 발견하고, 어울리는 콘텐츠를 연결하세요.</p>'
-            '<div class="hero-meta">'
-            f'<span>선정 작품 <strong>{len(build_core_issues(issues)):,}</strong></span>'
-            f'<span>테마 컬렉션 <strong>{len(themes):,}</strong></span>'
-            f'<span>{html.escape(str(issue_start_date))} — {html.escape(str(issue_end_date))}</span>'
-            '</div></div>'
-            '<div class="hero-art" aria-hidden="true"><div class="orbit"></div>'
-            '<div class="orbit-inner"></div><span class="art-label">STORIES, CONNECTED.</span></div>'
-            '</section>',
-            unsafe_allow_html=True,
-        )
-        with st.container(key="spotlight_section"):
-            with st.container(key="spotlight_heading"):
-                heading, all_issues_link = st.columns([5, 1.5], gap="small", vertical_alignment="center")
-                with heading:
-                    render_section_heading(1, '지금 주목할 이야기', '')
-                with all_issues_link:
-                    if st.button("이슈 전체 보기 ↗", key="spotlight_all_issues", use_container_width=True):
-                        st.session_state["issue_source_filter"] = "전체"
-                        go_page("issue_db")
-                        st.rerun()
-            st.markdown('<p class="section-intro">YouTube 인기 영상·반응, 관객 순위와 작품의 새 소식에서 골랐어요.</p>', unsafe_allow_html=True)
-            if issues.empty:
-                st.info("최근 수집된 이슈가 없습니다. 이슈가 수집되면 이곳에서 확인할 수 있어요.")
-            else:
-                main_issues = build_core_issues(issues).head(10)
-                cards = "".join(
-                    editorial_issue_card_html(issue, index)
-                    for index, (_, issue) in enumerate(main_issues.iterrows(), start=1)
-                )
-                st.markdown(issue_carousel_html(cards), unsafe_allow_html=True)
-                # The script is fixed application code; article text never enters it.
-                with st.container(key="issue_carousel_script"):
-                    st.html(CAROUSEL_SCRIPT, unsafe_allow_javascript=True)
-
-                news_issues = build_core_issues(issues[issues["source_group"] == "온라인 화제·뉴스"], news_pool=issues)
-                if not news_issues.empty:
-                    news_cards = ''.join(news_digest_html(issue) for _, issue in news_issues.head(2).iterrows())
-                    st.markdown(
-                        '<div class="news-digest"><h3 class="news-digest-heading">새로운 소식</h3>'
-                        '<p class="small">개봉·공개·캐스팅·제작 등 작품을 새롭게 이야기할 이유를 모았어요.</p>'
-                        '<div class="news-digest-grid">' + news_cards + '</div></div>',
-                        unsafe_allow_html=True,
+        if story_tab.open:
+            core_story_issues = cached_core_issues(issues, release_version=APP_VERSION)
+            st.markdown(
+                '<section class="magazine-hero">'
+                '<div class="hero-copy"><div class="eyebrow">THE WEEKLY EDIT</div>'
+                '<h1>이슈를 읽고, 취향을 큐레이션하다.</h1>'
+                '<p class="hero-description">이번 주의 이슈에서 새로운 테마를 발견하고, 어울리는 콘텐츠를 연결하세요.</p>'
+                '<div class="hero-meta">'
+                f'<span>선정 작품 <strong>{len(core_story_issues):,}</strong></span>'
+                f'<span>테마 컬렉션 <strong>{len(themes):,}</strong></span>'
+                f'<span>{html.escape(str(issue_start_date))} — {html.escape(str(issue_end_date))}</span>'
+                '</div></div>'
+                '<div class="hero-art" aria-hidden="true"><div class="orbit"></div>'
+                '<div class="orbit-inner"></div><span class="art-label">STORIES, CONNECTED.</span></div>'
+                '</section>',
+                unsafe_allow_html=True,
+            )
+            with st.container(key="spotlight_section"):
+                with st.container(key="spotlight_heading"):
+                    heading, all_issues_link = st.columns([5, 1.5], gap="small", vertical_alignment="center")
+                    with heading:
+                        render_section_heading(1, '지금 주목할 이야기', '')
+                    with all_issues_link:
+                        if st.button("이슈 전체 보기 ↗", key="spotlight_all_issues", use_container_width=True):
+                            st.session_state["issue_source_filter"] = "전체"
+                            go_page("issue_db")
+                            st.rerun()
+                st.markdown('<p class="section-intro">YouTube 인기 영상·반응, 관객 순위와 작품의 새 소식에서 골랐어요.</p>', unsafe_allow_html=True)
+                if issues.empty:
+                    st.info("최근 수집된 이슈가 없습니다. 이슈가 수집되면 이곳에서 확인할 수 있어요.")
+                else:
+                    main_issues = core_story_issues.head(10)
+                    cards = "".join(
+                        editorial_issue_card_html(issue, index)
+                        for index, (_, issue) in enumerate(main_issues.iterrows(), start=1)
                     )
+                    st.markdown(issue_carousel_html(cards), unsafe_allow_html=True)
+                    # The script is fixed application code; article text never enters it.
+                    with st.container(key="issue_carousel_script"):
+                        st.html(CAROUSEL_SCRIPT, unsafe_allow_javascript=True)
+
+                    news_issues = cached_core_issues(issues[issues["source_group"] == "온라인 화제·뉴스"], news_pool=issues, release_version=APP_VERSION)
+                    if not news_issues.empty:
+                        news_cards = ''.join(news_digest_html(issue) for _, issue in news_issues.head(2).iterrows())
+                        st.markdown(
+                            '<div class="news-digest"><h3 class="news-digest-heading">새로운 소식</h3>'
+                            '<p class="small">개봉·공개·캐스팅·제작 등 작품을 새롭게 이야기할 이유를 모았어요.</p>'
+                            '<div class="news-digest-grid">' + news_cards + '</div></div>',
+                            unsafe_allow_html=True,
+                        )
 
     with recommendation_tab:
-        with st.container(key="curation_section"):
-            openai_api_key = get_runtime_secret("OPENAI_API_KEY")
-            openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
-            github_config = get_github_writeback_config()
-            persistent_ready = github_writeback_configured(github_config)
-            recommendation_runs = weekly_recommendation_runs(
-                load_recommendation_runs(THEME_HISTORY_PATH, themes),
-                history=load_recommendation_history(THEME_HISTORY_PATH, days=36500),
-            )
-            selected_run = recommendation_runs[0] if recommendation_runs else {}
-            recs = attach_content_candidates(selected_run.get("recommendations", []), selected_run.get("run_id", ""))
-            meta = selected_run.get("meta", {})
-            content_frame = load_content_candidate_frame()
-            current_rows = content_frame[content_frame["run_id"].astype(str).eq(str(selected_run.get("run_id", "")))]
-            has_current_contents = not current_rows.empty
-            ready = bool(openai_api_key) and persistent_ready and not issues.empty
-            description = f"최근 이슈에서 발견한 {len(recs)}개의 테마" if recs else "최근 이슈에서 새로운 테마를 발견하세요."
+        if recommendation_tab.open:
+            with st.container(key="curation_section"):
+                openai_api_key = get_runtime_secret("OPENAI_API_KEY")
+                openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")
+                github_config = get_github_writeback_config()
+                persistent_ready = github_writeback_configured(github_config)
+                recommendation_runs = weekly_recommendation_runs(
+                    load_recommendation_runs(THEME_HISTORY_PATH, themes),
+                    history=load_recommendation_history(THEME_HISTORY_PATH, days=36500),
+                )
+                selected_run = recommendation_runs[0] if recommendation_runs else {}
+                recs = attach_content_candidates(selected_run.get("recommendations", []), selected_run.get("run_id", ""))
+                meta = selected_run.get("meta", {})
+                content_frame = load_content_candidate_frame()
+                current_rows = content_frame[content_frame["run_id"].astype(str).eq(str(selected_run.get("run_id", "")))]
+                has_current_contents = not current_rows.empty
+                ready = bool(openai_api_key) and persistent_ready and not issues.empty
+                description = f"최근 이슈에서 발견한 {len(recs)}개의 테마" if recs else "최근 이슈에서 새로운 테마를 발견하세요."
 
-            with st.container(key="curation_heading"):
-                title_column, action_column = st.columns([1, 2], gap="small", vertical_alignment="center")
-                with title_column:
-                    render_section_heading(2, '이번 주 추천 테마', description)
-                with action_column:
-                    with st.container(key="curation_actions"):
-                        create_action, content_action, library_action, settings_action = st.columns([1, 1, 1, .23], gap="small")
-                        with create_action:
-                            generate_clicked = st.button(
-                                "테마 생성하기", key="generate_weekly_themes", type="primary",
-                                use_container_width=True, disabled=not ready,
-                                help="최근 이슈로 테마를 만들고 추천 작품과 포스터까지 함께 채웁니다.",
-                            )
-                        with content_action:
-                            content_clicked = st.button(
-                                "콘텐츠 새로고침" if has_current_contents else "콘텐츠 채우기",
-                                key="load_weekly_contents", use_container_width=True,
-                                disabled=not bool(recs and openai_api_key and persistent_ready),
-                                help="현재 추천된 모든 테마의 작품 후보와 포스터를 불러옵니다.",
-                            )
-                        with library_action:
-                            if st.button("테마 라이브러리", key="open_theme_library", use_container_width=True):
-                                go_page("theme_db")
-                                st.rerun()
-                        with settings_action:
-                            with st.popover("⚙", help="생성 개수와 연결 설정", use_container_width=True):
-                                top_n = st.select_slider("생성할 테마 수", options=[5, 10, 15, 20, 25, 30], value=10)
-                                if not openai_api_key:
-                                    st.warning("테마를 생성하려면 OpenAI 연결 설정이 필요합니다.")
-                                if not persistent_ready:
-                                    st.warning("생성한 테마를 저장하려면 GitHub 연결 설정이 필요합니다.")
-                                if issues.empty:
-                                    st.info("선정 가능한 최근 이슈가 없습니다. 이슈 수집 상태를 확인해 주세요.")
-                                st.caption("테마를 생성하면 추천 작품과 포스터도 함께 준비합니다. 콘텐츠 버튼으로 작품 후보만 다시 불러올 수 있습니다.")
-
-            if generate_clicked:
-                try:
-                    with st.spinner("최근 이슈로 테마를 만들고 저장하는 중입니다..."):
-                        issue_records = build_llm_issue_records(issues, max_issues=12)
-                        recent_history = load_recommendation_history(THEME_HISTORY_PATH, days=56)
-                        recs, run_meta = generate_weekly_themes(
-                            issue_records=issue_records,
-                            themes=themes,
-                            top_n=top_n,
-                            api_key=openai_api_key,
-                            model=openai_model,
-                            recent_history=recent_history,
-                        )
-                        updated_themes, updated_history, added_rows = persist_recommendations_locally(
-                            recommendations=recs,
-                            themes=themes,
-                            theme_path=get_active_theme_path(),
-                            history_path=THEME_HISTORY_PATH,
-                            run_meta=run_meta,
-                        )
-                        github_result = {"status": "not_configured"}
-                        if github_writeback_configured(github_config):
-                            try:
-                                github_result = persist_files_to_github(
-                                    theme_path=get_active_theme_path(),
-                                    history_path=THEME_HISTORY_PATH,
-                                    config=github_config,
-                                    run_id=str(run_meta.get("run_id", "")),
+                with st.container(key="curation_heading"):
+                    title_column, action_column = st.columns([1, 2], gap="small", vertical_alignment="center")
+                    with title_column:
+                        render_section_heading(2, '이번 주 추천 테마', description)
+                    with action_column:
+                        with st.container(key="curation_actions"):
+                            create_action, content_action, library_action, settings_action = st.columns([1, 1, 1, .23], gap="small")
+                            with create_action:
+                                generate_clicked = st.button(
+                                    "테마 생성하기", key="generate_weekly_themes", type="primary",
+                                    use_container_width=True, disabled=not ready,
+                                    help="최근 이슈로 테마를 만들고 추천 작품과 포스터까지 함께 채웁니다.",
                                 )
-                            except Exception as github_exc:
-                                github_result = {"status": "error", "error": str(github_exc)}
+                            with content_action:
+                                content_clicked = st.button(
+                                    "콘텐츠 새로고침" if has_current_contents else "콘텐츠 채우기",
+                                    key="load_weekly_contents", use_container_width=True,
+                                    disabled=not bool(recs and openai_api_key and persistent_ready),
+                                    help="현재 추천된 모든 테마의 작품 후보와 포스터를 불러옵니다.",
+                                )
+                            with library_action:
+                                if st.button("테마 라이브러리", key="open_theme_library", use_container_width=True):
+                                    go_page("theme_db")
+                                    st.rerun()
+                            with settings_action:
+                                with st.popover("⚙", help="생성 개수와 연결 설정", use_container_width=True):
+                                    top_n = st.select_slider("생성할 테마 수", options=[5, 10, 15, 20, 25, 30], value=None if "weekly_theme_count" in st.session_state else 10, key="weekly_theme_count")
+                                    if not openai_api_key:
+                                        st.warning("테마를 생성하려면 OpenAI 연결 설정이 필요합니다.")
+                                    if not persistent_ready:
+                                        st.warning("생성한 테마를 저장하려면 GitHub 연결 설정이 필요합니다.")
+                                    if issues.empty:
+                                        st.info("선정 가능한 최근 이슈가 없습니다. 이슈 수집 상태를 확인해 주세요.")
+                                    st.caption("테마를 생성하면 추천 작품과 포스터도 함께 준비합니다. 콘텐츠 버튼으로 작품 후보만 다시 불러올 수 있습니다.")
 
-                        st.session_state["recs"] = recs
-                        st.session_state["generation_meta"] = run_meta
-                        st.session_state["last_generated_run_id"] = str(run_meta.get("run_id", ""))
-                        st.session_state["generation_added_count"] = len(added_rows)
-                        st.session_state["github_writeback_result"] = github_result
-                        st.session_state["updated_theme_csv"] = updated_themes.to_csv(
-                            sep="|", index=False, encoding="utf-8-sig"
-                        ).encode("utf-8-sig")
-                    with st.spinner("테마에 맞는 추천 작품과 포스터를 채우는 중입니다..."):
+                if generate_clicked:
+                    try:
+                        with st.spinner("최근 이슈로 테마를 만들고 저장하는 중입니다..."):
+                            issue_records = build_llm_issue_records(issues, max_issues=12)
+                            recent_history = load_recommendation_history(THEME_HISTORY_PATH, days=56)
+                            recs, run_meta = generate_weekly_themes(
+                                issue_records=issue_records,
+                                themes=themes,
+                                top_n=top_n,
+                                api_key=openai_api_key,
+                                model=openai_model,
+                                recent_history=recent_history,
+                            )
+                            updated_themes, updated_history, added_rows = persist_recommendations_locally(
+                                recommendations=recs,
+                                themes=themes,
+                                theme_path=get_active_theme_path(),
+                                history_path=THEME_HISTORY_PATH,
+                                run_meta=run_meta,
+                            )
+                            github_result = {"status": "not_configured"}
+                            if github_writeback_configured(github_config):
+                                try:
+                                    github_result = persist_files_to_github(
+                                        theme_path=get_active_theme_path(),
+                                        history_path=THEME_HISTORY_PATH,
+                                        config=github_config,
+                                        run_id=str(run_meta.get("run_id", "")),
+                                    )
+                                except Exception as github_exc:
+                                    github_result = {"status": "error", "error": str(github_exc)}
+
+                            st.session_state["recs"] = recs
+                            st.session_state["generation_meta"] = run_meta
+                            st.session_state["last_generated_run_id"] = str(run_meta.get("run_id", ""))
+                            st.session_state["generation_added_count"] = len(added_rows)
+                            st.session_state["github_writeback_result"] = github_result
+                            st.session_state["updated_theme_csv"] = updated_themes.to_csv(
+                                sep="|", index=False, encoding="utf-8-sig"
+                            ).encode("utf-8-sig")
+                        with st.spinner("테마에 맞는 추천 작품과 포스터를 채우는 중입니다..."):
+                            fill_weekly_content_candidates(
+                                recs,
+                                run_id=str(run_meta.get("run_id", "")),
+                                api_key=openai_api_key,
+                                model=openai_model,
+                                github_config=github_config,
+                            )
+                        st.rerun()
+                    except ThemeGenerationError as exc:
+                        st.error(str(exc))
+                    except Exception as exc:
+                        st.exception(exc)
+                if content_clicked:
+                    with st.spinner("추천 작품과 포스터를 다시 채우는 중입니다..."):
                         fill_weekly_content_candidates(
                             recs,
-                            run_id=str(run_meta.get("run_id", "")),
+                            run_id=str(selected_run.get("run_id", "")),
                             api_key=openai_api_key,
                             model=openai_model,
                             github_config=github_config,
                         )
                     st.rerun()
-                except ThemeGenerationError as exc:
-                    st.error(str(exc))
-                except Exception as exc:
-                    st.exception(exc)
-            if content_clicked:
-                with st.spinner("추천 작품과 포스터를 다시 채우는 중입니다..."):
-                    fill_weekly_content_candidates(
-                        recs,
-                        run_id=str(selected_run.get("run_id", "")),
-                        api_key=openai_api_key,
-                        model=openai_model,
-                        github_config=github_config,
-                    )
-                st.rerun()
 
-            if not recs:
-                st.info("테마 생성하기를 누르면 최근 이슈에 맞는 추천 테마가 이곳에 표시됩니다.")
-            else:
-                if selected_run.get("run_id") == st.session_state.get("last_generated_run_id"):
-                    github_result = st.session_state.get("github_writeback_result", {"status": "restored"})
-                    added_count = int(st.session_state.get("generation_added_count", meta.get("new_count", 0)))
+                if not recs:
+                    st.info("테마 생성하기를 누르면 최근 이슈에 맞는 추천 테마가 이곳에 표시됩니다.")
                 else:
-                    github_result = {"status": "restored"}
-                    added_count = int(meta.get("new_count", 0))
-                if github_result.get("status") == "error":
-                    st.warning(f"테마 저장 실패: {github_result.get('error', '')}")
-                current_content_run = st.session_state.get("content_candidate_run_id") == str(selected_run.get("run_id", ""))
-                content_meta = st.session_state.get("content_candidate_meta", {}) if current_content_run else {}
-                content_error = st.session_state.get("content_candidate_error", "") if current_content_run else ""
-                if content_error:
-                    st.warning("추천 작품을 채우지 못했어요. 테마는 저장되어 있습니다. 콘텐츠 버튼으로 다시 시도해 주세요.")
-                if content_meta.get("github_status") == "error":
-                    st.warning(f"콘텐츠 후보 저장 실패: {content_meta.get('github_error', '')}")
-                with st.expander("생성 기록", expanded=False):
-                    render_generation_status(meta, added_count, github_result)
+                    if selected_run.get("run_id") == st.session_state.get("last_generated_run_id"):
+                        github_result = st.session_state.get("github_writeback_result", {"status": "restored"})
+                        added_count = int(st.session_state.get("generation_added_count", meta.get("new_count", 0)))
+                    else:
+                        github_result = {"status": "restored"}
+                        added_count = int(meta.get("new_count", 0))
+                    if github_result.get("status") == "error":
+                        st.warning(f"테마 저장 실패: {github_result.get('error', '')}")
+                    current_content_run = st.session_state.get("content_candidate_run_id") == str(selected_run.get("run_id", ""))
+                    content_meta = st.session_state.get("content_candidate_meta", {}) if current_content_run else {}
+                    content_error = st.session_state.get("content_candidate_error", "") if current_content_run else ""
                     if content_error:
-                        st.caption(f"콘텐츠 연결 오류: {content_error}")
-                    if has_current_contents:
-                        verified_count = int(current_rows["kinolights_status"].astype(str).eq("verified").sum())
-                        poster_count = int(current_rows["poster_url"].astype(str).str.startswith(("https://", "http://")).sum())
-                        st.caption(f"콘텐츠 후보 {len(current_rows)}편 · 작품 정보 확인 {verified_count}편 · 포스터 연결 {poster_count}편")
-                    elif content_meta:
-                        st.caption(f"작품 정보 확인 {content_meta.get('verified_count', 0)}편 · 제목 검색 링크 {content_meta.get('search_link_only_count', 0)}편")
-                for index, rec in enumerate(recs, start=1):
-                    rec["recommended_at"] = selected_run.get("recommended_at", "")
-                    render_theme_card(index, rec, assessed_issues)
+                        st.warning("추천 작품을 채우지 못했어요. 테마는 저장되어 있습니다. 콘텐츠 버튼으로 다시 시도해 주세요.")
+                    if content_meta.get("github_status") == "error":
+                        st.warning(f"콘텐츠 후보 저장 실패: {content_meta.get('github_error', '')}")
+                    with st.expander("생성 기록", expanded=False):
+                        render_generation_status(meta, added_count, github_result)
+                        if content_error:
+                            st.caption(f"콘텐츠 연결 오류: {content_error}")
+                        if has_current_contents:
+                            verified_count = int(current_rows["kinolights_status"].astype(str).eq("verified").sum())
+                            poster_count = int(current_rows["poster_url"].astype(str).str.startswith(("https://", "http://")).sum())
+                            st.caption(f"콘텐츠 후보 {len(current_rows)}편 · 작품 정보 확인 {verified_count}편 · 포스터 연결 {poster_count}편")
+                        elif content_meta:
+                            st.caption(f"작품 정보 확인 {content_meta.get('verified_count', 0)}편 · 제목 검색 링크 {content_meta.get('search_link_only_count', 0)}편")
+                    issue_records_for_cards = assessed_issues.to_dict("records")
+                    for index, rec in enumerate(recs, start=1):
+                        rec["recommended_at"] = selected_run.get("recommended_at", "")
+                        render_theme_card(index, rec, issue_records_for_cards)
 
     with ott_tab:
-        render_ott_page(load_snapshot(OTT_SNAPSHOT_PATH), on_refresh=refresh_ott_public_homes)
+        if ott_tab.open:
+            render_ott_page(load_snapshot(OTT_SNAPSHOT_PATH), on_refresh=refresh_ott_public_homes)
 
     with director_tab:
-        render_ai_director_page(
-            themes=themes, contents=contents,
-            issue_records=[],
-            api_key=openai_api_key, model=openai_model, github_config=github_config,
-            theme_path=get_active_theme_path(), history_path=THEME_HISTORY_PATH,
-            content_path=THEME_CONTENT_PATH, existing_candidates=load_content_candidate_frame(),
-            find_saved_themes=lambda intent: rank_themes_by_ai_intent(themes, intent).head(5).fillna("").to_dict("records"),
-        )
+        if director_tab.open or st.session_state.get("_director_view_visited", False):
+            st.session_state["_director_view_visited"] = True
+            render_ai_director_page(
+                themes=themes, contents=contents,
+                issue_records=[],
+                api_key=openai_api_key, model=openai_model, github_config=github_config,
+                theme_path=get_active_theme_path(), history_path=THEME_HISTORY_PATH,
+                content_path=THEME_CONTENT_PATH, existing_candidates=load_content_candidate_frame(),
+                find_saved_themes=find_saved_theme_matches,
+            )
 
     with media_tab:
-        media_github_config = dict(github_config)
-        media_github_config["media_insights_path"] = get_runtime_secret("MEDIA_INSIGHTS_GITHUB_PATH", "media_insights_snapshot.json")
-        render_media_insights_tab(api_key=openai_api_key, model=openai_model,
-                                  github_config=media_github_config)
+        if media_tab.open or st.session_state.get("media_insight_research_open", False):
+            media_github_config = dict(github_config)
+            media_github_config["media_insights_path"] = get_runtime_secret("MEDIA_INSIGHTS_GITHUB_PATH", "media_insights_snapshot.json")
+            render_media_insights_tab(api_key=openai_api_key, model=openai_model,
+                                      github_config=media_github_config)
 
 with st.container(key="app_footer"):
     footer_brand, footer_cost = st.columns([3, 2], vertical_alignment="center", gap="small")

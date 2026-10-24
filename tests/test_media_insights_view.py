@@ -3,6 +3,7 @@ from copy import deepcopy
 from datetime import datetime, timezone
 import hashlib
 import unittest
+from unittest.mock import patch
 
 from streamlit.testing.v1 import AppTest
 
@@ -157,6 +158,46 @@ class SourceGuardsTests(unittest.TestCase):
 
 
 class MagazinePresentationTests(unittest.TestCase):
+    def test_render_validates_each_source_once_for_stories_archive_and_detail(self):
+        import media_insights_view as view
+        data = snapshot()
+        data["items"][0]["analysis"] = analysis(data["items"][0])
+        with patch.object(view, "valid_localization", wraps=view.valid_localization) as localization, \
+                patch.object(view, "_item_analysis", wraps=view._item_analysis) as notes:
+            app = app_fixture(data)
+            self.assertFalse(app.exception)
+            self.assertEqual(localization.call_count, len(data["items"]))
+            self.assertEqual(notes.call_count, len(data["items"]))
+            app.run()
+            self.assertFalse(app.exception)
+            self.assertEqual(localization.call_count, 2 * len(data["items"]))
+            self.assertEqual(notes.call_count, 2 * len(data["items"]))
+
+    def test_new_render_rejects_saved_copy_and_notes_after_source_changes(self):
+        def render(data):
+            import streamlit as st
+            from media_insights_view import render_media_insights_page
+            render_media_insights_page(st.session_state.get("current_data", data))
+
+        data = snapshot()
+        item = data["items"][0]
+        item["analysis"] = analysis(item)
+        item["localization"] = {"title": "저장된 한국어 광고 제휴 제목", "summary": "공식 발표에서 광고 제휴를 확인했습니다.",
+                                "source_hash": item["content_hash"], "language": "ko",
+                                "generated_at": "2026-10-23T10:00:00Z", "model": "test"}
+        app = AppTest.from_function(render, args=(data,)).run()
+        self.assertFalse(app.exception)
+        self.assertIn(item["localization"]["title"], " ".join(button.label for button in app.button))
+        self.assertIn("확인한 사실", " ".join(row.value for row in app.markdown))
+        updated = deepcopy(data)
+        updated["items"][0]["content_hash"] = "new-source-version"
+        app.session_state["current_data"] = updated
+        app.run()
+        self.assertFalse(app.exception)
+        self.assertNotIn(item["localization"]["title"], " ".join(button.label for button in app.button))
+        self.assertNotIn("확인한 사실", " ".join(row.value for row in app.markdown))
+        self.assertTrue(any('data-item-id="one"' in row.value for row in app.markdown))
+
     def test_korean_analysis_is_reused_and_original_is_not_a_headline(self):
         item = document()
         item["analysis"] = analysis(item)

@@ -36,7 +36,7 @@ class MediaInsightsAppTests(unittest.TestCase):
               patch("media_insights_runtime.persist_media_localizations") as localization_save,
               patch("media_insights_runtime.analyze_media_item") as analyze,
               patch("media_insights_runtime.answer_media_question") as ask,
-              app_fixture() as state):
+              app_fixture(home_tab="미디어 인사이트") as state):
             app = state["app"]
             self.assertFalse(app.exception)
             self.assertEqual([tab.label for tab in app.tabs],
@@ -69,7 +69,7 @@ class MediaInsightsAppTests(unittest.TestCase):
               patch("media_insights_runtime.collect_media_insights") as collect,
               patch("media_insights_runtime.analyze_media_item") as analyze,
               patch("media_insights_runtime.answer_media_question") as ask,
-              app_fixture() as state):
+              app_fixture(home_tab="미디어 인사이트") as state):
             app = state["app"]
             self.assertFalse(app.exception)
             localize.assert_not_called()
@@ -98,7 +98,7 @@ class MediaInsightsAppTests(unittest.TestCase):
         with (patch("media_insights_runtime.load_snapshot", return_value=deepcopy(SNAPSHOT)),
               patch("media_insights_runtime.analyze_media_item", return_value=deepcopy(ANALYSIS)) as analyze,
               patch("media_insights_runtime.persist_media_analysis", return_value={"status": "success"}) as save,
-              app_fixture() as state):
+              app_fixture(home_tab="미디어 인사이트") as state):
             app = state["app"]
             app.button(key="media_insights_analyze").click().run()
             self.assertFalse(app.exception)

@@ -10,6 +10,7 @@ class DirectorWorkflowCorrectionTests(unittest.TestCase):
     def test_library_retains_quick_lookup_but_moves_sentence_ai_to_director(self):
         with patch('ai_director_view.run_director_turn') as run, app_fixture() as state:
             app=state['app']; before={p.name:p.read_bytes() for p in Path('.').glob('*.csv')}
+            self.assertFalse(app.button(key='generate_weekly_themes').disabled)
             app.button(key='open_theme_library').click().run()
             self.assertFalse(app.exception)
             self.assertFalse(any(widget.key=='theme_ai_search_input' for widget in app.text_input))
@@ -21,7 +22,7 @@ class DirectorWorkflowCorrectionTests(unittest.TestCase):
             self.assertFalse(app.exception)
             self.assertEqual(app.session_state['page'],'home')
             self.assertEqual(app.session_state['home_sections'],'AI 디렉터')
-            self.assertFalse(app.button(key='generate_weekly_themes').disabled)
+            self.assertFalse(app.chat_input(key='director_chat_input').disabled)
             run.assert_not_called(); state['generate_weekly_themes'].assert_not_called()
             self.assertEqual(before,{p.name:p.read_bytes() for p in Path('.').glob('*.csv')})
 
@@ -33,6 +34,9 @@ class DirectorWorkflowCorrectionTests(unittest.TestCase):
             app=state['app'].run()
             self.assertFalse(app.exception)
             self.assertTrue(app.button(key='generate_weekly_themes').disabled)
+            app.session_state['home_sections']='AI 디렉터'
+            app.run()
+            self.assertFalse(app.exception)
             self.assertFalse(app.chat_input(key='director_chat_input').disabled)
             self.assertFalse(any(str(button.key or '').startswith('director_quick_') for button in app.button))
             app.chat_input(key='director_chat_input').set_value('차가운 분위기의 범죄 스릴러를 큐레이션해줘.').run()

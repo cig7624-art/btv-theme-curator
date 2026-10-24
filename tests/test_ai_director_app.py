@@ -64,14 +64,16 @@ class DirectorCardTests(unittest.TestCase):
 
 class DirectorAppTests(unittest.TestCase):
     def test_five_tabs_render_both_workflows_without_starting_either_generator(self):
-        with patch('ai_director_view.run_director_turn') as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
+        with patch('ai_director_view.run_director_turn') as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture(home_tab="추천 테마") as state:
             app = state['app']
             self.assertFalse(app.exception)
             self.assertEqual([tab.label for tab in app.tabs], ['지금 주목할 이야기', '추천 테마', 'AI 디렉터', 'OTT는 지금', '미디어 인사이트'])
             self.assertTrue(any(button.key == 'generate_weekly_themes' for button in app.button))
             self.assertTrue(any(button.key == 'load_weekly_contents' for button in app.button))
             self.assertTrue(any(button.key == 'open_theme_library' for button in app.button))
+            app.session_state['home_sections'] = 'AI 디렉터'
             app.run()
+            self.assertFalse(app.chat_input(key='director_chat_input').disabled)
             run.assert_not_called(); adopt.assert_not_called()
             state['generate_weekly_themes'].assert_not_called()
             state['persist_recommendations_locally'].assert_not_called()
@@ -80,7 +82,7 @@ class DirectorAppTests(unittest.TestCase):
         request = '도시의 밤을 배경으로 어두운 스릴러 큐레이션을 만들어줘.'
         expected = session_with(draft())
         expected['messages'][0]['content'] = request
-        with patch('ai_director_view.run_director_turn', return_value=expected) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
+        with patch('ai_director_view.run_director_turn', return_value=expected) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture(home_tab="AI 디렉터") as state:
             app = state['app']
             self.assertFalse(any(str(button.key or '').startswith('director_quick_') for button in app.button))
             self.assertFalse(any(widget.key in {'director_target', 'director_scope'} for widget in app.selectbox))
@@ -103,7 +105,7 @@ class DirectorAppTests(unittest.TestCase):
 
     def test_natural_input_produces_only_drafts_and_persists_context_across_reruns(self):
         expected = session_with(draft())
-        with patch('ai_director_view.run_director_turn', return_value=expected) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
+        with patch('ai_director_view.run_director_turn', return_value=expected) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture(home_tab="AI 디렉터") as state:
             app = state['app']
             app.chat_input(key='director_chat_input').set_value('한국 영화와 드라마를 섞어 테마 3개 만들어줘.').run()
             self.assertFalse(app.exception)
@@ -119,7 +121,7 @@ class DirectorAppTests(unittest.TestCase):
     def test_conversation_search_reuses_saved_themes_and_can_start_a_new_brief(self):
         initial = session_with()
         initial['library_search_intent'] = {'genres': ['범죄'], 'positive_keywords': ['공범', '배신']}
-        with patch('ai_director_view.run_director_turn', return_value=session_with(draft())) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
+        with patch('ai_director_view.run_director_turn', return_value=session_with(draft())) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture(home_tab="AI 디렉터") as state:
             app = state['app']; app.session_state[SESSION_KEY] = initial; app.run()
             self.assertFalse(app.exception)
             markup = ' '.join(item.value for item in app.markdown)
@@ -146,7 +148,7 @@ class DirectorAppTests(unittest.TestCase):
         initial = session_with()
         initial['library_search_intent'] = {'positive_keywords': ['완전히없는소재']}
         expected = deepcopy(initial); expected['library_search_results'] = []
-        with patch('ai_director_view.run_director_turn') as run, app_fixture() as state:
+        with patch('ai_director_view.run_director_turn') as run, app_fixture(home_tab="AI 디렉터") as state:
             app = state['app']; app.session_state[SESSION_KEY] = initial; app.run()
             self.assertFalse(app.exception)
             self.assertIn('가까운 저장 테마가 없어요.', ' '.join(item.value for item in app.caption))
@@ -157,7 +159,7 @@ class DirectorAppTests(unittest.TestCase):
     def test_card_edit_targets_one_theme_without_requiring_global_selection(self):
         initial = session_with(draft(1), draft(2), draft(3))
         revised = deepcopy(initial); revised['drafts'][1]['theme_name'] = '더 감각적인 이름'
-        with patch('ai_director_view.run_director_turn', return_value=revised) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
+        with patch('ai_director_view.run_director_turn', return_value=revised) as run, patch('ai_director_view.adopt_director_draft') as adopt, app_fixture(home_tab="AI 디렉터") as state:
             app = state['app']
             app.session_state[SESSION_KEY] = initial
             app.run()
@@ -175,7 +177,7 @@ class DirectorAppTests(unittest.TestCase):
 
     def test_final_adoption_is_explicit_and_same_revision_is_disabled_after_success(self):
         result = {'status': 'success', 'theme_id': 'T999', 'run_id': 'director-run'}
-        with patch('ai_director_view.adopt_director_draft', return_value=result) as adopt, app_fixture() as state:
+        with patch('ai_director_view.adopt_director_draft', return_value=result) as adopt, app_fixture(home_tab="AI 디렉터") as state:
             app = state['app']; app.session_state[SESSION_KEY] = session_with(draft())
             app.session_state['theme_quick_search_input'] = '이전에 검색한 조건'
             app.run(); adopt.assert_not_called()
@@ -195,7 +197,7 @@ class DirectorAppTests(unittest.TestCase):
             app.run(); adopt.assert_called_once()
 
     def test_insufficient_confirmed_contents_cannot_be_adopted(self):
-        with patch('ai_director_view.adopt_director_draft') as adopt, app_fixture() as state:
+        with patch('ai_director_view.adopt_director_draft') as adopt, app_fixture(home_tab="AI 디렉터") as state:
             app = state['app']; app.session_state[SESSION_KEY] = session_with(draft(count=3)); app.run()
             self.assertFalse(app.exception)
             self.assertTrue(app.button(key='director_adopt_draft-1').disabled)
@@ -204,7 +206,7 @@ class DirectorAppTests(unittest.TestCase):
 
     def test_request_failure_preserves_previous_drafts_and_offers_retry(self):
         initial = session_with(draft())
-        with patch('ai_director_view.run_director_turn', side_effect=RuntimeError('secret-provider-internals')) as run, app_fixture() as state:
+        with patch('ai_director_view.run_director_turn', side_effect=RuntimeError('secret-provider-internals')) as run, app_fixture(home_tab="AI 디렉터") as state:
             app = state['app']; app.session_state[SESSION_KEY] = deepcopy(initial); app.run()
             app.chat_input(key='director_chat_input').set_value('제목만 수정해줘').run()
             self.assertFalse(app.exception)

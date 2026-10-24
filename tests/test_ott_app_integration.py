@@ -18,22 +18,22 @@ class OttAppIntegrationTests(unittest.TestCase):
         st.cache_data.clear()
 
     def test_order_and_reruns_do_not_request_public_sites(self):
-        with patch('ott_collection.collect_public_homes') as collect, patch('ott_collection.load_snapshot',return_value=SNAPSHOT), app_fixture() as state:
+        with patch('ott_collection.collect_public_homes') as collect, patch('ott_collection.load_snapshot',return_value=SNAPSHOT), app_fixture(home_tab='OTT는 지금') as state:
             app=state['app']
             self.assertEqual([tab.label for tab in app.tabs],TABS)
             self.assertFalse(app.exception)
             app.session_state['home_sections']='OTT는 지금'
             app.run()
             self.assertFalse(app.exception)
+            self.assertIn('수집 결과의 원래 목록',' '.join(m.value for m in app.markdown))
             app.session_state['home_sections']='AI 디렉터'
             app.run()
             self.assertFalse(app.exception)
             collect.assert_not_called()
-            self.assertIn('수집 결과의 원래 목록',' '.join(m.value for m in app.markdown))
 
     def test_explicit_refresh_uses_browser_once_and_keeps_result_on_shared_cache(self):
         context=MagicMock();context.__enter__.return_value='public-browser'
-        with patch('ott_collection.collect_public_homes',return_value=SNAPSHOT) as collect, patch('ott_collection.save_snapshot') as save, patch('ott_collection.load_snapshot',return_value=SNAPSHOT), patch('ott_collection.PublicBrowser',return_value=context), patch('shutil.which',return_value='/usr/bin/chromium'), app_fixture() as state:
+        with patch('ott_collection.collect_public_homes',return_value=SNAPSHOT) as collect, patch('ott_collection.save_snapshot') as save, patch('ott_collection.load_snapshot',return_value=SNAPSHOT), patch('ott_collection.PublicBrowser',return_value=context), patch('shutil.which',return_value='/usr/bin/chromium'), app_fixture(home_tab='OTT는 지금') as state:
             app=state['app']
             app.button(key='refresh_ott_public_homes').click().run()
             self.assertFalse(app.exception)

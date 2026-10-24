@@ -27,7 +27,7 @@ def recommendation(theme_id="TEST-1"):
 
 
 @contextmanager
-def app_fixture(*, with_history=True):
+def app_fixture(*, with_history=True, home_tab="추천 테마"):
     """Use only temporary inputs; every remote call and writeback is mocked."""
     with TemporaryDirectory() as temporary, ExitStack() as stack:
         directory = Path(temporary)
@@ -90,7 +90,9 @@ def app_fixture(*, with_history=True):
         previous = Path.cwd()
         os.chdir(directory)
         try:
-            state["app"] = AppTest.from_file(ROOT / "app.py", default_timeout=15).run()
+            app = AppTest.from_file(ROOT / "app.py", default_timeout=15)
+            app.session_state["home_sections"] = home_tab
+            state["app"] = app.run()
             yield state
         finally:
             os.chdir(previous)

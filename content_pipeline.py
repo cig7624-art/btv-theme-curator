@@ -93,6 +93,14 @@ def _unique(rows: list[dict[str, Any]], requested: Mapping) -> tuple[dict[str, A
     return max(matches, key=lambda row: (bool(_url(row.get("poster_url"))), bool(_metadata_source(row.get("source_url"))))), False
 
 
+def _title_index(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    """Narrow exact-identity checks while preserving row order and remakes."""
+    index: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        index.setdefault(_key(row.get("title")), []).append(row)
+    return index
+
+
 def _verified(row: Mapping) -> bool:
     return (_clean(row.get("kinolights_status") or row.get("status")) == "verified"
             and bool(_metadata_source(row.get("source_url"))))
@@ -135,13 +143,19 @@ def resolve_director_contents(
         return []
     catalog, saved = _rows(local_contents), _rows(existing_candidates)
     verified = [row for row in saved if _verified(row)]
+    catalog_by_title = _title_index(catalog)
+    saved_by_title = _title_index(saved)
+    verified_by_title = _title_index(verified)
+    catalog_by_id: dict[str, list[dict[str, Any]]] = {}
+    for row in catalog:
+        catalog_by_id.setdefault(_clean(row.get("content_id")), []).append(row)
     excluded, excluded_ids = _excluded(excluded_titles)
     output, seen = [], set()
     for raw in _rows(suggestions)[:100]:
         requested = dict(raw)
         content_id = _clean(requested.get("content_id"))
         if content_id:
-            id_matches = [row for row in catalog if _clean(row.get("content_id")) == content_id]
+            id_matches = catalog_by_id.get(content_id, [])
             if not id_matches or content_id in excluded_ids:
                 continue
             if not _clean(requested.get("title")):
@@ -150,12 +164,12 @@ def resolve_director_contents(
             if matched is None:
                 continue
         else:
-            matched, ambiguous = _unique(catalog, requested)
+            matched, ambiguous = _unique(catalog_by_title.get(_key(requested.get("title")), []), requested)
         if _key(requested.get("title")) in excluded or ambiguous:
             continue
         catalog_status = "confirmed_local"
         if matched is None:
-            matched, ambiguous = _unique(verified, requested)
+            matched, ambiguous = _unique(verified_by_title.get(_key(requested.get("title")), []), requested)
             catalog_status = "verified_external"
             if ambiguous:
                 continue
@@ -173,7 +187,7 @@ def resolve_director_contents(
         if identity in seen or identity[0] in excluded or _clean(matched.get("content_id")) in excluded_ids:
             continue
         seen.add(identity)
-        metadata, _ = _unique(saved, matched)
+        metadata, _ = _unique(saved_by_title.get(_key(matched.get("title")), []), matched)
         source = _metadata_source((metadata or {}).get("source_url")) or _metadata_source(matched.get("source_url"))
         poster = _url(matched.get("poster_url")) or _url((metadata or {}).get("poster_url"))
         kino_verified = _verified(metadata or {}) or _verified(matched)

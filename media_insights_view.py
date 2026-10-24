@@ -38,6 +38,7 @@ _TOPIC_ALIASES = {
 }
 _COUNTRIES = {"KR": "한국", "US": "미국", "GB": "영국", "JP": "일본", "GLOBAL": "글로벌", "global": "글로벌"}
 _PERIODS = {"전체 기간": None, "최근 30일": 30, "최근 90일": 90, "최근 1년": 365}
+_UNPREPARED = object()
 
 
 def _text(value, limit=3000):
@@ -307,9 +308,9 @@ def _korean(value):
     return bool(re.search(r"[가-힣]", _text(value)))
 
 
-def display_copy(item, analysis=None):
+def display_copy(item, analysis=None, *, localization=_UNPREPARED):
     """Show Korean saved copy; original English stays inside the source drawer."""
-    localized = valid_localization(item)
+    localized = valid_localization(item) if localization is _UNPREPARED else localization
     localized = localized if isinstance(localized, Mapping) else {}
     headline = _text(localized.get("title"), 600)
     summary = _text(localized.get("summary"), 1800)
@@ -322,6 +323,27 @@ def display_copy(item, analysis=None):
     if not _korean(summary):
         summary = _text(item.get("excerpt"), 1800) if _korean(item.get("excerpt")) else "공식 발표의 한국어 요약을 준비하고 있습니다. 원문과 확인한 근거는 아래에서 볼 수 있습니다."
     return {"title": headline, "summary": summary}
+
+
+class _RenderPresentation:
+    """Validate source versions once during this render, never across sessions."""
+
+    def __init__(self, items):
+        self.items = items
+        self.localizations = {item["id"]: valid_localization(item) for item in items}
+        self._analyses = {}
+
+    def pending(self):
+        return [item for item in self.items if self.localizations[item["id"]] is None]
+
+    def analysis(self, item):
+        key = item["id"]
+        if key not in self._analyses:
+            self._analyses[key] = _item_analysis(item, self.items)
+        return self._analyses[key]
+
+    def copy(self, item, analysis=None):
+        return display_copy(item, analysis, localization=self.localizations[item["id"]])
 
 
 def _image_url(value):
@@ -366,10 +388,10 @@ def _editorial_date(item):
     return prefix + _date_label(value)
 
 
-def _render_story(item, *, index, selected, analysis=None, archive=False):
+def _render_story(item, *, index, selected, analysis=None, archive=False, copy=None):
     key = hashlib.sha256(_text(item["id"]).encode()).hexdigest()[:16]
     lead = index == 0 and not archive
-    copy = display_copy(item, analysis)
+    copy = display_copy(item, analysis) if copy is None else copy
     container_key = ("media_archive_story_" if archive else "media_story_") + key
     with st.container(key=container_key):
         classes = "media-story-meta" + (" media-story-selected" if selected else "")
@@ -405,8 +427,8 @@ def _render_comparison(item, analysis):
                        key="media_comparison_export", type="tertiary")
 
 
-def _render_detail(item, analysis, *, on_analyze, context_items):
-    copy = display_copy(item, analysis)
+def _render_detail(item, analysis, *, on_analyze, context_items, copy=None):
+    copy = display_copy(item, analysis) if copy is None else copy
     headline = copy["title"]
     st.markdown('<header class="media-detail-heading" id="media-insight-detail"><span>분석 노트</span><h3>' + _escape(headline)
                 + '</h3><p>' + _escape(' · '.join(value for value in [_company(item), _country(item),
@@ -517,7 +539,7 @@ def validated_answer(answer, items, selected_id=None):
             "evidence_ids": list(ids), "sources": sources, **metadata}
 
 
-def _render_research(on_ask, selected_id, items):
+def _render_research(on_ask, selected_id, items, *, presentation=None):
     if not st.session_state.get("media_insight_research_open"):
         return
     with st.container(key="media_research_panel", border=True):
@@ -557,7 +579,8 @@ def _render_research(on_ask, selected_id, items):
                 url = _url(source.get("url"))
                 if url:
                     source_item = source_items.get(url)
-                    label = display_copy(source_item)["title"] if source_item else "공식 원문"
+                    label = ((presentation.copy(source_item) if presentation else display_copy(source_item))["title"]
+                             if source_item else "공식 원문")
                     links.append(_link(url, label + " ↗"))
             if links:
                 st.markdown('<div class="media-answer-sources">' + ''.join(links) + '</div>', unsafe_allow_html=True)
@@ -615,7 +638,8 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
             return
         domestic = st.session_state.get("media_insight_topic", "전체") == "국내 이슈"
         scope_items = [item for item in items if not domestic or _is_domestic_item(item)]
-        pending_translations = [item for item in items if valid_localization(item) is None]
+        presentation = _RenderPresentation(items)
+        pending_translations = presentation.pending()
         pending_marker = st.empty()
         if pending_translations:
             pending_marker.markdown(''.join('<span class="media-pending-translation" hidden aria-hidden="true" data-item-id="'
@@ -639,7 +663,8 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                                 snapshot = refreshed
                                 items = insight_items(snapshot)
                                 scope_items = [item for item in items if not domestic or _is_domestic_item(item)]
-                                pending_translations = [item for item in items if valid_localization(item) is None]
+                                presentation = _RenderPresentation(items)
+                                pending_translations = presentation.pending()
                                 if pending_translations:
                                     pending_marker.markdown(''.join('<span class="media-pending-translation" hidden aria-hidden="true" data-item-id="'
                                         + _escape(item["id"], 500) + '"></span>' for item in pending_translations), unsafe_allow_html=True)
@@ -679,8 +704,8 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
         if st.session_state.get(_SELECTED) not in known_ids:
             st.session_state[_SELECTED] = (major or filtered)[0]["id"]
         selected = next(item for item in [*major, *filtered] if item["id"] == st.session_state[_SELECTED])
-        _render_research(on_ask, selected["id"], items)
-        analysis = _item_analysis(selected, items)
+        _render_research(on_ask, selected["id"], items, presentation=presentation)
+        analysis = presentation.analysis(selected)
         with st.container(key="media_insights_workspace"):
             stories, detail = st.columns([1.7, 1], gap="large")
             with stories:
@@ -688,23 +713,24 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                             + '<span>' + str(len(major)) + '건</span></div>', unsafe_allow_html=True)
                 if major:
                     _render_story(major[0], index=0, selected=major[0]["id"] == selected["id"],
-                                  analysis=_item_analysis(major[0], items))
+                                  copy=presentation.copy(major[0], presentation.analysis(major[0])))
                     for offset in range(1, len(major), 2):
                         with st.container(key="media_edition_row_" + str(offset)):
                             columns = st.columns(2, gap="medium")
                             for index, item in enumerate(major[offset:offset + 2], start=offset):
                                 with columns[index - offset]:
                                     _render_story(item, index=index, selected=item["id"] == selected["id"],
-                                                  analysis=_item_analysis(item, items))
+                                                  copy=presentation.copy(item, presentation.analysis(item)))
                 else:
                     st.info("이 조건에서 주요 이슈로 추릴 새 발표가 없습니다. 수집 자료는 보관함에서 확인할 수 있습니다.")
                 with st.expander(f"수집 자료 보관함 · {len(filtered)}건", expanded=selected["id"] not in {item["id"] for item in major}):
                     st.caption("보관함에는 주요 이슈에 선정되지 않은 과거 자료와 실적 첨부도 포함됩니다.")
                     for index, item in enumerate(filtered):
                         _render_story(item, index=index, selected=item["id"] == selected["id"],
-                                      analysis=_item_analysis(item, items), archive=True)
+                                      copy=presentation.copy(item, presentation.analysis(item)), archive=True)
                 _render_comparison(selected, analysis)
             with detail:
                 with st.container(key="media_insights_detail"):
-                    _render_detail(selected, analysis, on_analyze=on_analyze, context_items=items)
+                    _render_detail(selected, analysis, on_analyze=on_analyze, context_items=items,
+                                   copy=presentation.copy(selected, analysis))
         _render_collection_sources(snapshot)

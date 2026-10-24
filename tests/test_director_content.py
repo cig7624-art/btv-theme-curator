@@ -112,6 +112,54 @@ class DirectorContentTests(unittest.TestCase):
         self.assertEqual(row["poster_url"], "")
         self.assertNotIn("secret", row["source_url"])
 
+    def test_normalized_title_collisions_keep_remake_ambiguity(self):
+        contents = pd.DataFrame([
+            dict(content_id="C1", title="괴 물", type="영화", year="2006"),
+            dict(content_id="C2", title="괴물", type="드라마", year="2021"),
+        ])
+        self.assertEqual(resolve_director_contents([dict(title="괴물")], contents, enrich_posters=False), [])
+        row = resolve_director_contents([dict(title="괴물", year="2006")], contents, enrich_posters=False)[0]
+        self.assertEqual(row["content_id"], "C1")
+
+        saved = contents.rename(columns={"type": "content_type"}).assign(
+            kinolights_status="verified", source_url="https://m.kinolights.com/title/verified")
+        self.assertEqual(resolve_director_contents([dict(title="괴 물")], pd.DataFrame(), saved, enrich_posters=False), [])
+
+    def test_local_identity_and_art_keep_precedence_over_saved_metadata(self):
+        contents = pd.DataFrame([
+            dict(content_id="local", title="괴물", type="영화", year="2006",
+                 source_url="https://imdb.com/title/local", poster_url="https://images.example.org/local.jpg"),
+        ])
+        saved = pd.DataFrame([
+            dict(title="괴 물", content_type="영화", year="2006", source_url="https://imdb.com/title/no-art"),
+            dict(title="괴물", content_type="영화", year="2006", kinolights_status="verified",
+                 source_url="https://m.kinolights.com/title/saved", poster_url="https://images.example.org/saved.jpg"),
+            dict(title="괴물", content_type="드라마", year="2021", kinolights_status="verified",
+                 source_url="https://m.kinolights.com/title/remake", poster_url="https://images.example.org/remake.jpg"),
+        ])
+        row = resolve_director_contents([dict(title="괴물", year="2006")], contents, saved, enrich_posters=False)[0]
+        self.assertEqual(row["content_id"], "local")
+        self.assertEqual(row["catalog_status"], "confirmed_local")
+        self.assertEqual(row["poster_url"], "https://images.example.org/local.jpg")
+        self.assertEqual(row["source_url"], "https://m.kinolights.com/title/saved")
+        self.assertEqual(row["kinolights_status"], "verified")
+
+    def test_catalog_and_candidate_edits_are_used_on_each_resolution(self):
+        contents = pd.DataFrame([dict(content_id="C1", title="첫 작품", type="영화", year="2024")])
+        saved = pd.DataFrame([
+            dict(title="첫 작품", content_type="영화", year="2024", poster_url="https://images.example.org/first.jpg"),
+        ])
+        first = resolve_director_contents([dict(content_id="C1")], contents, saved, enrich_posters=False)[0]
+        self.assertEqual(first["title"], "첫 작품")
+        self.assertEqual(first["poster_url"], "https://images.example.org/first.jpg")
+
+        contents.loc[0, "title"] = "새 작품"
+        saved.loc[0, ["title", "poster_url"]] = ["새 작품", "https://images.example.org/new.jpg"]
+        self.assertEqual(resolve_director_contents([dict(title="첫 작품")], contents, saved, enrich_posters=False), [])
+        second = resolve_director_contents([dict(content_id="C1")], contents, saved, enrich_posters=False)[0]
+        self.assertEqual(second["title"], "새 작품")
+        self.assertEqual(second["poster_url"], "https://images.example.org/new.jpg")
+
 
 if __name__ == "__main__":
     unittest.main()

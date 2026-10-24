@@ -144,17 +144,25 @@ def content_map_for_scope(frame: pd.DataFrame, run_id: str) -> dict[str, list[di
     scoped["_rank_num"] = pd.to_numeric(scoped["rank"], errors="coerce").fillna(9999)
     scoped = scoped.sort_values(["theme_key", "_rank_num"], kind="stable")
     result: dict[str, list[dict[str, str]]] = {}
-    for _, row in scoped.iterrows():
+    columns = [column for column in scoped.columns if column != "_rank_num"]
+    for row in scoped[columns].to_dict("records"):
         key = _clean(row.get("theme_key"))
         if not key:
             continue
-        result.setdefault(key, []).append({column: _clean(row.get(column)) for column in scoped.columns if column != '_rank_num'})
+        result.setdefault(key, []).append({column: _clean(row.get(column)) for column in columns})
     return result
 
 
+def _content_keys_for_scope(frame: pd.DataFrame, run_id: str) -> pd.Series:
+    """Find connected keys without materializing every candidate's metadata."""
+    df = ensure_content_schema(frame)
+    keys = df.loc[df["run_id"].astype(str) == str(run_id), "theme_key"].map(_clean)
+    return keys.loc[keys.ne("")]
+
+
 def missing_theme_rows(themes: pd.DataFrame, frame: pd.DataFrame, *, limit: int = 10) -> pd.DataFrame:
-    content_map = content_map_for_scope(frame, "THEME_DB")
-    missing = themes[~themes["theme_id"].astype(str).isin(set(content_map))].copy()
+    connected_keys = set(_content_keys_for_scope(frame, "THEME_DB"))
+    missing = themes[~themes["theme_id"].astype(str).isin(connected_keys)].copy()
     return missing.head(max(1, int(limit)))
 
 
@@ -180,11 +188,11 @@ def stale_theme_rows(
 
 
 def content_coverage(themes: pd.DataFrame, frame: pd.DataFrame) -> dict[str, int]:
-    content_map = content_map_for_scope(frame, "THEME_DB")
-    connected = int(themes["theme_id"].astype(str).isin(set(content_map)).sum())
+    content_keys = _content_keys_for_scope(frame, "THEME_DB")
+    connected = int(themes["theme_id"].astype(str).isin(set(content_keys)).sum())
     return {
         "total_themes": int(len(themes)),
         "connected_themes": connected,
         "missing_themes": max(0, int(len(themes)) - connected),
-        "candidate_rows": sum(len(items) for items in content_map.values()),
+        "candidate_rows": int(len(content_keys)),
     }

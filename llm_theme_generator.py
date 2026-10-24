@@ -1353,32 +1353,33 @@ def sync_files_from_github(
     if not github_writeback_configured(config):
         return {"status": "not_configured"}
 
-    branch = config.get("branch") or "main"
-    theme_content = _github_get_file(
-        token=config["token"],
-        repo=config["repo"],
-        branch=branch,
-        path=config["theme_path"],
-    )
-    history_remote_path = config.get("history_path", "theme_recommendation_history.csv")
-    history_content = None
-    if history_remote_path:
-        history_content = _github_get_file(
-            token=config["token"],
-            repo=config["repo"],
-            branch=branch,
-            path=history_remote_path,
-        )
+    from concurrent.futures import ThreadPoolExecutor
 
+    branch = config.get("branch") or "main"
+    history_remote_path = config.get("history_path", "theme_recommendation_history.csv")
     content_remote_path = config.get("content_path", "theme_content_candidates.csv")
-    content_bytes = None
+    remote_paths = {"theme": config["theme_path"]}
+    if history_remote_path:
+        remote_paths["history"] = history_remote_path
     if content_path is not None and content_remote_path:
-        content_bytes = _github_get_file(
-            token=config["token"],
-            repo=config["repo"],
-            branch=branch,
-            path=content_remote_path,
-        )
+        remote_paths["content"] = content_remote_path
+
+    # These independent reads share the existing write lock with the apply
+    # phase. Resolve in the original order so errors still precede all writes.
+    with ThreadPoolExecutor(max_workers=min(3, len(remote_paths))) as executor:
+        pending = {
+            name: executor.submit(
+                _github_get_file,
+                token=config["token"],
+                repo=config["repo"],
+                branch=branch,
+                path=remote_path,
+            )
+            for name, remote_path in remote_paths.items()
+        }
+        theme_content = pending["theme"].result()
+        history_content = pending["history"].result() if "history" in pending else None
+        content_bytes = pending["content"].result() if "content" in pending else None
 
     synced = []
     if theme_content is not None:
