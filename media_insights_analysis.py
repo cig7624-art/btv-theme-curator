@@ -17,7 +17,7 @@ from typing import Literal
 from urllib.parse import urlsplit
 
 from openai import OpenAI
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, create_model
 
 from api_usage import record_llm_response
 
@@ -70,6 +70,31 @@ class MediaResearchPlan(_StrictModel):
 
 def _text(value, limit=2_000):
     return re.sub(r"\s+", " ", str(value or "")).strip()[:limit]
+
+
+def _model_text(value, limit=2_000):
+    # A structured fact/answer may still contain presentation numbering. Strip
+    # only line-leading list markers; decimal values such as 1.2 remain facts.
+    value = re.sub(r"(?m)^[ \t]*(?:[-*•][ \t]+|\d{1,2}[.)][ \t]+)", "", str(value or ""))
+    return _text(value, limit)
+
+
+def _cited_analysis_type(selected_ids, all_ids):
+    selected_type = Literal.__getitem__(tuple(sorted(selected_ids)))
+    provided_type = Literal.__getitem__(tuple(all_ids))
+    fact = create_model("CitedMediaFact", __base__=MediaFact,
+                        evidence_ids=(list[selected_type], Field(description="제공된 선택 문서의 근거 ID만 사용")))
+    comparison = create_model("CitedMediaComparison", __base__=MediaComparison,
+                              evidence_ids=(list[provided_type], Field(description="제공된 원문 근거 ID만 사용")))
+    return create_model("CitedMediaAnalysisPlan", __base__=MediaAnalysisPlan,
+                        facts=(list[fact], Field(description="선택한 문서에서 확인한 사실 1~5개")),
+                        comparison=(list[comparison], Field(description="확보한 원문만 비교. 없으면 빈 목록")))
+
+
+def _cited_research_type(all_ids):
+    provided_type = Literal.__getitem__(tuple(all_ids))
+    return create_model("CitedMediaResearchPlan", __base__=MediaResearchPlan,
+                        evidence_ids=(list[provided_type], Field(description="제공된 원문 근거 ID만 사용. 근거 없으면 빈 목록")))
 
 
 def _url(value):
@@ -428,10 +453,10 @@ def _metadata(item, ids, index, owners, model):
 
 def analyze_media_item(item, context_items=None, *, api_key="", model="gpt-5.6-luna", client=None):
     documents, index, owners = _documents(item, context_items)
-    plan = _call(MediaAnalysisPlan, {"selected_document_id": item["id"], "documents": documents},
+    selected_ids = {row["id"] for row in documents[0]["evidence"]}
+    plan = _call(_cited_analysis_type(selected_ids, index), {"selected_document_id": item["id"], "documents": documents},
                  api_key=api_key, model=model, client=client, feature="media_analysis",
                  instruction="선택한 문서를 분석한다. facts는 1~5개, btv_options와 questions는 각각 최대 3개. 비교할 실제 원문이 없으면 comparison은 빈 목록으로 둔다.")
-    selected_ids = {row["id"] for row in documents[0]["evidence"]}
     facts, comparison, all_ids = [], [], []
     verification = {"facts_omitted": 0, "comparisons_omitted": 0,
                     "summary_fallback": False, "headline_fallback": False,
@@ -439,7 +464,7 @@ def analyze_media_item(item, context_items=None, *, api_key="", model="gpt-5.6-l
     for fact in plan.facts[:5]:
         try:
             ids = _validated_ids(fact.evidence_ids, index, allowed=selected_ids)
-            text = _text(fact.text, 600)
+            text = _model_text(fact.text, 600)
             if not text:
                 raise MediaInsightError("원문에 근거한 사실을 확인하지 못했습니다.")
             _check_numbers(text, ids, index, owners)
@@ -455,7 +480,7 @@ def analyze_media_item(item, context_items=None, *, api_key="", model="gpt-5.6-l
     for row in plan.comparison[:6]:
         try:
             ids = _validated_ids(row.evidence_ids, index)
-            text = _text(row.detail, 700)
+            text = _model_text(row.detail, 700)
             _check_company(row.company, ids, index, owners)
             _check_numbers(_text(row.aspect, 180) + " " + text, ids, index, owners)
             _check_scope(_text(row.aspect, 180) + " " + text, ids, index)
@@ -467,7 +492,7 @@ def analyze_media_item(item, context_items=None, *, api_key="", model="gpt-5.6-l
         comparison.append({"company": _text(row.company, 100), "aspect": _text(row.aspect, 180),
                            "detail": text, "evidence_ids": ids})
         all_ids.extend(ids)
-    summary = _text(plan.summary, 800)
+    summary = _model_text(plan.summary, 800)
     try:
         _check_numbers(summary, fact_ids, index, owners)
         _check_scope(summary, fact_ids, index)
@@ -478,7 +503,7 @@ def analyze_media_item(item, context_items=None, *, api_key="", model="gpt-5.6-l
         if len(facts) > 1 and len(summary) + len(facts[1]["text"]) + 1 <= 800:
             summary += " " + facts[1]["text"]
         verification["summary_fallback"] = True
-    headline = _text(plan.headline, 110)
+    headline = _model_text(plan.headline, 110)
     try:
         _check_numbers(headline, fact_ids, index, owners)
         _check_scope(headline, fact_ids, index)
@@ -489,7 +514,7 @@ def analyze_media_item(item, context_items=None, *, api_key="", model="gpt-5.6-l
         verification["headline_fallback"] = True
 
     def supported_prose(value, limit):
-        text = _text(value, limit)
+        text = _model_text(value, limit)
         try:
             _check_numbers(text, all_ids, index, owners)
             _check_scope(text, all_ids, index)
@@ -515,14 +540,14 @@ def answer_media_question(question, item, context_items=None, *, api_key="", mod
     if not question:
         raise MediaInsightError("조사할 질문을 입력해 주세요.")
     documents, index, owners = _documents(item, context_items)
-    plan = _call(MediaResearchPlan, {"question": question, "selected_document_id": item["id"], "documents": documents},
+    plan = _call(_cited_research_type(index), {"question": question, "selected_document_id": item["id"], "documents": documents},
                  api_key=api_key, model=model, client=client, feature="media_research",
                  instruction="질문의 사실을 제공된 원문에서만 찾는다. 답변 근거가 없으면 status=not_found, evidence_ids=[]로 반환한다. 답변에 B tv 내부 조건이나 미래 수치를 만들어 넣지 않는다. 답변은 번호 목록 없이 자연스러운 문장으로 작성하며 원문에 없는 나열 번호나 수치를 추가하지 않는다.")
     if plan.status == "not_found":
         return {"status": "not_found", "answer": "현재 확보된 공식 자료에서 질문에 답할 근거를 확인하지 못했습니다.",
                 "evidence_ids": [], "sources": [], **_metadata(item, [], index, owners, model)}
     ids = _validated_ids(plan.evidence_ids, index)
-    answer = _text(plan.answer, 4_000)
+    answer = _model_text(plan.answer, 4_000)
     if not answer:
         raise MediaInsightError("원문에 근거한 답변을 확인하지 못했습니다. 다시 시도해 주세요.")
     _check_numbers(answer, ids, index, owners)

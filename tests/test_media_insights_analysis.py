@@ -215,6 +215,53 @@ class MediaInsightsAnalysisTests(unittest.TestCase):
             "btv_options_omitted": 1, "questions_omitted": 1})
         sdk.responses.parse.assert_called_once()
 
+    def test_actual_response_schemas_constrain_citations_to_the_supplied_ids(self):
+        item, context = document(), document("disney", "Disney")
+        item["evidence"].append({**item["evidence"][0], "id": "netflix-p002"})
+        sdk = client_with(MediaAnalysisPlan(**analysis_plan()))
+        analyze_media_item(item, [context], api_key="test", client=sdk)
+        plan_type = sdk.responses.parse.call_args.kwargs["text_format"]
+        schema = to_strict_json_schema(plan_type)
+        fact = schema["$defs"]["CitedMediaFact"]["properties"]["evidence_ids"]["items"]
+        comparison = schema["$defs"]["CitedMediaComparison"]["properties"]["evidence_ids"]["items"]
+        self.assertEqual(set(fact["enum"]), {"netflix-p001", "netflix-p002"})
+        self.assertEqual(set(comparison["enum"]), {"netflix-p001", "netflix-p002", "disney-p001"})
+        for invalid in ["p001", "invented", "disney-p001"]:
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                plan_type.model_validate(analysis_plan(facts=[{"text": "자료를 발표했습니다.", "evidence_ids": [invalid]}]))
+        answer = MediaResearchPlan(status="supported", answer="공식 자료를 발표했습니다.", evidence_ids=["netflix-p001"])
+        research = client_with(answer)
+        answer_media_question("무엇을 발표했나요?", item, [context], api_key="test", client=research)
+        research_type = research.responses.parse.call_args.kwargs["text_format"]
+        research_schema = to_strict_json_schema(research_type)
+        self.assertEqual(set(research_schema["properties"]["evidence_ids"]["items"]["enum"]),
+                         {"netflix-p001", "netflix-p002", "disney-p001"})
+        with self.assertRaises(ValueError):
+            research_type.model_validate({"status": "supported", "answer": "발표했습니다.", "evidence_ids": ["p001"]})
+        self.assertEqual(research_type.model_validate({"status": "not_found", "answer": "미확인", "evidence_ids": []}).status,
+                         "not_found")
+
+    def test_model_list_prefixes_are_formatting_and_decimal_values_still_require_support(self):
+        item = document(text="ESPN and Disney+ are beta testing AI-powered search features with selected users.")
+        plain = "ESPN과 Disney+는 AI 검색 기능을 베타 테스트하고 있습니다."
+        plan = analysis_plan(facts=[{"text": "1. " + plain, "evidence_ids": ["netflix-p001"]}],
+                             headline="1) AI 검색 베타 테스트", summary="2. " + plain)
+        result = analyze_media_item(item, [], api_key="test", client=client_with(MediaAnalysisPlan(**plan)))
+        self.assertEqual(result["facts"][0]["text"], plain)
+        self.assertEqual(result["summary"], plain)
+        self.assertEqual(result["headline"], "AI 검색 베타 테스트")
+        self.assertEqual(result["verification"]["facts_omitted"], 0)
+        answer = MediaResearchPlan(status="supported", answer="1. " + plain + "\n2) 공개된 베타 테스트입니다.",
+                                   evidence_ids=["netflix-p001"])
+        response = answer_media_question("어떤 변화인가요?", item, [], api_key="test", client=client_with(answer))
+        self.assertEqual(response["answer"], plain + " 공개된 베타 테스트입니다.")
+        decimal = analysis_plan(facts=[{"text": "1.2 million달러를 발표했습니다.", "evidence_ids": ["netflix-p001"]}])
+        money = document(text="Revenue was $1.2 million.")
+        result = analyze_media_item(money, [], api_key="test", client=client_with(MediaAnalysisPlan(**decimal)))
+        self.assertTrue(result["facts"][0]["text"].startswith("1.2 million"))
+        with self.assertRaises(MediaInsightError):
+            analyze_media_item(item, [], api_key="test", client=client_with(MediaAnalysisPlan(**decimal)))
+
     def test_validated_summary_fallback_joins_complete_facts_and_all_invalid_still_fails(self):
         good = [{"text": "매출은 $100 million입니다.", "evidence_ids": ["netflix-p001"]},
                 {"text": "미국에서 광고형 상품을 제공합니다.", "evidence_ids": ["netflix-p001"]}]
