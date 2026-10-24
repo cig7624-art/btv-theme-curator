@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 import html
 import io
+import ipaddress
 import json
 from pathlib import Path
 import re
@@ -16,11 +17,18 @@ import streamlit as st
 
 from media_insights_analysis import MediaInsightError
 from media_insights_storage import MediaInsightsStorageError
+from media_insights_editorial import select_major_insights
+from media_insights_localization import valid_localization, MediaLocalizationError
 
 
 _SELECTED = "media_insight_selected_id"
 _NOTES = "media_insight_session_notes"
 _QUESTIONS = "media_insight_questions"
+_SCOPE = "media_insight_scope"
+_SELECTIONS = "media_insight_scope_selections"
+_COMPANIES = {"Netflix": "넷플릭스", "Disney": "디즈니", "Amazon": "아마존", "Comcast": "컴캐스트",
+              "SKT": "SK텔레콤", "SK Broadband": "SK브로드밴드", "KT": "KT", "LG U+": "LG유플러스",
+              "TVING": "티빙", "Wavve": "웨이브", "Coupang Play": "쿠팡플레이"}
 _TOPIC_ORDER = ("광고·요금제", "스포츠·콘텐츠", "제휴·유통", "AI·기술", "실적·사업 전략", "시장·정책")
 _TOPIC_ALIASES = {
     "advertising_pricing": "광고·요금제", "advertising": "광고·요금제", "pricing": "광고·요금제",
@@ -242,6 +250,8 @@ def _item_analysis(item, context_items):
 
 def _select_item(item_id):
     st.session_state[_SELECTED] = item_id
+    scope = st.session_state.get(_SCOPE, "주요 이슈")
+    st.session_state.setdefault(_SELECTIONS, {})[scope] = item_id
 
 
 def _toggle_questions():
@@ -282,29 +292,98 @@ def analysis_markdown(item, analysis):
     return "\n".join(lines).encode("utf-8")
 
 
-def _render_story(item, *, index, selected, analysis=None):
+def _company(item):
+    value = _text(item.get("company"), 120)
+    return _COMPANIES.get(value, value)
+
+
+def _source_label(item):
+    kind = "공식 실적 자료" if item.get("source_type") == "earnings" else "공식 발표"
+    return " · ".join(value for value in (_company(item), kind) if value)
+
+
+def _korean(value):
+    return bool(re.search(r"[가-힣]", _text(value)))
+
+
+def display_copy(item, analysis=None):
+    """Show Korean saved copy; original English stays inside the source drawer."""
+    localized = valid_localization(item)
+    localized = localized if isinstance(localized, Mapping) else {}
+    headline = _text(localized.get("title"), 600)
+    summary = _text(localized.get("summary"), 1800)
+    if not _korean(headline) and analysis and _korean(analysis.get("headline")):
+        headline = _text(analysis.get("headline"), 600)
+    if not _korean(summary) and analysis and _korean(analysis.get("summary")):
+        summary = _text(analysis.get("summary"), 1800)
+    if not _korean(headline):
+        headline = _text(item.get("title"), 600) if _korean(item.get("title")) else f"{_company(item)}의 {_topic(item)} 발표"
+    if not _korean(summary):
+        summary = _text(item.get("excerpt"), 1800) if _korean(item.get("excerpt")) else "공식 발표의 한국어 요약을 준비하고 있습니다. 원문과 확인한 근거는 아래에서 볼 수 있습니다."
+    return {"title": headline, "summary": summary}
+
+
+def _image_url(value):
+    value = _url(value)
+    if not value or urlsplit(value).scheme != "https" or urlsplit(value).port not in {None, 443}:
+        return ""
+    host = (urlsplit(value).hostname or "").lower()
+    if host in {"localhost", "localhost.localdomain"} or host.endswith((".local", ".internal")):
+        return ""
+    try:
+        if not ipaddress.ip_address(host).is_global:
+            return ""
+    except ValueError:
+        pass
+    return value
+
+
+def artwork_html(item, *, lead=False):
+    """Only official collected artwork is photographed; missing art uses typography."""
+    image_url = _image_url(item.get("image_url"))
+    classes = "media-story-art media-story-art-lead" if lead else "media-story-art"
+    brand = _company(item) or "미디어 인사이트"
+    fallback = ('<div class="media-art-fallback"><span>' + _escape(_topic(item))
+                + '</span><strong>' + _escape(brand) + '</strong><small>공식 발표</small></div>')
+    image_class = "media-story-image" + (" media-story-image-logo" if item.get("image_kind") == "company_logo" else "")
+    image = ('<img class="' + image_class + '" src="' + _escape(image_url, 6000)
+             + '" alt="' + _escape(brand + " 공식 발표 관련 이미지")
+             + '" loading="lazy" decoding="async" referrerpolicy="no-referrer" '
+             + 'onerror="this.style.display=\'none\';">') if image_url else ''
+    attribution = _text(item.get("image_attribution") or item.get("image_source_name") or _source_label(item), 200)
+    return '<div class="' + classes + '">' + fallback + image + ('<span class="media-image-credit">' + _escape(attribution) + '</span>' if image else '') + '</div>'
+
+
+def _editorial_date(item):
+    value = item.get("editorial_date") or item.get("published_at")
+    prefix = "원문 수정 " if item.get("editorial_date_basis") == "source_updated" else ""
+    return prefix + _date_label(value)
+
+
+def _render_story(item, *, index, selected, analysis=None, archive=False):
     key = hashlib.sha256(_text(item["id"]).encode()).hexdigest()[:16]
-    lead = index == 0
-    with st.container(key="media_story_" + key):
+    lead = index == 0 and not archive
+    copy = display_copy(item, analysis)
+    container_key = ("media_archive_story_" if archive else "media_story_") + key
+    with st.container(key=container_key):
         classes = "media-story-meta" + (" media-story-selected" if selected else "")
-        scope = [_topic(item), _text(item.get("company")), _country(item)]
+        scope = [_topic(item), _company(item), _country(item)]
         st.markdown('<div class="' + classes + '"><span class="media-story-index">' + f'{index + 1:02d}'
                     + '</span><span>' + _escape(' · '.join(value for value in scope if value)) + '</span>'
-                    + '<time>' + _escape(_date_label(item.get("published_at"))) + '</time></div>', unsafe_allow_html=True)
-        headline = analysis.get("headline") if analysis else ""
-        st.button(headline or _text(item["title"], 600), key="media_select_" + key, type="tertiary", width="stretch",
-                  help=_text(item["title"], 600) if headline and headline != item["title"] else None,
-                  on_click=_select_item, args=(item["id"],))
-        excerpt = _preview(analysis.get("summary") if analysis else item.get("excerpt"), 350 if lead else 180)
-        if excerpt:
-            st.markdown('<p class="media-story-excerpt">' + _escape(excerpt) + '</p>', unsafe_allow_html=True)
-        st.markdown('<div class="media-story-source">' + _escape(item.get("source_name") or item.get("source_type") or "공식 자료")
-                    + (' · ' + _escape(item.get("period")) if _text(item.get("period")) else '')
-                    + (' · 원문 수정 ' + _date_label(item["source_updated_at"]) if item.get("source_updated_at") else '')
-                    + '</div>', unsafe_allow_html=True)
+                    + '<time>' + _escape(_editorial_date(item)) + '</time></div>', unsafe_allow_html=True)
+        if not archive:
+            st.markdown(artwork_html(item, lead=lead), unsafe_allow_html=True)
+        st.button(copy["title"], key=("media_archive_select_" if archive else "media_select_") + key,
+                  type="tertiary", width="stretch", on_click=_select_item, args=(item["id"],))
+        if not archive:
+            st.markdown('<p class="media-story-excerpt">' + _escape(_preview(copy["summary"], 260 if lead else 140)) + '</p>', unsafe_allow_html=True)
+            reason = _text(item.get("editorial_reason"), 300)
+            if reason:
+                st.markdown('<p class="media-editorial-reason"><span>주목한 이유</span>' + _escape(reason) + '</p>', unsafe_allow_html=True)
+        st.markdown('<div class="media-story-source">' + _escape(_source_label(item))
+                    + (' · ' + _escape(item.get("period")) if _text(item.get("period")) else '') + '</div>', unsafe_allow_html=True)
         if selected:
-            st.markdown('<a class="media-mobile-detail-link" href="#media-insight-detail">이 자료의 분석 노트 보기 ↓</a>',
-                        unsafe_allow_html=True)
+            st.markdown('<a class="media-mobile-detail-link" href="#media-insight-detail">이 자료의 분석 노트 보기 ↓</a>', unsafe_allow_html=True)
 
 
 def _render_comparison(item, analysis):
@@ -321,13 +400,12 @@ def _render_comparison(item, analysis):
 
 
 def _render_detail(item, analysis, *, on_analyze, context_items):
-    headline = analysis.get("headline") if analysis else ""
-    st.markdown('<header class="media-detail-heading" id="media-insight-detail"><span>분석 노트</span><h3>' + _escape(headline or item["title"])
-                + '</h3><p>' + _escape(' · '.join(value for value in [_text(item.get("company")), _country(item),
+    copy = display_copy(item, analysis)
+    headline = copy["title"]
+    st.markdown('<header class="media-detail-heading" id="media-insight-detail"><span>분석 노트</span><h3>' + _escape(headline)
+                + '</h3><p>' + _escape(' · '.join(value for value in [_company(item), _country(item),
                                                                    _date_label(item.get("published_at"))] if value)) + '</p></header>',
                 unsafe_allow_html=True)
-    if headline and headline != item["title"]:
-        st.caption("원문 제목 · " + _text(item["title"], 600))
     st.link_button("공식 원문 열기 ↗", _url(item["url"]), width="stretch")
     can_analyze = bool(on_analyze and _evidence(item.get("evidence"), item.get("url"), item.get("title")))
     label = "분석 노트 다시 만들기" if analysis else "분석 노트 만들기"
@@ -347,7 +425,7 @@ def _render_detail(item, analysis, *, on_analyze, context_items):
         except Exception:
             st.warning("분석 노트를 만들지 못했어요. 잠시 후 다시 시도해 주세요.")
     if analysis:
-        st.markdown('<p class="media-detail-summary">' + _escape(analysis["summary"]) + '</p>', unsafe_allow_html=True)
+        st.markdown('<p class="media-detail-summary">' + _escape(copy["summary"]) + '</p>', unsafe_allow_html=True)
         facts = _list_html(fact["text"] for fact in analysis["facts"])
         st.markdown(_section_html("01", "확인한 사실", facts), unsafe_allow_html=True)
         if analysis["interpretation"]:
@@ -360,15 +438,19 @@ def _render_detail(item, analysis, *, on_analyze, context_items):
                            key="media_note_export", width="stretch")
     else:
         st.markdown('<div class="media-source-first"><h4>원문에서 확인한 내용</h4><p>'
-                    + _escape(item.get("excerpt") or "공식 원문과 아래 근거를 확인할 수 있습니다.")
+                    + _escape(copy["summary"])
                     + '</p></div>', unsafe_allow_html=True)
         st.caption("분석 노트를 만들면 원문을 바탕으로 해석과 검토할 선택지를 함께 볼 수 있어요.")
     evidence = analysis["evidence"] if analysis else list(_evidence(item.get("evidence"), item.get("url"), item.get("title")).values())
-    with st.expander("원문·근거", expanded=not bool(analysis)):
+    with st.expander("원문·근거", expanded=False):
+        st.caption("원문 제목 · " + _text(item["title"], 600))
+        st.markdown("원문 내용은 번역 전 문장을 그대로 보관합니다.")
+        if _text(item.get("excerpt")):
+            st.markdown('<p class="media-original-excerpt">' + _escape(item.get("excerpt"), 5000) + '</p>', unsafe_allow_html=True)
         for row in evidence[:20]:
             st.markdown('<div class="media-evidence-row"><div>' + _escape(_locator_label(row["locator"]) or "원문 인용") + '</div>'
                         + '<blockquote>' + _escape(row["text"], 5000) + '</blockquote>'
-                        + _link(row["url"], (row["title"] or "공식 자료") + ' ↗') + '</div>', unsafe_allow_html=True)
+                        + _link(row["url"], _source_label(item) + ' ↗') + '</div>', unsafe_allow_html=True)
         if not evidence:
             st.caption("인용할 본문을 확인하면 이곳에 근거가 표시됩니다.")
     return analysis
@@ -464,10 +546,13 @@ def _render_research(on_ask, selected_id, items):
                         + _escape(answer.get("source_engine_revision", "")) + '"><strong>' + _escape(result["question"]) + '</strong><p>'
                         + _escape(answer.get("answer"), 10000) + '</p></div>', unsafe_allow_html=True)
             links = []
+            source_items = {_url(item.get("url")): item for item in items}
             for source in _rows(answer.get("sources"), 12):
                 url = _url(source.get("url"))
                 if url:
-                    links.append(_link(url, _text(source.get("title") or source.get("locator") or "공식 원문") + " ↗"))
+                    source_item = source_items.get(url)
+                    label = display_copy(source_item)["title"] if source_item else "공식 원문"
+                    links.append(_link(url, label + " ↗"))
             if links:
                 st.markdown('<div class="media-answer-sources">' + ''.join(links) + '</div>', unsafe_allow_html=True)
 
@@ -486,11 +571,14 @@ def _render_collection_sources(snapshot):
             elif source.get("error_code") == "no_business_documents":
                 label = "선정할 사업 자료 없음"
             date = _date_label(when) if when else "아직 확인한 자료가 없습니다"
-            st.markdown('<div class="media-source-status"><strong>' + _escape(source.get("name") or source.get("id"))
+            name = _text(source.get("name") or source.get("id"))
+            if not _korean(name):
+                name = _company(source) or next((ko + " 공식 자료" for en, ko in _COMPANIES.items() if en.lower() in name.lower()), "공식 자료")
+            st.markdown('<div class="media-source-status"><strong>' + _escape(name)
                         + '</strong><span>' + _escape(label) + '</span><span>' + _escape(date) + '</span></div>', unsafe_allow_html=True)
 
 
-def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on_ask=None):
+def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on_ask=None, on_localize=None):
     """Render real saved items; only explicit buttons call the supplied callbacks."""
     snapshot = snapshot if isinstance(snapshot, Mapping) else {}
     st.markdown('<style>' + Path(__file__).with_name("media_insights_styles.css").read_text(encoding="utf-8") + '</style>',
@@ -519,10 +607,42 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
             st.info("공식 발표와 실적 자료를 확인하면 주요 변화와 원문이 이곳에 표시됩니다.")
             _render_collection_sources(snapshot)
             return
-        topic_values = {_topic(item) for item in items}
+        scope = st.segmented_control("이슈 범위", ["주요 이슈", "국내 상품 이슈"],
+                                     default="주요 이슈", selection_mode="single",
+                                     key=_SCOPE, label_visibility="collapsed") or "주요 이슈"
+        domestic = scope == "국내 상품 이슈"
+        scope_items = [item for item in items if not domestic or item.get("market_scope") == "domestic_product"]
+        pending_translations = [item for item in scope_items if valid_localization(item) is None]
+        if pending_translations:
+            st.markdown(''.join('<span class="media-pending-translation" hidden aria-hidden="true" data-item-id="'
+                                + _escape(item["id"], 500) + '"></span>' for item in pending_translations), unsafe_allow_html=True)
+        with st.container(key="media_insights_edition_caption"):
+            if pending_translations:
+                explanation, translate = st.columns([4, 1], gap="small", vertical_alignment="center")
+            else:
+                explanation, translate = st.container(), None
+            with explanation:
+                st.caption("최근 6개월 국내 공식 발표에서 상품·결합·이용 조건의 변화를 추립니다. 상품 조건은 발표 당시 기준입니다." if domestic else
+                           "최근 공식 발표 중 상품·유통·AI·사업 실적의 주요 변화를 추립니다.")
+            if pending_translations:
+                with translate:
+                    if st.button("한글 정리", key="media_insights_localize", disabled=on_localize is None,
+                                 width="stretch", help="새 영문 자료의 제목과 요약을 한 번 정리해 저장합니다."):
+                        try:
+                            with st.spinner("새 자료의 제목과 요약을 한국어로 정리하고 있어요…"):
+                                refreshed = on_localize()
+                            if isinstance(refreshed, Mapping) and "items" in refreshed:
+                                snapshot = refreshed
+                                items = insight_items(snapshot)
+                                scope_items = [item for item in items if not domestic or item.get("market_scope") == "domestic_product"]
+                        except (MediaLocalizationError, MediaInsightsStorageError) as error:
+                            st.warning(str(error))
+                        except Exception:
+                            st.warning("한글 정리를 완료하지 못했습니다. 저장된 자료와 원문은 유지됩니다.")
+        topic_values = {_topic(item) for item in scope_items}
         topics = ["전체", *[topic for topic in _TOPIC_ORDER if topic in topic_values],
                   *sorted(topic_values - set(_TOPIC_ORDER))]
-        countries = ["전체", *sorted({_country(item) for item in items if _country(item)})]
+        countries = ["전체", *sorted({_country(item) for item in scope_items if _country(item)})]
         with st.container(key="media_insights_filters"):
             topic_col, country_col, period_col = st.columns([2.8, 1, 1], gap="small")
             with topic_col:
@@ -536,28 +656,45 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                                        format_func=lambda value: "전체 지역" if value == "전체" else value)
             with period_col:
                 period = st.selectbox("발표 기간", list(_PERIODS), key="media_insight_period", label_visibility="collapsed")
-        filtered = filter_insight_items(items, topic=topic, country=country, lookback_days=_PERIODS[period])
+        filtered = filter_insight_items(scope_items, topic=topic, country=country, lookback_days=_PERIODS[period])
+        major = select_major_insights(filtered, scope="domestic" if domestic else "all", limit=6)
         if not filtered:
-            st.info("선택한 조건에 맞는 발표가 없습니다. 기간이나 주제를 바꾸면 저장된 자료를 확인할 수 있어요.")
+            st.info("확인된 국내 상품 발표가 아직 없습니다. 공식 출처에서 확인된 새 상품·조건 변경만 이곳에 추가합니다." if domestic else
+                    "선택한 조건에 맞는 발표가 없습니다. 기간이나 주제를 바꾸면 저장된 자료를 확인할 수 있어요.")
             _render_collection_sources(snapshot)
             return
         known_ids = {item["id"] for item in filtered}
+        previous_scope = st.session_state.get("media_insight_previous_scope")
+        if previous_scope != scope:
+            st.session_state[_SELECTED] = st.session_state.get(_SELECTIONS, {}).get(scope)
+        st.session_state["media_insight_previous_scope"] = scope
         if st.session_state.get(_SELECTED) not in known_ids:
-            st.session_state[_SELECTED] = filtered[0]["id"]
-        selected = next(item for item in filtered if item["id"] == st.session_state[_SELECTED])
+            st.session_state[_SELECTED] = (major or filtered)[0]["id"]
+        selected = next(item for item in [*major, *filtered] if item["id"] == st.session_state[_SELECTED])
         _render_research(on_ask, selected["id"], items)
         analysis = _item_analysis(selected, items)
         with st.container(key="media_insights_workspace"):
-            stories, detail = st.columns([1.45, 1], gap="large")
+            stories, detail = st.columns([1.7, 1], gap="large")
             with stories:
-                st.markdown('<div class="media-section-label">주요 변화'
-                            + '<span>' + str(len(filtered)) + '건</span></div>', unsafe_allow_html=True)
-                for index, item in enumerate(filtered[:6]):
-                    _render_story(item, index=index, selected=item["id"] == selected["id"], analysis=_item_analysis(item, items))
-                if len(filtered) > 6:
-                    with st.expander(f"자료 {len(filtered) - 6}건 더 보기", expanded=selected["id"] not in {item["id"] for item in filtered[:6]}):
-                        for index, item in enumerate(filtered[6:], start=6):
-                            _render_story(item, index=index, selected=item["id"] == selected["id"], analysis=_item_analysis(item, items))
+                st.markdown('<div class="media-section-label">' + ("국내 상품의 변화" if domestic else "이번에 주목할 변화")
+                            + '<span>' + str(len(major)) + '건</span></div>', unsafe_allow_html=True)
+                if major:
+                    _render_story(major[0], index=0, selected=major[0]["id"] == selected["id"],
+                                  analysis=_item_analysis(major[0], items))
+                    for offset in range(1, len(major), 2):
+                        with st.container(key="media_edition_row_" + str(offset)):
+                            columns = st.columns(2, gap="medium")
+                            for index, item in enumerate(major[offset:offset + 2], start=offset):
+                                with columns[index - offset]:
+                                    _render_story(item, index=index, selected=item["id"] == selected["id"],
+                                                  analysis=_item_analysis(item, items))
+                else:
+                    st.info("이 조건에서 주요 이슈로 추릴 새 발표가 없습니다. 수집 자료는 보관함에서 확인할 수 있습니다.")
+                with st.expander(f"수집 자료 보관함 · {len(filtered)}건", expanded=selected["id"] not in {item["id"] for item in major}):
+                    st.caption("보관함에는 주요 이슈에 선정되지 않은 과거 자료와 실적 첨부도 포함됩니다.")
+                    for index, item in enumerate(filtered):
+                        _render_story(item, index=index, selected=item["id"] == selected["id"],
+                                      analysis=_item_analysis(item, items), archive=True)
                 _render_comparison(selected, analysis)
             with detail:
                 with st.container(key="media_insights_detail"):

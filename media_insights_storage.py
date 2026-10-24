@@ -8,6 +8,7 @@ are never included in messages returned to the UI.
 from __future__ import annotations
 
 import base64
+from collections.abc import Mapping
 from copy import deepcopy
 from datetime import datetime, timezone
 import json
@@ -131,6 +132,45 @@ def _valid_analysis(item, analysis, snapshot):
     return True
 
 
+def _valid_localization(item, localization):
+    """A saved Korean rendering belongs to one verified source version."""
+    if (not isinstance(localization, Mapping) or not isinstance(item.get("content_hash"), str)
+            or not item["content_hash"].strip()
+            or localization.get("source_hash") != item["content_hash"]
+            or localization.get("language") != "ko"):
+        return False
+    for field in ("title", "summary", "generated_at", "model"):
+        value = localization.get(field)
+        if not isinstance(value, str) or not value.strip():
+            return False
+    for field in ("title", "summary"):
+        value = localization[field]
+        hangul = len(re.findall(r"[가-힣]", value))
+        letters = len(re.findall(r"[A-Za-z가-힣]", value))
+        # Match the presentation validator: attaching a Korean particle to an
+        # otherwise English sentence must not make an unusable rendering count
+        # as saved. Brand names can still remain in their original alphabet.
+        if hangul < 2 or hangul / max(1, letters) < 0.12:
+            return False
+    return _time(localization["generated_at"]) != datetime.min.replace(tzinfo=timezone.utc)
+
+
+def _archive_localization(item, previous):
+    """Retain the prior translation with its original source, never as current."""
+    localization = previous.get("localization")
+    if not _valid_localization(previous, localization):
+        return
+    versions = deepcopy(item.get("versions")) if isinstance(item.get("versions"), list) else []
+    version = next((row for row in versions if isinstance(row, dict)
+                    and row.get("content_hash") == previous.get("content_hash")), None)
+    if version is None:
+        version = {key: deepcopy(previous[key]) for key in
+                   ("content_hash", "title", "published_at", "collected_at") if key in previous}
+        versions.append(version)
+    version["localization"] = deepcopy(localization)
+    item["versions"] = versions[-3:]
+
+
 def merge_media_snapshots(current, incoming):
     """Union source/document updates, keeping current or newer valid analyses.
 
@@ -167,8 +207,14 @@ def merge_media_snapshots(current, incoming):
             analyses = [row.get("analysis") for row in (previous, item) if isinstance(row.get("analysis"), dict)]
             if analyses:
                 chosen["analysis"] = deepcopy(max(analyses, key=lambda note: _time(note.get("generated_at"))))
+            localizations = [row["localization"] for row in (previous, item)
+                             if _valid_localization(chosen, row.get("localization"))]
+            if localizations:
+                chosen["localization"] = deepcopy(max(localizations, key=lambda value: _time(value["generated_at"])))
         elif not newer:
             chosen = deepcopy(previous)
+        else:
+            _archive_localization(chosen, previous)
         documents[item["id"]] = chosen
     # A scheduled collection appends IDs to the merge map. Display documents
     # by actual publication date instead of that historical insertion order;
@@ -189,6 +235,8 @@ def merge_media_snapshots(current, incoming):
     for item in result["items"]:
         if "analysis" in item and not _valid_analysis(item, item["analysis"], result):
             item.pop("analysis")
+        if "localization" in item and not _valid_localization(item, item["localization"]):
+            item.pop("localization")
     return result
 
 
@@ -361,6 +409,48 @@ def persist_media_analysis(item_id, analysis, *, snapshot_path, github_config,
         item["analysis"] = deepcopy(analysis)
         return updated
     return _persist(snapshot_path, github_config or {}, apply, remote_reader=remote_reader, remote_writer=remote_writer)
+
+
+def persist_media_localizations(localizations, *, snapshot_path, github_config,
+                                remote_reader=None, remote_writer=None):
+    """Save a batch of Korean renderings only against matching current sources.
+
+    The batch is atomic: a changed or missing document refuses the save before
+    any write. Callers may retain their completed translations and retry the
+    matching subset without making another model request.
+    """
+    if not isinstance(localizations, Mapping) or any(not isinstance(key, str) or not key for key in localizations):
+        raise MediaInsightsStorageError("한글 정리의 저장 형식을 확인하지 못했습니다.")
+    fields = ("title", "summary", "source_hash", "generated_at", "model", "language")
+    prepared = {}
+    for identifier, value in localizations.items():
+        if not isinstance(value, Mapping):
+            raise MediaInsightsStorageError("한글 정리의 저장 형식을 확인하지 못했습니다.")
+        rendering = {key: value.get(key) for key in fields}
+        if not _valid_localization({"content_hash": rendering.get("source_hash")}, rendering):
+            raise MediaInsightsStorageError("한글 제목·요약과 원문 정보를 확인하지 못했습니다. 기존 자료는 유지됩니다.")
+        prepared[identifier] = {key: content.strip() for key, content in rendering.items()}
+
+    def apply(snapshot):
+        updated = _snapshot(snapshot)
+        documents = {row["id"]: row for row in updated["items"]}
+        # Validate the complete batch first; a failed item cannot produce a
+        # partial remote save or local mirror.
+        for identifier, rendering in prepared.items():
+            item = documents.get(identifier)
+            if item is None or not _valid_localization(item, rendering):
+                raise MediaInsightsStorageError("원문이 갱신돼 한글 정리를 저장하지 않았습니다. 최신 자료를 확인해 주세요.")
+        for identifier, rendering in prepared.items():
+            item = documents[identifier]
+            current = item.get("localization")
+            if (_valid_localization(item, current)
+                    and _time(current["generated_at"]) > _time(rendering["generated_at"])):
+                continue
+            item["localization"] = deepcopy(rendering)
+        return updated
+
+    return _persist(snapshot_path, github_config or {}, apply,
+                    remote_reader=remote_reader, remote_writer=remote_writer)
 
 
 def persist_media_snapshot(snapshot, *, snapshot_path, github_config,

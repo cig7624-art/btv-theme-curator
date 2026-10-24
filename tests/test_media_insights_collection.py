@@ -211,6 +211,18 @@ class TransportAndDiscoveryTests(unittest.TestCase):
         self.assertEqual(snapshot["items"][0]["topic"], "sports_content")
         self.assertEqual(snapshot["sources"][0]["status"], "ok")
 
+    def test_verified_product_seed_cannot_be_starved_by_listing_candidates(self):
+        seed = "https://official.example/news/important-product"
+        source = {**SOURCE, "document_urls": [{"url": seed, "title": "NBA streaming partnership"}]}
+        listing = ''.join(f'<a href="/news/{i}">Company advertising partnership {i}</a>' for i in range(10))
+        calls = []
+        def fetcher(url):
+            calls.append(url)
+            return listing if url == source["url"] else article("NBA streaming partnership")
+        snapshot = collection.collect_media_insights(fetcher=fetcher, sources=[source], max_documents=1, now=NOW)
+        self.assertEqual(calls, [source["url"], seed])
+        self.assertEqual(snapshot["items"][0]["url"], seed)
+
 
 class SnapshotPreservationTests(unittest.TestCase):
     def collect(self, html=None, previous=None, now=NOW):
@@ -298,6 +310,94 @@ class SnapshotPreservationTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 collection.save_snapshot(path, {"items": []})
 
+
+class OfficialImageryAndDomesticTests(unittest.TestCase):
+    def test_publisher_revision_metadata_does_not_replace_publication(self):
+        html = article().replace('<head>', '<head><meta property="article:modified_time" content="2026-10-22T11:20:00Z">')
+        item = collection.parse_html_document(html, SOURCE, collected_at=NOW)
+        self.assertEqual(item["published_at"], "2026-10-21")
+        self.assertEqual(item["source_updated_at"], "2026-10-22")
+
+    def test_official_article_og_image_is_recorded_with_attribution(self):
+        # Structural excerpt from the real Disney publisher page: metadata is
+        # outside the article, and its hero asset shares the publisher host.
+        source = next(row for row in collection.SOURCES if row["id"] == "disney_news")
+        hero = "https://thewaltdisneycompany.com/app/uploads/2026/10/Disney_Dude-Perfect-scaled.jpeg"
+        html = article().replace("<head>", '<head><meta property="og:image" content="' + hero + '">')
+        item = collection.parse_html_document(html, source,
+            url="https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/", collected_at=NOW)
+        self.assertEqual(item["image_url"], hero)
+        self.assertEqual(item["image_source_url"], item["url"])
+        self.assertEqual(item["image_attribution"], "디즈니 공식 자료")
+        self.assertEqual(item["image_kind"], "article_image")
+
+    def test_only_registered_https_image_assets_and_safe_nested_urls_are_allowed(self):
+        source = {**SOURCE, "image_hosts": ["assets.official.example"]}
+        good = "https://assets.official.example/resize?url=https%3A%2F%2Fassets.official.example%2Fphoto.jpg"
+        self.assertEqual(collection._image_url(good, source), good)
+        for bad in ("http://assets.official.example/photo.jpg", "https://unrelated.example/photo.jpg",
+                    "https://assets.official.example:8443/photo.jpg", "https://user:pw@assets.official.example/photo.jpg",
+                    "https://assets.official.example/photo.jpg?credential=private",
+                    "https://assets.official.example/resize?url=https%3A%2F%2Fevil.example%2Fphoto.jpg",
+                    "https://assets.official.example/resize?fname=https%3A%2F%2Fassets.official.example%2Fphoto.jpg%3Ftoken%3Dprivate"):
+            with self.subTest(bad=bad):
+                self.assertEqual(collection._image_url(bad, source), "")
+
+    def test_wordpress_asset_proxy_must_embed_this_publishers_host(self):
+        source = next(row for row in collection.SOURCES if row["id"] == "skb_products")
+        real = "https://i0.wp.com/blog.bworld.co.kr/wp-content/uploads/2026/07/260701-ai-Btv.jpg"
+        self.assertEqual(collection._image_url(real, source), real)
+        self.assertEqual(collection._image_url("https://i0.wp.com/unrelated.example/photo.jpg", source), "")
+
+    def test_rss_inline_image_needs_no_extra_article_fetch(self):
+        source = {**SOURCE, "image_hosts": ["assets.official.example"]}
+        hero = "https://assets.official.example/product.jpg"
+        inline = '<img src="' + hero + '" alt="상품 화면">' + ''.join(f'<p>{text}</p>' for text in PARAGRAPHS)
+        rss = feed([{"url": "https://official.example/news/product", "body": inline}])
+        calls = []
+        snapshot = collection.collect_media_insights(fetcher=lambda url: calls.append(url) or rss,
+                                                      sources=[source], now=NOW)
+        self.assertEqual(calls, [source["url"]])
+        item = snapshot["items"][0]
+        self.assertEqual(item["image_url"], hero)
+        self.assertEqual(item["image_alt"], "상품 화면")
+        self.assertEqual(item["image_fetched_from"], source["url"])
+
+    def test_optional_article_art_fetch_preserves_feed_hash_and_saved_notes(self):
+        source = {**SOURCE, "fetch_article_images": True}
+        url = "https://official.example/news/product"
+        inline = ''.join(f'<p>{text}</p>' for text in PARAGRAPHS)
+        rss = feed([{"url": url, "body": inline}])
+        before = collection.collect_media_insights(fetcher=lambda _: rss, sources=[{**SOURCE}], now=NOW)
+        before["items"][0]["analysis"] = {"source_hash": before["items"][0]["content_hash"], "summary": "기존 분석"}
+        before["items"][0]["localization"] = {"title": "기존 한글 제목"}
+        # Article text differs from feed text. The artwork-only fetch must not
+        # invalidate feed evidence or trigger paid retranslation/reanalysis.
+        art = article(paragraphs=[text + " Additional article text." for text in PARAGRAPHS])
+        art = art.replace('<head>', '<head><meta property="og:image" content="https://official.example/hero.jpg">')
+        after = collection.collect_media_insights(before, sources=[source], now=LATER,
+            fetcher=lambda request: rss if request == SOURCE["url"] else art)
+        self.assertEqual(after["items"][0]["content_hash"], before["items"][0]["content_hash"])
+        self.assertEqual(after["items"][0]["analysis"], before["items"][0]["analysis"])
+        self.assertEqual(after["items"][0]["localization"], before["items"][0]["localization"])
+        self.assertEqual(after["items"][0]["image_url"], "https://official.example/hero.jpg")
+
+    def test_media_thumbnail_is_used_when_feed_body_has_no_image(self):
+        rss = feed([{"url": "https://official.example/news/product", "body": ''.join(f'<p>{text}</p>' for text in PARAGRAPHS)}])
+        rss = rss.replace('<rss ', '<rss xmlns:media="http://search.yahoo.com/mrss/" ')
+        rss = rss.replace('</item>', '<media:thumbnail url="https://official.example/media.jpg"/></item>')
+        result = collection.collect_media_insights(fetcher=lambda _: rss, sources=[SOURCE], now=NOW)
+        self.assertEqual(result["items"][0]["image_url"], "https://official.example/media.jpg")
+
+    def test_domestic_numeric_permalink_discovery_and_verified_product_marker(self):
+        source = {**SOURCE, "company": "LG유플러스", "require_domestic_product": True, "country": "KR"}
+        listing = '<a href="/22596">U+tv, 넷플릭스 결합 요금제 개편</a><a href="/22597">OTT 요금제 활용하는 방법</a>'
+        links = collection._discover_documents({"url": source["url"], "content": listing.encode()}, source)
+        self.assertEqual([row["url"] for row in links], ["https://official.example/22596"])
+        item = collection.parse_html_document(article("U+tv, 넷플릭스 결합 요금제 개편"), source,
+                                              url=links[0]["url"], collected_at=NOW)
+        self.assertEqual(item["market_scope"], "domestic_product")
+        self.assertEqual(item["country"], "KR")
 
 if __name__ == "__main__":
     unittest.main()

@@ -9,7 +9,7 @@ from unittest.mock import Mock, patch
 
 from media_insights_storage import (
     MediaInsightsStorageError, merge_media_snapshots,
-    persist_media_analysis, persist_media_snapshot,
+    persist_media_analysis, persist_media_snapshot, persist_media_localizations,
 )
 
 
@@ -46,6 +46,11 @@ def analysis(item, *, context=None, stamp="2026-10-23T09:00:00+00:00"):
 
 def payload(value):
     return (json.dumps(value, ensure_ascii=False, indent=2) + "\n").encode()
+
+
+def localization(item, *, stamp="2026-10-24T10:00:00+00:00", title="공식 상품 변경 발표"):
+    return {"title": title, "summary": "공식 자료에서 새 상품의 조건을 발표했습니다.",
+            "source_hash": item["content_hash"], "generated_at": stamp, "model": "test-model", "language": "ko"}
 
 
 class Remote:
@@ -107,6 +112,155 @@ class MediaInsightsStorageTests(unittest.TestCase):
         self.assertEqual(self.csv.read_bytes(), before_csv)
         self.assertNotIn("PRIVATE-TOKEN", repr(result))
         self.assertEqual(remote.writes[0]["path"], "media_insights_snapshot.json")
+
+    def test_localizations_save_in_their_own_snapshot_and_preserve_existing_notes_and_csv(self):
+        note = analysis(self.first)
+        other_locale = localization(self.second)
+        latest = snapshot({**self.first, "analysis": note}, {**self.second, "localization": other_locale}, document("three"))
+        remote = Remote(latest)
+        before_csv = self.csv.read_bytes()
+        rendering = {**localization(self.first), "api_key": "PRIVATE-DO-NOT-STORE"}
+        result = persist_media_localizations({"one": rendering}, snapshot_path=self.path, github_config=CONFIG,
+                                            remote_reader=remote.read, remote_writer=remote.write)
+        self.assertEqual(result["status"], "success")
+        rows = {row["id"]: row for row in result["snapshot"]["items"]}
+        self.assertEqual(rows["one"]["localization"], localization(self.first))
+        self.assertEqual(rows["one"]["analysis"], note)
+        self.assertEqual(rows["two"]["localization"], other_locale)
+        self.assertIn("three", rows)
+        self.assertEqual(self.csv.read_bytes(), before_csv)
+        self.assertNotIn("PRIVATE-DO-NOT-STORE", repr(result))
+        self.assertEqual(remote.writes[0]["path"], "media_insights_snapshot.json")
+
+    def test_localization_conflict_rereads_other_translations_without_regeneration(self):
+        remote = Remote(self.initial)
+        def concurrent_update(store, updated):
+            if len(store.writes) == 1:
+                store.snapshot["items"][1]["localization"] = localization(self.second)
+                store.snapshot["items"].append(document("three"))
+                store.sha = "translation-concurrent"
+                return {"status": "conflict"}
+        remote.on_write = concurrent_update
+        result = persist_media_localizations({"one": localization(self.first)}, snapshot_path=self.path,
+            github_config=CONFIG, remote_reader=remote.read, remote_writer=remote.write)
+        self.assertEqual(result["status"], "success")
+        self.assertEqual(len(remote.writes), 2)
+        self.assertEqual(remote.writes[1]["sha"], "translation-concurrent")
+        rows = {row["id"]: row for row in result["snapshot"]["items"]}
+        self.assertEqual(rows["two"]["localization"], localization(self.second))
+        self.assertIn("three", rows)
+
+    def test_batch_localizations_refuse_missing_changed_or_invalid_korean_before_writes(self):
+        remote = Remote(self.initial)
+        before = self.path.read_bytes()
+        invalid = []
+        for change in ({"title": "Official announcement"}, {"summary": "An official announcement"},
+                       {"summary": " "}, {"generated_at": "not-a-timestamp"}, {"model": ""},
+                       {"language": "en"}, {"source_hash": "old-source"}, {"source_hash": 123}):
+            invalid.append({"one": {**localization(self.first), **change}})
+        invalid.append({"missing": localization(self.first)})
+        invalid.append({"one": localization(self.first), "two": {**localization(self.second), "source_hash": "old"}})
+        for batch in invalid:
+            with self.subTest(batch=batch), self.assertRaises(MediaInsightsStorageError):
+                persist_media_localizations(batch, snapshot_path=self.path, github_config=CONFIG,
+                    remote_reader=remote.read, remote_writer=remote.write)
+        self.assertEqual(remote.writes, [])
+        self.assertEqual(self.path.read_bytes(), before)
+        self.assertFalse(any("localization" in row for row in remote.snapshot["items"]))
+
+    def test_translation_source_change_during_cas_retry_refuses_stale_batch(self):
+        remote = Remote(self.initial)
+        def change_source(store, updated):
+            store.snapshot["items"][0]["content_hash"] = "changed-during-translation"
+            store.sha = "new-source-sha"
+            return {"status": "conflict"}
+        remote.on_write = change_source
+        before = self.path.read_bytes()
+        with self.assertRaises(MediaInsightsStorageError):
+            persist_media_localizations({"one": localization(self.first)}, snapshot_path=self.path,
+                github_config=CONFIG, remote_reader=remote.read, remote_writer=remote.write)
+        self.assertEqual(len(remote.writes), 1)
+        self.assertNotIn("localization", remote.snapshot["items"][0])
+        self.assertEqual(self.path.read_bytes(), before)
+
+    def test_conflict_keeps_newer_same_document_translation_and_independent_analysis(self):
+        remote = Remote(self.initial)
+        recent = localization(self.first, stamp="2026-10-24T11:00:00Z", title="더 최근에 저장한 한국어 제목")
+        other_note = analysis(self.second)
+        def concurrent_update(store, updated):
+            if len(store.writes) == 1:
+                store.snapshot["items"][0]["localization"] = recent
+                store.snapshot["items"][1]["analysis"] = other_note
+                store.snapshot["sources"][0]["status"] = "partial"
+                store.sha = "newer-translation"
+                return {"status": "conflict"}
+        remote.on_write = concurrent_update
+        result = persist_media_localizations({"one": localization(self.first)}, snapshot_path=self.path,
+            github_config=CONFIG, remote_reader=remote.read, remote_writer=remote.write)
+        rows = {row["id"]: row for row in result["snapshot"]["items"]}
+        self.assertEqual(rows["one"]["localization"], recent)
+        self.assertEqual(rows["two"]["analysis"], other_note)
+        self.assertEqual(result["snapshot"]["sources"][0]["status"], "partial")
+        self.assertEqual(len(remote.writes), 1)
+
+    def test_token_korean_does_not_make_an_english_rendering_valid(self):
+        remote = Remote(self.initial)
+        for field in ("title", "summary"):
+            rendering = {**localization(self.first), field: "Official announcement with English source details 가나"}
+            with self.subTest(field=field), self.assertRaises(MediaInsightsStorageError):
+                persist_media_localizations({"one": rendering}, snapshot_path=self.path, github_config=CONFIG,
+                    remote_reader=remote.read, remote_writer=remote.write)
+        self.assertEqual(remote.writes, [])
+
+    def test_collection_merge_retains_newest_valid_korean_for_same_source(self):
+        old = localization(self.first, stamp="2026-10-24T08:00:00Z", title="이전 한국어 제목")
+        recent = localization(self.first, title="새 한국어 제목")
+        current = snapshot({**self.first, "localization": recent})
+        incoming = snapshot({**self.first, "last_checked_at": "2026-10-25T08:00:00Z", "localization": old})
+        merged = merge_media_snapshots(current, incoming)
+        self.assertEqual(merged["items"][0]["localization"], recent)
+        del incoming["items"][0]["localization"]
+        self.assertEqual(merge_media_snapshots(current, incoming)["items"][0]["localization"], recent)
+        incoming["items"][0]["localization"] = {**recent, "summary": "English-only invalid translation"}
+        self.assertEqual(merge_media_snapshots(current, incoming)["items"][0]["localization"], recent)
+
+    def test_changed_source_archives_prior_korean_and_drops_stale_current_translation(self):
+        previous_locale = localization(self.first)
+        current = snapshot({**self.first, "localization": previous_locale})
+        revised = document("one", content_hash="one-v2", collected_at="2026-10-25T08:00:00Z")
+        revised["localization"] = previous_locale
+        revised["versions"] = [{"content_hash": self.first["content_hash"], "title": self.first["title"], "future_field": "keep"}]
+        result = merge_media_snapshots(current, snapshot(revised))
+        item = result["items"][0]
+        self.assertEqual(item["content_hash"], "one-v2")
+        self.assertNotIn("localization", item)
+        self.assertEqual(item["versions"][0]["localization"], previous_locale)
+        self.assertEqual(item["versions"][0]["future_field"], "keep")
+        self.assertEqual(current["items"][0]["localization"], previous_locale)
+
+    def test_saved_newer_translation_and_identical_localization_are_not_overwritten(self):
+        recent = localization(self.first)
+        latest = snapshot({**self.first, "localization": recent}, self.second)
+        remote = Remote(latest)
+        for rendering in (recent, localization(self.first, stamp="2026-10-23T08:00:00Z", title="오래된 한국어 제목")):
+            result = persist_media_localizations({"one": rendering}, snapshot_path=self.path, github_config=CONFIG,
+                remote_reader=remote.read, remote_writer=remote.write)
+            self.assertEqual(result["snapshot"]["items"][0]["localization"], recent)
+        self.assertEqual(remote.writes, [])
+
+    def test_local_only_translation_does_not_touch_remote_or_protected_json(self):
+        with patch("requests.request", side_effect=AssertionError("No network")):
+            result = persist_media_localizations({"one": localization(self.first)}, snapshot_path=self.path, github_config={})
+        self.assertEqual(result["status"], "local_only")
+        self.assertEqual(json.loads(self.path.read_bytes())["items"][0]["localization"], localization(self.first))
+        for filename in ("theme_pool.csv", "ott_home_snapshot.json", "collection_status.json"):
+            target = self.root / filename
+            if not target.exists():
+                target.write_text("protected")
+            before = target.read_bytes()
+            with self.subTest(path=filename), self.assertRaises(MediaInsightsStorageError):
+                persist_media_localizations({"one": localization(self.first)}, snapshot_path=target, github_config={})
+            self.assertEqual(target.read_bytes(), before)
 
     def test_scheduled_merge_shows_newest_publication_first_and_unknown_last(self):
         older = {**self.first, "published_at": "2026-10-20T10:00:00Z"}

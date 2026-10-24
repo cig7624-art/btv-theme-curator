@@ -8,7 +8,8 @@ import streamlit as st
 
 from media_insights_analysis import analyze_media_item, answer_media_question
 from media_insights_collection import collect_media_insights, load_snapshot
-from media_insights_storage import persist_media_analysis, persist_media_snapshot
+from media_insights_localization import localize_media_items, localization_candidates
+from media_insights_storage import persist_media_analysis, persist_media_snapshot, persist_media_localizations
 from media_insights_view import render_media_insights_page
 
 
@@ -79,6 +80,21 @@ def render_media_insights_tab(*, api_key, model, github_config, snapshot_path=SN
         return answer_media_question(question, item, related_items(current, item, question),
                                      api_key=api_key, model=model)
 
+    def localize():
+        current = load_snapshot(path)
+        candidates = localization_candidates(current)
+        if not candidates:
+            return current
+        translated = localize_media_items(candidates, api_key=api_key, model=model)
+        saved = persist_media_localizations(translated["localizations"], snapshot_path=path,
+                                            github_config=config)
+        if translated["failed_ids"]:
+            st.warning("일부 자료의 한글 정리를 확인하지 못했습니다. 확인된 결과만 저장했습니다.")
+        if saved.get("status") == "local_only":
+            st.caption("한글 정리는 현재 앱에 저장됐습니다. 영구 보관은 저장소 연결 후 사용할 수 있어요.")
+        return saved["snapshot"]
+
     render_media_insights_page(snapshot, on_refresh=refresh,
                                on_analyze=analyze if api_key else None,
-                               on_ask=ask if api_key else None)
+                               on_ask=ask if api_key else None,
+                               on_localize=localize if api_key else None)

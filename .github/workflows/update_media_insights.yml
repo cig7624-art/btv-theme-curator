@@ -6,9 +6,10 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
   push:
-    branches: [main, codex/media-insights]
+    branches: [main, codex/media-insights, codex/media-magazine]
     paths:
       - media_insights_collection.py
+      - domestic_product_sources.py
       - scripts/collect_media_insights.py
       - .github/workflows/update_media_insights.yml
 
@@ -40,7 +41,7 @@ jobs:
           GITHUB_BRANCH: ${{ github.ref_name }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
-        run: python scripts/collect_media_insights.py --output media_insights_snapshot.json --max-documents 24 --analyze-limit 2
+        run: python scripts/collect_media_insights.py --output media_insights_snapshot.json --max-documents 48 --analyze-limit 2
       - name: Preserve collection evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -49,3 +50,45 @@ jobs:
           path: media_insights_snapshot.json
           if-no-files-found: warn
           retention-days: 14
+
+  cache-korean-presentation:
+    needs: collect-official-documents
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install playwright
+      - name: Use the existing browser
+        run: |
+          media_browser="$(command -v google-chrome || command -v chromium || true)"
+          if [ -n "$media_browser" ]; then
+            echo "MEDIA_CHROMIUM_PATH=$media_browser" >> "$GITHUB_ENV"
+          else
+            python -m playwright install --with-deps chromium
+          fi
+      - name: Cache new English titles once through the deployed app
+        run: |
+          if [ -n "${MEDIA_CHROMIUM_PATH:-}" ]; then
+            python scripts/localize_media_live.py --executable "$MEDIA_CHROMIUM_PATH"
+          else
+            python scripts/localize_media_live.py
+          fi
+      - name: Record translation action outcome
+        if: always()
+        run: |
+          if [ ! -f artifacts/media_localization_validation.json ]; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- artifacts/media_localization_validation.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Record cached Korean media presentation status [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -24,6 +24,8 @@ import xml.etree.ElementTree as ET
 import requests
 from bs4 import BeautifulSoup
 
+from domestic_product_sources import DOMESTIC_PRODUCT_SOURCES, domestic_product_candidate, domestic_product_topic
+
 
 SNAPSHOT_PATH = Path(__file__).with_name("media_insights_snapshot.json")
 MAX_DOCUMENT_BYTES = 12 * 1024 * 1024
@@ -36,7 +38,8 @@ SOURCES = (
     {"id": "netflix_ir", "name": "Netflix Investor Relations", "company": "Netflix",
      "url": "https://ir.netflix.net/rss/pressrelease.aspx",
      "source_type": "earnings", "country": "global",
-     "allowed_hosts": ["ir.netflix.net", "s22.q4cdn.com"]},
+     "allowed_hosts": ["ir.netflix.net", "s22.q4cdn.com"],
+     "image_hosts": ["mma.prnewswire.com"]},
     {"id": "disney_ir", "name": "The Walt Disney Company Investor Relations", "company": "Disney",
      "url": "https://thewaltdisneycompany.com/investor-relations/",
      "source_type": "earnings", "country": "global",
@@ -51,10 +54,12 @@ SOURCES = (
      "allowed_hosts": ["www.cmcsa.com", "cmcsa.com"]},
     {"id": "disney_news", "name": "The Walt Disney Company News", "company": "Disney",
      "url": "https://thewaltdisneycompany.com/feed/", "source_type": "official_announcement", "country": "",
+     "fetch_article_images": True,
      "allowed_hosts": ["thewaltdisneycompany.com", "www.thewaltdisneycompany.com"]},
     {"id": "amazon_news", "name": "About Amazon: Entertainment", "company": "Amazon",
      "url": "https://www.aboutamazon.com/news/entertainment", "source_type": "official_announcement", "country": "",
      "allowed_hosts": ["www.aboutamazon.com", "aboutamazon.com"],
+     "image_hosts": ["assets.aboutamazon.com"],
      # A verified, maintained business/sports explainer can leave the first
      # listing page when routine film promotions arrive. Refetch its source;
      # its publication and revision dates remain those actually in the article.
@@ -63,7 +68,7 @@ SOURCES = (
     {"id": "skt_news", "name": "SK텔레콤 뉴스룸", "company": "SKT",
      "url": "https://news.sktelecom.com/feed", "source_type": "official_announcement", "country": "KR",
      "require_media_subject": True, "allowed_hosts": ["news.sktelecom.com", "news-static.sktelecom.com"]},
-)
+) + DOMESTIC_PRODUCT_SOURCES
 
 TOPIC_LABELS = {
     "advertising_pricing": "광고·요금제", "partnership_distribution": "제휴·유통",
@@ -86,6 +91,9 @@ _ISO_DATE = re.compile(r"\b(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})(?!\d)")
 _SECRET_QUERY = frozenset({"key", "api_key", "apikey", "token", "access_token", "authorization", "signature", "password"})
 _SCHEDULE_ONLY = re.compile(r"to (?:announce|webcast)|conference call|participate.*(?:conference|session)|mini-tender|annual meeting|연구|보이스피싱", re.I)
 _MEDIA_SUBJECT = re.compile(r"B\s*tv|IPTV|OTT|스트리밍|미디어|중계권|영상\s*서비스|콘텐츠\s*(?:제휴|유통|사업)|구독\s*상품|방송|media|streaming|Prime Video", re.I)
+_IMAGE_NOISE = re.compile(r"(?:^|[/_.-])(?:pixel|spacer|transparent|favicon|tracking)(?:[/_.-]|$)", re.I)
+_IMAGE_META_KEYS = ("og:image:secure_url", "og:image", "twitter:image", "twitter:image:src")
+_COMPANY_IMAGE = re.compile(r"logo|로고|amazon[-_]smile|brandmark|CJENM_SNS_|Uplus_Newsroom", re.I)
 
 
 class CollectionError(RuntimeError):
@@ -129,6 +137,110 @@ def _official_url(value, source, base=""):
         return urlunsplit((parts.scheme, parts.netloc.lower(), parts.path or "/", urlencode(pairs), ""))
     except (ValueError, TypeError):
         return ""
+
+
+def _image_url(value, source, base="", *, _nested=False):
+    """Only source-observed images on exact registered asset hosts are usable."""
+    try:
+        raw = str(value or "").strip()
+        if not raw or len(raw) > 6000 or any(ord(char) < 32 or ord(char) == 127 for char in raw):
+            return ""
+        url = urljoin(base or source["url"], raw)
+        parts = urlsplit(url)
+        host = (parts.hostname or "").lower().rstrip(".")
+        allowed = {str(name).lower() for name in [*source.get("allowed_hosts", []), *source.get("image_hosts", [])]}
+        if (parts.scheme != "https" or not host or host not in allowed or parts.username or parts.password
+                or parts.port not in {None, 443} or _IMAGE_NOISE.search(parts.path)):
+            return ""
+        if host in {"i0.wp.com", "i1.wp.com", "i2.wp.com"}:
+            # WordPress' public resizing proxy embeds the publisher host in
+            # its path. Registering the CDN never authorizes unrelated images.
+            proxied_host = parts.path.lstrip("/").split("/", 1)[0].lower()
+            if proxied_host not in {str(name).lower() for name in source.get("allowed_hosts", [])}:
+                return ""
+        try:
+            if not ipaddress.ip_address(host).is_global:
+                return ""
+        except ValueError:
+            pass
+        pairs = parse_qsl(parts.query, keep_blank_values=True)
+        if any(key.lower() in _SECRET_QUERY | {"credential"} for key, _ in pairs):
+            return ""
+        # Some official asset CDNs expose a resizing URL whose image parameter
+        # must also stay on that source's registered hosts.
+        for key, target in pairs:
+            if key.lower() in {"url", "src", "image", "fname"} and target.startswith(("http:", "https:", "//")):
+                if _nested or not _image_url(target, source, base, _nested=True):
+                    return ""
+        pairs = [(key, value) for key, value in pairs if not key.lower().startswith("utm_") and key.lower() not in {"fbclid", "gclid"}]
+        return urlunsplit(("https", parts.netloc.lower(), parts.path or "/", urlencode(pairs), ""))
+    except (ValueError, TypeError):
+        return ""
+
+
+def _image_values(value):
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for key in ("contentUrl", "url", "@id"):
+            if isinstance(value.get(key), str):
+                yield value[key]
+    elif isinstance(value, list):
+        for nested in value[:10]:
+            yield from _image_values(nested)
+
+
+def _article_image(soup, source, url, *, structured=None, region=None):
+    candidates = []
+    for key in _IMAGE_META_KEYS:
+        for node in soup.find_all("meta", attrs={"property": key}) + soup.find_all("meta", attrs={"name": key}):
+            candidates.append((node.get("content", ""), ""))
+    for value in _image_values((structured or {}).get("image")):
+        candidates.append((value, ""))
+    if region is not None:
+        for node in region.find_all("img", limit=40):
+            noisy = " ".join(str(node.get(key) or "") for key in ("class", "id", "alt"))
+            if re.search(r"avatar|author(?:[-_ ]?(?:image|photo))|byline|social[-_ ]|share[-_ ]", noisy, re.I):
+                continue
+            try:
+                width, height = int(node.get("width", 0)), int(node.get("height", 0))
+            except (TypeError, ValueError):
+                width = height = 0
+            if width and height and min(width, height) < 80:
+                continue
+            for key in ("data-src", "data-original", "src"):
+                if node.get(key):
+                    candidates.append((node[key], _text(node.get("alt"), 300)))
+            for entry in str(node.get("srcset") or node.get("data-srcset") or "").split(",")[-3:]:
+                candidate = entry.strip().split(" ")[0]
+                if candidate:
+                    candidates.append((candidate, _text(node.get("alt"), 300)))
+    logo = {}
+    for candidate, alt in candidates:
+        if safe := _image_url(candidate, source, url):
+            image = {"image_url": safe, "image_alt": alt}
+            if _COMPANY_IMAGE.search(safe + " " + alt):
+                if not logo:
+                    logo = image
+                continue
+            return image
+    return logo
+
+
+def _with_image(item, image, source, *, fetched_from=""):
+    if not item or not image or not image.get("image_url"):
+        return item
+    safe = _image_url(image["image_url"], source, item["url"])
+    if not safe:
+        return item
+    company = {"Netflix": "넷플릭스", "Disney": "디즈니", "Amazon": "아마존", "Comcast": "컴캐스트", "SKT": "SK텔레콤"}.get(source["company"], source["company"])
+    item.update(image_url=safe, image_alt=_text(image.get("image_alt"), 300),
+                image_source_url=item["url"], image_attribution=company + " 공식 자료",
+                image_kind="company_logo" if _COMPANY_IMAGE.search(safe + " " + str(image.get("image_alt", ""))) else "article_image",
+                image_recorded_at=item["collected_at"])
+    if fetched_from:
+        item["image_fetched_from"] = fetched_from
+    return item
 
 
 def _http_fetch(url, source):
@@ -252,6 +364,8 @@ def _json_articles(soup):
 
 
 def _classify(title, body, source):
+    if source.get("require_domestic_product"):
+        return domestic_product_topic(title, body, source)
     if _SCHEDULE_ONLY.search(title):
         return ""
     if source.get("require_media_subject") and not _MEDIA_SUBJECT.search(title):
@@ -291,12 +405,15 @@ def _make_item(source, url, title, paragraphs, published_at, collected_at, *, im
                  "url": url + "#page=" + match[1] if (match := re.match(r"^page(\d+)-p\d+$", locator)) else url}
                 for locator, text in paragraphs[:MAX_EVIDENCE]]
     body = "\n".join(row["text"] for row in evidence)
-    return {"id": identity, "source_id": source["id"], "company": source["company"],
+    item = {"id": identity, "source_id": source["id"], "company": source["company"],
             "topic": topic, "title": title, "url": url, "published_at": published_at,
             "collected_at": collected_at, "country": source.get("country", ""), "period": _period(title),
             "source_name": source["name"], "source_type": source.get("source_type", "official_announcement"),
             "excerpt": body[:420], "body_text": body, "image_url": image_url,
             "evidence": evidence, "content_hash": sha256((title + "\n" + body).encode()).hexdigest()}
+    if source.get("require_domestic_product"):
+        item["market_scope"] = "domestic_product"
+    return item
 
 
 def parse_html_document(html, source, *, url=None, collected_at=None, title_hint=""):
@@ -312,7 +429,7 @@ def parse_html_document(html, source, *, url=None, collected_at=None, title_hint
             candidate_url = candidate_url.get("@id", "")
         return not candidate_url or _official_url(candidate_url, source, url) == url
     structured = next((item for item in articles if (item.get("headline") or item.get("name")) and current_article(item)), {})
-    title_node = soup.find("h1")
+    title_node = soup.select_one(source["title_selector"]) if source.get("title_selector") else soup.find("h1")
     og = soup.find("meta", property="og:title")
     candidates = [structured.get("headline") or structured.get("name"),
                   title_node.get_text(" ", strip=True) if title_node else "",
@@ -329,12 +446,14 @@ def parse_html_document(html, source, *, url=None, collected_at=None, title_hint
         node = soup.find("time")
         published = _date((node.get("datetime") or node.get_text(" ", strip=True)) if node else "")
     if not published:
-        node = soup.select_one("[itemprop='datePublished'],.module_date-text,.module-news-details_date,.entry-date")
+        node = soup.select_one(source.get("date_selector") or "[itemprop='datePublished'],.module_date-text,.module-news-details_date,.entry-date")
         if node:
             published = _date(node.get("content") or node.get("datetime") or node.get_text(" ", strip=True))
-    region = (soup.select_one(".module-news-details .module_body,.module-press-release .module_body")
+    region = ((soup.select_one(source["article_selector"]) if source.get("article_selector") else None)
+              or soup.select_one(".module-news-details .module_body,.module-press-release .module_body")
               or soup.find("article") or soup.find("main") or soup.find(attrs={"role": "main"})
               or soup.find(class_=re.compile(r"article-body|article-content|press-release|news-release|entry-content|module_body", re.I)))
+    image = _article_image(soup, source, url, structured=structured, region=region)
     if region is None:
         # An explicit article body in structured data is also source text.
         body = structured.get("articleBody")
@@ -357,13 +476,14 @@ def parse_html_document(html, source, *, url=None, collected_at=None, title_hint
             if text and text not in seen:
                 seen.add(text)
                 paragraphs.append((f"p{len(paragraphs) + 1:03d}", text))
-    image = soup.find("meta", property="og:image")
-    # Artwork is optional and never used as factual evidence. Accept only an
-    # official-host asset; unknown CDN artwork remains absent.
-    image_url = _official_url(image.get("content", ""), source, url) if image else ""
-    item = _make_item(source, url, title, paragraphs, published, _timestamp(collected_at), image_url=image_url)
-    if item and (modified := _date(structured.get("dateModified"))):
-        item["source_updated_at"] = modified
+    item = _with_image(_make_item(source, url, title, paragraphs, published, _timestamp(collected_at)), image, source)
+    if item:
+        modified = _date(structured.get("dateModified"))
+        if not modified:
+            node = soup.find("meta", attrs={"property": "article:modified_time"})
+            modified = _date(node.get("content", "")) if node else ""
+        if modified:
+            item["source_updated_at"] = modified
     return item
 
 
@@ -423,7 +543,14 @@ def _discover_documents(payload, source):
                     if body_node is None:
                         body_node = entry.find("{*}content")
                     inline_html = body_node.text if body_node is not None else ""
-                    links.append({"url": url, "title": title, "published_at": published, "inline_html": inline_html or ""})
+                    # RSS media elements are actual publisher-selected assets,
+                    # independent of whether full article text is in the feed.
+                    image_urls = [node.get("url", "") for node in entry.iter()
+                                  if node.tag.rsplit("}", 1)[-1] in {"thumbnail", "content", "enclosure"}
+                                  and (node.tag.rsplit("}", 1)[-1] != "enclosure"
+                                       or str(node.get("type", "")).startswith("image/"))]
+                    links.append({"url": url, "title": title, "published_at": published,
+                                  "inline_html": inline_html or "", "image_urls": image_urls})
                     seen.add(url)
         except ET.ParseError:
             pass
@@ -436,9 +563,11 @@ def _discover_documents(payload, source):
         title = _text(node.get_text(" ", strip=True) or node.get("aria-label", ""), 300)
         if not url or url in seen or url == payload["url"] or _EXCLUDED_LINK.search(url + " " + title):
             continue
-        if not (_DOCUMENT_LINK.search(url) or any(pattern.search(title) for _, pattern in _TOPICS)):
+        if not (source.get("require_domestic_product") or _DOCUMENT_LINK.search(url)
+                or any(pattern.search(title) for _, pattern in _TOPICS)):
             continue
-        if not _classify(title, "", source):
+        if not (_classify(title, "", source)
+                or (source.get("require_domestic_product") and domestic_product_candidate(title))):
             continue
         seen.add(url)
         links.append({"url": url, "title": title})
@@ -462,12 +591,17 @@ def _collect_source(source, previous_source, *, fetcher, observed, limit):
         if direct:
             items.append(direct)
         links = _discover_documents(root, source)
-        known_urls = {link["url"] for link in links}
+        seeded_links, seeded_urls = [], set()
         for configured_document in source.get("document_urls", []):
             seed_url = _official_url(configured_document.get("url", ""), source)
-            if seed_url and seed_url not in known_urls:
-                links.append({"url": seed_url, "title": _text(configured_document.get("title", ""), 300)})
-                known_urls.add(seed_url)
+            if seed_url and seed_url not in seeded_urls:
+                # Maintained product pages can leave a chronological listing.
+                # Reserve their bounded slot before exploratory candidates;
+                # reuse actual feed metadata if that URL is also in the feed.
+                seeded_links.append(next((link for link in links if link["url"] == seed_url),
+                    {"url": seed_url, "title": _text(configured_document.get("title", ""), 300)}))
+                seeded_urls.add(seed_url)
+        links = seeded_links + [link for link in links if link["url"] not in seeded_urls]
         for link in links[:max(0, limit - len(items))]:
             try:
                 item = None
@@ -475,18 +609,42 @@ def _collect_source(source, previous_source, *, fetcher, observed, limit):
                     # WordPress supplies its actual full article in the official
                     # feed. Keep the article URL and record the fetched feed too.
                     inline = BeautifulSoup(link["inline_html"], "html.parser")
+                    image = _article_image(inline, source, link["url"], region=inline)
+                    for node in inline.select("script,style,nav,footer,header,aside"):
+                        node.decompose()
                     paragraphs = [(f"p{i:03d}", node.get_text(" ", strip=True))
                                   for i, node in enumerate(inline.find_all("p"), 1)]
                     item = _make_item(source, link["url"], link["title"], paragraphs,
                                       link.get("published_at", ""), observed)
                     if item:
                         item["fetched_from"] = root["url"]
+                        _with_image(item, image, source, fetched_from=root["url"])
                 if item is None:
                     item = parse(_fetch(link["url"], source, fetcher), link["title"])
                     if item and not item["published_at"] and link.get("published_at"):
                         item["published_at"] = link["published_at"]
                         item["published_at_source"] = "official_feed"
                 if item:
+                    if not item.get("image_url"):
+                        for candidate in link.get("image_urls", []):
+                            if safe := _image_url(candidate, source, link["url"]):
+                                _with_image(item, {"image_url": safe}, source, fetched_from=root["url"])
+                                break
+                    if (item.get("fetched_from") and not item.get("image_url")
+                            and source.get("fetch_article_images")):
+                        # Some official feeds omit the hero art. Fetch that
+                        # same article for its own image without replacing the
+                        # feed paragraphs, IDs, saved notes or content hash.
+                        try:
+                            art_payload = _fetch(item["url"], source, fetcher)
+                            art_soup = BeautifulSoup(art_payload["content"].decode("utf-8", errors="replace"), "html.parser")
+                            image = _article_image(art_soup, source, item["url"],
+                                                   region=art_soup.find("article") or art_soup.find("main"))
+                            _with_image(item, image, source, fetched_from=art_payload["url"])
+                        except Exception:
+                            # Optional imagery cannot make a genuine article
+                            # disappear or mark its text collection as failed.
+                            pass
                     items.append(item)
                 else:
                     errors.append("document_not_extractable")
@@ -512,7 +670,7 @@ def _collect_source(source, previous_source, *, fetcher, observed, limit):
     return state, items
 
 
-def collect_media_insights(previous=None, *, fetcher=None, now=None, sources=None, max_documents=24):
+def collect_media_insights(previous=None, *, fetcher=None, now=None, sources=None, max_documents=48):
     """Collect only configured official sources and preserve previous good items.
 
     A custom fetcher accepts one URL and returns HTML, bytes, a Response, or a
@@ -536,6 +694,13 @@ def collect_media_insights(previous=None, *, fetcher=None, now=None, sources=Non
             old = old_items.get(old_id or item["id"], {})
             if old and old.get("content_hash") == item["content_hash"]:
                 merged = {**old, **item}
+                if not item.get("image_url") and old.get("image_url"):
+                    source = next((row for row in configured if row["id"] == item["source_id"]), {})
+                    if _image_url(old["image_url"], source, item["url"]):
+                        for field in ("image_url", "image_alt", "image_source_url", "image_attribution",
+                                      "image_kind", "image_recorded_at", "image_fetched_from"):
+                            if field in old:
+                                merged[field] = old[field]
                 # Collection time means when this version was first acquired;
                 # repeated observations have their own last-checked timestamp.
                 merged["collected_at"] = old.get("collected_at") or item["collected_at"]
@@ -546,6 +711,7 @@ def collect_media_insights(previous=None, *, fetcher=None, now=None, sources=Non
                     # for publication; analysis using that metadata needs a
                     # fresh review even though the document text is unchanged.
                     merged.pop("analysis", None)
+                    merged.pop("localization", None)
                 merged["last_checked_at"] = observed
                 old_items[item["id"]] = merged
             else:

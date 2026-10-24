@@ -67,7 +67,7 @@ def _context_items(item, snapshot):
                                                row.get("published_at", "")), reverse=True)[:5]
 
 
-def run_collection(*, output, max_documents=24, analyze_limit=2):
+def run_collection(*, output, max_documents=48, analyze_limit=2):
     """Return a credential-free report and exit code; never print raw failures."""
     previous = load_snapshot(output)
     collected = collect_media_insights(previous, max_documents=max_documents)
@@ -124,8 +124,8 @@ def run_collection(*, output, max_documents=24, analyze_limit=2):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=SNAPSHOT_PATH)
-    parser.add_argument("--max-documents", type=_bounded_number(1, 160), default=24,
-                        help="Bound the document discovery budget (default: 24).")
+    parser.add_argument("--max-documents", type=_bounded_number(1, 160), default=48,
+                        help="Bound the document discovery budget (default: 48).")
     parser.add_argument("--analyze-limit", type=_bounded_number(0, 2), default=2,
                         help="Analyze up to 0–2 new/changed documents when an API key is present.")
     args = parser.parse_args(argv)

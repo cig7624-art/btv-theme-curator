@@ -32,6 +32,8 @@ class MediaInsightsAppTests(unittest.TestCase):
     def test_navigation_and_filters_never_collect_or_call_models(self):
         with (patch("media_insights_runtime.load_snapshot", return_value=deepcopy(SNAPSHOT)),
               patch("media_insights_runtime.collect_media_insights") as collect,
+              patch("media_insights_runtime.localize_media_items") as localize,
+              patch("media_insights_runtime.persist_media_localizations") as localization_save,
               patch("media_insights_runtime.analyze_media_item") as analyze,
               patch("media_insights_runtime.answer_media_question") as ask,
               app_fixture() as state):
@@ -41,12 +43,56 @@ class MediaInsightsAppTests(unittest.TestCase):
                              ["지금 주목할 이야기", "추천 테마", "OTT는 지금", "AI 디렉터", "미디어 인사이트"])
             app.radio(key="media_insight_topic").set_value("제휴·유통").run()
             app.selectbox(key="media_insight_period").set_value("최근 30일").run()
+            next(widget for widget in app.get("button_group") if widget.key == "media_insight_scope").set_value("국내 상품 이슈").run()
+            next(widget for widget in app.get("button_group") if widget.key == "media_insight_scope").set_value("주요 이슈").run()
             app.run()
             self.assertFalse(app.exception)
+            for callback in (collect, analyze, ask, localize, localization_save):
+                callback.assert_not_called()
+            state["generate_weekly_themes"].assert_not_called()
+            state["persist_files_to_github"].assert_not_called()
+
+    def test_explicit_korean_action_saves_once_then_rerenders_without_paid_calls(self):
+        current = deepcopy(SNAPSHOT)
+        localized = {"title": "디즈니의 크리에이터 제휴", "summary": "전사적인 크리에이티브 제휴를 발표했습니다.",
+            "source_hash": ITEM["content_hash"], "language": "ko", "generated_at": "2026-10-24T00:00:00+00:00",
+            "model": "test-model"}
+        translations = {ITEM["id"]: localized}
+        def persist(mapping, **kwargs):
+            current["items"][0]["localization"] = deepcopy(mapping[ITEM["id"]])
+            return {"status": "success", "snapshot": deepcopy(current)}
+        with (patch("media_insights_runtime.load_snapshot", side_effect=lambda *args: deepcopy(current)),
+              patch("media_insights_runtime.localize_media_items", return_value={
+                  "localizations": translations, "failed_ids": [], "requested_ids": [ITEM["id"]],
+                  "api_called": True}) as localize,
+              patch("media_insights_runtime.persist_media_localizations", side_effect=persist) as save,
+              patch("media_insights_runtime.collect_media_insights") as collect,
+              patch("media_insights_runtime.analyze_media_item") as analyze,
+              patch("media_insights_runtime.answer_media_question") as ask,
+              app_fixture() as state):
+            app = state["app"]
+            self.assertFalse(app.exception)
+            localize.assert_not_called()
+            app.button(key="media_insights_localize").click().run()
+            self.assertFalse(app.exception)
+            localize.assert_called_once()
+            self.assertEqual([item["id"] for item in localize.call_args.args[0]], [ITEM["id"]])
+            save.assert_called_once()
+            self.assertEqual(save.call_args.args, (translations,))
+            self.assertEqual(save.call_args.kwargs["snapshot_path"].name, "media_insights_snapshot.json")
+            self.assertIn(localized["title"], " ".join(element.value for element in app.markdown))
+            app.run()
+            next(widget for widget in app.get("button_group") if widget.key == "media_insight_scope").set_value("국내 상품 이슈").run()
+            next(widget for widget in app.get("button_group") if widget.key == "media_insight_scope").set_value("주요 이슈").run()
+            self.assertFalse(app.exception)
+            self.assertFalse(any(button.key == "media_insights_localize" for button in app.button))
+            localize.assert_called_once()
+            save.assert_called_once()
             for callback in (collect, analyze, ask):
                 callback.assert_not_called()
             state["generate_weekly_themes"].assert_not_called()
             state["persist_files_to_github"].assert_not_called()
+            state["persist_content_candidates_to_github"].assert_not_called()
 
     def test_explicit_analysis_saves_only_insight_note_not_theme_data(self):
         with (patch("media_insights_runtime.load_snapshot", return_value=deepcopy(SNAPSHOT)),

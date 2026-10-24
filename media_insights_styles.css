@@ -76,3 +76,45 @@
     .media-source-status strong { flex-basis: 100%; }
     .media-mobile-detail-link { display: block; font-size: 12px; margin: 5px 0 10px; }
 }
+
+/* An edition of photographed stories, followed by its full source archive. */
+.st-key-media_insights_section .st-key-media_insight_scope { margin: 8px 0 4px; max-width: 100%; }
+.st-key-media_insights_section button[data-variant="segmented_control"] { border-radius: 0; border: 0; border-bottom: 2px solid transparent; background: transparent; padding: 10px 14px; }
+.st-key-media_insights_section button[data-variant="segmented_control"][aria-checked="true"] { border-bottom-color: var(--accent, #e7bd86); color: var(--accent, #e7bd86); }
+.st-key-media_insights_edition_caption { margin: 0 0 8px; }
+.media-story-art { position: relative; isolation: isolate; height: clamp(126px, 15vw, 190px); overflow: hidden; margin: 11px 0 7px; border-radius: 5px; background: #202924; }
+.media-story-art-lead { height: clamp(190px, 24vw, 305px); }
+.media-art-fallback { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: 22px; color: var(--ink, #f3eee5); background: radial-gradient(ellipse at 90% 5%, #9f7b354a, transparent 70%), linear-gradient(140deg, #26352f, #131c18); }
+.media-art-fallback::before { content: ''; width: 35px; height: 2px; background: #e7bd86; margin-bottom: 14px; }
+.media-art-fallback > span { font-size: 10px; letter-spacing: .05em; color: var(--muted, #aaa99f); }
+.media-art-fallback > strong { font-family: Georgia, serif; font-size: clamp(22px, 2.6vw, 36px); font-weight: 500; line-height: 1.4; overflow-wrap: anywhere; }
+.media-art-fallback > small { font-size: 9px; color: var(--muted, #aaa99f); margin-top: 8px; }
+.media-story-image { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; background: #19221d; }
+.media-story-image-logo { object-fit: contain; padding: 28px; background: #17211b; }
+.media-image-credit { position: absolute; right: 0; bottom: 0; max-width: 90%; padding: 3px 7px; color: #f8f4eb; background: #0009; font-size: 8px; line-height: 1.5; overflow-wrap: anywhere; }
+[class*="st-key-media_edition_row_"] { min-width: 0; }
+[class*="st-key-media_edition_row_"] [data-testid="stColumn"] { min-width: 0; }
+[class*="st-key-media_edition_row_"] [class*="st-key-media_story_"] .stButton button p { font-size: 15px; line-height: 1.5; }
+[class*="st-key-media_edition_row_"] .media-story-meta time { margin-left: 0; }
+[data-testid="stMarkdownContainer"] .media-editorial-reason { font-size: 10px; line-height: 1.7; color: var(--quiet, #7d817e); margin: 7px 0 3px; overflow-wrap: anywhere; }
+.media-editorial-reason > span { display: inline; color: var(--accent, #e7bd86); margin-right: 7px; }
+[class*="st-key-media_archive_story_"] { padding: 10px 0; border-bottom: 1px solid var(--line, #343734); gap: 0; min-width: 0; }
+[class*="st-key-media_archive_story_"] .stButton button { display: block; text-align: left; padding: 5px 0; min-height: 30px; border: 0; }
+[class*="st-key-media_archive_story_"] .stButton button p { font-size: 12px; text-align: left; line-height: 1.6; overflow-wrap: anywhere; }
+[class*="st-key-media_archive_story_"] .media-story-source { margin-bottom: 2px; }
+@media (max-width: 760px) {
+    .st-key-media_insights_edition_caption [data-testid="stHorizontalBlock"] { flex-wrap: wrap; }
+    .st-key-media_insights_edition_caption [data-testid="stColumn"] { min-width: 0 !important; flex: 1 1 100% !important; width: 100% !important; }
+    .st-key-media_insights_edition_caption [data-testid="stColumn"]:last-child { flex-basis: 110px !important; }
+    [class*="st-key-media_edition_row_"] > [data-testid="stLayoutWrapper"] > [data-testid="stHorizontalBlock"] { flex-direction: column; gap: 0; }
+    [class*="st-key-media_edition_row_"] > [data-testid="stLayoutWrapper"] > [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] { width: 100% !important; flex: 1 1 100% !important; min-width: 0 !important; }
+    .media-story-art, .media-story-art-lead { height: auto; aspect-ratio: 1.95; min-height: 145px; max-height: 260px; }
+    .media-art-fallback > strong { font-size: 28px; }
+    .st-key-media_insights_section button[data-variant="segmented_control"] { padding: 9px 10px; }
+}
+@media (max-width: 380px) {
+    .media-story-meta { gap: 4px 7px; }
+    .media-story-art, .media-story-art-lead { min-height: 125px; }
+}
+
+.st-key-media_insights_section [data-testid="stElementContainer"]:has(.media-pending-translation) { display: none; }

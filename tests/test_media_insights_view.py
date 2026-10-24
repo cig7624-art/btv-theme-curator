@@ -7,12 +7,12 @@ import unittest
 from streamlit.testing.v1 import AppTest
 
 from media_insights_view import (analysis_markdown, comparison_csv, filter_insight_items,
-                                 insight_items, validated_analysis, validated_answer, _url, _locator_label)
+                                 insight_items, validated_analysis, validated_answer, _url, _locator_label, display_copy, artwork_html)
 
 
 def document(identifier="one", *, topic="advertising_pricing", country="US", published="2026-10-01"):
     return {"id": identifier, "company": "Test Media " + identifier, "topic": topic, "country": country,
-            "title": "Official announcement " + identifier, "url": "https://official.example/" + identifier,
+            "title": "Netflix introduces new ad-supported subscription plan " + identifier, "url": "https://official.example/" + identifier,
             "source_name": "Official newsroom", "source_type": "official_newsroom", "period": "2026년 3분기",
             "published_at": published, "collected_at": "2026-10-23T09:00:00Z", "content_hash": "hash-" + identifier,
             "excerpt": "This is an official source excerpt.",
@@ -154,6 +154,86 @@ class SourceGuardsTests(unittest.TestCase):
         self.assertIn("'=formula", csv)
         self.assertIn("'+formula", csv)
         self.assertIn("'@formula", csv)
+
+
+class MagazinePresentationTests(unittest.TestCase):
+    def test_korean_analysis_is_reused_and_original_is_not_a_headline(self):
+        item = document()
+        item["analysis"] = analysis(item)
+        copy = display_copy(item)
+        self.assertEqual(copy["title"], item["analysis"]["headline"])
+        self.assertNotEqual(copy["title"], item["title"])
+        missing = display_copy(document())
+        self.assertRegex(missing["title"], "[가-힣]")
+        self.assertNotEqual(missing["summary"], document()["excerpt"])
+
+    def test_artwork_escapes_metadata_and_rejects_unsafe_image_addresses(self):
+        item = {**document(), "company": "Disney", "image_url": "https://images.disney.example/art.jpg",
+                "image_attribution": '<script>alert("bad")</script>'}
+        art = artwork_html(item, lead=True)
+        self.assertIn('src="https://images.disney.example/art.jpg"', art)
+        self.assertIn("디즈니 공식 발표 관련 이미지", art)
+        self.assertIn("&lt;script&gt;", art)
+        self.assertNotIn("<script>", art)
+        for url in ("http://images.example/a.jpg", "https://127.0.0.1/a.jpg", "https://localhost/a.jpg",
+                    "https://user:password@images.example/a.jpg", "https://images.example:8443/a.jpg"):
+            art = artwork_html({**item, "image_url": url})
+            self.assertNotIn("<img ", art)
+            self.assertIn("media-art-fallback", art)
+
+    def test_major_edition_keeps_old_material_only_in_the_archive(self):
+        app = app_fixture()
+        self.assertFalse(app.exception)
+        major_keys = [button.key for button in app.button if str(button.key).startswith("media_select_")]
+        self.assertEqual(major_keys, ["media_select_" + hashlib.sha256(b"one").hexdigest()[:16]])
+        self.assertTrue(any("수집 자료 보관함 · 2건" in expander.label for expander in app.expander))
+        self.assertEqual(len(app.tabs), 0)
+        markup = " ".join(row.value for row in app.markdown)
+        self.assertIn("media-story-art-lead", markup)
+        self.assertIn("주목한 이유", markup)
+
+    def test_domestic_tab_excludes_foreign_stories_and_does_not_call_ai(self):
+        data = snapshot()
+        domestic = {**document("domestic", country="KR"), "company": "SK브로드밴드",
+                    "title": "B tv 신규 결합 상품 출시", "market_scope": "domestic_product"}
+        data["items"].append(domestic)
+        app = app_fixture(data)
+        app.get("button_group")[0].set_value("국내 상품 이슈").run()
+        self.assertFalse(app.exception)
+        self.assertEqual(app.session_state["media_insight_selected_id"], "domestic")
+        markup = " ".join(row.value for row in app.markdown)
+        self.assertIn("국내 상품의 변화", markup)
+        self.assertNotIn("Test Media one", markup)
+        self.assertEqual(app.session_state["test_callbacks"], {"refresh": 0, "analyze": 0, "ask": 0})
+
+    def test_localization_only_calls_explicit_button_and_uses_returned_saved_copy(self):
+        def render():
+            import streamlit as st
+            from media_insights_view import render_media_insights_page
+            from test_media_insights_view import snapshot
+            data = snapshot()
+            st.session_state.setdefault("translate_calls", 0)
+            def translate():
+                st.session_state["translate_calls"] += 1
+                for item in data["items"]:
+                    item["localization"] = {
+                        "title": "새로운 광고 제휴를 발표한 미디어 기업", "summary": "공식 발표에서 광고 제휴를 소개했습니다.",
+                        "source_hash": item["content_hash"], "generated_at": "2026-10-24T01:00:00Z",
+                        "model": "test", "language": "ko"}
+                st.session_state["translated_data"] = data
+                return data
+            render_media_insights_page(st.session_state.get("translated_data", data), on_localize=translate)
+        app = AppTest.from_function(render).run()
+        self.assertFalse(app.exception)
+        app.run()
+        self.assertEqual(app.session_state["translate_calls"], 0)
+        app.button(key="media_insights_localize").click().run()
+        self.assertFalse(app.exception)
+        self.assertEqual(app.session_state["translate_calls"], 1)
+        self.assertIn("새로운 광고 제휴를 발표한 미디어 기업", " ".join(row.value for row in app.markdown))
+        app.run()
+        self.assertFalse(any(button.key == "media_insights_localize" for button in app.button))
+        self.assertEqual(app.session_state["translate_calls"], 1)
 
 
 class MediaInsightsAppTests(unittest.TestCase):
