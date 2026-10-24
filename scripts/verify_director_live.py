@@ -24,7 +24,7 @@ from scripts.verify_deployment import (  # noqa: E402
     no_horizontal_overflow, normalized_version,
 )
 
-TAB_ORDER = ['지금 주목할 이야기', '추천 테마', 'OTT는 지금', 'AI 디렉터', '미디어 인사이트']
+TAB_ORDER = ['지금 주목할 이야기', '추천 테마', 'AI 디렉터', 'OTT는 지금', '미디어 인사이트']
 CREATE_REQUEST = '어두운 한국 심리 스릴러로 큐레이션해줘. 어떤 타이틀이 들어가는지 추천 작품과 이유도 함께 보여줘.'
 TITLE_REQUEST = ('테마명만 더 감각적인 제목으로 바꿔줘. 서브카피, 기획 의도, 장르, 분위기, '
                  '추천 작품과 추천 이유는 모두 그대로 유지해줘.')

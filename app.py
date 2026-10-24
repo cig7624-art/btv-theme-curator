@@ -1795,8 +1795,8 @@ else:
             unsafe_allow_html=True,
         )
 
-    story_tab, recommendation_tab, ott_tab, director_tab, media_tab = st.tabs(
-        ["지금 주목할 이야기", "추천 테마", "OTT는 지금", "AI 디렉터", "미디어 인사이트"],
+    story_tab, recommendation_tab, director_tab, ott_tab, media_tab = st.tabs(
+        ["지금 주목할 이야기", "추천 테마", "AI 디렉터", "OTT는 지금", "미디어 인사이트"],
         key="home_sections", on_change="rerun",
         default=st.session_state.get("home_tab_default", "지금 주목할 이야기"),
     )

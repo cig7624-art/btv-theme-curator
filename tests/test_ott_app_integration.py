@@ -6,7 +6,7 @@ import streamlit as st
 from test_theme_actions import app_fixture
 
 NOW = datetime.now(timezone.utc).isoformat()
-TABS = ['지금 주목할 이야기','추천 테마','OTT는 지금','AI 디렉터','미디어 인사이트']
+TABS = ['지금 주목할 이야기','추천 테마','AI 디렉터','OTT는 지금','미디어 인사이트']
 
 SNAPSHOT = {'schema_version':1,'updated_at':NOW,'platforms':[
     {'id':'tving','status':'ok','checked_at':NOW,'last_success_at':NOW,

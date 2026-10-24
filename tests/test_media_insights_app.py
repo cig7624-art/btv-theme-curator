@@ -40,7 +40,7 @@ class MediaInsightsAppTests(unittest.TestCase):
             app = state["app"]
             self.assertFalse(app.exception)
             self.assertEqual([tab.label for tab in app.tabs],
-                             ["지금 주목할 이야기", "추천 테마", "OTT는 지금", "AI 디렉터", "미디어 인사이트"])
+                             ["지금 주목할 이야기", "추천 테마", "AI 디렉터", "OTT는 지금", "미디어 인사이트"])
             app.radio(key="media_insight_topic").set_value("제휴·유통").run()
             app.selectbox(key="media_insight_period").set_value("최근 30일").run()
             app.radio(key="media_insight_topic").set_value("국내 이슈").run()

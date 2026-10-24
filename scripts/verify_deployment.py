@@ -137,7 +137,7 @@ def _load_version(page, args, report, label):
 def _check_editorial(frame, report, label, screenshots):
     page = frame.page
     tab_names = frame.get_by_role("tab").all_text_contents()
-    report["tests"][f"{label}_five_tabs"] = [name.strip() for name in tab_names] == ["지금 주목할 이야기", "추천 테마", "OTT는 지금", "AI 디렉터", "미디어 인사이트"]
+    report["tests"][f"{label}_five_tabs"] = [name.strip() for name in tab_names] == ["지금 주목할 이야기", "추천 테마", "AI 디렉터", "OTT는 지금", "미디어 인사이트"]
     if not report["tests"][f"{label}_five_tabs"]:
         raise VerificationIssue("five_tabs_missing", retry=True)
     frame.get_by_role("tab", name="추천 테마", exact=True).click()
