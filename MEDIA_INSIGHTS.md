@@ -33,3 +33,7 @@
 GitHub Actions에 `OPENAI_API_KEY`를 별도 설정하면 매 실행 새로 수집·변경된 문서 최대 2건을 분석합니다. 설정이 없으면 공식 자료만 수집하며, 앱에서 필요한 노트를 만들 수 있습니다. 앱 Secrets의 키가 Actions로 자동 전달되지는 않습니다. 분석·질문·실제 AI 검증에는 API 비용이 발생하며 앱 하단 ‘AI 비용·잔액’의 세션 집계에 포함합니다. 자동 작업의 비용은 OpenAI 사용 내역을 확인합니다.
 
 GitHub 저장은 기존 `GITHUB_WRITE_TOKEN`·`GITHUB_REPO`·`GITHUB_BRANCH`를 재사용하며 경로는 `MEDIA_INSIGHTS_GITHUB_PATH`로 변경할 수 있습니다. 기본 경로는 위 JSON입니다. 수집과 분석의 동시 저장은 최신 파일 SHA를 확인해 병합하며, 분석의 근거 문서가 바뀌면 오래된 노트를 표시하지 않습니다. 파일이 커져도 GitHub 원문 읽기를 사용합니다. 코드 롤백은 이 JSON의 최신 자료를 보존합니다.
+
+## 실제 검증
+
+v1.3.4에서 공식 자료 12건과 실제 생성·저장한 분석 2건을 확인했습니다. 마지막 검증은 노트를 재생성하지 않고 새 질문 1회, 원문 링크, 새 접속과 GitHub 저장을 확인했습니다. 기존 탭과 PC·모바일 화면도 통과했습니다. 세부 결과는 `artifacts/media_insights_validation.json`, `artifacts/media_insights_live_validation.json`, `artifacts/deployment_validation.json`에 있습니다.
