@@ -1,17 +1,21 @@
 {
   "schema_version": 1,
   "expected_version": "1.3.0",
-  "observed_version": null,
+  "observed_version": "1.3.0",
   "passed": false,
   "blocked": false,
   "checks": {
-    "desktop_exact_version": false,
+    "desktop_exact_version": true,
+    "analysis_1_unanalysed_official_document_selected": true,
+    "analysis_1_click_attempted": true,
     "verification_completed": false
   },
   "counts": {
-    "release_load_attempts": 14,
-    "analysis_clicks": 0,
+    "release_load_attempts": 2,
+    "analysis_clicks": 1,
     "question_clicks": 0,
-    "requested_analyses": 3
+    "requested_analyses": 3,
+    "visible_documents": 12,
+    "analysis_1_clicks": 1
   }
 }
