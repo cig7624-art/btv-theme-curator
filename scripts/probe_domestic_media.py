@@ -13,17 +13,14 @@ from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = [
-    ("skb_new_feed", "https://blog.bworld.co.kr/feed/"),
-    ("skb_new", "https://blog.bworld.co.kr/"),
-    ("skb_news", "https://news.skbroadband.com/"),
-    ("kt_newsroom", "https://newsroom.kt.com/"),
+    ("skb_press_feed", "https://blog.bworld.co.kr/category/보도자료/feed/"),
+    ("skb_search", "https://blog.bworld.co.kr/?s=B+tv&feed=rss2"),
+    ("skb_api", "https://blog.bworld.co.kr/wp-json/wp/v2/posts?search=B%20tv&per_page=30&_embed=1"),
+    ("lgu_press", "https://news.lguplus.com/category/프레스센터/보도자료"),
+    ("lgu_product", "https://news.lguplus.com/category/uplus-인사이드/상품-서비스"),
+    ("lgu_api", "https://news.lguplus.com/wp-json/wp/v2/posts?search=tv&per_page=30"),
+    ("lgu_sitemaps", "https://news.lguplus.com/sitemap_index.xml"),
     ("kt_news_list", "https://corp.kt.com/html/promote/news/report_list.html"),
-    ("kt_news_site", "https://corp.kt.com/html/promote/news/report.html"),
-    ("lgu_rss", "https://news.lguplus.com/?feed=rss2"),
-    ("lgu_sitemap", "https://news.lguplus.com/post-sitemap.xml"),
-    ("lgu_products", "https://news.lguplus.com/category/newsroom/service/"),
-    ("coupang_home", "https://news.coupang.com/"),
-    ("coupang_play", "https://news.coupang.com/archives/category/coupang-play"),
 ]
 
 BUSINESS = re.compile(r"B\s*tv|IPTV|OTT|티빙|TVING|웨이브|wavve|쿠팡플레이|디즈니|넷플릭스|지니\s*TV|U\+\s*tv|요금|구독|결합|번들|출시|제휴", re.I)
@@ -38,7 +35,16 @@ def probe(entry):
                       content_type=response.headers.get("Content-Type", ""))
         if response.status_code != 200 or len(response.content) > 8_000_000:
             return result
+        if "application/json" in result["content_type"]:
+            payload = response.json()
+            if isinstance(payload, list):
+                result["json_items"] = [{"title": x.get("title"), "url": x.get("link"), "date": x.get("date"), "excerpt": x.get("excerpt")} for x in payload[:30]]
+                result["articles"] = [{"title": x.get("title", {}).get("rendered", ""), "url": x["link"]} for x in payload if x.get("link") and BUSINESS.search(x.get("title", {}).get("rendered", ""))][:10]
+                result["status"] = "ok"
+                return result
         soup = BeautifulSoup(response.content, "html.parser")
+        result["script_urls"] = [urljoin(response.url, n["src"]) for n in soup.select("script[src]")]
+        result["inline_source_paths"] = re.findall(r"[^\s\"']{1,100}\.(?:ajax|json|do|js)(?:[^\s\"']{0,80})", response.text)[:80]
         result["title"] = soup.title.get_text(" ", strip=True) if soup.title else ""
         feed_items = []
         if re.search(br"<(rss|feed)[\s>]", response.content[:1500], re.I):
@@ -95,7 +101,7 @@ def main():
     with ThreadPoolExecutor(max_workers=6) as pool:
         details = list(pool.map(probe, followups))
     report = {"checked_at": datetime.now(timezone.utc).isoformat(), "sources": results, "article_details": details}
-    path = ROOT / "artifacts/domestic_media_probe_current.json"
+    path = ROOT / "artifacts/domestic_media_probe_products.json"
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps({"sources": len(results), "ok": sum(r["status"] == "ok" for r in results), "details": len(details)}))
 
