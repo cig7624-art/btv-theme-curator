@@ -346,7 +346,138 @@
       ],
       "content_hash": "fe5ff5da4381a11de5a7966d2e4ecae91e79baded2dfbc8c260fb74d700637df",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-24T01:56:22+00:00"
+      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "analysis": {
+        "headline": "Disney+, 2027년 슈퍼볼 LXI 스트리밍 예정",
+        "summary": "Disney+는 2027년 2월 14일 슈퍼볼 LXI를 미국의 모든 Disney+ 가입자에게 스트리밍하고, 미국 외 55개국 이상에서도 ESPN의 슈퍼볼 중계를 제공할 예정입니다. 미국에서는 정규시즌 Monday Night Football 두 경기도 Disney+에서 시청할 수 있습니다.",
+        "facts": [
+          {
+            "text": "Disney+는 2027년 2월 14일 일요일 슈퍼볼 LXI를 라이브 스트리밍하며, 미국의 모든 Disney+ 가입자는 ESPN과 ABC에서 방송되는 전통적 경기 중계와 ESPN Deportes의 스페인어 중계를 시청할 수 있다.",
+            "evidence_ids": [
+              "mi-e5577dde5187375575-p002"
+            ]
+          },
+          {
+            "text": "미국 외 지역에서 Disney+는 스페인어권 라틴아메리카, 브라질, 카리브해, 남아프리카, 호주·뉴질랜드를 포함한 55개국 이상에서 ESPN의 슈퍼볼을 스트리밍할 예정이다.",
+            "evidence_ids": [
+              "mi-e5577dde5187375575-p003"
+            ]
+          },
+          {
+            "text": "미국에서 ESPN의 모든 Monday Night Football 경기와 슈퍼볼 프로그램은 ESPN 앱에서도 계속 제공된다.",
+            "evidence_ids": [
+              "mi-e5577dde5187375575-p007"
+            ]
+          }
+        ],
+        "interpretation": "이번 발표는 Disney+의 단발성 스포츠 중계가 아니라 ESPN·ABC와 Disney+·ESPN 앱을 함께 활용하는 멀티플랫폼 배포 확대를 보여준다. 다만 발표문만으로는 Disney+ 스포츠 중계의 별도 가입자 증가, 광고 매출, 한국 제공 여부 또는 B tv 도입 가능성을 판단할 수 없다. 또한 본문은 2027년 중계 예정 계획을 설명하므로 실제 시행·시청 성과와는 구분해야 한다.",
+        "btv_options": [
+          "한국 제공 여부와 권리 범위를 확인한 뒤, 관련 스포츠 콘텐츠의 B tv 내 편성·검색·추천 노출 가능성 검토",
+          "Disney+ 또는 ESPN 연계 콘텐츠가 B tv에서 제공될 경우, 라이브 스포츠 시청 중 멀티스크린·하이라이트·다국어 중계 기능의 적용 조건 검토",
+          "스포츠 이벤트의 광고 재고·브랜드 연계 가능성은 별도 계약, 지역 권리, 광고 상품 구조 확인 후 검토"
+        ],
+        "questions": [
+          "Disney+의 슈퍼볼 LXI 스트리밍 권리와 제공 범위가 한국에도 적용되는가?",
+          "B tv에서 Disney+·ESPN 관련 라이브 스포츠 또는 주문형 콘텐츠를 제공할 수 있는 계약·기술 조건은 무엇인가?",
+          "Disney+ 스포츠 중계에서 광고 삽입, 스폰서십, 시청자 데이터 공유가 가능한 지역과 상품 구조는 무엇인가?"
+        ],
+        "comparison": [
+          {
+            "company": "Amazon",
+            "aspect": "스트리밍 스포츠 콘텐츠의 제공 범위",
+            "detail": "Prime Video는 2026-27 NBA 정규시즌 67경기를 스트리밍한다. Disney+는 슈퍼볼 LXI와 정규시즌 Monday Night Football 두 경기를 제공할 예정이라고 발표했다. 종목과 경기 수·범위가 달라 직접적인 규모 비교는 어렵다.",
+            "evidence_ids": [
+              "mi-5b80871e69b160f1a3-p001",
+              "mi-e5577dde5187375575-p005"
+            ]
+          },
+          {
+            "company": "Amazon",
+            "aspect": "스포츠 중계의 인터랙티브 기능",
+            "detail": "Amazon 자료는 AI 기반 Prime 360 하이라이트와 Yahoo! Sports 연동 개인화 판타지 농구 기능을 제시한다. Disney 자료는 ESPN·ABC 중계 및 영어·스페인어 스트리밍을 설명하지만, 이 발췌에서는 유사한 인터랙티브 기능을 확인할 수 없다.",
+            "evidence_ids": [
+              "mi-5b80871e69b160f1a3-p003",
+              "mi-e5577dde5187375575-p002",
+              "mi-e5577dde5187375575-p005"
+            ]
+          },
+          {
+            "company": "Amazon",
+            "aspect": "데이터·통계 기반 시청 기능",
+            "detail": "NBA와 AWS는 방송을 개선하고 팬이 경기에 더 깊이 참여할 수 있도록 라이브 통계를 제공하는 파트너십을 발표했다. Disney의 선택 문서에서는 슈퍼볼 스트리밍의 라이브 통계 기능이 확인되지 않는다.",
+            "evidence_ids": [
+              "mi-5b80871e69b160f1a3-p004"
+            ]
+          }
+        ],
+        "verification": {
+          "facts_omitted": 2,
+          "comparisons_omitted": 0,
+          "summary_fallback": false,
+          "headline_fallback": false,
+          "interpretation_omitted": false,
+          "btv_options_omitted": 0,
+          "questions_omitted": 0
+        },
+        "generated_at": "2026-10-24T02:29:25.124827+00:00",
+        "model": "gpt-5.6-luna",
+        "source_hash": "fe5ff5da4381a11de5a7966d2e4ecae91e79baded2dfbc8c260fb74d700637df",
+        "context_hashes": {
+          "mi-e5577dde5187375575": "fe5ff5da4381a11de5a7966d2e4ecae91e79baded2dfbc8c260fb74d700637df",
+          "mi-5b80871e69b160f1a3": "baa38c6950155ed542f0ab2a1c12a07707f1c370fa5bb38ae89fba1ea8c1d38c"
+        },
+        "evidence": [
+          {
+            "id": "mi-e5577dde5187375575-p002",
+            "text": "Disney+ and ESPN, in collaboration with the NFL, today announced that Disney+ will livestream Super Bowl LXI on Sunday, Feb. 14, 2027, providing another platform for fans to watch ESPN’s first-ever Super Bowl production. All Disney+ subscribers in the United States can stream the traditional game presentation airing on ESPN and ABC, with Joe Buck , Troy Aikman , Lisa Salters and Laura Rutledge on the call, as well as the Spanish-language telecast on ESPN Deportes.",
+            "locator": "p002",
+            "url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
+            "title": "Disney+ to Stream Super Bowl LXI, Joining ESPN and ABC to Give Fans More Ways to Watch"
+          },
+          {
+            "id": "mi-e5577dde5187375575-p003",
+            "text": "Outside of the U.S., Disney+ will stream ESPN’s Super Bowl in more than 55 international markets, including Spanish-speaking Latin America, Brazil, the Caribbean, South Africa and Australia/New Zealand. In conjunction, ESPN’s linear platforms will carry the Super Bowl in more than 130 countries and territories.",
+            "locator": "p003",
+            "url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
+            "title": "Disney+ to Stream Super Bowl LXI, Joining ESPN and ABC to Give Fans More Ways to Watch"
+          },
+          {
+            "id": "mi-e5577dde5187375575-p007",
+            "text": "All of ESPN’s Monday Night Football games and its Super Bowl programming will remain available on the ESPN App in the United States. In addition to the traditional and Spanish-language Super Bowl LXI presentations, the platform will carry the ManningCast with Peyton and Eli on ESPN2 and all other Super Bowl Sunday studio programming. The ESPN App will also carry programming throughout the week leading up to the game, as well as all season long.",
+            "locator": "p007",
+            "url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
+            "title": "Disney+ to Stream Super Bowl LXI, Joining ESPN and ABC to Give Fans More Ways to Watch"
+          },
+          {
+            "id": "mi-5b80871e69b160f1a3-p001",
+            "text": "Prime Video streams 67 games during the regular season, including the Emirates NBA Cup Championship.",
+            "locator": "p001",
+            "url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
+            "title": "How to watch the 2026-27 NBA season on Prime Video"
+          },
+          {
+            "id": "mi-e5577dde5187375575-p005",
+            "text": "In addition to Super Bowl LXI, two Monday Night Football regular-season games will be available to Disney+ subscribers in the lead-up to the big game. The first is the Dallas Cowboys at Philadelphia Eagles on Monday, Oct. 26 (Week 7), with a second game to be announced. Both games will continue to air as scheduled on ESPN/ABC and ESPN Deportes, with the option to stream both the English- and Spanish-language broadcasts on Disney+. These add to the expanding roster of domestic and global live sports available on Disney+.",
+            "locator": "p005",
+            "url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
+            "title": "Disney+ to Stream Super Bowl LXI, Joining ESPN and ABC to Give Fans More Ways to Watch"
+          },
+          {
+            "id": "mi-5b80871e69b160f1a3-p003",
+            "text": "New broadcast features include AI-powered Prime 360 highlights and personalized fantasy basketball integration with Yahoo! Sports.",
+            "locator": "p003",
+            "url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
+            "title": "How to watch the 2026-27 NBA season on Prime Video"
+          },
+          {
+            "id": "mi-5b80871e69b160f1a3-p004",
+            "text": "NBA and AWS announce a partnership that will enhance broadcasts and provide fans with live stats to help them dive deeper into the game.",
+            "locator": "p004",
+            "url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
+            "title": "How to watch the 2026-27 NBA season on Prime Video"
+          }
+        ]
+      }
     },
     {
       "id": "mi-80a30a5f266d73b1a5",
