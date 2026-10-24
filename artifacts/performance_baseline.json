@@ -5,7 +5,7 @@
   "status": "failed",
   "expected_version": "1.4.1",
   "observed_version": "1.4.1",
-  "started_at": "2026-10-24T15:05:46.720800+00:00",
+  "started_at": "2026-10-24T15:21:59.222114+00:00",
   "samples_per_flow": 3,
   "flow_order": [
     "tab_recommendation",
@@ -36,49 +36,97 @@
       "viewport": "desktop",
       "sample": 1,
       "flow": "tab_recommendation",
-      "completion_ms": 3936.1,
-      "ready_ms": 4275.9,
+      "completion_ms": 3840.7,
+      "ready_ms": 4138.3,
       "reruns": 1,
       "successful_reruns": 1,
       "forward_messages": 318,
-      "forward_bytes": 193235,
+      "forward_bytes": 193233,
       "rendered_cards": 0
     },
     {
       "viewport": "desktop",
       "sample": 1,
       "flow": "tab_director",
-      "completion_ms": 3900.0,
-      "ready_ms": 4242.8,
+      "completion_ms": 3802.9,
+      "ready_ms": 4098.2,
       "reruns": 1,
       "successful_reruns": 1,
       "forward_messages": 318,
-      "forward_bytes": 193232,
+      "forward_bytes": 193233,
       "rendered_cards": 0
     },
     {
       "viewport": "desktop",
       "sample": 1,
       "flow": "tab_ott",
-      "completion_ms": 3857.9,
-      "ready_ms": 4186.7,
+      "completion_ms": 4029.3,
+      "ready_ms": 4317.2,
       "reruns": 1,
       "successful_reruns": 1,
       "forward_messages": 318,
-      "forward_bytes": 193234,
+      "forward_bytes": 193233,
       "rendered_cards": 0
     },
     {
       "viewport": "desktop",
       "sample": 1,
       "flow": "tab_media",
-      "completion_ms": 3764.2,
-      "ready_ms": 4112.0,
+      "completion_ms": 3681.7,
+      "ready_ms": 3997.2,
       "reruns": 1,
       "successful_reruns": 1,
       "forward_messages": 318,
       "forward_bytes": 193233,
       "rendered_cards": 0
+    },
+    {
+      "viewport": "desktop",
+      "sample": 1,
+      "flow": "library_open",
+      "completion_ms": 9252.7,
+      "ready_ms": 10182.4,
+      "reruns": 2,
+      "successful_reruns": 1,
+      "forward_messages": 7535,
+      "forward_bytes": 2029318,
+      "rendered_cards": 621
+    },
+    {
+      "viewport": "desktop",
+      "sample": 1,
+      "flow": "library_search_horror",
+      "completion_ms": 2975.4,
+      "ready_ms": 3551.6,
+      "reruns": 1,
+      "successful_reruns": 1,
+      "forward_messages": 1267,
+      "forward_bytes": 341048,
+      "rendered_cards": 101
+    },
+    {
+      "viewport": "desktop",
+      "sample": 1,
+      "flow": "library_search_summer_night",
+      "completion_ms": 2127.1,
+      "ready_ms": 2441.8,
+      "reruns": 1,
+      "successful_reruns": 1,
+      "forward_messages": 223,
+      "forward_bytes": 55389,
+      "rendered_cards": 14
+    },
+    {
+      "viewport": "desktop",
+      "sample": 1,
+      "flow": "library_search_healing",
+      "completion_ms": 3629.7,
+      "ready_ms": 4115.1,
+      "reruns": 1,
+      "successful_reruns": 1,
+      "forward_messages": 2083,
+      "forward_bytes": 540031,
+      "rendered_cards": 169
     }
   ],
   "summary": [
@@ -86,41 +134,89 @@
       "viewport": "desktop",
       "flow": "tab_recommendation",
       "samples": 1,
-      "median_completion_ms": 3936.1,
-      "median_ready_ms": 4275.9,
-      "min_completion_ms": 3936.1,
-      "max_completion_ms": 3936.1
+      "median_completion_ms": 3840.7,
+      "median_ready_ms": 4138.3,
+      "min_completion_ms": 3840.7,
+      "max_completion_ms": 3840.7
     },
     {
       "viewport": "desktop",
       "flow": "tab_director",
       "samples": 1,
-      "median_completion_ms": 3900.0,
-      "median_ready_ms": 4242.8,
-      "min_completion_ms": 3900.0,
-      "max_completion_ms": 3900.0
+      "median_completion_ms": 3802.9,
+      "median_ready_ms": 4098.2,
+      "min_completion_ms": 3802.9,
+      "max_completion_ms": 3802.9
     },
     {
       "viewport": "desktop",
       "flow": "tab_ott",
       "samples": 1,
-      "median_completion_ms": 3857.9,
-      "median_ready_ms": 4186.7,
-      "min_completion_ms": 3857.9,
-      "max_completion_ms": 3857.9
+      "median_completion_ms": 4029.3,
+      "median_ready_ms": 4317.2,
+      "min_completion_ms": 4029.3,
+      "max_completion_ms": 4029.3
     },
     {
       "viewport": "desktop",
       "flow": "tab_media",
       "samples": 1,
-      "median_completion_ms": 3764.2,
-      "median_ready_ms": 4112.0,
-      "min_completion_ms": 3764.2,
-      "max_completion_ms": 3764.2
+      "median_completion_ms": 3681.7,
+      "median_ready_ms": 3997.2,
+      "min_completion_ms": 3681.7,
+      "max_completion_ms": 3681.7
+    },
+    {
+      "viewport": "desktop",
+      "flow": "library_open",
+      "samples": 1,
+      "median_completion_ms": 9252.7,
+      "median_ready_ms": 10182.4,
+      "min_completion_ms": 9252.7,
+      "max_completion_ms": 9252.7
+    },
+    {
+      "viewport": "desktop",
+      "flow": "library_search_horror",
+      "samples": 1,
+      "median_completion_ms": 2975.4,
+      "median_ready_ms": 3551.6,
+      "min_completion_ms": 2975.4,
+      "max_completion_ms": 2975.4
+    },
+    {
+      "viewport": "desktop",
+      "flow": "library_search_summer_night",
+      "samples": 1,
+      "median_completion_ms": 2127.1,
+      "median_ready_ms": 2441.8,
+      "min_completion_ms": 2127.1,
+      "max_completion_ms": 2127.1
+    },
+    {
+      "viewport": "desktop",
+      "flow": "library_search_healing",
+      "samples": 1,
+      "median_completion_ms": 3629.7,
+      "median_ready_ms": 4115.1,
+      "min_completion_ms": 3629.7,
+      "max_completion_ms": 3629.7
     }
   ],
   "errors": [
     "completed_rerun_or_target_timeout"
   ],
-  "finished_at": "2026-10-24T15:07:06.414909+00:00"
+  "timeout_diagnostics": {
+    "stage": "target_readiness",
+    "reason": "query_not_applied",
+    "markers": 1,
+    "visible_markers": 1,
+    "stale_nodes": 0,
+    "reruns": 1,
+    "successful_reruns": 1,
+    "forward_messages": 7507,
+    "running": 0,
+    "decode_errors": 0
+  },
+  "finished_at": "2026-10-24T15:23:41.554174+00:00"
 }
