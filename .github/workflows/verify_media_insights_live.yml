@@ -1,6 +1,7 @@
 name: Verify real media insights analysis
 
 # Initial launch check: at most three document analyses and one research question.
+# Validate real creator-partnership, sports and AI-discovery source notes on launch.
 # The script defaults to one analysis for later manual use; this workflow requests three.
 # No schedules, ordinary deployment triggers, or retries after paid clicks.
 on:
