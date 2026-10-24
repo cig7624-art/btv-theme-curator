@@ -162,7 +162,91 @@
       ],
       "content_hash": "60d467a44a6681d8ea04718c3c902263342ae875d7de373d944293b956a16986",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-24T01:56:22+00:00"
+      "last_checked_at": "2026-10-24T01:56:22+00:00",
+      "analysis": {
+        "headline": "디즈니, Dude Perfect와 전사적 콘텐츠·유통 파트너십 발표",
+        "summary": "디즈니는 Dude Perfect와 협력해 디즈니 프랜차이즈·이벤트를 활용한 오리지널 콘텐츠를 제작하고, 일부 콘텐츠를 Disney+에 선보일 계획이다. 또한 Dude Perfect의 기존 숏폼 라이브러리를 Disney+, ESPN 및 디즈니 소셜 플랫폼에 유통할 수 있게 됐다.",
+        "facts": [
+          {
+            "text": "디즈니와 Dude Perfect는 스포츠·코미디 엔터테인먼트와 디즈니 프랜차이즈·문화 이벤트를 결합한 통합 크리에이티브 파트너십을 발표했다.",
+            "evidence_ids": [
+              "mi-525e4bb84089078f44-p003"
+            ]
+          },
+          {
+            "text": "Dude Perfect는 자체 채널용 디즈니 프랜차이즈·이벤트 기반 오리지널 콘텐츠를 개발하며, 일부 Dude Perfect 콘텐츠는 Disney+에도 소개될 예정이다.",
+            "evidence_ids": [
+              "mi-525e4bb84089078f44-p003"
+            ]
+          },
+          {
+            "text": "향후 1년간 계획된 협업에는 Super Bowl LXI, Star Wars 50주년, Marvel Studios의 Avengers: Doomsday 관련 콘텐츠가 포함된다.",
+            "evidence_ids": [
+              "mi-525e4bb84089078f44-p004"
+            ]
+          },
+          {
+            "text": "이번 파트너십을 통해 디즈니는 Dude Perfect의 기존 숏폼 라이브러리 일부를 Disney+, ESPN 및 디즈니 소셜 플랫폼에 유통할 수 있게 됐다.",
+            "evidence_ids": [
+              "mi-525e4bb84089078f44-p005"
+            ]
+          },
+          {
+            "text": "디즈니와 Dude Perfect의 과거 협업으로 진행된 전 세계 12개 디즈니 파크 방문 콘텐츠는 첫 24시간에 13M views를 넘겼고, Make-A-Wish 기부 캠페인에서 $1.2M 이상을 모금했다.",
+            "evidence_ids": [
+              "mi-525e4bb84089078f44-p008"
+            ]
+          }
+        ],
+        "interpretation": "이번 발표는 단순 콘텐츠 제작을 넘어 Dude Perfect의 자체 채널, Disney+, ESPN, 디즈니 소셜 플랫폼을 연결하는 다중 유통 구조로 해석할 수 있다. 다만 발표문에는 Disney+의 제공 국가·편성 방식, 계약 기간·대가, B tv에서의 이용 가능 여부와 사업 성과가 공개되지 않았다.",
+        "btv_options": [
+          "Dude Perfect의 스포츠·코미디 숏폼 또는 디즈니 협업 콘텐츠를 B tv 내 전용 큐레이션·검색 영역에 편성할 수 있는지 권리 범위와 함께 검토",
+          "Disney+·ESPN 등 외부 플랫폼과 중복되지 않는 B tv 독점 클립·프로모션 패키지 가능 여부를 사업자 및 권리자와 확인",
+          "디즈니 프랜차이즈·대형 이벤트 연계 콘텐츠를 B tv의 이벤트성 홈 화면·VOD 큐레이션으로 활용할 수 있는지 검토"
+        ],
+        "questions": [
+          "Dude Perfect 콘텐츠의 한국 유통권, B tv 재유통권, 광고·프로모션 사용권은 어떻게 설정돼 있는가?",
+          "Disney+에 제공되는 콘텐츠와 B tv에 제공 가능한 콘텐츠의 공개 시점·지역·편성 조건은 무엇인가?",
+          "파트너십의 계약 기간, 콘텐츠 공급 물량, 라이선스 비용 및 성과 지표가 공개 또는 협의 가능한가?"
+        ],
+        "comparison": [],
+        "generated_at": "2026-10-24T02:22:11.776445+00:00",
+        "model": "gpt-5.6-luna",
+        "source_hash": "60d467a44a6681d8ea04718c3c902263342ae875d7de373d944293b956a16986",
+        "context_hashes": {
+          "mi-525e4bb84089078f44": "60d467a44a6681d8ea04718c3c902263342ae875d7de373d944293b956a16986"
+        },
+        "evidence": [
+          {
+            "id": "mi-525e4bb84089078f44-p003",
+            "text": "The Walt Disney Company and Dude Perfect today announced an integrated creative partnership combining Dude Perfect’s signature sports and comedy entertainment with some of Disney’s most beloved franchises and biggest cultural moments. As part of the partnership, Dude Perfect will develop original content for its own channels inspired by Disney franchises and events, with select Dude Perfect content also featured on Disney+ .",
+            "locator": "p003",
+            "url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
+            "title": "The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership"
+          },
+          {
+            "id": "mi-525e4bb84089078f44-p004",
+            "text": "Planned collaborations over the next year include Super Bowl LXI , the 50th anniversary of Star Wars , and Marvel Studios’ Avengers: Doomsday , one of the year’s most anticipated films — including Avengers -themed content for its popular series Overtime .",
+            "locator": "p004",
+            "url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
+            "title": "The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership"
+          },
+          {
+            "id": "mi-525e4bb84089078f44-p005",
+            "text": "The partnership additionally gives Disney access to a selection of Dude Perfect’s existing short-form library for distribution across Disney+, ESPN , and Disney social platforms .",
+            "locator": "p005",
+            "url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
+            "title": "The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership"
+          },
+          {
+            "id": "mi-525e4bb84089078f44-p008",
+            "text": "Disney and Dude Perfect’s past collaborations include last year’s challenge to visit all 12 Disney Parks around the world in under 75 hours in an attempt to break the world record. The adventure became the channel’s #2 best-performing YouTube upload in its first 24 hours, generating more than 13M views . The video had a meaningful impact beyond the content itself, with a fundraising campaign that drove more than $1.2M in donations to Make-A-Wish .",
+            "locator": "p008",
+            "url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
+            "title": "The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership"
+          }
+        ]
+      }
     },
     {
       "id": "mi-e5577dde5187375575",
