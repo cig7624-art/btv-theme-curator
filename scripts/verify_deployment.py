@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow", "media_magazine", "media_domestic")
+CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow", "media_magazine", "media_domestic", "media_korean")
 
 
 def normalized_version(value):
@@ -283,6 +283,13 @@ def _check_editorial(frame, report, label, screenshots):
         and frame.locator('img.media-story-image').count() >= 2)
     if not report['tests'][f'{label}_media_magazine']:
         raise VerificationIssue('media_magazine_missing', retry=True)
+    summaries = frame.locator('.media-story-excerpt').all_text_contents()
+    report['tests'][f'{label}_media_korean'] = (
+        frame.locator('.media-pending-translation').count() == 0
+        and bool(summaries) and all(re.search('[가-힣]', text) for text in summaries)
+        and all('요약을 준비하고 있습니다' not in text for text in summaries))
+    if not report['tests'][f'{label}_media_korean']:
+        raise VerificationIssue('media_korean_pending', retry=True)
     media_images = frame.evaluate('''async () => await Promise.all(
       Array.from(document.querySelectorAll('img.media-story-image')).slice(0,6).map(element =>
         new Promise(resolve => {

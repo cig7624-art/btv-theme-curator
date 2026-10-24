@@ -1496,7 +1496,15 @@
       "image_kind": "article_image",
       "image_recorded_at": "2026-10-24T09:22:41+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-24T09:22:41+00:00"
+      "last_checked_at": "2026-10-24T09:22:41+00:00",
+      "localization": {
+        "title": "디즈니, 실적 설명에서 훌루 연동과 스포츠 전략 강조",
+        "summary": "조시 다마로 CEO는 실적 설명에서 통합 전략을 제시했다. 훌루 단독·결합 구독자의 프로필 연결과 디즈니+ 내 구독 관리의 진전, ESPN을 통한 팬 참여 확대를 설명했다.",
+        "source_hash": "b434b29bd91dd17968f1e4aa362d32f7238fd9c43ea51d23f4d259175391b6e5",
+        "generated_at": "2026-10-24T09:27:43+00:00",
+        "model": "editorial_source_review",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-f225fce079cd30efb6",
@@ -1901,7 +1909,15 @@
         }
       ],
       "content_hash": "c2b345f02d73b7330cc03ae0d0a4a354a1091ce21eb936974e40a8821caffcf3",
-      "last_checked_at": "2026-10-24T09:22:41+00:00"
+      "last_checked_at": "2026-10-24T09:22:41+00:00",
+      "localization": {
+        "title": "아마존 2분기 실적: 프라임 비디오 신작·NBA 시청 성과",
+        "summary": "아마존은 회사 전체의 분기 실적과 함께 프라임 비디오의 미디어 성과를 발표했다. 신작 Off Campus의 초기 시청 반응과 NBA 중계 시청 성과를 소개했다.",
+        "source_hash": "c2b345f02d73b7330cc03ae0d0a4a354a1091ce21eb936974e40a8821caffcf3",
+        "generated_at": "2026-10-24T09:27:43+00:00",
+        "model": "editorial_source_review",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-8eb352c71b06ac9ae5",
@@ -2500,7 +2516,15 @@
         }
       ],
       "content_hash": "10f11121079894d5e410635c297e2bd2fe9c2be36687347a7420dfee8c012654",
-      "last_checked_at": "2026-10-24T09:22:41+00:00"
+      "last_checked_at": "2026-10-24T09:22:41+00:00",
+      "localization": {
+        "title": "아마존 1분기 실적: 넷플릭스 광고 타기팅·NBA 중계",
+        "summary": "아마존은 회사 전체의 분기 실적을 발표하며 넷플릭스 광고 구매에 Amazon Audiences를 추가했다고 설명했다. 프라임 비디오의 NBA 플레이인 토너먼트 중계 시청 성과도 함께 소개했다.",
+        "source_hash": "10f11121079894d5e410635c297e2bd2fe9c2be36687347a7420dfee8c012654",
+        "generated_at": "2026-10-24T09:27:43+00:00",
+        "model": "editorial_source_review",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-7cb4165a48c7bf427a",
@@ -3973,7 +3997,15 @@
         }
       ],
       "content_hash": "7302c3f25e1f6eec6f270b3559d8d0f0f5c3ca50f8d5da94b178baa3718b7e24",
-      "last_checked_at": "2026-10-24T09:22:41+00:00"
+      "last_checked_at": "2026-10-24T09:22:41+00:00",
+      "localization": {
+        "title": "아마존 4분기 실적: NBA 중계 확대·챔피언스리그 권리 연장",
+        "summary": "아마존은 회사 전체 실적과 함께 NBA on Prime의 여러 국가 진출 및 시청 성과를 발표했다. 독일·아일랜드·이탈리아·영국의 UEFA 챔피언스리그 중계권 연장도 설명했다.",
+        "source_hash": "7302c3f25e1f6eec6f270b3559d8d0f0f5c3ca50f8d5da94b178baa3718b7e24",
+        "generated_at": "2026-10-24T09:27:43+00:00",
+        "model": "editorial_source_review",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-794e58b4f8209e8d01",
@@ -5471,7 +5503,15 @@
       ],
       "content_hash": "cc64576f1e9ad7812785a28bb7f37659fc937b2746c65ea702d9f6da13e1fcfb",
       "last_checked_at": "2026-10-24T09:22:41+00:00",
-      "published_at_source": "pdf_publication_unconfirmed"
+      "published_at_source": "pdf_publication_unconfirmed",
+      "localization": {
+        "title": "디즈니 분기 재무지표 조정 내역",
+        "summary": "조정 주당순이익, 부문 영업이익, 잉여현금흐름과 구독형 스트리밍 사업의 영업지표를 회계기준 지표와 대조한 공식 자료다. 스트리밍 부문 지표에는 훌루 라이브 TV와 Fubo 서비스의 실적이 제외된다고 설명한다.",
+        "source_hash": "cc64576f1e9ad7812785a28bb7f37659fc937b2746c65ea702d9f6da13e1fcfb",
+        "generated_at": "2026-10-24T09:27:43+00:00",
+        "model": "editorial_source_review",
+        "language": "ko"
+      }
     }
   ]
 }

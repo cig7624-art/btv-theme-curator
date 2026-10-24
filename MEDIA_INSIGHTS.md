@@ -62,3 +62,7 @@ GitHub 저장은 기존 `GITHUB_WRITE_TOKEN`·`GITHUB_REPO`·`GITHUB_BRANCH`를 
 ## 실제 검증
 
 v1.3.4에서 공식 자료 12건과 실제 생성·저장한 분석 2건을 확인했습니다. 당시 마지막 검증은 노트를 재생성하지 않고 새 질문 1회, 원문 링크, 새 접속과 GitHub 저장을 확인했습니다. 이 결과를 v1.4.0의 배포 완료나 화면 검증 결과로 간주하지 않습니다. 버전별 실제 확인 내용은 `artifacts/media_insights_validation.json`, `artifacts/media_insights_live_validation.json`, `artifacts/deployment_validation.json`에서 버전·확인 시각과 함께 봅니다. 한글 정리 자동 실행 결과는 `artifacts/media_localization_validation.json`에 기록합니다.
+
+### v1.4.0 한글 자료 확인
+
+공식 자료 24건의 한글 제목·요약을 확인했습니다. 새 영문 자료 13건 중 8건은 실제 API 결과를 저장했고, 수치 검증에서 보류된 재무 자료 5건은 원문을 직접 대조해 번역·요약을 저장했습니다. 이 5건은 `model: editorial_source_review`로 구분하며 API 생성 결과로 표시하지 않습니다. 기존 한글 분석 2건과 한글 원문 9건은 재사용합니다. 모든 표시 데이터는 현재 원문 해시와 연결돼 있습니다.

@@ -138,9 +138,11 @@ def valid_localization(item):
         title, summary = _text(analysis.get("headline"), 160), _text(analysis.get("summary"), 800)
         facts = analysis.get("facts")
         index, _ = _source_index(item)
+        citation_ids = set(index) & {_text(row.get("id")) for row in item.get("evidence", [])
+                                    if isinstance(row, Mapping)}
         valid_facts = (isinstance(facts, list) and facts and all(
             isinstance(fact, Mapping) and isinstance(fact.get("evidence_ids"), list) and fact["evidence_ids"]
-            and all(isinstance(key, str) and key in index for key in fact["evidence_ids"]) for fact in facts))
+            and all(isinstance(key, str) and key in citation_ids for key in fact["evidence_ids"]) for fact in facts))
         if valid_facts and _supported(item, title, summary):
             return {"title": title, "summary": summary, "source_hash": source_hash,
                     "generated_at": analysis["generated_at"], "model": analysis["model"],

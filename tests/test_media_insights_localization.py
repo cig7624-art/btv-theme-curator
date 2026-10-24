@@ -148,6 +148,8 @@ class MediaInsightsLocalizationTests(unittest.TestCase):
             "source_hash": item["content_hash"], "generated_at": NOW, "model": "model",
             "facts": [{"text": "관련 발표가 있습니다.", "evidence_ids": ["foreign-p001"]}]}
         self.assertIsNone(valid_localization(item))
+        item["analysis"]["facts"][0]["evidence_ids"] = ["source-metadata"]
+        self.assertIsNone(valid_localization(item))
 
     def test_batch_size_and_prompt_character_limits_with_no_automatic_retry(self):
         items = [source(f"source-{index}", "Advertising plan update. " * 500) for index in range(25)]

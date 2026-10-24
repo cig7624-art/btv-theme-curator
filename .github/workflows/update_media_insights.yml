@@ -9,6 +9,7 @@ on:
     branches: [main, codex/media-insights, codex/media-magazine]
     paths:
       - media_insights_collection.py
+      - media_insights_localization.py
       - domestic_product_sources.py
       - scripts/collect_media_insights.py
       - scripts/localize_media_live.py

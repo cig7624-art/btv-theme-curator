@@ -1,0 +1,14 @@
+{
+  "version": "1.4.0",
+  "checked_at": "2026-10-24T09:30:20.797117+00:00",
+  "full_tests_passed": 576,
+  "official_documents": 24,
+  "official_images": 18,
+  "korean_presentations": 24,
+  "api_translations": 8,
+  "source_reviewed_translations": 5,
+  "analyses_preserved": 2,
+  "protected_data_unchanged": true,
+  "major_stories": 6,
+  "domestic_stories": 4
+}
