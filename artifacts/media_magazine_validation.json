@@ -1,7 +1,7 @@
 {
   "version": "1.4.0",
-  "checked_at": "2026-10-24T09:30:20.797117+00:00",
-  "full_tests_passed": 576,
+  "checked_at": "2026-10-24T09:38:50.888003+00:00",
+  "full_tests_passed": 577,
   "official_documents": 24,
   "official_images": 18,
   "korean_presentations": 24,
@@ -10,5 +10,8 @@
   "analyses_preserved": 2,
   "protected_data_unchanged": true,
   "major_stories": 6,
-  "domestic_stories": 4
+  "domestic_stories": 6,
+  "public_checks_passed": 38,
+  "public_source_commit": "6f5b8a79b414c13c33144ec2a439e524aaa4dc9e",
+  "cache_reused_without_api": true
 }
