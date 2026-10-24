@@ -191,6 +191,7 @@ def media_alert_code(value):
         ("GitHub", "media_github_save_failed"),
         ("저장", "media_save_failed"),
         ("원문 근거를", "media_citations_unverified"),
+        ("분석할 사실을", "media_no_verified_facts"),
     ):
         if phrase in value:
             return code

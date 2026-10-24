@@ -76,8 +76,9 @@ class MediaInsightsAnalysisTests(unittest.TestCase):
                     facts=[{"text": text, "evidence_ids": ["netflix-p001"]}]))))
         plan = analysis_plan(comparison=[{"company": "Invented OTT", "aspect": "실적", "detail": "광고형 상품을 운영합니다.",
                                          "evidence_ids": ["netflix-p001"]}])
-        with self.assertRaises(MediaInsightError):
-            analyze_media_item(document(), [], api_key="test", client=client_with(MediaAnalysisPlan(**plan)))
+        result = analyze_media_item(document(), [], api_key="test", client=client_with(MediaAnalysisPlan(**plan)))
+        self.assertEqual(result["comparison"], [])
+        self.assertEqual(result["verification"]["comparisons_omitted"], 1)
 
     def test_explicit_numeric_scale_and_calendar_normalizations_are_supported(self):
         self.assertEqual(_quantities("$100 million"), _quantities("1억 달러"))
@@ -142,8 +143,9 @@ class MediaInsightsAnalysisTests(unittest.TestCase):
             plan = analysis_plan(facts=[{"text": "광고 상품을 발표했습니다.", "evidence_ids": ["netflix-p001"]}],
                                  comparison=[{"company": company, "aspect": "제휴", "detail": "제휴를 발표했습니다.",
                                               "evidence_ids": ["netflix-p001"]}])
-            with self.assertRaises(MediaInsightError):
-                analyze_media_item(absent, [], api_key="test", client=client_with(MediaAnalysisPlan(**plan)))
+            result = analyze_media_item(absent, [], api_key="test", client=client_with(MediaAnalysisPlan(**plan)))
+            self.assertEqual(result["comparison"], [])
+            self.assertEqual(result["verification"]["comparisons_omitted"], 1)
 
     def test_provider_error_codes_are_whitelisted_without_provider_text(self):
         for supplied, expected in [("invalid_api_key", "invalid_api_key"),
@@ -167,19 +169,63 @@ class MediaInsightsAnalysisTests(unittest.TestCase):
         comparison = {"company": "Disney", "aspect": "실적", "detail": "매출은 $900 million입니다.",
                       "evidence_ids": ["disney-p001"]}
         for changes in [{"headline": "매출 $900 million 발표"}, {"summary": "매출은 $900 million입니다."}]:
-            with self.subTest(changes=changes), self.assertRaises(MediaInsightError):
-                analyze_media_item(selected, [context], api_key="test", client=client_with(
+            with self.subTest(changes=changes):
+                result = analyze_media_item(selected, [context], api_key="test", client=client_with(
                     MediaAnalysisPlan(**analysis_plan(comparison=[comparison], **changes))))
+                field = next(iter(changes))
+                self.assertEqual(result[field], result["facts"][0]["text"])
+                self.assertTrue(result["verification"][field + "_fallback"])
+                self.assertTrue(result["comparison"])
         item = document(text="TikTok discussed its advertising plan. Revenue was $100 million.")
         for company, aspect in [("KT", "공개 자료"), ("Netflix", "매출 $999 million")]:
-            with self.subTest(company=company), self.assertRaises(MediaInsightError):
-                analyze_media_item(item, [], api_key="test", client=client_with(MediaAnalysisPlan(**analysis_plan(
+            with self.subTest(company=company):
+                result = analyze_media_item(item, [], api_key="test", client=client_with(MediaAnalysisPlan(**analysis_plan(
                     comparison=[{"company": company, "aspect": aspect, "detail": "광고 상품을 논의했습니다.",
                                  "evidence_ids": ["netflix-p001"]}]))))
+                self.assertEqual(result["comparison"], [])
+                self.assertEqual(result["verification"]["comparisons_omitted"], 1)
         item = document(text="KT discussed its advertising plan. Revenue was $100 million.")
         plan = analysis_plan(comparison=[{"company": "KT", "aspect": "공개 자료", "detail": "광고 상품을 논의했습니다.",
                                           "evidence_ids": ["netflix-p001"]}])
         self.assertTrue(analyze_media_item(item, [], api_key="test", client=client_with(MediaAnalysisPlan(**plan)))["comparison"])
+
+    def test_one_invalid_statement_does_not_erase_verified_facts_or_store_invalid_text(self):
+        valid = {"text": "매출은 $100 million입니다.", "evidence_ids": ["netflix-p001"]}
+        invalid = [
+            {"text": "UNVERIFIED 매출은 $999 million입니다.", "evidence_ids": ["netflix-p001"]},
+            {"text": "UNVERIFIED 원문에 없는 근거입니다.", "evidence_ids": ["invented"]},
+            {"text": "UNVERIFIED Prime Video 매출은 $100 million입니다.", "evidence_ids": ["netflix-p001"]},
+        ]
+        plan = analysis_plan(facts=[valid, *invalid], headline="UNVERIFIED $999 million",
+                             summary="UNVERIFIED $999 million", interpretation="UNVERIFIED $999 million",
+                             btv_options=["원문 상품 구조를 검토합니다.", "UNVERIFIED $999 million"],
+                             questions=["한국 적용 여부가 공개됐나요?", "UNVERIFIED $999 million"],
+                             comparison=[{"company": "UNVERIFIED OTT", "aspect": "실적", "detail": "UNVERIFIED $999 million",
+                                          "evidence_ids": ["netflix-p001"]}])
+        sdk = client_with(MediaAnalysisPlan(**plan))
+        result = analyze_media_item(document(), [], api_key="test", client=sdk)
+        self.assertEqual(result["facts"], [valid])
+        self.assertEqual(result["headline"], valid["text"])
+        self.assertEqual(result["summary"], valid["text"])
+        self.assertEqual(result["comparison"], [])
+        self.assertEqual(result["interpretation"], "")
+        self.assertNotIn("UNVERIFIED", json.dumps(result, ensure_ascii=False))
+        self.assertEqual(result["verification"], {"facts_omitted": 3, "comparisons_omitted": 1,
+            "summary_fallback": True, "headline_fallback": True, "interpretation_omitted": True,
+            "btv_options_omitted": 1, "questions_omitted": 1})
+        sdk.responses.parse.assert_called_once()
+
+    def test_validated_summary_fallback_joins_complete_facts_and_all_invalid_still_fails(self):
+        good = [{"text": "매출은 $100 million입니다.", "evidence_ids": ["netflix-p001"]},
+                {"text": "미국에서 광고형 상품을 제공합니다.", "evidence_ids": ["netflix-p001"]}]
+        plan = analysis_plan(facts=good, summary="UNVERIFIED $999 million")
+        result = analyze_media_item(document(), [], api_key="test", client=client_with(MediaAnalysisPlan(**plan)))
+        self.assertEqual(result["summary"], " ".join(row["text"] for row in good))
+        bad = [{"text": "매출은 $999 million입니다.", "evidence_ids": ["netflix-p001"]},
+               {"text": "알 수 없는 원문입니다.", "evidence_ids": ["invented"]}]
+        with self.assertRaises(MediaInsightError):
+            analyze_media_item(document(), [], api_key="test", client=client_with(
+                MediaAnalysisPlan(**analysis_plan(facts=bad))))
 
     def test_aggregate_amazon_revenue_and_ad_viewers_are_not_relabelled(self):
         for item, text in [

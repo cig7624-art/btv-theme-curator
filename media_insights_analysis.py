@@ -433,37 +433,81 @@ def analyze_media_item(item, context_items=None, *, api_key="", model="gpt-5.6-l
                  instruction="선택한 문서를 분석한다. facts는 1~5개, btv_options와 questions는 각각 최대 3개. 비교할 실제 원문이 없으면 comparison은 빈 목록으로 둔다.")
     selected_ids = {row["id"] for row in documents[0]["evidence"]}
     facts, comparison, all_ids = [], [], []
+    verification = {"facts_omitted": 0, "comparisons_omitted": 0,
+                    "summary_fallback": False, "headline_fallback": False,
+                    "interpretation_omitted": False, "btv_options_omitted": 0, "questions_omitted": 0}
     for fact in plan.facts[:5]:
-        ids = _validated_ids(fact.evidence_ids, index, allowed=selected_ids)
-        text = _text(fact.text, 600)
-        if not text:
-            raise MediaInsightError("원문에 근거한 사실을 확인하지 못했습니다. 다시 시도해 주세요.")
-        _check_numbers(text, ids, index, owners)
-        _check_scope(text, ids, index)
+        try:
+            ids = _validated_ids(fact.evidence_ids, index, allowed=selected_ids)
+            text = _text(fact.text, 600)
+            if not text:
+                raise MediaInsightError("원문에 근거한 사실을 확인하지 못했습니다.")
+            _check_numbers(text, ids, index, owners)
+            _check_scope(text, ids, index)
+        except MediaInsightError:
+            verification["facts_omitted"] += 1
+            continue
         facts.append({"text": text, "evidence_ids": ids})
         all_ids.extend(ids)
     if not facts:
         raise MediaInsightError("원문에서 분석할 사실을 확인하지 못했습니다.")
     fact_ids = list(all_ids)
     for row in plan.comparison[:6]:
-        ids = _validated_ids(row.evidence_ids, index)
-        text = _text(row.detail, 700)
-        _check_company(row.company, ids, index, owners)
-        _check_numbers(_text(row.aspect, 180) + " " + text, ids, index, owners)
-        _check_scope(_text(row.aspect, 180) + " " + text, ids, index)
+        try:
+            ids = _validated_ids(row.evidence_ids, index)
+            text = _text(row.detail, 700)
+            _check_company(row.company, ids, index, owners)
+            _check_numbers(_text(row.aspect, 180) + " " + text, ids, index, owners)
+            _check_scope(_text(row.aspect, 180) + " " + text, ids, index)
+            if not text:
+                raise MediaInsightError("비교할 내용을 확인하지 못했습니다.")
+        except MediaInsightError:
+            verification["comparisons_omitted"] += 1
+            continue
         comparison.append({"company": _text(row.company, 100), "aspect": _text(row.aspect, 180),
                            "detail": text, "evidence_ids": ids})
         all_ids.extend(ids)
     summary = _text(plan.summary, 800)
-    _check_numbers(summary, fact_ids, index, owners)
-    _check_scope(summary, fact_ids, index)
+    try:
+        _check_numbers(summary, fact_ids, index, owners)
+        _check_scope(summary, fact_ids, index)
+        if not summary:
+            raise MediaInsightError("요약 내용을 확인하지 못했습니다.")
+    except MediaInsightError:
+        summary = facts[0]["text"]
+        if len(facts) > 1 and len(summary) + len(facts[1]["text"]) + 1 <= 800:
+            summary += " " + facts[1]["text"]
+        verification["summary_fallback"] = True
     headline = _text(plan.headline, 110)
-    _check_numbers(headline, fact_ids, index, owners)
-    _check_scope(headline, fact_ids, index)
-    return {"headline": headline, "summary": summary, "facts": facts, "interpretation": _text(plan.interpretation, 1_400),
-            "btv_options": [_text(value, 500) for value in plan.btv_options[:3] if _text(value)],
-            "questions": [_text(value, 400) for value in plan.questions[:3] if _text(value)],
-            "comparison": comparison, **_metadata(item, all_ids, index, owners, model)}
+    try:
+        _check_numbers(headline, fact_ids, index, owners)
+        _check_scope(headline, fact_ids, index)
+        if not headline:
+            raise MediaInsightError("제목을 확인하지 못했습니다.")
+    except MediaInsightError:
+        headline = facts[0]["text"]
+        verification["headline_fallback"] = True
+
+    def supported_prose(value, limit):
+        text = _text(value, limit)
+        try:
+            _check_numbers(text, all_ids, index, owners)
+            _check_scope(text, all_ids, index)
+        except MediaInsightError:
+            return ""
+        return text
+
+    interpretation = supported_prose(plan.interpretation, 1_400)
+    verification["interpretation_omitted"] = bool(plan.interpretation and not interpretation)
+    options = [supported_prose(value, 500) for value in plan.btv_options[:3] if _text(value)]
+    questions = [supported_prose(value, 400) for value in plan.questions[:3] if _text(value)]
+    verification["btv_options_omitted"] = sum(not value for value in options)
+    verification["questions_omitted"] = sum(not value for value in questions)
+    return {"headline": headline, "summary": summary, "facts": facts, "interpretation": interpretation,
+            "btv_options": [value for value in options if value],
+            "questions": [value for value in questions if value],
+            "comparison": comparison, "verification": verification,
+            **_metadata(item, all_ids, index, owners, model)}
 
 
 def answer_media_question(question, item, context_items=None, *, api_key="", model="gpt-5.6-luna", client=None):
@@ -473,7 +517,7 @@ def answer_media_question(question, item, context_items=None, *, api_key="", mod
     documents, index, owners = _documents(item, context_items)
     plan = _call(MediaResearchPlan, {"question": question, "selected_document_id": item["id"], "documents": documents},
                  api_key=api_key, model=model, client=client, feature="media_research",
-                 instruction="질문의 사실을 제공된 원문에서만 찾는다. 답변 근거가 없으면 status=not_found, evidence_ids=[]로 반환한다. 답변에 B tv 내부 조건이나 미래 수치를 만들어 넣지 않는다.")
+                 instruction="질문의 사실을 제공된 원문에서만 찾는다. 답변 근거가 없으면 status=not_found, evidence_ids=[]로 반환한다. 답변에 B tv 내부 조건이나 미래 수치를 만들어 넣지 않는다. 답변은 번호 목록 없이 자연스러운 문장으로 작성하며 원문에 없는 나열 번호나 수치를 추가하지 않는다.")
     if plan.status == "not_found":
         return {"status": "not_found", "answer": "현재 확보된 공식 자료에서 질문에 답할 근거를 확인하지 못했습니다.",
                 "evidence_ids": [], "sources": [], **_metadata(item, [], index, owners, model)}
