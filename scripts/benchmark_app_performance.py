@@ -40,6 +40,10 @@ FLOW_ORDER = [f"tab_{key}" for key, _, _ in TABS] + [
 class BenchmarkIssue(RuntimeError):
     """A fixed, safe error code; never serialize browser exception messages."""
 
+    def __init__(self, code, diagnostics=None):
+        super().__init__(code)
+        self.diagnostics = diagnostics
+
 
 class RerunTracker:
     def __init__(self, page):
@@ -97,33 +101,46 @@ class RerunTracker:
 DOM_STATE = r"""({selector, tab, query, source}) => {
   const visible = el => !!el && el.getClientRects().length > 0
     && getComputedStyle(el).visibility !== 'hidden';
-  const marker = Array.from(document.querySelectorAll(selector)).find(visible);
-  if (!marker || marker.closest('[data-stale="true"]')) return null;
+  const markers = Array.from(document.querySelectorAll(selector));
+  const counts = {markers: markers.length, visible_markers: markers.filter(visible).length};
+  const fail = reason => ({ready: false, reason, counts});
+  const marker = markers.find(visible);
+  if (!marker) return fail('marker_missing');
+  if (marker.closest('[data-stale="true"]')) return fail('marker_stale');
   if (tab && !Array.from(document.querySelectorAll('[role="tab"]')).some(
-      el => el.textContent.trim() === tab && el.getAttribute('aria-selected') === 'true')) return null;
+      el => el.textContent.trim() === tab && el.getAttribute('aria-selected') === 'true')) return fail('tab_not_selected');
   const scope = marker.closest('[role="tabpanel"]') ||
     (query !== null ? document.querySelector('[data-testid="stMain"]') : marker);
-  if (!scope) return null;
-  if (Array.from(scope.querySelectorAll('[data-stale="true"]')).some(visible)) return null;
+  if (!scope) return fail('scope_missing');
+  counts.stale_nodes = Array.from(scope.querySelectorAll('[data-stale="true"]')).filter(visible).length;
+  if (counts.stale_nodes) return fail('target_stale');
   const search = document.querySelector('.st-key-theme_quick_search_input input');
   const filter = document.querySelector('.st-key-theme_library_source_filter');
-  if (query !== null && (!search || search.value !== query)) return null;
-  if (source && (!filter || !filter.textContent.includes(source))) return null;
+  if (query !== null && (!search || search.value !== query)) return fail('query_not_applied');
+  // Streamlit's selected label can be an input value rather than a text node.
+  const sourceValue = filter ? [filter.textContent, ...Array.from(
+    filter.querySelectorAll('[role="combobox"],input,select'))
+      .map(el => [el.value || '', el.textContent || ''].join(' '))].join(' ') : '';
+  if (source && !sourceValue.includes(source)) return fail('source_not_applied');
   const cards = Array.from(scope.querySelectorAll('.theme-db-main'));
+  counts.cards = cards.length;
   if (query !== null) {
     const result = Array.from(scope.querySelectorAll('h3')).map(el => el.textContent)
       .find(text => /빠른 검색 결과 \d+개|전체 \d+개 중 \d+개 표시/.test(text));
-    if (!result) return null;
+    if (!result) return fail('result_count_missing');
     const numbers = result.match(/\d+/g).map(Number);
-    if (cards.length !== numbers[numbers.length - 1]) return null;
+    const pageMeta = scope.querySelector('.library-page-meta[data-visible-count]');
+    const expectedCards = pageMeta ? Number(pageMeta.dataset.visibleCount) : numbers[numbers.length - 1];
+    counts.expected_cards = Number.isInteger(expectedCards) ? expectedCards : -1;
+    if (!Number.isInteger(expectedCards) || expectedCards < 0 || cards.length !== expectedCards) return fail('card_count_mismatch');
     if (source === 'AI 디렉터' && cards.some(card =>
-      !card.querySelector('.small')?.textContent.includes('[AI 디렉터]'))) return null;
+      !card.querySelector('.small')?.textContent.includes('[AI 디렉터]'))) return fail('source_badge_mismatch');
   }
-  return JSON.stringify({nodes: scope.querySelectorAll('*').length,
+  return {ready: true, reason: 'ready', counts, signature: JSON.stringify({nodes: scope.querySelectorAll('*').length,
     textLength: scope.textContent.length, cards: cards.length,
     widgets: Array.from(scope.querySelectorAll('input,button,[role="combobox"],[role="tab"]'))
       .filter(visible).map(el => [el.tagName, !!el.disabled, el.value || '',
-        el.getAttribute('aria-selected'), el.getAttribute('aria-expanded')])});
+        el.getAttribute('aria-selected'), el.getAttribute('aria-expanded')])})};
 }"""
 
 
@@ -141,11 +158,13 @@ class Session:
     def wait(self, before, started, **target):
         stable_signature = None
         stable_since = 0.0
+        diagnostics = {"stage": "script_completion", "reason": "full_rerun_pending"}
         end = min(self.deadline, started + 40)
         while time.monotonic() < end:
             self.page.wait_for_timeout(50)
             frame = resolve_app_frame(self.page)
             if not frame:
+                diagnostics = {"stage": "frame_resolution", "reason": "app_frame_missing"}
                 continue
             if has_app_exception(self.page) or self.tracker.compile_error:
                 raise BenchmarkIssue("app_exception")
@@ -153,12 +172,16 @@ class Session:
             finished = (tracker.runs > before[0] and tracker.successes > before[1]
                         and tracker.finished_run == tracker.runs and not tracker.running)
             if not finished:
+                diagnostics = {"stage": "script_completion", "reason": "full_rerun_pending"}
                 stable_signature = None
                 continue
             try:
-                signature = frame.evaluate(DOM_STATE, target)
+                state = frame.evaluate(DOM_STATE, target)
+                signature = state.get("signature") if state.get("ready") else None
+                diagnostics = {"stage": "target_readiness", "reason": state["reason"], **state["counts"]}
             except Exception:
                 signature = None
+                diagnostics = {"stage": "target_readiness", "reason": "dom_evaluation_unavailable"}
             now = time.monotonic()
             if signature and signature == stable_signature:
                 if now - stable_since >= .25 and now - tracker.last_control >= .25:
@@ -173,7 +196,12 @@ class Session:
                     }
             else:
                 stable_signature, stable_since = signature, now
-        raise BenchmarkIssue("completed_rerun_or_target_timeout")
+        diagnostics.update({"reruns": self.tracker.runs - before[0],
+                            "successful_reruns": self.tracker.successes - before[1],
+                            "forward_messages": self.tracker.messages - before[2],
+                            "running": int(self.tracker.running),
+                            "decode_errors": self.tracker.decode_errors})
+        raise BenchmarkIssue("completed_rerun_or_target_timeout", diagnostics)
 
 
 def tab_action(session, name, selector):
@@ -281,6 +309,8 @@ def benchmark(args):
             report["status"] = "blocked"
     except BenchmarkIssue as error:
         report["errors"] = [str(error)]
+        if error.diagnostics:
+            report["timeout_diagnostics"] = error.diagnostics
     except Exception:
         report["errors"] = ["browser_benchmark_unavailable"]
     report["summary"] = summarize(report["measurements"])

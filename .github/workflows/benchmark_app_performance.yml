@@ -50,7 +50,7 @@ jobs:
         continue-on-error: true
         env:
           BENCHMARK_LABEL: ${{ inputs.label || 'baseline' }}
-          EXPECTED_VERSION: ${{ inputs.expected_version }}
+          EXPECTED_VERSION: ${{ inputs.expected_version || '1.4.1' }}
         run: |
           performance_args=(--label "$BENCHMARK_LABEL" --timeout 480)
           if [ -n "$EXPECTED_VERSION" ]; then
