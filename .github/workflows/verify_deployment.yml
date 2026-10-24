@@ -10,6 +10,8 @@ on:
       - media_insights_view.py
       - media_insights_styles.css
       - media_insights_runtime.py
+      - media_insights_editorial.py
+      - media_insights_localization.py
       - ott_editorial.py
       - ott_view.py
       - ott_styles.css

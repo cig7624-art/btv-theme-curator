@@ -59,10 +59,10 @@ _LAUNCH = re.compile(r"launch|introduc|debut|release|출시|도입|신설|개편
 _CORPORATE_ONLY = re.compile(r"기부|봉사|사회공헌|보이스피싱|휴대폰|아이폰|iPhone|갤럭시|채용|cruise ship", re.I)
 _SEASON = re.compile(r"\b(20\d{2})\s*[-–/]\s*(20\d{2}|\d{2})\b")
 _CONTENT_SUBJECT = re.compile(
-    r"콘텐츠|드라마|영화|예능|오리지널|시리즈|프로그램|라인업|편성|채널|중계|방송", re.I)
+    r"콘텐츠|드라마|영화|예능|오리지널|시리즈|프로그램|라인업|편성|채널|중계|방송|OTT|스트리밍|브랜드관|티빙|웨이브|쿠팡플레이", re.I)
 _CONTENT_RELEASE = re.compile(
     r"신작|신규|라인업|공개|첫\s*방송|첫선|편성|개편|선보|방영|출시|확대|시작", re.I)
-_CONTENT_DISTRIBUTION = re.compile(r"유통|판권|공급|수출|진출|제휴|계약|배급|동시\s*공개", re.I)
+_CONTENT_DISTRIBUTION = re.compile(r"유통|판권|공급|수출|진출|제휴|파트너십|브랜드관|계약|배급|동시\s*공개", re.I)
 _CONTENT_IMPACT = re.compile(r"성과|흥행|돌파|기록|1위|시청률|시청\s*시간|수출|매출|수상", re.I)
 _ROUTINE_GUIDE = re.compile(
     r"알아보[기자]|총정리|(?:가입|이용|설정|활용)(?:하는)?\s*방법|사용법|리뷰|"

@@ -31,6 +31,15 @@ class MediaInsightsEditorialTests(unittest.TestCase):
     def select(self, items, **options):
         return select_major_insights(items, now=NOW, **options)
 
+    def test_ott_brand_channel_partnership_is_a_domestic_media_issue(self):
+        item = document("mbc-tving", "CJ ENM, MBC 그룹과 전략적 파트너십 체결… MENA 지역 OTT에 티빙 브랜드관 론칭",
+            company="CJ ENM", country="KR", market_scope="domestic_media", date="2026-10-14",
+            text="CJ ENM은 MBC 샤히드에 티빙 브랜드관을 론칭하고 국내 콘텐츠를 공급하는 파트너십을 체결했습니다.")
+        for scope in ("all", "domestic"):
+            selected = self.select([item], scope=scope)
+            self.assertEqual([row["id"] for row in selected], ["mbc-tving"])
+            self.assertEqual(selected[0]["editorial_category"], "콘텐츠 유통·제휴")
+
     def test_collecting_a_document_does_not_make_it_a_major_story(self):
         items = [
             document("creator", "Disney and Dude Perfect Announce Creative Partnership"),
