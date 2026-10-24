@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "status": "failed",
+  "status": "passed",
   "expected_version": "1.4.0",
   "observed_version": "1.4.0",
-  "started_at": "2026-10-24T09:03:42.852484+00:00",
-  "finished_at": "2026-10-24T09:04:34.397246+00:00",
-  "attempts": 1,
+  "started_at": "2026-10-24T09:08:27.598024+00:00",
+  "finished_at": "2026-10-24T09:11:30.961695+00:00",
+  "attempts": 2,
   "tests": {
     "desktop_version": true,
     "desktop_five_tabs": true,
@@ -21,32 +21,30 @@
     "desktop_coupang_content": true,
     "desktop_coupang_artwork": true,
     "desktop_media_insights": true,
-    "desktop_media_evidence": false,
+    "desktop_media_evidence": true,
     "desktop_media_no_overflow": true,
-    "desktop_media_magazine": false,
-    "desktop_media_domestic": false,
-    "mobile_version": false,
-    "mobile_five_tabs": false,
-    "mobile_weekly_actions": false,
-    "mobile_library_director_filter": false,
-    "mobile_director_screen": false,
-    "mobile_api_cost_control": false,
-    "mobile_ott_magazine": false,
-    "mobile_ott_feature": false,
-    "mobile_no_exception": false,
-    "mobile_no_horizontal_overflow": false,
-    "mobile_lead_artwork": false,
-    "mobile_coupang_content": false,
-    "mobile_coupang_artwork": false,
-    "mobile_media_insights": false,
-    "mobile_media_evidence": false,
-    "mobile_media_no_overflow": false,
-    "mobile_media_magazine": false,
-    "mobile_media_domestic": false
+    "desktop_media_magazine": true,
+    "desktop_media_domestic": true,
+    "mobile_version": true,
+    "mobile_five_tabs": true,
+    "mobile_weekly_actions": true,
+    "mobile_library_director_filter": true,
+    "mobile_director_screen": true,
+    "mobile_api_cost_control": true,
+    "mobile_ott_magazine": true,
+    "mobile_ott_feature": true,
+    "mobile_no_exception": true,
+    "mobile_no_horizontal_overflow": true,
+    "mobile_lead_artwork": true,
+    "mobile_coupang_content": true,
+    "mobile_coupang_artwork": true,
+    "mobile_media_insights": true,
+    "mobile_media_evidence": true,
+    "mobile_media_no_overflow": true,
+    "mobile_media_magazine": true,
+    "mobile_media_domestic": true
   },
-  "errors": [
-    "media_insights_verification_failed"
-  ],
+  "errors": [],
   "warnings": [],
   "artwork": {
     "desktop": {
@@ -54,8 +52,24 @@
       "loaded": 6,
       "unavailable": 0,
       "lead_loaded": true
+    },
+    "mobile": {
+      "checked": 6,
+      "loaded": 6,
+      "unavailable": 0,
+      "lead_loaded": true
     }
   },
-  "source_commit": "d7dfd68c46917a1f0f24492648f145187d5c81ad",
-  "frame_state": "matched_release"
+  "source_commit": "4385b5e4e5329bc75a7386882ccd77e5399219bf",
+  "frame_state": "matched_release",
+  "media_artwork": {
+    "desktop": {
+      "checked": 6,
+      "loaded": 3
+    },
+    "mobile": {
+      "checked": 6,
+      "loaded": 3
+    }
+  }
 }
