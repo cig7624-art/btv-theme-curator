@@ -11,6 +11,7 @@ on:
       - media_insights_collection.py
       - domestic_product_sources.py
       - scripts/collect_media_insights.py
+      - scripts/localize_media_live.py
       - .github/workflows/update_media_insights.yml
 
 concurrency:

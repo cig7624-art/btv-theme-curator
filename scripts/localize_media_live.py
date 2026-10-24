@@ -22,7 +22,7 @@ from scripts.verify_deployment import APP_URL, VerificationIssue, _load_version
 def run(args):
     from playwright.sync_api import sync_playwright
     report = {"status": "failed", "tests": {}, "expected_version": args.expected_version,
-              "button_submitted": False, "checked_at": datetime.now(timezone.utc).isoformat()}
+              "button_submitted": False, "stage": "loading", "checked_at": datetime.now(timezone.utc).isoformat()}
     try:
         with sync_playwright() as playwright:
             launch = {"headless": True, "args": ["--disable-dev-shm-usage"]}
@@ -32,29 +32,42 @@ def run(args):
             try:
                 page = browser.new_page(viewport={"width": 1366, "height": 1000})
                 deadline = time.monotonic() + args.timeout
-                # Only the unpaid loading phase may retry while Cloud wakes up.
+                # Only unpaid loading/navigation may retry while Cloud updates.
                 while True:
                     try:
                         frame = _load_version(page, args, report, "localization")
+                        frame.get_by_role("tab", name="미디어 인사이트", exact=True).click()
+                        frame.locator(".media-insights-heading").wait_for(state="visible", timeout=30000)
+                        report["stage"] = "media_open"
+                        frame.get_by_role('link', name='공식 원문 열기 ↗', exact=True).wait_for(state='visible', timeout=30000)
+                        frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
+                        action = frame.locator(".st-key-media_insights_localize button")
+                        if action.count() == 0:
+                            report["status"] = "already_cached"
+                            return report
+                        if not action.is_enabled():
+                            report["error_code"] = "translation_connection_unavailable"
+                            return report
+                        report["stage"] = "control_ready"
+                        report["control_visible"] = action.is_visible()
+                        action.click(trial=True, timeout=15000)  # no event dispatched, no API call
                         break
                     except VerificationIssue as error:
                         if not error.retry or time.monotonic() >= deadline:
                             raise
                         page.wait_for_timeout(15000)
-                frame.get_by_role("tab", name="미디어 인사이트", exact=True).click()
-                frame.locator(".media-insights-heading").wait_for(state="visible", timeout=30000)
-                action = frame.locator(".st-key-media_insights_localize button")
-                if action.count() == 0:
-                    report["status"] = "already_cached"
-                    return report
-                if not action.is_enabled():
-                    report["error_code"] = "translation_connection_unavailable"
-                    return report
+                    except Exception as error:
+                        report["prepare_failure_type"] = type(error).__name__
+                        if time.monotonic() >= deadline:
+                            raise
+                        page.wait_for_timeout(15000)
                 report["batches"] = []
                 for _ in range(args.max_batches):
                     before = frame.locator(".media-pending-translation").count()
+                    action.scroll_into_view_if_needed(timeout=10000)
                     action.click()
                     report["button_submitted"] = True
+                    report["stage"] = "submitted"
                     # An uncertain or partial submission is never repeated.
                     page.wait_for_timeout(1000)
                     frame.locator('[data-testid="stSpinner"]').wait_for(state="hidden", timeout=150000)
@@ -73,7 +86,8 @@ def run(args):
                 browser.close()
     except VerificationIssue as error:
         report["error_code"] = error.code
-    except Exception:
+    except Exception as error:
+        report["failure_type"] = type(error).__name__
         report["error_code"] = ("submission_outcome_unconfirmed" if report["button_submitted"]
                                 else "public_app_unavailable")
     return report

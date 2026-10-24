@@ -262,9 +262,13 @@ def _check_editorial(frame, report, label, screenshots):
     frame.get_by_role('tab', name='미디어 인사이트', exact=True).click()
     frame.locator('.media-insights-heading').wait_for(state='visible', timeout=30000)
     frame.locator('.media-story-meta').first.wait_for(state='visible', timeout=30000)
+    frame.get_by_role('link', name='공식 원문 열기 ↗', exact=True).wait_for(state='visible', timeout=30000)
+    frame.get_by_text('원문·근거', exact=True).click()
+    frame.locator('.media-evidence-row').first.wait_for(state='visible', timeout=30000)
     report['tests'][f'{label}_media_insights'] = frame.locator('.media-story-meta').count() > 0
     report['tests'][f'{label}_media_evidence'] = (frame.get_by_role('link', name='공식 원문 열기 ↗', exact=True).count() == 1
         and frame.locator('.media-evidence-row').count() > 0)
+    frame.get_by_text('원문·근거', exact=True).click()
     media_dimensions = frame.evaluate("""() => {
       const main = document.querySelector('[data-testid="stMain"]');
       return {viewport:innerWidth, document_scroll:document.documentElement.scrollWidth,
@@ -279,6 +283,19 @@ def _check_editorial(frame, report, label, screenshots):
         and frame.locator('img.media-story-image').count() >= 2)
     if not report['tests'][f'{label}_media_magazine']:
         raise VerificationIssue('media_magazine_missing', retry=True)
+    media_images = frame.evaluate('''async () => await Promise.all(
+      Array.from(document.querySelectorAll('img.media-story-image')).slice(0,6).map(element =>
+        new Promise(resolve => {
+          const image = new Image(); let settled = false;
+          const finish = value => {if (settled) return; settled = true; clearTimeout(timer); resolve(value);};
+          const timer = setTimeout(() => finish(false), 8000);
+          image.onload = () => finish(image.naturalWidth > 0);
+          image.onerror = () => finish(false); image.src = element.src;
+          if (image.complete && image.naturalWidth > 0) finish(true);
+        })))''')
+    report.setdefault('media_artwork', {})[label] = {'checked':len(media_images),'loaded':sum(media_images)}
+    if sum(media_images) < 2:
+        raise VerificationIssue('media_artwork_unavailable', retry=True)
     frame.locator('.st-key-media_insight_topic').get_by_text('국내 이슈', exact=True).click()
     frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
     domestic_cards = frame.locator('.st-key-media_insights_workspace [class*="st-key-media_story_"]')
