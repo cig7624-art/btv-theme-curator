@@ -1,0 +1,12 @@
+{
+  "status": "failed",
+  "tests": {
+    "localization_version": true
+  },
+  "expected_version": "1.4.0",
+  "button_submitted": false,
+  "checked_at": "2026-10-24T09:04:14.086193+00:00",
+  "observed_version": "1.4.0",
+  "frame_state": "matched_release",
+  "error_code": "public_app_unavailable"
+}
