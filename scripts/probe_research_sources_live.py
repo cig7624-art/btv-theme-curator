@@ -41,7 +41,7 @@ def sanitized_diagnostics(raw):
 def probe(args):
     report = {"schema_version": 1, "status": "failed", "expected_version": args.expected_version,
               "started_at": datetime.now(timezone.utc).isoformat(), "checks": {},
-              "counts": {"questions_attempted": 0}, "responses": [], "errors": []}
+              "counts": {"questions_attempted": 0}, "responses": [], "errors": [], "stage": "opening"}
     try:
         from playwright.sync_api import sync_playwright
         with sync_playwright() as playwright:
@@ -52,13 +52,16 @@ def probe(args):
             try:
                 page = browser.new_page(viewport={"width": 1366, "height": 1000})
                 frame = _load_research(page, args, report, "desktop")
+                report["stage"] = "latest_implementation"
                 try:
                     frame.locator('.media-research-heading[data-source-protocol="2"]').wait_for(state='visible', timeout=30000)
                 except Exception:
                     raise VerificationIssue('research_pipeline_update_pending') from None
                 started = time.monotonic()
                 submit_question_once(frame.locator(".st-key-media_research_question textarea"), report, 1, QUESTIONS[0])
+                report["stage"] = "waiting_answer"
                 _wait_state(frame, 1, timeout=180000, deadline=time.monotonic() + 180)
+                report["stage"] = "reading_source_diagnostics"
                 values = _metadata(frame, 1)
                 raw = frame.locator(".media-research-result").last.evaluate("""el => ({
                   search_completed:el.dataset.searchCompleted,citations_found:el.dataset.citationsFound,
@@ -76,6 +79,7 @@ def probe(args):
                 if not report["checks"]["new_primary_document_fetched"]:
                     raise VerificationIssue("new_primary_source_unavailable")
                 report["status"] = "passed"
+                report["stage"] = "completed"
             finally:
                 browser.close()
     except VerificationIssue as error:
