@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow", "media_magazine", "media_domestic", "media_korean", "media_default_period")
+CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow", "media_magazine", "media_domestic", "media_korean", "media_default_period", "media_research")
 
 
 def normalized_version(value):
@@ -325,6 +325,19 @@ def _check_editorial(frame, report, label, screenshots):
         raise VerificationIssue('media_domestic_missing', retry=True)
     frame.locator('.st-key-media_insight_topic').get_by_text('전체', exact=True).click()
     frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
+    frame.get_by_role('button', name='리서치 질문하기', exact=True).click()
+    composer = frame.get_by_placeholder('사업에 필요한 질문을 자유롭게 적어 주세요.')
+    composer.wait_for(state='visible', timeout=30000)
+    draft = '아직 보내지 않은 사업 검토 질문'
+    composer.fill(draft)
+    frame.get_by_role('tab', name='추천 테마', exact=True).click()
+    frame.locator('.st-key-curation_section').wait_for(state='visible', timeout=30000)
+    frame.get_by_role('tab', name='미디어 인사이트', exact=True).click()
+    composer.wait_for(state='visible', timeout=30000)
+    report['tests'][f'{label}_media_research'] = composer.input_value() == draft and composer.is_enabled()
+    if not report['tests'][f'{label}_media_research']:
+        raise VerificationIssue('research_composer_or_draft_missing')
+    composer.fill('')
     if has_app_exception(page):
         raise VerificationIssue('media_insights_exception')
     screenshots.mkdir(parents=True, exist_ok=True)

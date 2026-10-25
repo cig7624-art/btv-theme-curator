@@ -607,7 +607,8 @@ def _render_collection_sources(snapshot):
                         + '</strong><span>' + _escape(label) + '</span><span>' + _escape(date) + '</span></div>', unsafe_allow_html=True)
 
 
-def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on_ask=None, on_localize=None):
+def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on_ask=None, on_localize=None,
+                              on_business_ask=None, research_storage_config=None):
     """Render real saved items; only explicit buttons call the supplied callbacks."""
     snapshot = snapshot if isinstance(snapshot, Mapping) else {}
     st.markdown('<style>' + Path(__file__).with_name("media_insights_styles.css").read_text(encoding="utf-8") + '</style>',
@@ -619,7 +620,7 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                 st.markdown('<header class="media-insights-heading"><h2>미디어 인사이트</h2><p>사업의 변화에서, 다음 선택의 근거까지.</p></header>', unsafe_allow_html=True)
             with question_action:
                 st.button("리서치 질문하기", key="media_insights_research_toggle", on_click=_toggle_questions,
-                          disabled=not bool(on_ask and insight_items(snapshot)), width="stretch")
+                          disabled=not bool(on_business_ask or (on_ask and insight_items(snapshot))), width="stretch")
             with refresh_action:
                 if st.button("자료 새로고침", key="media_insights_refresh", disabled=on_refresh is None, width="stretch"):
                     try:
@@ -631,6 +632,9 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                         _show_action_error(error)
                     except Exception:
                         st.warning("새 자료를 확인하지 못했어요. 마지막으로 저장된 자료를 보여드립니다.")
+        if research_storage_config is not None and st.session_state.get("media_insight_research_open"):
+            from media_research_view import render_media_research
+            render_media_research(snapshot, on_ask=on_business_ask, storage_config=research_storage_config)
         items = insight_items(snapshot)
         if not items:
             st.info("공식 발표와 실적 자료를 확인하면 주요 변화와 원문이 이곳에 표시됩니다.")
@@ -705,7 +709,8 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
         if st.session_state.get(_SELECTED) not in known_ids:
             st.session_state[_SELECTED] = (major or filtered)[0]["id"]
         selected = next(item for item in [*major, *filtered] if item["id"] == st.session_state[_SELECTED])
-        _render_research(on_ask, selected["id"], items, presentation=presentation)
+        if research_storage_config is None:
+            _render_research(on_ask, selected["id"], items, presentation=presentation)
         analysis = presentation.analysis(selected)
         with st.container(key="media_insights_workspace"):
             stories, detail = st.columns([1.7, 1], gap="large")

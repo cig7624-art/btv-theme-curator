@@ -11,6 +11,7 @@ from media_insights_collection import collect_media_insights, load_snapshot
 from media_insights_localization import localize_media_items, localization_candidates
 from media_insights_storage import persist_media_analysis, persist_media_snapshot, persist_media_localizations
 from media_insights_view import render_media_insights_page
+from media_research_runtime import answer_research
 
 
 SNAPSHOT_PATH = Path(__file__).with_name("media_insights_snapshot.json")
@@ -47,7 +48,8 @@ def related_items(snapshot, selected, question="", limit=5):
     return [row[2] for row in ranked[:limit]]
 
 
-def render_media_insights_tab(*, api_key, model, github_config, snapshot_path=SNAPSHOT_PATH):
+def render_media_insights_tab(*, api_key, model, github_config, snapshot_path=SNAPSHOT_PATH,
+                              research_storage_config=None):
     path = Path(snapshot_path)
     snapshot = load_snapshot(path)
     config = dict(github_config or {})
@@ -80,6 +82,11 @@ def render_media_insights_tab(*, api_key, model, github_config, snapshot_path=SN
         return answer_media_question(question, item, related_items(current, item, question),
                                      api_key=api_key, model=model)
 
+    def business_ask(question, project):
+        # Research searches the whole saved archive and this project's prior
+        # primary excerpts, independently of the magazine's 30-day filter.
+        return answer_research(question, load_snapshot(path), project, api_key=api_key, model=model)
+
     def localize():
         current = load_snapshot(path)
         candidates = localization_candidates(current)
@@ -97,4 +104,6 @@ def render_media_insights_tab(*, api_key, model, github_config, snapshot_path=SN
     render_media_insights_page(snapshot, on_refresh=refresh,
                                on_analyze=analyze if api_key else None,
                                on_ask=ask if api_key else None,
-                               on_localize=localize if api_key else None)
+                               on_localize=localize if api_key else None,
+                               on_business_ask=business_ask if api_key else None,
+                               research_storage_config=dict(research_storage_config or github_config or {}))

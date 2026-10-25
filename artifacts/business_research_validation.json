@@ -1,0 +1,59 @@
+{
+  "version": "1.5.0",
+  "status": "local_passed",
+  "full_suite_tests": 701,
+  "model_calls_in_local_tests": 0,
+  "existing_data_files_changed": false,
+  "ui_checks": {
+    "viewports": [
+      {
+        "width": 1366,
+        "no_overflow": true,
+        "dimensions": {
+          "viewport": 1366,
+          "document": 1366,
+          "main_width": 1366,
+          "main_scroll": 1366
+        },
+        "unsent_chat_retained": true,
+        "unsaved_brief_retained": true,
+        "exceptions": 0,
+        "toolbar_button_unclipped": true
+      },
+      {
+        "width": 390,
+        "no_overflow": true,
+        "dimensions": {
+          "viewport": 390,
+          "document": 390,
+          "main_width": 390,
+          "main_scroll": 390
+        },
+        "unsent_chat_retained": true,
+        "unsaved_brief_retained": true,
+        "exceptions": 0,
+        "toolbar_button_unclipped": true
+      },
+      {
+        "width": 320,
+        "no_overflow": true,
+        "dimensions": {
+          "viewport": 320,
+          "document": 320,
+          "main_width": 320,
+          "main_scroll": 320
+        },
+        "unsent_chat_retained": true,
+        "unsaved_brief_retained": true,
+        "exceptions": 0,
+        "toolbar_button_unclipped": true
+      }
+    ]
+  },
+  "notes": [
+    "Official text retrieval before factual citations",
+    "Encrypted local and remote project persistence",
+    "Cross-session live verification recorded separately"
+  ],
+  "live_report": "artifacts/research_live_validation.json"
+}

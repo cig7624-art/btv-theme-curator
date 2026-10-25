@@ -1,0 +1,30 @@
+/* Research conversation shares the app's charcoal, ivory and gold palette. */
+.st-key-media_research_panel { padding: 18px; margin: 10px 0 20px; min-width: 0; }
+.st-key-media_research_panel [data-testid="stColumn"],
+.st-key-media_research_panel [data-testid="stChatMessageContent"] { min-width: 0; }
+.media-research-heading { margin: 0 0 7px; }
+.media-research-heading > span { color: var(--accent, #e7bd86); font-size: 9px; letter-spacing: .12em; }
+[data-testid="stMarkdownContainer"] .media-research-heading h3 { font-size: 21px; margin: 7px 0; padding: 0; }
+[data-testid="stMarkdownContainer"] .media-research-heading p { font-size: 12px; line-height: 1.7; color: var(--muted, #aaa99f); margin: 0 0 6px; }
+.st-key-media_research_panel [data-testid="stChatMessage"] { padding: 14px 12px; background: #ffffff03; border: 1px solid var(--line, #343734); border-radius: 8px; }
+.st-key-media_research_panel [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) { background: #e7bd8608; }
+.st-key-media_research_panel [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] :is(p, li) { font-size: 13px; line-height: 1.8; overflow-wrap: anywhere; }
+.st-key-media_research_panel [data-testid="stChatMessage"] blockquote { font-size: 12px; border-left-color: var(--accent, #e7bd86); }
+.st-key-media_research_panel [data-testid="stCaptionContainer"] p { overflow-wrap: anywhere; }
+.st-key-media_research_panel a { overflow-wrap: anywhere; white-space: normal; }
+.st-key-media_research_panel pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.st-key-media_research_composer { position: sticky; bottom: 0; padding-top: 10px; background: var(--paper, #151b17); z-index: 2; }
+.st-key-media_research_panel [data-testid="stChatInput"] { border-color: var(--line, #343734); }
+.st-key-media_research_panel [data-testid="stElementContainer"]:has(.media-research-state),
+.st-key-media_research_panel [data-testid="stElementContainer"]:has(.media-research-result) { display: none; }
+@media (max-width: 760px) {
+    .st-key-media_research_panel { padding: 12px; }
+    .st-key-media_research_header > [data-testid="stLayoutWrapper"] > [data-testid="stHorizontalBlock"] { gap: 8px; }
+    .st-key-media_research_header [data-testid="stColumn"]:first-child { flex: 1 1 0 !important; width: auto !important; min-width: 0 !important; }
+    .st-key-media_research_header [data-testid="stColumn"]:last-child { flex: 0 0 68px !important; width: 68px !important; min-width: 68px !important; }
+    [data-testid="stMarkdownContainer"] .media-research-heading h3 { font-size: 19px; }
+    .st-key-media_research_panel [data-testid="stChatMessage"] { padding: 11px 8px; gap: 8px; }
+    .st-key-media_research_panel [data-testid="stChatMessageAvatarAssistant"],
+    .st-key-media_research_panel [data-testid="stChatMessageAvatarUser"] { width: 24px; height: 24px; }
+    .st-key-media_research_panel [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] :is(p, li) { font-size: 12px; }
+}

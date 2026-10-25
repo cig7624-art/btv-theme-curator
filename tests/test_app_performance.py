@@ -192,23 +192,20 @@ class AppPerformanceTests(unittest.TestCase):
                 callback.assert_not_called()
             self.assert_no_generation_or_writes(state)
 
-    def test_unsubmitted_research_question_survives_open_panel_tab_roundtrip(self):
+    def test_research_composer_stays_mounted_through_open_panel_tab_roundtrip(self):
         with (patch("media_insights_runtime.load_snapshot", return_value=deepcopy(MEDIA_SNAPSHOT)),
-              patch("media_insights_runtime.answer_media_question") as ask,
+              patch("media_insights_runtime.answer_research") as ask,
               app_fixture(home_tab="미디어 인사이트") as state):
             app = state["app"]
             app.button(key="media_insights_research_toggle").click().run()
-            question_id = app.text_input(key="media_research_question").id
-            # A real browser retains pending edits while this same keyed form
-            # stays mounted; AppTest only models stored widget state.
-            app.session_state["media_research_question"] = "한국 적용 범위를 확인하고 싶어요"
+            question_id = app.chat_input(key="media_research_question").id
+            # AppTest models chat values as submitted messages. Pending text is
+            # checked in a real browser; here the same composer stays mounted.
             self.switch(app, "추천 테마")
-            self.assertEqual(app.text_input(key="media_research_question").id, question_id)
-            self.assertEqual(app.text_input(key="media_research_question").value, "한국 적용 범위를 확인하고 싶어요")
+            self.assertEqual(app.chat_input(key="media_research_question").id, question_id)
             self.switch(app, "미디어 인사이트")
-            self.assertEqual(app.text_input(key="media_research_question").id, question_id)
+            self.assertEqual(app.chat_input(key="media_research_question").id, question_id)
             self.assertTrue(app.session_state["media_insight_research_open"])
-            self.assertEqual(app.text_input(key="media_research_question").value, "한국 적용 범위를 확인하고 싶어요")
             ask.assert_not_called()
             self.assert_no_generation_or_writes(state)
 

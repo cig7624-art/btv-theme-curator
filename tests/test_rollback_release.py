@@ -37,6 +37,7 @@ class RollbackReleaseTests(unittest.TestCase):
         for path in self.new_code:
             self.put(path, "new OTT release file\n")
         for path in rollback.CONTROL_FILES | {"ott_home_snapshot.json", "media_insights_snapshot.json", "artifacts/observed.json",
+                                              "research_projects/encrypted.json", ".research_projects/local.json",
                                               "design/review.html", ".env.production", ".streamlit/secrets.toml"}:
             self.put(path, "new operational or runtime value\n")
         for path in self.repo.rglob("*.csv"):

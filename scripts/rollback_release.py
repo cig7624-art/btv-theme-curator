@@ -53,7 +53,7 @@ def protected(path):
     name = Path(path).name.lower()
     parts = {part.lower() for part in Path(path).parts}
     return (path in CONTROL_FILES or path in DATA_FILES
-            or path.startswith(("artifacts/", "design/"))
+            or path.startswith(("artifacts/", "design/", "research_projects/", ".research_projects/"))
             or Path(path).suffix.lower() in DATA_SUFFIXES
             or name.startswith(".env") or name.startswith("secrets.")
             or bool(parts & {"secrets", "env", ".env", ".venv"}))

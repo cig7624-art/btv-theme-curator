@@ -2049,8 +2049,14 @@ else:
         if media_tab.open or st.session_state.get("media_insight_research_open", False):
             media_github_config = dict(github_config)
             media_github_config["media_insights_path"] = get_runtime_secret("MEDIA_INSIGHTS_GITHUB_PATH", "media_insights_snapshot.json")
+            research_storage_config = {
+                "repo": get_runtime_secret("RESEARCH_GITHUB_REPO", github_config.get("repo", "")),
+                "token": get_runtime_secret("RESEARCH_GITHUB_TOKEN", github_config.get("token", "")),
+                "branch": get_runtime_secret("RESEARCH_GITHUB_BRANCH", github_config.get("branch", "main")),
+                "research_path": get_runtime_secret("RESEARCH_GITHUB_PATH", "research_projects"),
+            }
             render_media_insights_tab(api_key=openai_api_key, model=openai_model,
-                                      github_config=media_github_config)
+                                      github_config=media_github_config, research_storage_config=research_storage_config)
 
 with st.container(key="app_footer"):
     footer_brand, footer_cost = st.columns([3, 2], vertical_alignment="center", gap="small")
