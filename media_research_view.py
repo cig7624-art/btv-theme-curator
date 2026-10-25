@@ -344,7 +344,7 @@ def render_media_research(snapshot, *, on_ask=None, storage_config=None):
         with st.container(key="media_research_header"):
             heading, action = st.columns([4, 1], vertical_alignment="center", gap="small")
             with heading:
-            st.markdown('<header class="media-research-heading" data-source-protocol="2"><span>BUSINESS RESEARCH</span>'
+                st.markdown('<header class="media-research-heading" data-source-protocol="2"><span>BUSINESS RESEARCH</span>'
                             '<h3>질문에서 다음 결정까지</h3>'
                             '<p>국내외 자료와 이전 논의를 연결해, 사업에 필요한 답을 함께 검토합니다.</p></header>',
                             unsafe_allow_html=True)
