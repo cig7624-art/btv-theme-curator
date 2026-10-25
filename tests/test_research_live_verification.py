@@ -1,11 +1,11 @@
 """The real browser probe cannot repeat paid questions or leak prose/codes."""
 from copy import deepcopy
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 import unittest
 
 from scripts.verify_deployment import VerificationIssue
 from scripts.verify_research_live import (memory_answer_supports_context, public_source_hosts,
-                                          safe_result_metadata, submit_question_once)
+                                          safe_result_metadata, submit_question_once, _recovery_code)
 
 
 def report():
@@ -18,6 +18,24 @@ def metadata():
 
 
 class ResearchLiveVerificationTests(unittest.TestCase):
+    def test_recovery_waits_for_lazily_rendered_code_after_project_state_is_ready(self):
+        frame = Mock()
+        code = "rp_" + "A" * 43
+        frame.locator.return_value.all_text_contents.side_effect = [[], ["Loading code"], ["\n" + code + "\n"]]
+        with (patch("scripts.verify_research_live._management"),
+              patch("scripts.verify_research_live.time.monotonic", side_effect=[100, 100, 100.2, 100.4])):
+            self.assertEqual(_recovery_code(frame), code)
+        self.assertEqual(frame.page.wait_for_timeout.call_count, 2)
+
+    def test_missing_recovery_code_expires_without_question_submission_or_prose_in_error(self):
+        frame = Mock()
+        frame.locator.return_value.all_text_contents.return_value = ["non-code private prose"]
+        with (patch("scripts.verify_research_live._management"),
+              patch("scripts.verify_research_live.time.monotonic", side_effect=[100, 100, 131])):
+            with self.assertRaisesRegex(VerificationIssue, "^project_recovery_code_missing$"):
+                _recovery_code(frame)
+        frame.get_by_role.assert_not_called()
+
     def test_two_questions_are_attempted_once_and_later_repeats_are_rejected(self):
         composer, result = Mock(), report()
         for position in (1, 2):

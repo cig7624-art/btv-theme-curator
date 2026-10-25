@@ -212,12 +212,22 @@ def _management(frame, *, expanded=True):
     return expander
 
 
-def _recovery_code(frame):
+def _recovery_code(frame, *, timeout=30000):
     _management(frame)
-    for code in frame.locator(".st-key-media_research_panel code").all_text_contents():
-        value = code.strip()
-        if RECOVERY_CODE.fullmatch(value):
-            return value
+    # Streamlit's syntax-highlighter can load after the project-state marker.
+    # Poll the actual code block rather than interpreting that earlier marker
+    # as proof that its lazily mounted code text has already reached the DOM.
+    token = re.compile(r"(?<![A-Za-z0-9_-])(rp_[A-Za-z0-9_-]{43})(?![A-Za-z0-9_-])")
+    deadline = time.monotonic() + timeout / 1000
+    while time.monotonic() < deadline:
+        blocks = frame.locator(".st-key-media_research_panel [data-testid='stCode'], "
+                               ".st-key-media_research_panel [data-testid='stCodeBlock'], "
+                               ".st-key-media_research_panel pre, .st-key-media_research_panel code")
+        for text in blocks.all_text_contents():
+            match = token.search(text)
+            if match and RECOVERY_CODE.fullmatch(match.group(1)):
+                return match.group(1)
+        frame.page.wait_for_timeout(200)
     raise VerificationIssue("project_recovery_code_missing")
 
 
