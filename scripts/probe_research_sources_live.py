@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import sys
 import time
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -98,7 +99,9 @@ def main():
     parser.add_argument("--executable", default=os.environ.get("RESEARCH_CHROMIUM_PATH"))
     args = parser.parse_args()
     args.expected_version = normalized_version(args.expected_version or (ROOT / "VERSION").read_text().strip())
-    if not args.expected_version or not args.url.startswith("https://"):
+    target = urlsplit(args.url)
+    if (not args.expected_version or target.scheme != "https" or not target.hostname
+            or target.username or target.password):
         parser.error("Exact release and public HTTPS URL required")
     report = probe(args)
     (ROOT / "artifacts/research_sources_live_validation.json").write_text(json.dumps(report, indent=2) + "\n")
