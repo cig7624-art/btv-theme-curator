@@ -2,49 +2,19 @@
   "schema_version": 1,
   "status": "failed",
   "expected_version": "1.5.1",
-  "started_at": "2026-10-25T23:23:15.946615+00:00",
+  "started_at": "2026-10-25T23:27:26.382228+00:00",
   "checks": {
     "desktop_exact_version": true,
-    "desktop_composer": true,
-    "question_1_attempted": true,
-    "new_primary_document_fetched": false,
-    "one_once_only_question": true
+    "desktop_composer": true
   },
   "counts": {
-    "questions_attempted": 1
+    "questions_attempted": 0
   },
-  "responses": [
-    {
-      "fact_count": 7,
-      "source_count": 7,
-      "option_count": 3,
-      "added_documents": 0,
-      "status": "grounded",
-      "search_status": "archive_only",
-      "engine_version": "business-research-v1",
-      "model": "gpt-5.6-luna",
-      "citations_found": 1,
-      "fetch_attempted": 1,
-      "search_completed": false,
-      "fallback_used": false,
-      "search_errors": [
-        "primary_too_large",
-        "search_incomplete"
-      ],
-      "provider_code": "none",
-      "fetch_http_statuses": [],
-      "completion_seconds": 41.44
-    }
-  ],
+  "responses": [],
   "errors": [
-    "new_primary_source_unavailable"
+    "research_pipeline_update_pending"
   ],
-  "stage": "reading_source_diagnostics",
+  "stage": "latest_implementation",
   "observed_version": "1.5.1",
-  "source_hosts": [
-    "blog.bworld.co.kr",
-    "s206.q4cdn.com",
-    "thewaltdisneycompany.com"
-  ],
-  "finished_at": "2026-10-25T23:24:06.556071+00:00"
+  "finished_at": "2026-10-25T23:28:12.398060+00:00"
 }
