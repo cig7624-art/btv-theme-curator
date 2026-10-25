@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "failed",
+  "expected_version": "1.5.0",
+  "observed_version": "1.5.0",
+  "started_at": "2026-10-25T14:51:47.320299+00:00",
+  "finished_at": "2026-10-25T14:52:01.063486+00:00",
+  "checks": {
+    "desktop_exact_version": true,
+    "desktop_composer": true,
+    "desktop_unsent_draft_retained": true
+  },
+  "counts": {
+    "questions_attempted": 0
+  },
+  "responses": [],
+  "source_hosts": [],
+  "errors": [
+    "project_recovery_code_missing"
+  ],
+  "source_commit": "c73b10413d85fe05c18fd58cf582194107586bf9"
+}
