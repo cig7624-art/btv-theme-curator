@@ -9,10 +9,15 @@ on:
         description: Exact public release to verify (blank uses VERSION)
         type: string
         default: ''
+      full_research:
+        description: Run the full two-question memory check instead of one source check
+        type: boolean
+        default: false
   push:
     branches: [codex/business-research]
     paths:
       - scripts/verify_research_live.py
+      - scripts/probe_research_sources_live.py
       - .github/workflows/verify_research_live.yml
 
 concurrency:
@@ -34,7 +39,7 @@ jobs:
           python-version: '3.11'
       - name: Remove stale evidence and verify once-only paid actions
         run: |
-          rm -f artifacts/research_live_validation.json
+          rm -f artifacts/research_sources_live_validation.json
           python -m unittest discover -s tests -p 'test_research_live_verification.py' -v
       - name: Install browser driver
         run: python -m pip install playwright
@@ -46,37 +51,45 @@ jobs:
           else
             python -m playwright install --with-deps chromium
           fi
-      - name: Submit two real questions and recover encrypted project
+      - name: Verify new primary sources with one real question
         id: verify
         continue-on-error: true
         env:
           EXPECTED_VERSION: ${{ inputs.expected_version || '' }}
+          FULL_RESEARCH: ${{ inputs.full_research || 'false' }}
         run: |
-          research_args=(--timeout 480 --response-timeout 180)
+          research_args=()
           if [ -n "$EXPECTED_VERSION" ]; then
             research_args+=(--expected-version "$EXPECTED_VERSION")
           fi
-          python scripts/verify_research_live.py "${research_args[@]}"
+          if [ "$FULL_RESEARCH" = 'true' ]; then
+            python scripts/verify_research_live.py --timeout 480 --response-timeout 180 "${research_args[@]}"
+          else
+            python scripts/probe_research_sources_live.py "${research_args[@]}"
+          fi
       - name: Preserve sanitized live evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: real-business-research-validation
-          path: artifacts/research_live_validation.json
+          path: artifacts/research*_live_validation.json
           retention-days: 7
       - name: Record sanitized result on this branch
         if: ${{ always() && !cancelled() && github.ref == 'refs/heads/codex/business-research' }}
         env:
           TARGET_BRANCH: ${{ github.ref_name }}
+          FULL_RESEARCH: ${{ inputs.full_research || 'false' }}
         run: |
-          if [ ! -f artifacts/research_live_validation.json ]; then exit 0; fi
+          research_report='artifacts/research_sources_live_validation.json'
+          if [ "$FULL_RESEARCH" = 'true' ]; then research_report='artifacts/research_live_validation.json'; fi
+          if [ ! -f "$research_report" ]; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- artifacts/research_live_validation.json
+          git add -- "$research_report"
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Record real business research and memory verification [skip ci]'
           git pull --rebase origin "$TARGET_BRANCH"
-          validation_version="$(python -c 'import json; print(json.load(open("artifacts/research_live_validation.json"))["expected_version"])')"
+          validation_version="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["expected_version"])' "$research_report")"
           current_version="$(tr -d '[:space:]' < VERSION)"
           if [ "$validation_version" != "$current_version" ]; then exit 0; fi
           git push origin HEAD:"$TARGET_BRANCH"

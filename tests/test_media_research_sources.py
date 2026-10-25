@@ -83,7 +83,7 @@ class ResearchSourcesTests(unittest.TestCase):
         active = client_for()
         active.responses.create.return_value = response(text="Primary URL: " + URL)
         fetch = Mock()
-        result = enrich_research_sources("pricing", snapshot(), api_key="", model="test", client=active, fetcher=fetch)
+        result = enrich_research_sources("새 발표 내용 확인", snapshot(), api_key="", model="test", client=active, fetcher=fetch)
         self.assertEqual(result["report"]["errors"], ["no_primary_citations"])
         fetch.assert_not_called()
 
@@ -93,7 +93,7 @@ class ResearchSourcesTests(unittest.TestCase):
                 "https://help.netflix.com/account/", "https://help.netflix.com/ko/node/1?token=secret",
                 "https://help.netflix.com/%61ccount/",
                 "https://help.netflix.com:8443/ko/node/1", "https://help.netflix.com/ko/node/1\n")
-        result, _, fetch, _ = self.enrich(urls)
+        result, _, fetch, _ = self.enrich(urls, question="새 발표 내용 확인")
         self.assertEqual(result["report"]["status"], "archive_only")
         self.assertEqual(result["report"]["errors"], ["no_primary_citations"])
         fetch.assert_not_called()
@@ -138,7 +138,7 @@ class ResearchSourcesTests(unittest.TestCase):
         active = client_for((URL,))
         active.responses.create.side_effect = RuntimeError("secret-provider-response")
         fetch = Mock()
-        result = enrich_research_sources("price", snapshot(), api_key="", model="test", client=active, fetcher=fetch)
+        result = enrich_research_sources("새 발표 내용 확인", snapshot(), api_key="", model="test", client=active, fetcher=fetch)
         self.assertEqual(result["report"]["errors"], ["search_unavailable"])
         self.assertNotIn("secret", str(result["report"]))
         fetch.assert_not_called()
@@ -201,6 +201,73 @@ class ResearchSourcesTests(unittest.TestCase):
             with self.assertRaises(Exception):
                 _http_reference_fetch(URL, source, -1)
             http.assert_not_called()
+
+    def test_pricing_fallback_refetches_only_known_primary_reference_without_a_second_model_call(self):
+        active = client_for()
+        active.responses.create.side_effect = RuntimeError("secret-provider-body")
+        fetch = Mock(return_value=HTML)
+        result = enrich_research_sources("B tv 단품 가격", snapshot(), api_key="", model="test", client=active,
+                                         fetcher=fetch, now=NOW)
+        report = result["report"]
+        self.assertEqual(report["status"], "enriched")
+        self.assertEqual(report["documents_added"], 1)
+        self.assertFalse(report["search_completed"])
+        self.assertEqual(report["citations_found"], 0)
+        self.assertEqual(report["fetch_attempted"], 1)
+        self.assertEqual(report["fetch_http_statuses"], [200])
+        self.assertTrue(report["fallback_used"])
+        self.assertEqual(report["provider_code"], "unknown")
+        self.assertEqual(report["errors"], ["search_unavailable"])
+        self.assertNotIn("secret", str(report))
+        fetch.assert_called_once_with(URL)
+        active.responses.create.assert_called_once()
+
+    def test_branding_fallback_uses_existing_actual_document_not_a_newsroom_index(self):
+        data = snapshot()
+        actual_url = "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/"
+        data["items"].append({"id": "brand-source", "url": actual_url,
+                              "title": "The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership",
+                              "topic": "partnership_distribution", "published_at": "2026-10-15"})
+        result, _, fetch, _ = self.enrich((), data=data, question="비플 브랜딩 키메시지")
+        fetch.assert_called_once_with(actual_url)
+        self.assertTrue(result["report"]["fallback_used"])
+        self.assertEqual(result["report"]["status"], "enriched")
+        self.assertEqual(result["report"]["errors"], ["no_primary_citations"])
+
+    def test_search_diagnostics_distinguish_returned_citations_from_approved_ones(self):
+        result, _, _, _ = self.enrich((URL, "https://unregistered.example/article"))
+        report = result["report"]
+        self.assertTrue(report["search_completed"])
+        self.assertEqual(report["citations_found"], 2)
+        self.assertEqual(report["citations_approved"], 1)
+        self.assertEqual(report["fetch_attempted"], 1)
+        self.assertFalse(report["fallback_used"])
+        self.assertEqual(report["provider_code"], "none")
+
+    def test_primary_http_and_timeout_errors_are_distinct_without_leaking_response(self):
+        from media_insights_collection import CollectionError
+        import requests
+        error = CollectionError("reference_http_unavailable")
+        error.http_status = 403
+        result, _, _, _ = self.enrich(fetcher=Mock(side_effect=error))
+        self.assertEqual(result["report"]["errors"], ["primary_http_unavailable"])
+        self.assertEqual(result["report"]["fetch_http_statuses"], [403])
+        result, _, _, _ = self.enrich(fetcher=Mock(side_effect=requests.Timeout("secret-url-and-body")))
+        self.assertEqual(result["report"]["errors"], ["primary_timeout"])
+        self.assertNotIn("secret", str(result["report"]))
+
+    def test_provider_diagnostic_only_uses_allowlisted_code_status_or_exception_type(self):
+        active = client_for()
+        error = RuntimeError("secret-provider-body")
+        error.code = "unsafe-provider-secret-code"
+        error.status_code = 401
+        active.responses.create.side_effect = error
+        result = enrich_research_sources("새 발표 내용 확인", snapshot(), api_key="", model="test", client=active)
+        self.assertEqual(result["report"]["provider_code"], "http_401")
+        self.assertNotIn("secret", str(result["report"]))
+        error.code = "model_not_found"
+        result = enrich_research_sources("새 발표 내용 확인", snapshot(), api_key="", model="test", client=active)
+        self.assertEqual(result["report"]["provider_code"], "model_not_found")
 
 
 if __name__ == "__main__":

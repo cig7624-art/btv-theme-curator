@@ -1,7 +1,7 @@
 {
   "version": "1.5.0",
   "status": "local_passed",
-  "full_suite_tests": 701,
+  "full_suite_tests": 714,
   "model_calls_in_local_tests": 0,
   "existing_data_files_changed": false,
   "ui_checks": {
@@ -55,5 +55,7 @@
     "Encrypted local and remote project persistence",
     "Cross-session live verification recorded separately"
   ],
-  "live_report": "artifacts/research_live_validation.json"
+  "live_report": "artifacts/research_live_validation.json",
+  "live_conversation_and_recovery": "passed",
+  "source_refresh_verification": "pending"
 }

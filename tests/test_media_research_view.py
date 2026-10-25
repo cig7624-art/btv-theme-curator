@@ -208,6 +208,40 @@ class MediaResearchViewTests(unittest.TestCase):
             self.assertNotIn("이 답변 이후 원문이 갱신", captions)
             self.assertIn("저장된 자료를 참고", captions)
 
+    def test_search_diagnostics_expose_only_bounded_counts_boolean_and_fixed_codes(self):
+        answer = deepcopy(ANSWER)
+        answer["source_search"] = {
+            "search_completed": True, "citations_found": 5000, "fetch_attempted": 900,
+            "errors": ["primary_timeout", "search_unavailable", "primary_timeout",
+                       "private-provider-message", "https://private.example/?token=private-value",
+                       {"secret": "private-key"}, "search_unavailable\nprivate-body"],
+            "private-provider-field": "private-key",
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            app = fixture(directory, answer=answer)
+            app.chat_input(key="media_research_question").set_value("검색 근거를 검토해줘.").run()
+            self.assertFalse(app.exception)
+            markers = [element.value for element in app.markdown if 'class="media-research-result"' in element.value]
+            self.assertEqual(len(markers), 1)
+            marker = markers[0]
+            self.assertIn('data-search-completed="true"', marker)
+            self.assertIn('data-citations-found="100"', marker)
+            self.assertIn('data-fetch-attempted="4"', marker)
+            self.assertIn('data-search-errors="primary_timeout,search_unavailable"', marker)
+            self.assertNotIn("private-", marker)
+            self.assertNotIn("https://private", marker)
+        answer["source_search"] = {"search_completed": "true", "citations_found": True,
+                                   "fetch_attempted": -100, "errors": "private-body"}
+        with tempfile.TemporaryDirectory() as directory:
+            app = fixture(directory, answer=answer)
+            app.chat_input(key="media_research_question").set_value("검색 근거를 검토해줘.").run()
+            self.assertFalse(app.exception)
+            marker = next(element.value for element in app.markdown if 'class="media-research-result"' in element.value)
+            self.assertIn('data-search-completed="false"', marker)
+            self.assertIn('data-citations-found="0"', marker)
+            self.assertIn('data-fetch-attempted="0"', marker)
+            self.assertIn('data-search-errors=""', marker)
+
 
 if __name__ == "__main__":
     unittest.main()

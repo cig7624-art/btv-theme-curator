@@ -8,6 +8,12 @@ on:
       - VERSION
       - app.py
       - media_insights_view.py
+      - media_research_engine.py
+      - media_research_runtime.py
+      - media_research_sources.py
+      - media_research_storage.py
+      - media_research_view.py
+      - media_research_styles.css
       - media_insights_styles.css
       - media_insights_runtime.py
       - media_insights_editorial.py

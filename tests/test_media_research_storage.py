@@ -226,6 +226,33 @@ class ResearchStorageTests(unittest.TestCase):
                 self.assertNotIn('비공개 사업'.encode(), payload)
                 self.assertEqual(kwargs['json']['message'], 'Update private research project')
 
+    def test_reading_synchronized_project_skips_remote_and_local_writes_but_pending_turn_syncs(self):
+        remote = Remote()
+        with patch.object(store.requests, 'request', side_effect=remote):
+            first = self.create(github_config=CONFIG)
+            code = first['recovery_code']
+            local_path = self.directory / (first['project']['id'] + '.json')
+            initial_local, initial_remote = local_path.read_bytes(), deepcopy(remote.files)
+            for _ in range(3):
+                result = store.open_project(code, storage_dir=self.directory, github_config=CONFIG)
+                self.assertEqual(result['status'], 'remote_synced')
+            self.assertEqual(sum(method == 'PUT' for method, _, _ in remote.calls), 1)
+            self.assertEqual(local_path.read_bytes(), initial_local)
+            self.assertEqual(remote.files, initial_remote)
+            # An offline turn is retained locally and written once on reconnect.
+            offline = store.append_turn(code, '아직 동기화하지 않은 질문', {'summary':'보관한 답변'}, storage_dir=self.directory)
+            self.assertEqual(offline['status'], 'local_only')
+            result = store.open_project(code, storage_dir=self.directory, github_config=CONFIG)
+            self.assertEqual(result['status'], 'remote_synced')
+            self.assertEqual(len(result['project']['turns']), 1)
+            synchronized_local = local_path.read_bytes()
+            store.open_project(code, storage_dir=self.directory, github_config=CONFIG)
+            self.assertEqual(sum(method == 'PUT' for method, _, _ in remote.calls), 2)
+            self.assertEqual(local_path.read_bytes(), synchronized_local)
+            recovered = store.open_project(code, storage_dir=Path(self.temp.name)/'fresh-instance', github_config=CONFIG)
+            self.assertEqual(recovered['project']['turns'], result['project']['turns'])
+            self.assertEqual(sum(method == 'PUT' for method, _, _ in remote.calls), 2)
+
     def test_conflict_rereads_decrypts_and_merges_a_concurrent_event(self):
         remote = Remote()
         with patch.object(store.requests, 'request', side_effect=remote):

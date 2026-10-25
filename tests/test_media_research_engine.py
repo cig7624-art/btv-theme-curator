@@ -198,6 +198,30 @@ class BusinessResearchTests(unittest.TestCase):
         result = answer_business_question("다른 조건은?", {"items": [document()]}, project, client=client(value))
         self.assertEqual(result["options"], [])
 
+    def test_recalled_user_cost_is_preserved_but_prior_ai_price_stays_unverified(self):
+        value = plan()
+        provided_cost = {**value["options"][0], "proposal": "사용자가 알려준 원가 3000원을 기준으로 상품 구성을 검토하세요."}
+        prior_ai_price = {**value["options"][0], "title": "별도 가격안", "proposal": "월 3900원 가격을 검토하세요."}
+        value["options"] = [provided_cost, prior_ai_price]
+        project = {"turns": [{"question": "단품 원가는 3000원이야. 가격 구조를 검토해줘.",
+                              "answer": {"headline": "월 3900원은 검증하지 않은 제안"}}]}
+        result = answer_business_question("그럼 광고를 넣으면 어떻게 달라져?", {"items": [document()]}, project,
+                                          client=client(value))
+        self.assertEqual(len(result["options"]), 1)
+        self.assertIn("3000원", result["options"][0]["proposal"])
+        self.assertNotIn("3900", json.dumps(result["options"], ensure_ascii=False))
+
+    def test_long_question_reaches_model_and_final_topic_drives_archive_retrieval(self):
+        question = ("검토 배경을 충분히 설명합니다. " * 180) + "마지막 요청: 단품 가격과 요금 구조를 검토해줘."
+        self.assertGreater(len(question), 2000)
+        self.assertLess(len(question), 10000)
+        sdk = client(plan())
+        result = answer_business_question(question, {"items": [document()]}, client=sdk)
+        payload = json.loads(sdk.responses.parse.call_args.kwargs["input"][1]["content"])
+        self.assertEqual(payload["question"], question)
+        self.assertTrue(payload["question"].endswith("단품 가격과 요금 구조를 검토해줘."))
+        self.assertEqual(result["retrieval"]["source_ids"], ["netflix"])
+
     def test_korean_btv_company_alias_is_valid_only_with_the_actual_btv_source(self):
         quote = "SK브로드밴드는 B tv 신규 결합 상품을 출시하고 해당 상품의 제공 조건을 안내했습니다."
         item = {**document(company="SK브로드밴드", title="B tv 신규 상품", quote=quote), "country": "KR"}

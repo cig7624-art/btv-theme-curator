@@ -367,8 +367,16 @@ def _sync(document, path, config, code):
         for _ in range(3):
             other, sha = _remote_read(remote, identifier, code)
             merged = merge_project_documents(document, other) if other else document
-            if other == merged or _remote_write(remote, identifier, merged, sha, code):
-                _atomic(path, merged, code)
+            if other is not None and merged == other:
+                # Reading an already synchronized project must not generate a
+                # fresh encrypted envelope/commit or rewrite identical local
+                # state. A newer remote event still refreshes the local copy.
+                if merged != document:
+                    _atomic(path, merged, code)
+                return merged, "remote_synced", ""
+            if _remote_write(remote, identifier, merged, sha, code):
+                if merged != document:
+                    _atomic(path, merged, code)
                 return merged, "remote_synced", ""
         return document, "local_only", "remote_conflict"
     except ResearchStorageError:

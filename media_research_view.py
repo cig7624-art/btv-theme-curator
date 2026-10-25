@@ -25,6 +25,11 @@ STATUS_KEY = "media_research_storage_status"
 _PENDING = "media_research_unsaved_turn"
 _ERROR = "media_research_error"
 _FAILED = "media_research_failed_question"
+_SEARCH_ERRORS = frozenset({
+    "empty_question", "search_not_configured", "search_unavailable", "search_incomplete",
+    "no_primary_citations", "primary_fetch_unavailable", "primary_http_unavailable",
+    "primary_timeout", "primary_redirect_refused", "primary_too_large", "primary_document_unusable",
+})
 
 
 def _text(value, limit=20000):
@@ -42,6 +47,10 @@ def _list(value):
 
 def _key(value):
     return hashlib.sha256(_text(value).encode()).hexdigest()[:16]
+
+
+def _bounded_count(value, maximum=100):
+    return min(maximum, max(0, value)) if type(value) is int else 0
 
 
 def _safe_url(value):
@@ -211,12 +220,29 @@ def _render_answer(answer, snapshot):
         revision = ""
     added = search.get("documents_added")
     added = min(100, max(0, added)) if isinstance(added, int) else 0
+    search_completed = "true" if search.get("search_completed") is True else "false"
+    citations_found = _bounded_count(search.get("citations_found"))
+    fetch_attempted = _bounded_count(search.get("fetch_attempted"), 4)
+    errors = search.get("errors") if isinstance(search.get("errors"), list) else []
+    search_errors = ",".join(sorted({error for error in errors if isinstance(error, str) and error in _SEARCH_ERRORS}))
+    provider = search.get("provider_code")
+    if not isinstance(provider, str) or not re.fullmatch(r"(?:not_called|none|unknown|request_timeout|api_connection|invalid_api_key|insufficient_quota|model_not_found|unsupported_parameter|invalid_value|rate_limit_exceeded|http_(?:400|401|403|404|408|409|422|429|500|502|503|504))", provider):
+        provider = "unknown"
+    fallback = "true" if search.get("fallback_used") is True else "false"
+    http_statuses = search.get("fetch_http_statuses")
+    http_statuses = ",".join(str(number) for number in sorted(set(
+        value for value in http_statuses if type(value) is int and 100 <= value <= 599))) if isinstance(http_statuses, list) else ""
     st.markdown('<span class="media-research-result" hidden aria-hidden="true" data-fact-count="'
                 + str(len(_list(answer.get("facts")))) + '" data-source-count="' + str(len(sources))
                 + '" data-option-count="' + str(len(_list(answer.get("options")))) + '" data-status="'
                 + status + '" data-engine-version="' + html.escape(revision, quote=True)
                 + '" data-model="' + html.escape(model, quote=True) + '" data-search-status="'
-                + search_status + '" data-added-documents="' + str(added) + '"></span>', unsafe_allow_html=True)
+                + search_status + '" data-added-documents="' + str(added)
+                + '" data-search-completed="' + search_completed + '" data-citations-found="' + str(citations_found)
+                + '" data-fetch-attempted="' + str(fetch_attempted)
+                + '" data-search-errors="' + html.escape(search_errors, quote=True)
+                + '" data-search-provider="' + provider + '" data-fallback-used="' + fallback
+                + '" data-fetch-statuses="' + http_statuses + '"></span>', unsafe_allow_html=True)
     headline = _text(answer.get("headline"), 300)
     if headline:
         st.markdown("**" + _plain(headline) + "**")

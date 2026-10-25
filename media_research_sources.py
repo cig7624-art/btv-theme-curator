@@ -67,6 +67,9 @@ def _registry():
 
 OFFICIAL_DOMAINS = _registry()
 _PRIVATE_PATH = re.compile(r"/(?:login|signin|sign-in|signup|sign-up|account|checkout|payment|auth)(?:/|$)", re.I)
+_PRICING_QUESTION = re.compile(r"가격|요금|구독료|월정액|멤버십|광고형|price|pricing|subscription|membership|bundle|번들", re.I)
+_BRAND_QUESTION = re.compile(r"브랜딩|브랜드|리브랜딩|키\s*메시지|포지셔닝|캠페인|brand|positioning|campaign", re.I)
+_PROVIDER_CODES = frozenset({"unsupported_parameter", "model_not_found", "invalid_api_key", "rate_limit_exceeded"})
 
 
 def _field(value, key, default=None):
@@ -117,6 +120,68 @@ def _citation_urls(response):
     return urls
 
 
+def _citation_count(response):
+    return sum(1 for output in (_field(response, "output", []) or [])
+               if _field(output, "type") == "message"
+               for content in (_field(output, "content", []) or [])
+               for annotation in (_field(content, "annotations", []) or [])
+               if _field(annotation, "type") == "url_citation")
+
+
+def _provider_code(error):
+    """Only an allowlisted code/status/type, never provider text or bodies."""
+    code = getattr(error, "code", None)
+    if isinstance(code, str) and code in _PROVIDER_CODES:
+        return code
+    status = getattr(error, "status_code", None)
+    if type(status) is int and status in {400, 401, 403, 404, 408, 409, 422, 429, 500, 502, 503, 504}:
+        return "http_" + str(status)
+    if type(error).__name__ in {"APITimeoutError", "TimeoutError", "Timeout", "ReadTimeout", "ConnectTimeout"}:
+        return "request_timeout"
+    if type(error).__name__ in {"APIConnectionError", "ConnectionError", "ProxyError"}:
+        return "api_connection"
+    return "unknown"
+
+
+def _fallback_sources(question, snapshot):
+    """Known primary locations, not model URLs or made-up campaign articles.
+
+    A plan reference can be rechecked even if web search is unavailable. Other
+    fallbacks must already be genuine original document URLs in the archive;
+    a newsroom index is never presented as a dated campaign announcement.
+    """
+    pricing, branding = bool(_PRICING_QUESTION.search(question)), bool(_BRAND_QUESTION.search(question))
+    urls = ["https://help.netflix.com/ko/node/24926"] if pricing else []
+    if not pricing and not branding:
+        return []
+    ranked = []
+    for document in snapshot.get("items", []) if isinstance(snapshot, Mapping) else []:
+        if not isinstance(document, Mapping):
+            continue
+        title = str(document.get("title", ""))
+        topic = document.get("topic")
+        score = 0
+        if pricing:
+            score += 10 * (topic == "advertising_pricing")
+            score += 5 * bool(_PRICING_QUESTION.search(title))
+        if branding:
+            score += 10 * bool(_BRAND_QUESTION.search(title))
+            score += 4 * (topic in {"branding_strategy", "partnership_distribution"})
+            score += 2 * bool(re.search(r"creative|크리에이터|공감|접근성|독립|가족|문화|제휴", title, re.I))
+        if score:
+            ranked.append((score, str(document.get("published_at", "")), str(document.get("url", ""))))
+    urls.extend(row[2] for row in sorted(ranked, reverse=True))
+    result, seen = [], set()
+    for url in urls:
+        source = _official_source(url)
+        if source and source["url"] not in seen:
+            result.append(source)
+            seen.add(source["url"])
+        if len(result) == MAX_REFERENCES:
+            break
+    return result
+
+
 def _http_reference_fetch(url, source, deadline):
     for _ in range(4):
         remaining = deadline - time.monotonic()
@@ -137,7 +202,9 @@ def _http_reference_fetch(url, source, deadline):
                 url = candidate
                 continue
             if response.status_code != 200:
-                raise CollectionError("reference_http_unavailable")
+                error = CollectionError("reference_http_unavailable")
+                error.http_status = response.status_code
+                raise error
             content = bytearray()
             for chunk in response.iter_content(64 * 1024):
                 if time.monotonic() >= deadline:
@@ -215,12 +282,14 @@ def _reference_html(content, source, url, checked_at):
 
 
 def _retrieve(source, checked_at, deadline, fetcher):
+    status = None
     try:
         callback = fetcher or (lambda url: _http_reference_fetch(url, source, deadline))
         payload = _fetch(source["url"], source, callback)
+        status = 200
         if (not _official_source(payload["url"]) or len(payload["content"]) > MAX_REFERENCE_BYTES
                 or time.monotonic() >= deadline):
-            return None, "primary_document_unusable"
+            return None, "primary_document_unusable", status
         content_type = payload.get("content_type", "").lower()
         if "pdf" in content_type or payload["content"].lstrip().startswith(b"%PDF"):
             document = parse_pdf_document(payload["content"], source, url=payload["url"], collected_at=checked_at)
@@ -232,24 +301,47 @@ def _retrieve(source, checked_at, deadline, fetcher):
                 document = parse_html_document(payload["content"].decode("utf-8", errors="replace"),
                                                source, url=payload["url"], collected_at=checked_at)
         if not document or not document.get("evidence"):
-            return None, "primary_document_unusable"
+            return None, "primary_document_unusable", status
         document.update(source_type="research_reference", research_reference=True,
                         reference_checked_at=checked_at, last_checked_at=checked_at)
-        return document, None
+        return document, None, status
+    except requests.Timeout:
+        return None, "primary_timeout", status
+    except CollectionError as error:
+        # CollectionError is our own fixed-code exception, not a provider body.
+        code = str(error)
+        http_status = getattr(error, "http_status", None)
+        if type(http_status) is int and 100 <= http_status <= 599:
+            status = http_status
+        elif match := re.fullmatch(r"http_(\d{3})", code):
+            status = int(match[1])
+        if code == "reference_timeout":
+            return None, "primary_timeout", status
+        if code in {"redirect_not_allowed", "redirect_limit", "url_not_allowed"}:
+            return None, "primary_redirect_refused", status
+        if code == "document_too_large":
+            return None, "primary_too_large", status
+        if code == "reference_http_unavailable" or code.startswith("http_"):
+            return None, "primary_http_unavailable", status
+        return None, "primary_fetch_unavailable", status
     except Exception:
-        return None, "primary_fetch_unavailable"
+        return None, "primary_fetch_unavailable", status
 
 
 def enrich_research_sources(question, snapshot, *, api_key, model, client=None, fetcher=None, now=None):
     """One web search and up to four real primary downloads; never write data."""
     result = deepcopy(dict(snapshot)) if isinstance(snapshot, Mapping) else {"schema_version": 1, "sources": [], "items": []}
-    report = {"status": "archive_only", "attempted": False, "documents_added": 0, "errors": []}
+    report = {"status": "archive_only", "attempted": False, "documents_added": 0, "errors": [],
+              "search_completed": False, "citations_found": 0, "citations_approved": 0,
+              "fetch_attempted": 0, "fallback_used": False, "provider_code": "not_called",
+              "fetch_http_statuses": []}
     question = re.sub(r"https?://\S+", "", str(question or ""), flags=re.I).strip()[:1800]
     if not question or (not api_key and client is None):
         report["errors"] = ["empty_question" if not question else "search_not_configured"]
         return {"snapshot": result, "report": report}
     checked_at = _stamp(now)
     report["attempted"] = True
+    sources = []
     try:
         active = client or OpenAI(api_key=api_key, timeout=35, max_retries=0)
         response = active.responses.create(
@@ -265,20 +357,32 @@ def enrich_research_sources(question, snapshot, *, api_key, model, client=None, 
             tool_choice="required", max_tool_calls=1, max_output_tokens=1000,
         )
         record_llm_response(response, feature="media_research", model=model)
+        report["search_completed"] = _field(response, "status", "completed") == "completed"
+        report["provider_code"] = "none"
+        report["citations_found"] = _citation_count(response)
         sources = _citation_urls(response)[:MAX_REFERENCES]
-    except Exception:
+        report["citations_approved"] = len(sources)
+        if not report["search_completed"]:
+            report["errors"].append("search_incomplete")
+    except Exception as error:
         report["errors"] = ["search_unavailable"]
-        return {"snapshot": result, "report": report}
+        report["provider_code"] = _provider_code(error)
     if not sources:
-        report["errors"] = ["no_primary_citations"]
+        if report["search_completed"]:
+            report["errors"].append("no_primary_citations")
+        sources = _fallback_sources(question, result)
+        report["fallback_used"] = bool(sources)
+    if not sources:
         return {"snapshot": result, "report": report}
+    report["fetch_attempted"] = len(sources)
     deadline = time.monotonic() + FETCH_SECONDS
     with ThreadPoolExecutor(max_workers=MAX_REFERENCES) as pool:
         fetched = list(pool.map(lambda source: _retrieve(source, checked_at, deadline, fetcher), sources))
     # Two search citations can redirect to the same original document. Keep
     # its citation IDs unique in the model's evidence index.
-    documents = list({document["url"]: document for document, _ in fetched if document}.values())
-    report["errors"] = sorted({error for _, error in fetched if error})
+    documents = list({document["url"]: document for document, _, _ in fetched if document}.values())
+    report["errors"] = sorted(set(report["errors"]) | {error for _, error, _ in fetched if error})
+    report["fetch_http_statuses"] = sorted({status for _, _, status in fetched if type(status) is int})
     if documents:
         replaced = {document["url"] for document in documents}
         result["items"] = [row for row in result.get("items", []) if isinstance(row, Mapping)

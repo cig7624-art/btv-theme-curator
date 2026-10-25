@@ -27,6 +27,7 @@ from media_insights_analysis import (
 ENGINE_REVISION = "business-research-v1"
 MAX_RESEARCH_DOCUMENTS = 6
 MAX_PROJECT_CHARS = 10_000
+MAX_QUESTION_CHARS = 10_000
 MAX_HISTORY_TURNS = 6
 
 _ROUTES = (
@@ -116,8 +117,8 @@ def _plain(value, limit):
 
 
 def _memory_score(question, previous_question):
-    query = _text(question, 2000).lower()
-    previous = _text(previous_question, 2000).lower()
+    query = _text(question, MAX_QUESTION_CHARS).lower()
+    previous = _text(previous_question, MAX_QUESTION_CHARS).lower()
     tokens = set(re.findall(r"[a-z0-9가-힣]{2,}", query))
     score = sum(3 for token in tokens if token in previous)
     score += sum(10 for trigger, _, _ in _ROUTES
@@ -189,7 +190,7 @@ def retrieve_business_documents(question, snapshot, project=None, *, limit=MAX_R
     """
     context = project_context(project, question)
     previous = " ".join(turn["question"] for turn in context["conversation"][-2:])
-    current = _text(question, 2000)
+    current = _text(question, MAX_QUESTION_CHARS)
     # Follow-up references need the earlier user's topic; original questions
     # should not be dominated by unrelated historical topics.
     query = current + (" " + previous if len(current) < 45 or re.search(r"지난|앞서|아까|그\s*안|번\s*(?:안|더|테마)|그럼", current) else "")
@@ -360,7 +361,7 @@ def _check_claim_scope(text, quote, owner):
 
 def answer_business_question(question, snapshot, project=None, *, api_key="", model="gpt-5.6-luna", client=None):
     """Return verified source facts and clearly separated strategic proposals."""
-    question = _text(question, 2000)
+    question = _text(question, MAX_QUESTION_CHARS)
     if not question:
         raise MediaInsightError("질문을 입력해 주세요.")
     context = project_context(project, question)
@@ -411,9 +412,13 @@ def answer_business_question(question, snapshot, project=None, *, api_key="", mo
         cited_ids.extend(ids)
     known_facts = {fact["id"]: fact for fact in facts}
     # Previously generated answers must not launder hypothetical prices into
-    # valid figures. Only current user conditions/question and verified facts
-    # can supply numerical business quantities to a proposal.
-    user_numbers = " ".join([question, context["user_supplied_conditions"], *context["approved_decisions"]])
+    # valid figures. User conditions/questions, including recalled earlier
+    # user messages, and verified facts can supply proposal quantities. Never
+    # turn a number from an earlier assistant suggestion into a user input.
+    prior_user_questions = [_text(turn.get("question", turn.get("user", "")), MAX_QUESTION_CHARS)
+                            for turn in recalled_project_turns(project, question)]
+    user_numbers = " ".join([question, context["user_supplied_conditions"],
+                             *context["approved_decisions"], *prior_user_questions])
     allowed_numbers = _financial_quantities(user_numbers + " " + " ".join(fact["text"] for fact in facts))
     rejected_proposals = 0
 
