@@ -328,6 +328,7 @@ def _check_editorial(frame, report, label, screenshots):
     frame.get_by_role('button', name='리서치 질문하기', exact=True).click()
     composer = frame.get_by_placeholder('사업에 필요한 질문을 자유롭게 적어 주세요.')
     composer.wait_for(state='visible', timeout=30000)
+    frame.locator('.media-research-heading[data-source-protocol="3"]').wait_for(state='visible', timeout=30000)
     draft = '아직 보내지 않은 사업 검토 질문'
     composer.fill(draft)
     frame.get_by_role('tab', name='추천 테마', exact=True).click()
