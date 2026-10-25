@@ -690,7 +690,8 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                 country = st.selectbox("지역", countries, key="media_insight_country", label_visibility="collapsed",
                                        format_func=lambda value: "전체 지역" if value == "전체" else value)
             with period_col:
-                period = st.selectbox("발표 기간", list(_PERIODS), key="media_insight_period", label_visibility="collapsed")
+                period = st.selectbox("발표 기간", list(_PERIODS), index=list(_PERIODS).index("최근 30일"),
+                                      key="media_insight_period", label_visibility="collapsed")
         domestic = topic == "국내 이슈"
         scope_items = [item for item in items if not domestic or _is_domestic_item(item)]
         filtered = filter_insight_items(scope_items, topic="전체" if domestic else topic, country=country, lookback_days=_PERIODS[period])

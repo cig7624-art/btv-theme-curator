@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow", "media_magazine", "media_domestic", "media_korean")
+CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow", "media_magazine", "media_domestic", "media_korean", "media_default_period")
 
 
 def normalized_version(value):
@@ -266,6 +266,12 @@ def _check_editorial(frame, report, label, screenshots):
     frame.locator('.ott-magazine').wait_for(state='visible')
     frame.get_by_role('tab', name='미디어 인사이트', exact=True).click()
     frame.locator('.media-insights-heading').wait_for(state='visible', timeout=30000)
+    frame.wait_for_function('''() => {
+      const control = document.querySelector('.st-key-media_insight_period');
+      return control && [control.innerText, ...Array.from(control.querySelectorAll('input,select'))
+        .map(input => input.value || '')].join(' ').includes('최근 30일');
+    }''', timeout=30000)
+    report['tests'][f'{label}_media_default_period'] = True
     frame.locator('.media-story-meta').first.wait_for(state='visible', timeout=30000)
     frame.get_by_role('link', name='공식 원문 열기 ↗', exact=True).wait_for(state='visible', timeout=30000)
     frame.get_by_text('원문·근거', exact=True).click()

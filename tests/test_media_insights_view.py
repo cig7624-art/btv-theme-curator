@@ -37,7 +37,7 @@ def snapshot():
                          "last_success_at": "2026-10-20T09:00:00Z", "last_checked_at": "2026-10-23T09:00:00Z"}]}
 
 
-def app_fixture(data=None, note=None, answer=None):
+def app_fixture(data=None, note=None, answer=None, *, period=None):
     def run_app(data, note, answer):
         import streamlit as st
         from media_insights_view import render_media_insights_page
@@ -56,7 +56,10 @@ def app_fixture(data=None, note=None, answer=None):
             st.session_state["test_asked"] = (question, identifier)
             return answer
         render_media_insights_page(data, on_refresh=refresh, on_analyze=analyze, on_ask=ask)
-    return AppTest.from_function(run_app, args=(data or snapshot(), note or analysis(), answer)).run()
+    app = AppTest.from_function(run_app, args=(data or snapshot(), note or analysis(), answer))
+    if period is not None:
+        app.session_state["media_insight_period"] = period
+    return app.run()
 
 
 class SourceGuardsTests(unittest.TestCase):
@@ -164,7 +167,7 @@ class MagazinePresentationTests(unittest.TestCase):
         data["items"][0]["analysis"] = analysis(data["items"][0])
         with patch.object(view, "valid_localization", wraps=view.valid_localization) as localization, \
                 patch.object(view, "_item_analysis", wraps=view._item_analysis) as notes:
-            app = app_fixture(data)
+            app = app_fixture(data, period="전체 기간")
             self.assertFalse(app.exception)
             self.assertEqual(localization.call_count, len(data["items"]))
             self.assertEqual(notes.call_count, len(data["items"]))
@@ -223,7 +226,7 @@ class MagazinePresentationTests(unittest.TestCase):
             self.assertIn("media-art-fallback", art)
 
     def test_major_edition_keeps_old_material_only_in_the_archive(self):
-        app = app_fixture()
+        app = app_fixture(period="전체 기간")
         self.assertFalse(app.exception)
         major_keys = [button.key for button in app.button if str(button.key).startswith("media_select_")]
         self.assertEqual(major_keys, ["media_select_" + hashlib.sha256(b"one").hexdigest()[:16]])
@@ -288,7 +291,7 @@ class MagazinePresentationTests(unittest.TestCase):
 
 class MediaInsightsAppTests(unittest.TestCase):
     def test_render_filter_and_selection_never_trigger_callbacks(self):
-        app = app_fixture()
+        app = app_fixture(period="전체 기간")
         self.assertFalse(app.exception)
         app.run()
         app.radio(key="media_insight_topic").set_value("AI·기술").run()
