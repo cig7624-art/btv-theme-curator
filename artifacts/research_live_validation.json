@@ -1,22 +1,69 @@
 {
   "schema_version": 1,
-  "status": "failed",
+  "status": "passed",
   "expected_version": "1.5.0",
   "observed_version": "1.5.0",
-  "started_at": "2026-10-25T14:51:47.320299+00:00",
-  "finished_at": "2026-10-25T14:52:01.063486+00:00",
+  "started_at": "2026-10-25T14:55:36.346360+00:00",
+  "finished_at": "2026-10-25T14:57:31.833528+00:00",
   "checks": {
     "desktop_exact_version": true,
     "desktop_composer": true,
-    "desktop_unsent_draft_retained": true
+    "desktop_unsent_draft_retained": true,
+    "question_1_attempted": true,
+    "pricing_facts_and_sources": true,
+    "decision_explicitly_adopted": true,
+    "question_2_attempted": true,
+    "followup_uses_brief_and_decision": true,
+    "desktop_no_overflow": true,
+    "desktop_no_exception": true,
+    "reopened_desktop_exact_version": true,
+    "reopened_desktop_composer": true,
+    "reopened_desktop_recovered_two_turns_and_decision": true,
+    "reopened_desktop_no_overflow": true,
+    "reopened_desktop_no_exception": true,
+    "mobile_exact_version": true,
+    "mobile_composer": true,
+    "mobile_recovered_two_turns_and_decision": true,
+    "mobile_unsent_draft_retained": true,
+    "mobile_no_overflow": true,
+    "mobile_no_exception": true,
+    "exactly_two_once_only_questions": true
   },
   "counts": {
-    "questions_attempted": 0
+    "questions_attempted": 2,
+    "stored_turns": 2,
+    "stored_decisions": 1
   },
-  "responses": [],
-  "source_hosts": [],
-  "errors": [
-    "project_recovery_code_missing"
+  "responses": [
+    {
+      "fact_count": 8,
+      "source_count": 8,
+      "option_count": 3,
+      "added_documents": 0,
+      "status": "grounded",
+      "search_status": "archive_only",
+      "engine_version": "business-research-v1",
+      "model": "gpt-5.6-luna",
+      "completion_seconds": 39.6
+    },
+    {
+      "fact_count": 5,
+      "source_count": 5,
+      "option_count": 2,
+      "added_documents": 0,
+      "status": "grounded",
+      "search_status": "archive_only",
+      "engine_version": "business-research-v1",
+      "model": "gpt-5.6-luna",
+      "completion_seconds": 29.07
+    }
   ],
-  "source_commit": "c73b10413d85fe05c18fd58cf582194107586bf9"
+  "source_hosts": [
+    "blog.bworld.co.kr",
+    "s206.q4cdn.com",
+    "thewaltdisneycompany.com",
+    "www.cjenm.com"
+  ],
+  "errors": [],
+  "source_commit": "56a86d10fc347849be12ee4b50b4e0f01ae0606f"
 }
