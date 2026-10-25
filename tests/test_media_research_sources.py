@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 from media_research_sources import (
-    MAX_REFERENCE_BYTES, OFFICIAL_DOMAINS, _http_reference_fetch, _official_source,
+    CollectionError, MAX_REFERENCE_BYTES, OFFICIAL_DOMAINS, _http_reference_fetch, _official_source,
     enrich_research_sources,
 )
 
@@ -179,6 +179,27 @@ class ResearchSourcesTests(unittest.TestCase):
         self.assertIsNone(_official_source("https://s206.q4cdn.com/111111111/another-company.pdf"))
         self.assertIsNone(_official_source("https://s22.q4cdn.com/unverified-account/report.pdf"))
         self.assertEqual(_official_source("https://s206.q4cdn.com/979796730/report.pdf")["company"], "Disney")
+
+    def test_large_official_page_keeps_only_bounded_primary_text(self):
+        payload = HTML.encode() + b"<script>" + b"x" * (3 * 1024 * 1024) + b"</script>"
+        result, _, _, _ = self.enrich(fetcher=Mock(return_value={
+            "content": payload, "url": URL, "content_type": "text/html"}))
+        self.assertEqual(result["report"]["documents_added"], 1)
+        document = result["snapshot"]["items"][-1]
+        self.assertIn("Basic | USD 8.00 monthly", document["body_text"])
+        self.assertLess(len(document["body_text"]), 10000)
+
+    def test_partial_search_can_use_known_primary_when_found_document_is_unusable(self):
+        found = "https://thewaltdisneycompany.com/news/official-pricing/"
+        def fetch(url):
+            if url == found:
+                raise CollectionError("document_too_large")
+            return HTML
+        result, _, fetcher, _ = self.enrich((found,), fetcher=Mock(side_effect=fetch))
+        self.assertEqual(result["report"]["status"], "enriched")
+        self.assertTrue(result["report"]["fallback_used"])
+        self.assertEqual(result["report"]["fetch_attempted"], 2)
+        self.assertIn("primary_too_large", result["report"]["errors"])
 
     def test_fetcher_final_account_redirect_is_refused(self):
         result, _, _, _ = self.enrich(fetcher=Mock(return_value={"html": HTML, "url": "https://help.netflix.com/account/"}))

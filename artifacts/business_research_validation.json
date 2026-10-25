@@ -1,7 +1,7 @@
 {
-  "version": "1.5.0",
+  "version": "1.5.1",
   "status": "local_passed",
-  "full_suite_tests": 714,
+  "full_suite_tests": 715,
   "model_calls_in_local_tests": 0,
   "existing_data_files_changed": false,
   "ui_checks": {
@@ -56,6 +56,6 @@
     "Cross-session live verification recorded separately"
   ],
   "live_report": "artifacts/research_live_validation.json",
-  "live_conversation_and_recovery": "passed",
+  "live_conversation_and_recovery": "passed on v1.5.0",
   "source_refresh_verification": "pending"
 }

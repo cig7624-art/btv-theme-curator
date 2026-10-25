@@ -28,7 +28,7 @@ from media_insights_collection import (
 
 
 MAX_REFERENCES = 4
-MAX_REFERENCE_BYTES = 2 * 1024 * 1024
+MAX_REFERENCE_BYTES = 8 * 1024 * 1024
 FETCH_SECONDS = 25
 MAX_EVIDENCE = 40
 
@@ -378,6 +378,17 @@ def enrich_research_sources(question, snapshot, *, api_key, model, client=None, 
             report["errors"].append("no_primary_citations")
         sources = _fallback_sources(question, result)
         report["fallback_used"] = bool(sources)
+    elif len(sources) < MAX_REFERENCES:
+        # A partial search may yield one unusable/large document. Fill only the
+        # remaining download slots with previously verified primary locations.
+        seen_urls = {source["url"] for source in sources}
+        for known in _fallback_sources(question, result):
+            if known["url"] not in seen_urls:
+                sources.append(known)
+                seen_urls.add(known["url"])
+                report["fallback_used"] = True
+            if len(sources) >= MAX_REFERENCES:
+                break
     if not sources:
         return {"snapshot": result, "report": report}
     report["fetch_attempted"] = len(sources)

@@ -54,7 +54,7 @@ def probe(args):
                 frame = _load_research(page, args, report, "desktop")
                 report["stage"] = "latest_implementation"
                 try:
-                    frame.locator('.media-research-heading[data-source-protocol="2"]').wait_for(state='visible', timeout=30000)
+                    frame.locator('.media-research-heading[data-source-protocol="3"]').wait_for(state='visible', timeout=30000)
                 except Exception:
                     raise VerificationIssue('research_pipeline_update_pending') from None
                 started = time.monotonic()
