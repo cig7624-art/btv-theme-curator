@@ -6,7 +6,7 @@ requests
 beautifulsoup4
 openai==3.35.1
 pydantic>=2
-cryptography>=44,<48
+cryptography==47.0.0
 pypdf==6.21.2
 playwright
 openpyxl
