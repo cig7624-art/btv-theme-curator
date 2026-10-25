@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "status": "passed",
-  "expected_version": "1.5.0",
-  "observed_version": "1.5.0",
-  "started_at": "2026-10-25T23:10:47.224003+00:00",
-  "finished_at": "2026-10-25T23:11:31.347177+00:00",
+  "expected_version": "1.5.1",
+  "observed_version": "1.5.1",
+  "started_at": "2026-10-25T23:19:44.114653+00:00",
+  "finished_at": "2026-10-25T23:20:16.898773+00:00",
   "attempts": 1,
   "tests": {
     "desktop_version": true,
@@ -66,7 +66,7 @@
       "lead_loaded": true
     }
   },
-  "source_commit": "6373a9bb05959c787c9e6ba5a33b7eee8015f8e5",
+  "source_commit": "3150331993bf611a7f59acc9d8dbbe75ecbbd0d9",
   "frame_state": "matched_release",
   "media_artwork": {
     "desktop": {
