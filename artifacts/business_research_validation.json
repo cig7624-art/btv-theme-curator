@@ -1,7 +1,7 @@
 {
   "version": "1.5.1",
-  "status": "local_passed",
-  "full_suite_tests": 715,
+  "status": "passed",
+  "full_suite_tests": 717,
   "model_calls_in_local_tests": 0,
   "existing_data_files_changed": false,
   "ui_checks": {
@@ -56,6 +56,8 @@
     "Cross-session live verification recorded separately"
   ],
   "live_report": "artifacts/research_live_validation.json",
-  "live_conversation_and_recovery": "passed on v1.5.0",
-  "source_refresh_verification": "pending"
+  "live_conversation_and_recovery": "passed on v1.5.0; compatible project storage retained",
+  "source_refresh_verification": "passed on v1.5.1",
+  "deployment_checks": 42,
+  "checked_at": "2026-10-25T23:35:48.660785+00:00"
 }
