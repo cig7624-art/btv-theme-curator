@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "status": "failed",
+  "expected_version": "1.5.0",
+  "started_at": "2026-10-25T23:10:53.604705+00:00",
+  "checks": {
+    "desktop_exact_version": true,
+    "desktop_composer": true
+  },
+  "counts": {
+    "questions_attempted": 0
+  },
+  "responses": [],
+  "errors": [
+    "source_probe_unavailable"
+  ],
+  "observed_version": "1.5.0",
+  "finished_at": "2026-10-25T23:11:41.854333+00:00"
+}
