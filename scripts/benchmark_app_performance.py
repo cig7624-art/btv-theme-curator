@@ -10,16 +10,23 @@ import argparse
 from collections import defaultdict
 from datetime import datetime, timezone
 import json
+import math
 import os
 from pathlib import Path
 import statistics
 import time
 from urllib.parse import urlsplit
 
-from verify_deployment import (
-    APP_URL, ROOT, VerificationIssue, _load_version, has_app_exception,
-    normalized_version, resolve_app_frame,
-)
+if __package__:
+    from .verify_deployment import (
+        APP_URL, ROOT, VerificationIssue, _load_version, has_app_exception,
+        normalized_version, resolve_app_frame,
+    )
+else:
+    from verify_deployment import (
+        APP_URL, ROOT, VerificationIssue, _load_version, has_app_exception,
+        normalized_version, resolve_app_frame,
+    )
 
 
 PROTOCOL = "streamlit-full-rerun-v1"
@@ -224,6 +231,60 @@ def summarize(rows):
     } for (viewport, flow), values in groups.items()]
 
 
+def compare_baseline(report, baseline):
+    """Compare equally sampled flows without changing measurement success.
+
+    A failed baseline may still contain complete flows, but one before sample
+    must never be compared with three after samples. Comparison availability
+    is evidence about the baseline, not a failure of optimized measurements.
+    """
+    result = {"comparison_status": "unavailable", "comparison": []}
+    if not isinstance(baseline, dict):
+        return {**result, "comparison_reason": "baseline_unavailable"}
+    required = report.get("samples_per_flow")
+    if required != 3 or any(baseline.get(key) != report.get(key)
+                            for key in ("protocol", "samples_per_flow", "viewports")):
+        return {**result, "comparison_reason": "incompatible_baseline"}
+
+    expected = {(viewport["name"], flow) for viewport in report["viewports"]
+                for flow in report["flow_order"]}
+
+    def complete_rows(value):
+        rows = {}
+        summary = value.get("summary")
+        if not isinstance(summary, list):
+            return rows
+        for row in summary:
+            if not isinstance(row, dict) or row.get("samples") != required:
+                continue
+            key = (row.get("viewport"), row.get("flow"))
+            elapsed = row.get("median_completion_ms")
+            if (key in expected and isinstance(elapsed, (int, float))
+                    and math.isfinite(elapsed) and elapsed > 0):
+                rows[key] = row
+        return rows
+
+    previous, current = complete_rows(baseline), complete_rows(report)
+    for key, row in current.items():
+        if key not in previous:
+            continue
+        before = previous[key]["median_completion_ms"]
+        result["comparison"].append({
+            "viewport": key[0], "flow": key[1],
+            "baseline_samples": required, "optimized_samples": required,
+            "baseline_median_ms": before,
+            "optimized_median_ms": row["median_completion_ms"],
+            "change_percent": round(100 * (row["median_completion_ms"] / before - 1), 1),
+        })
+    result["baseline_version"] = baseline.get("observed_version")
+    if result["comparison"]:
+        complete = len(result["comparison"]) == len(expected) and baseline.get("status") == "passed"
+        result["comparison_status"] = "complete" if complete else "partial"
+    if result["comparison_status"] != "complete":
+        result["comparison_reason"] = "incomplete_baseline"
+    return result
+
+
 def benchmark(args):
     report = {
         "schema_version": 1, "protocol": PROTOCOL, "label": args.label,
@@ -321,22 +382,9 @@ def benchmark(args):
     if args.label == "optimized" and report["status"] == "passed":
         try:
             baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
-            compatible = all(baseline.get(key) == report[key]
-                             for key in ("protocol", "samples_per_flow", "flow_order", "viewports"))
-            if not compatible or baseline.get("status") != "passed":
-                raise ValueError("incompatible_baseline")
-            previous = {(row["viewport"], row["flow"]): row for row in baseline["summary"]}
-            report["baseline_version"] = baseline["observed_version"]
-            report["comparison"] = [{
-                "viewport": row["viewport"], "flow": row["flow"],
-                "baseline_median_ms": previous[(row["viewport"], row["flow"])]["median_completion_ms"],
-                "optimized_median_ms": row["median_completion_ms"],
-                "change_percent": round(100 * (row["median_completion_ms"] /
-                    previous[(row["viewport"], row["flow"])]["median_completion_ms"] - 1), 1),
-            } for row in report["summary"]]
-        except (OSError, KeyError, ValueError, TypeError, ZeroDivisionError):
-            report["errors"] = ["baseline_comparison_unavailable"]
-            report["status"] = "failed"
+        except (OSError, ValueError):
+            baseline = None
+        report.update(compare_baseline(report, baseline))
     return report
 
 

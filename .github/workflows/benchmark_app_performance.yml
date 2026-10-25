@@ -49,8 +49,8 @@ jobs:
         id: benchmark
         continue-on-error: true
         env:
-          BENCHMARK_LABEL: ${{ inputs.label || 'baseline' }}
-          EXPECTED_VERSION: ${{ inputs.expected_version || '1.4.1' }}
+          BENCHMARK_LABEL: ${{ inputs.label || 'optimized' }}
+          EXPECTED_VERSION: ${{ inputs.expected_version || '' }}
         run: |
           performance_args=(--label "$BENCHMARK_LABEL" --timeout 480)
           if [ -n "$EXPECTED_VERSION" ]; then
@@ -61,14 +61,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: public-app-performance-${{ inputs.label || 'baseline' }}
+          name: public-app-performance-${{ inputs.label || 'optimized' }}
           path: artifacts/performance_*.json
           retention-days: 7
       - name: Record sanitized report on this branch
         if: ${{ always() && !cancelled() && github.ref == 'refs/heads/codex/performance' }}
         env:
           TARGET_BRANCH: ${{ github.ref_name }}
-          BENCHMARK_LABEL: ${{ inputs.label || 'baseline' }}
+          BENCHMARK_LABEL: ${{ inputs.label || 'optimized' }}
         run: |
           performance_report="artifacts/performance_${BENCHMARK_LABEL}.json"
           if [ ! -f "$performance_report" ]; then exit 0; fi

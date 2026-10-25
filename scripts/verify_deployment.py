@@ -164,7 +164,12 @@ def _check_editorial(frame, report, label, screenshots):
     frame.get_by_role("tab", name="AI 디렉터", exact=True).click()
     try:
         frame.locator(".director-heading").wait_for(state="visible", timeout=20000)
-        report["tests"][f"{label}_director_screen"] = frame.get_by_placeholder("만들고 싶은 테마나 고치고 싶은 부분을 알려주세요.").count() == 1
+        # Lazy tab rendering streams the heading before the chat input. Check
+        # the actual composer after it arrives rather than sampling the DOM
+        # immediately when only the heading is ready.
+        composer = frame.get_by_placeholder("만들고 싶은 테마나 고치고 싶은 부분을 알려주세요.")
+        composer.wait_for(state="visible", timeout=20000)
+        report["tests"][f"{label}_director_screen"] = composer.count() == 1
     except Exception:
         raise VerificationIssue("director_screen_missing", retry=True)
     if not report["tests"][f"{label}_director_screen"]:
