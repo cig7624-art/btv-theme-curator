@@ -66,6 +66,10 @@ def _registry():
 
 
 OFFICIAL_DOMAINS = _registry()
+# Shared IR CDNs host documents for many unrelated companies. These account
+# prefixes are verified by the existing official-document archive; a hostname
+# alone does not establish the publisher of a newly discovered PDF.
+_CDN_PREFIXES = {"s2.q4cdn.com": "/299287126/", "s206.q4cdn.com": "/979796730/"}
 _PRIVATE_PATH = re.compile(r"/(?:login|signin|sign-in|signup|sign-up|account|checkout|payment|auth)(?:/|$)", re.I)
 _PRICING_QUESTION = re.compile(r"가격|요금|구독료|월정액|멤버십|광고형|price|pricing|subscription|membership|bundle|번들", re.I)
 _BRAND_QUESTION = re.compile(r"브랜딩|브랜드|리브랜딩|키\s*메시지|포지셔닝|캠페인|brand|positioning|campaign", re.I)
@@ -90,6 +94,8 @@ def _official_source(url):
         parsed = urlsplit(str(url or ""))
         host = (parsed.hostname or "").lower()
         entry = OFFICIAL_DOMAINS.get(host)
+        if host.endswith(".q4cdn.com") and not parsed.path.startswith(_CDN_PREFIXES.get(host, "\0")):
+            return None
         if (not entry or parsed.scheme != "https" or parsed.username or parsed.password
                 or parsed.port not in {None, 443} or _PRIVATE_PATH.search(unquote(parsed.path))
                 or any(ord(char) < 32 for char in str(url))):

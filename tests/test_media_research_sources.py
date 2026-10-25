@@ -161,8 +161,8 @@ class ResearchSourcesTests(unittest.TestCase):
         self.assertEqual(doc["reference_checked_at"], NOW)
 
     def test_pdf_evidence_comes_from_actual_parser_not_search_text(self):
-        url = "https://s22.q4cdn.com/example/report.pdf"
-        parsed = {"id": "pdf-original", "url": url, "company": "Netflix", "title": "Official report",
+        url = "https://s206.q4cdn.com/979796730/test/report.pdf"
+        parsed = {"id": "pdf-original", "url": url, "company": "Disney", "title": "Official report",
                   "content_hash": "pdf-hash", "published_at": "", "collected_at": NOW,
                   "evidence": [{"id": "pdf-original-page1-p001", "url": url + "#page=1",
                                 "locator": "page1-p001", "text": "This is the downloaded original report paragraph."}]}
@@ -174,6 +174,11 @@ class ResearchSourcesTests(unittest.TestCase):
         evidence = result["snapshot"]["items"][-1]["evidence"][0]
         self.assertEqual(evidence["locator"], "page1-p001")
         self.assertNotIn("999999", evidence["text"])
+
+    def test_shared_ir_cdn_requires_a_verified_publisher_account(self):
+        self.assertIsNone(_official_source("https://s206.q4cdn.com/111111111/another-company.pdf"))
+        self.assertIsNone(_official_source("https://s22.q4cdn.com/unverified-account/report.pdf"))
+        self.assertEqual(_official_source("https://s206.q4cdn.com/979796730/report.pdf")["company"], "Disney")
 
     def test_fetcher_final_account_redirect_is_refused(self):
         result, _, _, _ = self.enrich(fetcher=Mock(return_value={"html": HTML, "url": "https://help.netflix.com/account/"}))

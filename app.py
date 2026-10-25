@@ -2062,7 +2062,7 @@ with st.container(key="app_footer"):
     footer_brand, footer_cost = st.columns([3, 2], vertical_alignment="center", gap="small")
     with footer_brand:
         st.markdown(
-            f'<footer class="magazine-footer" data-release="api-cost-v1" data-version="{html.escape(APP_VERSION, quote=True)}">'
+            f'<footer class="magazine-footer" data-release="business-research" data-version="{html.escape(APP_VERSION, quote=True)}">'
             f'<span>B tv+ · THEME CURATOR · v{html.escape(APP_VERSION)}</span></footer>',
             unsafe_allow_html=True,
         )

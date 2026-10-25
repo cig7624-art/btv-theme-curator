@@ -52,7 +52,10 @@ def probe(args):
             try:
                 page = browser.new_page(viewport={"width": 1366, "height": 1000})
                 frame = _load_research(page, args, report, "desktop")
-                frame.locator('.media-research-heading[data-source-protocol="2"]').wait_for(state='visible', timeout=30000)
+                try:
+                    frame.locator('.media-research-heading[data-source-protocol="2"]').wait_for(state='visible', timeout=30000)
+                except Exception:
+                    raise VerificationIssue('research_pipeline_update_pending') from None
                 started = time.monotonic()
                 submit_question_once(frame.locator(".st-key-media_research_question textarea"), report, 1, QUESTIONS[0])
                 _wait_state(frame, 1, timeout=180000, deadline=time.monotonic() + 180)
