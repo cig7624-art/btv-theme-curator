@@ -10,6 +10,8 @@ on:
       - media_insights_view.py
       - public_media_monitoring.py
       - news_digest.py
+      - news_subjects.py
+      - issue_quality.py
       - media_research_engine.py
       - media_research_runtime.py
       - media_research_sources.py
@@ -48,7 +50,7 @@ jobs:
       - name: Check application syntax before browser verification
         run: |
           rm -f artifacts/deployment_validation.json
-          python -m compileall -q app.py media_insights_runtime.py media_insights_view.py public_media_monitoring.py news_digest.py
+          python -m compileall -q app.py media_insights_runtime.py media_insights_view.py public_media_monitoring.py news_digest.py news_subjects.py issue_quality.py
       - name: Use the hosted runner's existing browser when available
         run: |
           deployment_browser="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"

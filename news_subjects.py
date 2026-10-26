@@ -21,7 +21,11 @@ def strip_news_editorial_labels(text):
         before, after = text[:match.start()].strip(), text[match.end():].strip()
         introduced_work = bool(re.search(r"(?:영화|드라마|예능|시리즈|작품)\s*$", before))
         trailing_label = bool(before) and (not after or after.startswith("- ")) and not introduced_work
-        if _KNOWN_LABEL.fullmatch(label) or trailing_label:
+        # Regional/desk prefixes can precede a separately, explicitly named
+        # film: [임실군] ‘우리마을담다’ 동화영화. Prefer the actual media title.
+        leading_desk = not before and bool(re.match(
+            r"[‘'\"“`]([^’'\"”`]+)[’'\"”`]\s*(?:동화영화|영화|드라마|예능|시리즈|작품)", after))
+        if _KNOWN_LABEL.fullmatch(label) or trailing_label or leading_desk:
             removed.append(label)
             # The label itself is not a work, but this context is needed to
             # recognize a leading quoted work followed by an actor interview.

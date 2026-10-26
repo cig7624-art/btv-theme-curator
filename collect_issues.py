@@ -680,6 +680,10 @@ def guess_news_related_content(headline):
     related = guess_related_content(candidate_headline)
     if related:
         return related
+    # A regional desk prefix may precede a work named before its format noun.
+    explicit_work = re.search(r"[‘'\"“`]([^’'\"”`]+)[’'\"”`]\s*(?:동화영화|영화|드라마|예능|시리즈|작품)", candidate_headline)
+    if explicit_work and is_reliable_related_content(explicit_work.group(1)):
+        return _clean_content_candidate(explicit_work.group(1))
     # A leading quoted work followed by an actor's interview is a useful
     # editorial event; requiring both structure and interview avoids quotes.
     leading_quote = re.match(

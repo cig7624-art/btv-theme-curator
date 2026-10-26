@@ -158,6 +158,7 @@ class NewsCollectionTests(unittest.TestCase):
             "예능 ‘도라이버’ 종영 확정 [이슈S] - 방송신문": "도라이버",
             "[달빛] 공식 예고편 공개": "달빛",
             "신작 영화 [달빛]": "달빛",
+            "[임실군] ‘우리마을담다’ 동화영화, 임실 UCC 공모전 대상 수상": "우리마을담다",
         }
         for title, expected in headlines.items():
             with self.subTest(title=title):
