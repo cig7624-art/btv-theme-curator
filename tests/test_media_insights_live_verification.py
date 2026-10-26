@@ -7,6 +7,7 @@ from unittest.mock import Mock, patch
 from scripts.verify_deployment import VerificationIssue
 from scripts.verify_media_insights_live import (
     _load_media, _public_url, answer_distinguishes_unknown, saved_note_valid, submit_once, media_alert_code, prepare_note,
+    main, verify,
 )
 
 
@@ -20,6 +21,23 @@ def snapshot():
 
 
 class MediaInsightsLiveVerificationTests(unittest.TestCase):
+    def test_retired_cli_cannot_be_reenabled_by_an_old_expected_version(self):
+        with (patch('scripts.verify_media_insights_live._legacy_research_enabled', return_value=False),
+              patch('scripts.verify_media_insights_live.verify') as run,
+              patch('builtins.print')):
+            self.assertEqual(main(['--expected-version', '1.5.1']), 2)
+        run.assert_not_called()
+
+    def test_retired_programmatic_check_blocks_before_any_browser_or_question(self):
+        args = SimpleNamespace(expected_version='1.6.0', reuse_analyses=True, analysis_limit=2)
+        with (patch('scripts.verify_media_insights_live._legacy_research_enabled', return_value=False),
+              patch('scripts.verify_media_insights_live.exercise') as exercise):
+            report = verify(args)
+        exercise.assert_not_called()
+        self.assertTrue(report['blocked'])
+        self.assertEqual(report['counts']['question_clicks'], 0)
+        self.assertEqual(report['failure_code'], 'retired_research_verification')
+
     def test_saved_note_check_never_submits_another_analysis(self):
         frame = Mock()
         frame.locator.return_value.count.return_value = 4

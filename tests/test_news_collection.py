@@ -151,6 +151,35 @@ class NewsCollectionTests(unittest.TestCase):
         self.assertEqual(c.infer_news_event("신작 '실낙원' 배현성 인터뷰"), "interview")
         self.assertEqual(c.infer_news_event("신작 이야기"), "")
 
+    def test_unseen_trailing_corner_labels_never_become_works(self):
+        headlines = {
+            '"배우도 카메라도 없다" 600억짜리 영화…中서 첫 AI 장편영화 개봉 [차이나 워치] - 한국경제': "",
+            "'9살 연하' 아내 내조에도…조세호 마지막 고정 예능 종영 어쩌나 [이슈S]": "",
+            "예능 ‘도라이버’ 종영 확정 [이슈S] - 방송신문": "도라이버",
+            "[달빛] 공식 예고편 공개": "달빛",
+            "신작 영화 [달빛]": "달빛",
+        }
+        for title, expected in headlines.items():
+            with self.subTest(title=title):
+                self.assertEqual(c.guess_news_related_content(title), expected)
+
+    def test_saved_editorial_subjects_are_excluded_without_rewriting_source_rows(self):
+        for label in ["차이나 워치", "이슈S"]:
+            row = dict(date="2026-10-21", published_at="2026-10-21", source="온라인 화제·뉴스",
+                       related_content=label, issue_title=f'"배우도 카메라도 없다" AI 영화 개봉 [{label}]',
+                       description=f'"배우도 카메라도 없다" AI 영화 개봉 [{label}]',
+                       publisher="기사신문", source_url="https://publisher.example/story/1", event_type="release")
+            result = assess_issues(pd.DataFrame([row]), now="2026-10-21T12:00:00+09:00").iloc[0]
+            self.assertFalse(result.eligible)
+            self.assertEqual(row["related_content"], label)
+
+    def test_actual_subject_is_preserved_over_incidental_headline_quotes(self):
+        row = dict(date="2026-10-21", published_at="2026-10-21", source="온라인 화제·뉴스",
+                   related_content="도라이버", issue_title="'9살 연하' 내조에도…예능 ‘도라이버’ 종영 [이슈S]",
+                   publisher="기사신문", source_url="https://publisher.example/story/1", event_type="release")
+        result = assess_issues(pd.DataFrame([row]), now="2026-10-21T12:00:00+09:00").iloc[0]
+        self.assertEqual(result.related_content, "도라이버")
+
     def test_all_article_urls_resolve_even_when_image_collection_is_disabled(self):
         urls = [f"https://news.google.com/rss/articles/{number}" for number in range(3)]
         rows = [news_row(url) for url in urls]

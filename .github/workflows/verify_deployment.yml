@@ -90,14 +90,20 @@ jobs:
             exit 0
           fi
           git commit -m 'Record public Streamlit deployment verification [skip ci]'
-          git pull --rebase origin main
-          validation_version="$(python -c 'import json; print(json.load(open("artifacts/deployment_validation.json"))["expected_version"])')"
-          current_version="$(tr -d '[:space:]' < VERSION)"
-          if [ "$validation_version" != "$current_version" ]; then
-            echo 'A newer release superseded this check; evidence remains in CI artifacts.'
-            exit 0
-          fi
-          git push origin HEAD:main
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            validation_version="$(python -c 'import json; print(json.load(open("artifacts/deployment_validation.json"))["expected_version"])')"
+            current_version="$(tr -d '[:space:]' < VERSION)"
+            if [ "$validation_version" != "$current_version" ]; then
+              echo 'A newer release superseded this check; evidence remains in CI artifacts.'
+              exit 0
+            fi
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+          done
+          echo 'Could not record evidence after three concurrent data updates.'
+          exit 1
       - name: Require successful live verification
         if: ${{ steps.verify.outcome != 'success' }}
         run: exit 1

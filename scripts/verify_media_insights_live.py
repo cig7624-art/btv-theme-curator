@@ -318,12 +318,25 @@ def exercise(page, args, report, browser):
         'responsive_or_app_check_failed')
 
 
+def _legacy_research_enabled():
+    """Historical question verification is retired by the public-only release."""
+    try:
+        version = normalized_version((ROOT / 'VERSION').read_text())
+        parts = tuple(map(int, version.split('-')[0].split('+')[0].split('.'))) if version else None
+        return parts is not None and parts < (1, 6, 0)
+    except (OSError, ValueError):
+        return False
+
+
 def verify(args):
     report = {'schema_version': 1, 'expected_version': args.expected_version, 'observed_version': None,
               'passed': False, 'blocked': False, 'checks': {},
               'counts': {'release_load_attempts': 0, 'analysis_clicks': 0, 'question_clicks': 0,
                          'requested_analyses': 0 if args.reuse_analyses else args.analysis_limit,
                          'requested_saved_notes': args.analysis_limit if args.reuse_analyses else 0}}
+    if not _legacy_research_enabled():
+        report.update(blocked=True, failure_code='retired_research_verification')
+        return report
     try:
         from playwright.sync_api import sync_playwright
         with sync_playwright() as playwright:
@@ -355,6 +368,9 @@ def verify(args):
 
 
 def main(argv=None):
+    if not _legacy_research_enabled():
+        print('The research-question verifier is retired in v1.6.0. Use scripts/verify_deployment.py for public-only checks.')
+        return 2
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--url', default=APP_URL)
     parser.add_argument('--expected-version')

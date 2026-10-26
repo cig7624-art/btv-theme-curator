@@ -668,7 +668,8 @@ def guess_news_related_content(headline):
     headline = normalize_text(headline)
     # Editorial columns and report labels are not the work being reported on.
     # Keep bracketed actual work names, but remove known newspaper corner tags.
-    headline = re.sub(r"\[(?:TEN스타필드|TEN초점|기자수첩|취재수첩|데스크칼럼|연예프리즘)\]", "", headline, flags=re.I)
+    from news_subjects import strip_news_editorial_labels
+    headline, _ = strip_news_editorial_labels(headline)
     # "'암살자' 넘었다" describes the comparison target, not the unnamed film
     # that actually made news. Preserve any subsequent explicitly named work.
     quote_pattern = r"(?:‘[^’]+’|“[^”]+”|'[^']+'|\"[^\"]+\"|`[^`]+`|《[^》]+》|〈[^〉]+〉)"

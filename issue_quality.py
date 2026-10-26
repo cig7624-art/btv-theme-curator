@@ -18,6 +18,8 @@ from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 import pandas as pd
 
+from news_subjects import strip_news_editorial_labels
+
 from issue_rules import (
     DAILY_COMMENT_DELTA_THRESHOLD, DAILY_VIEW_DELTA_THRESHOLD,
     GROWTH_MIN_DELTA, GROWTH_RATE_THRESHOLD, ISSUE_LOOKBACK_DAYS,
@@ -163,6 +165,12 @@ def canonical_title(row):
     description = _text(row.get("description"))
     publisher = _text(row.get("publisher"))
     if classify_source(row) == NEWS:
+        title, title_labels = strip_news_editorial_labels(title)
+        description, description_labels = strip_news_editorial_labels(description)
+        # Previously saved corner-name subjects cannot become named works just
+        # because the same editorial tag occurs in an RSS description again.
+        if _key(_clean_title(related)) in {_key(label) for label in title_labels + description_labels}:
+            return ""
         # A film mentioned as the record being beaten is not the article's
         # subject. Keep the collector's corrected subject through assessment.
         quoted = r"(?:‘[^’]+’|“[^”]+”|'[^']+'|\"[^\"]+\"|`[^`]+`|《[^》]+》|≪[^≫]+≫|〈[^〉]+〉|\[[^\]]+\])"
@@ -173,6 +181,9 @@ def canonical_title(row):
         description = re.sub(comparison, " ", description)
         if _key(_clean_title(related)) in targets:
             related = ""
+        candidate = _clean_title(related)
+        if _title_valid(candidate):
+            return candidate
     if classify_source(row) == YOUTUBE:
         promotion = re.search(r"(?:^|[|｜])\s*([^|｜\[\]‘’\"']+?)\s+홍보하러\s+온", title + " " + description)
         if promotion:
