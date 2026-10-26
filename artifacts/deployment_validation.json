@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "status": "passed",
-  "expected_version": "1.5.1",
-  "observed_version": "1.5.1",
-  "started_at": "2026-10-25T23:30:54.089728+00:00",
-  "finished_at": "2026-10-25T23:31:32.931252+00:00",
+  "expected_version": "1.6.0",
+  "observed_version": "1.6.0",
+  "started_at": "2026-10-26T04:55:11.241190+00:00",
+  "finished_at": "2026-10-26T04:55:53.128339+00:00",
   "attempts": 1,
   "tests": {
     "desktop_version": true,
@@ -27,7 +27,8 @@
     "desktop_media_domestic": true,
     "desktop_media_korean": true,
     "desktop_media_default_period": true,
-    "desktop_media_research": true,
+    "desktop_media_public_only": true,
+    "desktop_news_digest": true,
     "mobile_version": true,
     "mobile_five_tabs": true,
     "mobile_weekly_actions": true,
@@ -48,7 +49,8 @@
     "mobile_media_domestic": true,
     "mobile_media_korean": true,
     "mobile_media_default_period": true,
-    "mobile_media_research": true
+    "mobile_media_public_only": true,
+    "mobile_news_digest": true
   },
   "errors": [],
   "warnings": [],
@@ -66,8 +68,18 @@
       "lead_loaded": true
     }
   },
-  "source_commit": "a61367bd497ca3bf70b4c250ce2576cd868eaa0f",
+  "source_commit": "fb536347e5609989415a595e0a278395d01c06e8",
   "frame_state": "matched_release",
+  "news_digest": {
+    "desktop": {
+      "count": 4,
+      "maximum": 4
+    },
+    "mobile": {
+      "count": 4,
+      "maximum": 4
+    }
+  },
   "media_artwork": {
     "desktop": {
       "checked": 6,
