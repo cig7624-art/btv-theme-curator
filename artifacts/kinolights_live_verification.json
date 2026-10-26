@@ -1,0 +1,232 @@
+{
+  "checked_at": "2026-10-26T10:02:25+00:00",
+  "source": "https://gateway.kinolights.com/graphql",
+  "credential_use": false,
+  "lookups": [
+    {
+      "selected": {
+        "title": "기생충",
+        "content_type": "영화",
+        "year": "2019",
+        "source_url": "https://m.kinolights.com/title/66957",
+        "poster_url": "",
+        "id": "66957",
+        "content_id": "66957",
+        "title_en": "PARASITE",
+        "fetched_at": "2026-10-26T10:02:26+00:00"
+      },
+      "result": {
+        "title": "기생충",
+        "year": "2019",
+        "content_type": "영화",
+        "source_url": "https://m.kinolights.com/title/66957",
+        "fetched_at": "2026-10-26T10:02:27+00:00",
+        "providers": [
+          {
+            "name": "왓챠",
+            "provider_id": "watcha-play",
+            "offer_type": "subscription",
+            "url": "https://watcha.com/contents/mdRL4eL"
+          },
+          {
+            "name": "티빙",
+            "provider_id": "tving",
+            "offer_type": "subscription",
+            "url": "https://www.tving.com/contents/M000244233"
+          },
+          {
+            "name": "웨이브",
+            "provider_id": "wavve",
+            "offer_type": "rent",
+            "url": "https://www.wavve.com/player/movie?movieid=MV_EN01_EN000000008",
+            "price": 1540
+          },
+          {
+            "name": "넷플릭스",
+            "provider_id": "netflix",
+            "offer_type": "subscription",
+            "url": "https://www.netflix.com/kr/title/81221938"
+          },
+          {
+            "name": "Apple TV",
+            "provider_id": "apple",
+            "offer_type": "rent",
+            "url": "https://tv.apple.com/kr/movie/%E1%84%80%E1%85%B5%E1%84%89%E1%85%A2%E1%86%BC%E1%84%8E%E1%85%AE%E1%86%BC/umc.cmc.5j8t2blurpxgpnxeqtm15n8i1",
+            "price": 3000
+          },
+          {
+            "name": "Apple TV",
+            "provider_id": "apple",
+            "offer_type": "buy",
+            "url": "https://tv.apple.com/kr/movie/%E1%84%80%E1%85%B5%E1%84%89%E1%85%A2%E1%86%BC%E1%84%8E%E1%85%AE%E1%86%BC/umc.cmc.5j8t2blurpxgpnxeqtm15n8i1",
+            "price": 7500
+          },
+          {
+            "name": "왓챠",
+            "provider_id": "watcha-play",
+            "offer_type": "rent",
+            "url": "https://watcha.com/contents/mdRL4eL",
+            "price": 2750
+          },
+          {
+            "name": "왓챠",
+            "provider_id": "watcha-play",
+            "offer_type": "buy",
+            "url": "https://watcha.com/contents/mdRL4eL",
+            "price": 7150
+          },
+          {
+            "name": "웨이브",
+            "provider_id": "wavve",
+            "offer_type": "subscription",
+            "url": "https://www.wavve.com/player/movie?movieid=MV_EN01_EN000000008"
+          }
+        ],
+        "status": "available",
+        "reason": ""
+      }
+    },
+    {
+      "selected": {
+        "title": "괴물",
+        "content_type": "영화",
+        "year": "2006",
+        "source_url": "https://m.kinolights.com/title/8374",
+        "poster_url": "",
+        "id": "8374",
+        "content_id": "8374",
+        "title_en": "The Host",
+        "fetched_at": "2026-10-26T10:02:27+00:00"
+      },
+      "result": {
+        "title": "괴물",
+        "year": "2006",
+        "content_type": "영화",
+        "source_url": "https://m.kinolights.com/title/8374",
+        "fetched_at": "2026-10-26T10:02:28+00:00",
+        "providers": [
+          {
+            "name": "넷플릭스",
+            "provider_id": "netflix",
+            "offer_type": "subscription",
+            "url": "https://www.netflix.com/kr/title/70059029"
+          },
+          {
+            "name": "왓챠",
+            "provider_id": "watcha-play",
+            "offer_type": "subscription",
+            "url": "https://watcha.com/contents/mOPooYW"
+          },
+          {
+            "name": "티빙",
+            "provider_id": "tving",
+            "offer_type": "subscription",
+            "url": "https://www.tving.com/contents/M000292336"
+          },
+          {
+            "name": "왓챠",
+            "provider_id": "watcha-play",
+            "offer_type": "rent",
+            "url": "https://watcha.com/contents/mOPooYW",
+            "price": 1540
+          },
+          {
+            "name": "왓챠",
+            "provider_id": "watcha-play",
+            "offer_type": "buy",
+            "url": "https://watcha.com/contents/mOPooYW",
+            "price": 7150
+          },
+          {
+            "name": "웨이브",
+            "provider_id": "wavve",
+            "offer_type": "rent",
+            "url": "https://www.wavve.com/player/movie?movieid=MV_C901_SG0000056826",
+            "price": 1540
+          },
+          {
+            "name": "웨이브",
+            "provider_id": "wavve",
+            "offer_type": "subscription",
+            "url": "https://www.wavve.com/player/movie?movieid=MV_C901_SG0000056826"
+          },
+          {
+            "name": "디즈니+",
+            "provider_id": "disney",
+            "offer_type": "subscription",
+            "url": "https://www.disneyplus.com/play/f9d5dd3b-95c7-4d77-912d-3264be89712f?distributionPartner=kinolights"
+          }
+        ],
+        "status": "available",
+        "reason": "일부 제공 정보를 읽지 못했습니다."
+      }
+    },
+    {
+      "selected": {
+        "title": "괴물",
+        "content_type": "영화",
+        "year": "2023",
+        "source_url": "https://m.kinolights.com/title/122296",
+        "poster_url": "",
+        "id": "122296",
+        "content_id": "122296",
+        "title_en": "Monster",
+        "fetched_at": "2026-10-26T10:02:27+00:00"
+      },
+      "result": {
+        "title": "괴물",
+        "year": "2023",
+        "content_type": "영화",
+        "source_url": "https://m.kinolights.com/title/122296",
+        "fetched_at": "2026-10-26T10:02:28+00:00",
+        "providers": [
+          {
+            "name": "웨이브",
+            "provider_id": "wavve",
+            "offer_type": "rent",
+            "url": "https://www.wavve.com/player/movie?movieid=MV_CK01_TCO000013000",
+            "price": 1540
+          },
+          {
+            "name": "쿠팡플레이",
+            "provider_id": "coupang-play",
+            "offer_type": "rent",
+            "url": "https://www.coupangplay.com/titles/bc7eae70-6a18-47a1-8221-c1f3c8c5a1b5",
+            "price": 1400
+          },
+          {
+            "name": "쿠팡플레이",
+            "provider_id": "coupang-play",
+            "offer_type": "buy",
+            "url": "https://www.coupangplay.com/titles/bc7eae70-6a18-47a1-8221-c1f3c8c5a1b5",
+            "price": 5000
+          },
+          {
+            "name": "왓챠",
+            "provider_id": "watcha-play",
+            "offer_type": "buy",
+            "url": "https://watcha.com/contents/mOopwPa",
+            "price": 5500
+          },
+          {
+            "name": "웨이브",
+            "provider_id": "wavve",
+            "offer_type": "subscription",
+            "url": "https://www.wavve.com/player/movie?movieid=MV_MC01_MC000000114"
+          },
+          {
+            "name": "왓챠",
+            "provider_id": "watcha-play",
+            "offer_type": "rent",
+            "url": "https://watcha.com/contents/mOopwPa",
+            "price": 1540
+          }
+        ],
+        "status": "available",
+        "reason": ""
+      }
+    }
+  ],
+  "public_query_count": 5,
+  "status": "passed"
+}
