@@ -42,7 +42,7 @@ class MediaLocalizationRuntimeTests(unittest.TestCase):
               patch("media_insights_runtime.persist_media_localizations") as save,
               patch("media_insights_runtime.collect_media_insights") as collect,
               patch("media_insights_runtime.analyze_media_item") as analyze,
-              patch("media_insights_runtime.answer_media_question") as ask):
+              patch("media_insights_analysis.answer_media_question") as ask):
             render_media_insights_tab(api_key="test-key", model="model", github_config={}, snapshot_path=self.path)
         self.assertEqual(page.call_args.args[0], self.snapshot)
         self.assertTrue(callable(page.call_args.kwargs["on_localize"]))
@@ -93,7 +93,9 @@ class MediaLocalizationRuntimeTests(unittest.TestCase):
             render_media_insights_tab(api_key="", model="model", github_config={}, snapshot_path=self.path)
         self.assertIsNone(page.call_args.kwargs["on_localize"])
         self.assertIsNone(page.call_args.kwargs["on_analyze"])
-        self.assertIsNone(page.call_args.kwargs["on_ask"])
+        self.assertNotIn("on_ask", page.call_args.kwargs)
+        self.assertNotIn("on_business_ask", page.call_args.kwargs)
+        self.assertNotIn("research_storage_config", page.call_args.kwargs)
 
 
 if __name__ == "__main__":

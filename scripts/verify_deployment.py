@@ -10,11 +10,12 @@ import re
 import sys
 import time
 from urllib.parse import urlsplit
+from zoneinfo import ZoneInfo
 
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow", "media_magazine", "media_domestic", "media_korean", "media_default_period", "media_research")
+CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow", "media_magazine", "media_domestic", "media_korean", "media_default_period", "media_public_only", "news_digest")
 
 
 def normalized_version(value):
@@ -49,6 +50,27 @@ def access_problem(url, status=None, private_message=False):
 def no_horizontal_overflow(dimensions):
     return (dimensions["document_scroll"] <= dimensions["viewport"] + 1
             and dimensions["main_scroll"] <= dimensions["main_width"] + 1)
+
+
+def valid_news_digest(dates, limit, displayed, *, now=None):
+    """A public digest is capped at four real, recent, date-ordered articles."""
+    if limit != 4 or displayed != len(dates) or not 0 <= displayed <= 4:
+        return False
+    clock = now or datetime.now(timezone.utc)
+    values = []
+    try:
+        for value in dates:
+            published = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+            if published.tzinfo is None:
+                published = published.replace(tzinfo=ZoneInfo("Asia/Seoul"))
+            age = (clock.astimezone(ZoneInfo("Asia/Seoul")).date()
+                   - published.astimezone(ZoneInfo("Asia/Seoul")).date()).days
+            if age < 0 or age >= 7 or (published - clock).total_seconds() > 60:
+                return False
+            values.append(published)
+        return values == sorted(values, reverse=True)
+    except (TypeError, ValueError, OverflowError):
+        return False
 
 
 class VerificationIssue(RuntimeError):
@@ -140,6 +162,14 @@ def _check_editorial(frame, report, label, screenshots):
     report["tests"][f"{label}_five_tabs"] = [name.strip() for name in tab_names] == ["지금 주목할 이야기", "추천 테마", "AI 디렉터", "OTT는 지금", "미디어 인사이트"]
     if not report["tests"][f"{label}_five_tabs"]:
         raise VerificationIssue("five_tabs_missing", retry=True)
+    digest = frame.locator('.news-digest[data-limit="4"]')
+    digest.wait_for(state='visible', timeout=30000)
+    dates = digest.locator('.news-digest-card').evaluate_all("elements=>elements.map(el=>el.dataset.publishedAt)")
+    report['tests'][f'{label}_news_digest'] = valid_news_digest(dates, int(digest.get_attribute('data-limit')),
+                                                             int(digest.get_attribute('data-count')))
+    if not report['tests'][f'{label}_news_digest']:
+        raise VerificationIssue('news_digest_stale_or_invalid', retry=True)
+    report.setdefault('news_digest', {})[label] = {'count': len(dates), 'maximum': 4}
     frame.get_by_role("tab", name="추천 테마", exact=True).click()
     frame.locator(".st-key-curation_section").wait_for(state="visible", timeout=20000)
     report["tests"][f"{label}_weekly_actions"] = frame.get_by_role("button", name="테마 생성하기", exact=True).count() == 1 and frame.locator('.st-key-load_weekly_contents').count() == 1
@@ -325,20 +355,17 @@ def _check_editorial(frame, report, label, screenshots):
         raise VerificationIssue('media_domestic_missing', retry=True)
     frame.locator('.st-key-media_insight_topic').get_by_text('전체', exact=True).click()
     frame.wait_for_function("() => !document.querySelector('[data-stale=true]')", timeout=30000)
-    frame.get_by_role('button', name='리서치 질문하기', exact=True).click()
-    composer = frame.get_by_placeholder('사업에 필요한 질문을 자유롭게 적어 주세요.')
-    composer.wait_for(state='visible', timeout=30000)
-    frame.locator('.media-research-heading[data-source-protocol="3"]').wait_for(state='visible', timeout=30000)
-    draft = '아직 보내지 않은 사업 검토 질문'
-    composer.fill(draft)
-    frame.get_by_role('tab', name='추천 테마', exact=True).click()
-    frame.locator('.st-key-curation_section').wait_for(state='visible', timeout=30000)
-    frame.get_by_role('tab', name='미디어 인사이트', exact=True).click()
-    composer.wait_for(state='visible', timeout=30000)
-    report['tests'][f'{label}_media_research'] = composer.input_value() == draft and composer.is_enabled()
-    if not report['tests'][f'{label}_media_research']:
-        raise VerificationIssue('research_composer_or_draft_missing')
-    composer.fill('')
+    frame.get_by_role('button', name='공개 자료 비교', exact=True).click()
+    frame.locator('.public-media-monitoring[data-public-only="true"]').wait_for(state='visible', timeout=30000)
+    frame.locator('.st-key-public_media_document').wait_for(state='visible', timeout=30000)
+    report['tests'][f'{label}_media_public_only'] = frame.evaluate('''() => {
+      const section = document.querySelector('.st-key-media_insights_section');
+      return !!section && !section.querySelector('[data-testid="stChatInput"],[data-testid="stTextInput"],[data-testid="stTextArea"]')
+        && !document.querySelector('.st-key-media_research_panel')
+        && !Array.from(section.querySelectorAll('button')).some(el=>el.textContent.includes('리서치 질문하기'));
+    }''')
+    if not report['tests'][f'{label}_media_public_only']:
+        raise VerificationIssue('private_research_controls_present')
     if has_app_exception(page):
         raise VerificationIssue('media_insights_exception')
     screenshots.mkdir(parents=True, exist_ok=True)

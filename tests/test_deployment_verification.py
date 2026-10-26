@@ -1,11 +1,12 @@
 """A pushed revision or anonymous auth redirect is not a verified deployment."""
 import unittest
+from datetime import datetime, timezone
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 from scripts.verify_deployment import (
     VerificationIssue, _load_version, access_problem, exact_version, has_app_exception,
-    no_horizontal_overflow, normalized_version, resolve_app_frame,
+    no_horizontal_overflow, normalized_version, resolve_app_frame, valid_news_digest,
 )
 
 
@@ -25,6 +26,22 @@ def fake_frame(*, version=None, app=False, exception=False):
 
 
 class DeploymentVerificationTests(unittest.TestCase):
+    def test_news_digest_requires_at_most_four_recent_publication_dates_in_order(self):
+        now = datetime(2026, 10, 26, 1, tzinfo=timezone.utc)
+        dates = ["2026-10-26T08:00:00+09:00", "2026-10-25T12:00:00+09:00",
+                 "2026-10-24T12:00:00+09:00", "2026-10-23T12:00:00+09:00"]
+        self.assertTrue(valid_news_digest(dates, 4, 4, now=now))
+        self.assertTrue(valid_news_digest(dates[:2], 4, 2, now=now))
+        self.assertFalse(valid_news_digest(dates + dates[:1], 4, 5, now=now))
+        self.assertFalse(valid_news_digest(list(reversed(dates)), 4, 4, now=now))
+        self.assertFalse(valid_news_digest(dates, 2, 4, now=now))
+
+    def test_news_digest_rejects_old_future_missing_and_collection_only_dates(self):
+        now = datetime(2026, 10, 26, 1, tzinfo=timezone.utc)
+        for value in ("2026-10-19", "2026-10-27", "", "unknown"):
+            with self.subTest(value=value):
+                self.assertFalse(valid_news_digest([value], 4, 1, now=now))
+
     def test_sleep_button_can_appear_after_initial_page_navigation(self):
         app = fake_frame(version="1.3.0", app=True)
         page = Mock(frames=[app], url="https://public-app.streamlit.app/")

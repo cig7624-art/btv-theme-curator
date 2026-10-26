@@ -19,11 +19,11 @@ from media_insights_analysis import MediaInsightError
 from media_insights_storage import MediaInsightsStorageError
 from media_insights_editorial import select_major_insights
 from media_insights_localization import valid_localization, MediaLocalizationError
+from public_media_monitoring import public_documents, compare_public_document, comparison_focus
 
 
 _SELECTED = "media_insight_selected_id"
 _NOTES = "media_insight_session_notes"
-_QUESTIONS = "media_insight_questions"
 _COMPANIES = {"Netflix": "넷플릭스", "Disney": "디즈니", "Amazon": "아마존", "Comcast": "컴캐스트",
               "SKT": "SK텔레콤", "SK Broadband": "SK브로드밴드", "KT": "KT", "LG U+": "LG유플러스",
               "TVING": "티빙", "Wavve": "웨이브", "Coupang Play": "쿠팡플레이"}
@@ -256,8 +256,8 @@ def _select_item(item_id):
     st.session_state[_SELECTED] = item_id
 
 
-def _toggle_questions():
-    st.session_state["media_insight_research_open"] = not st.session_state.get("media_insight_research_open", False)
+def _toggle_public_comparison():
+    st.session_state["media_insight_comparison_open"] = not st.session_state.get("media_insight_comparison_open", False)
 
 
 def _csv_cell(value):
@@ -539,51 +539,51 @@ def validated_answer(answer, items, selected_id=None):
             "evidence_ids": list(ids), "sources": sources, **metadata}
 
 
-def _render_research(on_ask, selected_id, items, *, presentation=None):
-    if not st.session_state.get("media_insight_research_open"):
+def _render_public_monitoring(snapshot):
+    documents = public_documents(snapshot)
+    if not documents:
         return
-    with st.container(key="media_research_panel", border=True):
-        st.markdown("**공식 자료에 질문하기**")
-        st.caption("선택한 주제와 저장된 공식 자료에서 근거를 찾아 답합니다.")
-        with st.form("media_research_form", clear_on_submit=True):
-            question = st.text_input("조사할 질문", placeholder="예: 이 발표에 한국도 포함되나요? 지난 발표와 무엇이 달라졌나요?",
-                                     key="media_research_question")
-            submitted = st.form_submit_button("근거 찾아 답하기", disabled=on_ask is None, width="stretch")
-        if submitted and _text(question):
-            try:
-                with st.spinner("공식 자료에서 답의 근거를 찾고 있어요…"):
-                    answer = on_ask(_text(question), selected_id)
-                checked = validated_answer(answer, items, selected_id)
-                if checked:
-                    st.session_state.setdefault(_QUESTIONS, []).append({"question": _text(question), "answer": checked})
-                    st.session_state[_QUESTIONS] = st.session_state[_QUESTIONS][-5:]
-                else:
-                    st.info("저장된 자료에서 답의 근거를 확인하지 못했어요. 질문을 더 구체적으로 적어 주세요.")
-            except (MediaInsightError, MediaInsightsStorageError) as error:
-                _show_action_error(error)
-            except Exception:
-                st.warning("질문을 처리하지 못했어요. 기존 자료는 계속 확인할 수 있습니다.")
-        for result in reversed(st.session_state.get(_QUESTIONS, [])[-3:]):
-            answer = validated_answer(result.get("answer"), items)
-            if answer is None:
-                result["answer"] = None
-                st.markdown('<div class="media-research-answer"><strong>' + _escape(result.get("question"))
-                            + '</strong><p>공식 자료가 갱신됐어요. 현재 자료로 다시 질문해 주세요.</p></div>', unsafe_allow_html=True)
-                continue
-            st.markdown('<div class="media-research-answer" data-engine-version="'
-                        + _escape(answer.get("source_engine_revision", "")) + '"><strong>' + _escape(result["question"]) + '</strong><p>'
-                        + _escape(answer.get("answer"), 10000) + '</p></div>', unsafe_allow_html=True)
-            links = []
-            source_items = {_url(item.get("url")): item for item in items}
-            for source in _rows(answer.get("sources"), 12):
-                url = _url(source.get("url"))
-                if url:
-                    source_item = source_items.get(url)
-                    label = ((presentation.copy(source_item) if presentation else display_copy(source_item))["title"]
-                             if source_item else "공식 원문")
-                    links.append(_link(url, label + " ↗"))
-            if links:
-                st.markdown('<div class="media-answer-sources">' + ''.join(links) + '</div>', unsafe_allow_html=True)
+    with st.container(key="media_public_comparison", border=True):
+        st.markdown('<section class="public-media-monitoring" data-public-only="true"><h3>공개 자료 비교</h3>'
+                    '<p>누적된 공식 발표의 흐름과 같은 원문의 이전 확인본을 비교합니다.</p></section>', unsafe_allow_html=True)
+        # Start with the company that has the newest dated announcement.
+        companies = list(dict.fromkeys(item["company"] for item in documents))
+        company_key, document_key = "public_media_company", "public_media_document"
+        if st.session_state.get(company_key) not in companies:
+            st.session_state[company_key] = companies[0]
+        company = st.selectbox("비교할 사업자", companies, key=company_key,
+                               format_func=lambda name: _COMPANIES.get(name, name))
+        flow = public_documents(snapshot, company)
+        identifiers = [item["id"] for item in flow]
+        copies = {item["id"]: display_copy(item) for item in flow}
+        if st.session_state.get(document_key) not in identifiers:
+            st.session_state[document_key] = identifiers[0]
+        selected_id = st.selectbox("비교할 공식 발표", identifiers, key=document_key,
+                                   format_func=lambda identifier: copies[identifier]["title"])
+        selected = next(item for item in flow if item["id"] == selected_id)
+        st.caption(comparison_focus(selected.get("topic")))
+        comparison = compare_public_document(selected)
+        st.markdown("**" + comparison["label"] + "**")
+        if comparison["status"] == "no_previous":
+            st.caption("같은 원문의 이전 본문이 보관되면 전후 문장을 함께 보여드립니다.")
+        else:
+            st.caption("이전 확인 " + _date_label(comparison["before_at"]) + " · 최근 확인 "
+                       + _date_label(comparison["after_at"]))
+            if comparison["status"] == "changed":
+                with st.expander("달라진 원문 문장", expanded=False):
+                    earlier, current = st.columns(2, gap="medium")
+                    for column, label, field in ((earlier, "이전 확인본", "removed"), (current, "최근 확인본", "added")):
+                        with column:
+                            st.markdown("**" + label + "**")
+                            for text in comparison[field]:
+                                st.text(text[:1200])
+                            if not comparison[field]:
+                                st.caption("달라진 문장이 없습니다.")
+        st.link_button("비교한 공식 원문 열기 ↗", comparison["source_url"], width="stretch")
+        st.markdown("**관련 발표 흐름**")
+        for item in flow[:6]:
+            st.markdown(_link(item["url"], copies[item["id"]]["title"] + " ↗"), unsafe_allow_html=True)
+            st.caption("발표 " + _date_label(item.get("published_at")) + " · 확인 " + _date_label(item.get("collected_at")))
 
 
 def _render_collection_sources(snapshot):
@@ -607,8 +607,7 @@ def _render_collection_sources(snapshot):
                         + '</strong><span>' + _escape(label) + '</span><span>' + _escape(date) + '</span></div>', unsafe_allow_html=True)
 
 
-def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on_ask=None, on_localize=None,
-                              on_business_ask=None, research_storage_config=None):
+def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on_localize=None):
     """Render real saved items; only explicit buttons call the supplied callbacks."""
     snapshot = snapshot if isinstance(snapshot, Mapping) else {}
     st.markdown('<style>' + Path(__file__).with_name("media_insights_styles.css").read_text(encoding="utf-8") + '</style>',
@@ -619,8 +618,8 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
             with title:
                 st.markdown('<header class="media-insights-heading"><h2>미디어 인사이트</h2><p>사업의 변화에서, 다음 선택의 근거까지.</p></header>', unsafe_allow_html=True)
             with question_action:
-                st.button("리서치 질문하기", key="media_insights_research_toggle", on_click=_toggle_questions,
-                          disabled=not bool(on_business_ask or (on_ask and insight_items(snapshot))), width="stretch")
+                st.button("공개 자료 비교", key="media_insights_compare_toggle", on_click=_toggle_public_comparison,
+                          disabled=not bool(public_documents(snapshot)), width="stretch")
             with refresh_action:
                 if st.button("자료 새로고침", key="media_insights_refresh", disabled=on_refresh is None, width="stretch"):
                     try:
@@ -632,9 +631,8 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
                         _show_action_error(error)
                     except Exception:
                         st.warning("새 자료를 확인하지 못했어요. 마지막으로 저장된 자료를 보여드립니다.")
-        if research_storage_config is not None and st.session_state.get("media_insight_research_open"):
-            from media_research_view import render_media_research
-            render_media_research(snapshot, on_ask=on_business_ask, storage_config=research_storage_config)
+        if st.session_state.get("media_insight_comparison_open"):
+            _render_public_monitoring(snapshot)
         items = insight_items(snapshot)
         if not items:
             st.info("공식 발표와 실적 자료를 확인하면 주요 변화와 원문이 이곳에 표시됩니다.")
@@ -709,8 +707,6 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
         if st.session_state.get(_SELECTED) not in known_ids:
             st.session_state[_SELECTED] = (major or filtered)[0]["id"]
         selected = next(item for item in [*major, *filtered] if item["id"] == st.session_state[_SELECTED])
-        if research_storage_config is None:
-            _render_research(on_ask, selected["id"], items, presentation=presentation)
         analysis = presentation.analysis(selected)
         with st.container(key="media_insights_workspace"):
             stories, detail = st.columns([1.7, 1], gap="large")

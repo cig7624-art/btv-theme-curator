@@ -2,6 +2,7 @@
 
 import copy
 import unittest
+from datetime import datetime, timezone
 
 from bs4 import BeautifulSoup
 
@@ -39,7 +40,8 @@ class OttViewTests(unittest.TestCase):
         self.assertNotIn("0개", soup.get_text())
 
     def test_overview_selects_original_highlights_with_collapsed_evidence_and_no_equal_slots(self):
-        soup = BeautifulSoup(ott_comparison_html({"platforms": [platform()]}), "html.parser")
+        checked = datetime.now(timezone.utc).isoformat()
+        soup = BeautifulSoup(ott_comparison_html({"platforms": [platform(checked_at=checked, last_success_at=checked)]}), "html.parser")
         stories = soup.select(".ott-feature")
         self.assertEqual(len(stories), 2)
         self.assertEqual({node['data-platform'] for node in stories}, {"tving"})

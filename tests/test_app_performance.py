@@ -170,7 +170,7 @@ class AppPerformanceTests(unittest.TestCase):
               patch("ott_collection.load_snapshot", return_value=deepcopy(OTT_SNAPSHOT)),
               patch("media_insights_runtime.collect_media_insights") as collect,
               patch("media_insights_runtime.analyze_media_item") as analyze,
-              patch("media_insights_runtime.answer_media_question") as ask,
+              patch("media_insights_analysis.answer_media_question") as ask,
               app_fixture(home_tab="미디어 인사이트") as state):
             app = state["app"]
             app.radio(key="media_insight_topic").set_value("제휴·유통").run()
@@ -192,21 +192,28 @@ class AppPerformanceTests(unittest.TestCase):
                 callback.assert_not_called()
             self.assert_no_generation_or_writes(state)
 
-    def test_research_composer_stays_mounted_through_open_panel_tab_roundtrip(self):
+    def test_public_comparison_preserves_selection_without_private_inputs_or_calls(self):
         with (patch("media_insights_runtime.load_snapshot", return_value=deepcopy(MEDIA_SNAPSHOT)),
-              patch("media_insights_runtime.answer_research") as ask,
+              patch("media_research_runtime.answer_research") as ask,
+              patch("media_research_storage.create_project") as create,
               app_fixture(home_tab="미디어 인사이트") as state):
             app = state["app"]
-            app.button(key="media_insights_research_toggle").click().run()
-            question_id = app.chat_input(key="media_research_question").id
-            # AppTest models chat values as submitted messages. Pending text is
-            # checked in a real browser; here the same composer stays mounted.
+            app.session_state["media_research_project"] = {"brief": "retired private input"}
+            app.session_state["media_insight_questions"] = [{"question": "retired question"}]
+            app.session_state["media_insight_research_open"] = True
+            app.run()
+            for key in ("media_research_project", "media_insight_questions", "media_insight_research_open"):
+                self.assertNotIn(key, app.session_state)
+            app.button(key="media_insights_compare_toggle").click().run()
+            selected = app.selectbox(key="public_media_document").value
+            self.assertEqual(len(app.chat_input), 0)
+            self.assertEqual(len(app.text_area), 0)
             self.switch(app, "추천 테마")
-            self.assertEqual(app.chat_input(key="media_research_question").id, question_id)
             self.switch(app, "미디어 인사이트")
-            self.assertEqual(app.chat_input(key="media_research_question").id, question_id)
-            self.assertTrue(app.session_state["media_insight_research_open"])
+            self.assertEqual(app.selectbox(key="public_media_document").value, selected)
+            self.assertTrue(app.session_state["media_insight_comparison_open"])
             ask.assert_not_called()
+            create.assert_not_called()
             self.assert_no_generation_or_writes(state)
 
     def test_library_pages_all_621_rows_and_searches_before_paging_then_resets_filters(self):

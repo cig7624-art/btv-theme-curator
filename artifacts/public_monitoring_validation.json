@@ -1,0 +1,45 @@
+{
+  "version": "1.6.0",
+  "status": "local_passed",
+  "full_tests": 744,
+  "public_only": true,
+  "freeform_business_inputs": false,
+  "project_storage_in_runtime": false,
+  "encrypted_records_preserved": true,
+  "news_maximum": 4,
+  "news_refresh_hours": 6,
+  "open_view_refresh_seconds": 300,
+  "standalone_ui": [
+    {
+      "width": 1366,
+      "no_overflow": true,
+      "no_chat_inputs": true,
+      "no_textareas": true,
+      "no_private_controls": true,
+      "exceptions": 0,
+      "public_links": 7
+    },
+    {
+      "width": 390,
+      "no_overflow": true,
+      "no_chat_inputs": true,
+      "no_textareas": true,
+      "no_private_controls": true,
+      "exceptions": 0,
+      "public_links": 7
+    },
+    {
+      "width": 320,
+      "no_overflow": true,
+      "no_chat_inputs": true,
+      "no_textareas": true,
+      "no_private_controls": true,
+      "exceptions": 0,
+      "public_links": 6
+    }
+  ],
+  "live_reports": [
+    "artifacts/deployment_validation.json",
+    "artifacts/news_digest_live_validation.json"
+  ]
+}

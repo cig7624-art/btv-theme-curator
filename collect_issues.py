@@ -13,6 +13,8 @@
 from __future__ import annotations
 
 import csv
+import argparse
+from copy import deepcopy
 import html
 import json
 import math
@@ -68,6 +70,8 @@ YOUTUBE_MAX_RESULTS_PER_QUERY = max(
 REQUEST_TIMEOUT_SECONDS = 20
 ARTICLE_IMAGE_FETCH_LIMIT = max(0, int(os.getenv("ARTICLE_IMAGE_FETCH_LIMIT", "60")))
 ARTICLE_IMAGE_TIMEOUT_SECONDS = max(3, int(os.getenv("ARTICLE_IMAGE_TIMEOUT_SECONDS", "8")))
+NEWS_ENTRIES_PER_QUERY = 12
+NEWS_MAX_CANDIDATES = 96
 
 ISSUE_COLUMNS = [
     "date",
@@ -182,25 +186,25 @@ def metadata_row(row, **metadata):
 
 NEWS_QUERY_GROUPS = [
     # 온라인 화제·뉴스: 큐레이션 기회로 연결하기 쉬운 사건성 신호 중심
-    ("온라인 화제·뉴스", "한국 드라마 신작 첫방 공개"),
-    ("온라인 화제·뉴스", "한국 예능 신작 첫방 공개"),
-    ("온라인 화제·뉴스", "한국 영화 개봉 신작"),
-    ("온라인 화제·뉴스", "드라마 예능 캐스팅 출연 확정"),
-    ("온라인 화제·뉴스", "시즌2 후속편 제작 확정"),
-    ("온라인 화제·뉴스", "웹툰 웹소설 원작 영상화 제작"),
-    ("온라인 화제·뉴스", "드라마 예능 시청률 상승"),
-    ("온라인 화제·뉴스", "드라마 영화 역주행 화제"),
-    ("온라인 화제·뉴스", "콘텐츠 수상 해외 반응"),
-    ("온라인 화제·뉴스", "드라마 예능 종영 결말 화제"),
-    ("온라인 화제·뉴스", "콘텐츠 리메이크 제작 확정"),
-    ("온라인 화제·뉴스", "배우 감독 인터뷰 신작"),
+    ("온라인 화제·뉴스", "드라마 (신작 OR 첫방 OR 공개)"),
+    ("온라인 화제·뉴스", "예능 (신작 OR 첫방 OR 공개)"),
+    ("온라인 화제·뉴스", "영화 (개봉 OR 신작)"),
+    ("온라인 화제·뉴스", "(드라마 OR 예능 OR 영화) (캐스팅 OR 출연확정)"),
+    ("온라인 화제·뉴스", "(시즌2 OR 후속편) (제작 OR 확정)"),
+    ("온라인 화제·뉴스", "(웹툰 OR 웹소설) (영상화 OR 제작)"),
+    ("온라인 화제·뉴스", "(드라마 OR 예능) 시청률"),
+    ("온라인 화제·뉴스", "(드라마 OR 영화) 역주행"),
+    ("온라인 화제·뉴스", "(영화 OR 드라마) (수상 OR 영화제)"),
+    ("온라인 화제·뉴스", "(드라마 OR 예능) (종영 OR 결말)"),
+    ("온라인 화제·뉴스", "(영화 OR 드라마) 리메이크"),
+    ("온라인 화제·뉴스", "(배우 OR 감독) 신작 인터뷰"),
 
     # OTT 신작·공개 예정 관련 자료. 실제 순위는 Netflix 공식 데이터에서 별도 수집합니다.
-    ("OTT 공식 신작", "넷플릭스 한국 신작 공개 예정"),
-    ("OTT 공식 신작", "티빙 오리지널 신작 공개"),
-    ("OTT 공식 신작", "웨이브 오리지널 신작 공개"),
-    ("OTT 공식 신작", "디즈니플러스 코리아 신작 공개"),
-    ("OTT 공식 신작", "쿠팡플레이 오리지널 신작 공개"),
+    ("OTT 공식 신작", "넷플릭스 (신작 OR 공개 OR 제작)"),
+    ("OTT 공식 신작", "티빙 (오리지널 OR 신작 OR 공개)"),
+    ("OTT 공식 신작", "웨이브 (오리지널 OR 신작 OR 공개)"),
+    ("OTT 공식 신작", "디즈니플러스 (신작 OR 공개 OR 제작)"),
+    ("OTT 공식 신작", "쿠팡플레이 (오리지널 OR 신작 OR 공개)"),
 ]
 
 YOUTUBE_QUERIES = [
@@ -662,6 +666,9 @@ def guess_related_content(title):
 def guess_news_related_content(headline):
     """기사의 주제 작품만 선택하고, 흥행 비교 대상으로 언급된 작품은 건너뜁니다."""
     headline = normalize_text(headline)
+    # Editorial columns and report labels are not the work being reported on.
+    # Keep bracketed actual work names, but remove known newspaper corner tags.
+    headline = re.sub(r"\[(?:TEN스타필드|TEN초점|기자수첩|취재수첩|데스크칼럼|연예프리즘)\]", "", headline, flags=re.I)
     # "'암살자' 넘었다" describes the comparison target, not the unnamed film
     # that actually made news. Preserve any subsequent explicitly named work.
     quote_pattern = r"(?:‘[^’]+’|“[^”]+”|'[^']+'|\"[^\"]+\"|`[^`]+`|《[^》]+》|〈[^〉]+〉)"
@@ -688,15 +695,21 @@ def guess_news_related_content(headline):
     return ""
 
 
-def parse_entry_date(entry):
-    for field in ("published_parsed", "updated_parsed"):
-        parsed = entry.get(field) if isinstance(entry, dict) else getattr(entry, field, None)
-        if parsed:
-            try:
-                return datetime(*parsed[:6], tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=9))).date()
-            except (TypeError, ValueError, OverflowError):
-                continue
+def parse_entry_timestamp(entry):
+    # A feed's modification date cannot establish when an article was first
+    # published, nor renew an old article as a newly published story.
+    parsed = entry.get("published_parsed") if isinstance(entry, dict) else getattr(entry, "published_parsed", None)
+    if parsed:
+        try:
+            return datetime(*parsed[:6], tzinfo=timezone.utc)
+        except (TypeError, ValueError, OverflowError):
+            pass
     return None
+
+
+def parse_entry_date(entry):
+    stamp = parse_entry_timestamp(entry)
+    return stamp.astimezone(timezone(timedelta(hours=9))).date() if stamp else None
 
 
 def load_csv(path, columns):
@@ -736,7 +749,8 @@ def collect_google_news():
     missing_dates = 0
     rejected = 0
     for requested_source, query in NEWS_QUERY_GROUPS:
-        url = "https://news.google.com/rss/search?" + f"q={quote(query)}&hl=ko&gl=KR&ceid=KR:ko"
+        timed_query = query if re.search(r"\bwhen:", query) else f"{query} when:{DAYS}d"
+        url = "https://news.google.com/rss/search?" + f"q={quote(timed_query)}&hl=ko&gl=KR&ceid=KR:ko"
         try:
             response = requests.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
             response.raise_for_status()
@@ -746,7 +760,13 @@ def collect_google_news():
         except Exception as exc:
             source_error("news", f"RSS 수집 실패 ({query}): {safe_error(exc)}")
             continue
-        for entry in feed.entries[:12]:
+        # Google orders search RSS by relevance. Examine newest actual dated
+        # entries before limiting qualified candidates, not the first 12 hits.
+        entries = sorted(feed.entries, key=lambda entry: parse_entry_timestamp(entry) or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
+        accepted = 0
+        query_event_counts = {}
+        for entry in entries[:100]:
+            published_stamp = parse_entry_timestamp(entry)
             published_date = parse_entry_date(entry)
             if published_date is None:
                 missing_dates += 1
@@ -770,22 +790,40 @@ def collect_google_news():
             if not title or not is_article_url(link) or not related or not relevant or not event or not publisher:
                 rejected += 1
                 continue
+            discovery_key = (normalize_dedup_text(related), event)
+            if query_event_counts.get(discovery_key, 0) >= 2:
+                continue
             rows.append(metadata_row({
                 "date": published_date.isoformat(), "source": "온라인 화제·뉴스",
                 "issue_title": headline[:140], "related_content": related,
                 "keywords": extract_keywords(f"{headline} {summary}"),
                 "description": summary[:300] or headline,
                 "source_url": link, "image_url": extract_entry_image(entry),
-            }, published_at=published_date.isoformat(), collected_at=utc_now_iso(),
+            }, published_at=published_stamp.isoformat(), collected_at=utc_now_iso(),
                 reference_date=published_date.isoformat(), reference_period=published_date.isoformat(),
                 publisher=publisher, source_type="news", content_id="", event_type=event,
                 metrics_json={"news_provenance": "google_news_rss",
                               "publisher_url": normalize_text(publisher_info.get("href", "")),
                               "rss_url": link},
                 quality_status="candidate", quality_notes="RSS의 발행일·매체·작품 소식을 확인한 기사 후보"))
+            accepted += 1
+            query_event_counts[discovery_key] = query_event_counts.get(discovery_key, 0) + 1
+            if accepted >= NEWS_ENTRIES_PER_QUERY:
+                break
     # Search queries often return the same article. It remains one source,
     # independently of how many discovery queries matched it.
     rows = list({(row["source_url"], row["related_content"]): row for row in rows}.values())
+    rows.sort(key=lambda row: row["published_at"], reverse=True)
+    bounded, event_counts = [], {}
+    for row in rows:
+        key = (normalize_dedup_text(row["related_content"]), row["event_type"])
+        if event_counts.get(key, 0) >= 2:
+            continue
+        bounded.append(row)
+        event_counts[key] = event_counts.get(key, 0) + 1
+        if len(bounded) == NEWS_MAX_CANDIDATES:
+            break
+    rows = bounded
     rows = enrich_news_images(rows)
     unresolved = 0
     for row in rows:
@@ -2024,13 +2062,15 @@ def cleanup_legacy_youtube_issues(df):
     return df[~mask].copy()
 
 
-def save_issue_feed(new_rows):
+def save_issue_feed(new_rows, *, updated_routes=None):
     """Merge only successful routes; failed or partial routes retain their prior rows."""
     existing = normalize_legacy_issue_sources(load_existing_issues())
     today = today_kst_date().isoformat()
     states = COLLECTION_STATUS.get("sources", {})
     if not existing.empty:
         def replace_row(row):
+            if updated_routes is not None and source_key(row) not in updated_routes:
+                return False
             state = states.get(source_key(row), {})
             if state.get("state") not in {"ok", "empty"}:
                 return False
@@ -2038,7 +2078,15 @@ def save_issue_feed(new_rows):
             # News/YouTube reruns replace only their own capture-day slice.
             return source_key(row) in {"youtube", "news"} and str(row.get("date", "")) == today
         existing = existing[~existing.apply(replace_row, axis=1)].copy()
+    untouched = existing.iloc[0:0].copy()
+    if updated_routes is not None and not existing.empty:
+        current_routes = existing.apply(lambda row: source_key(row) in updated_routes, axis=1)
+        untouched = existing[~current_routes].copy()
+        existing = existing[current_routes].copy()
     new_df = pd.DataFrame(new_rows, columns=ISSUE_COLUMNS).fillna("")
+    if updated_routes is not None and not new_df.empty:
+        if not new_df.apply(lambda row: source_key(row) in updated_routes, axis=1).all():
+            raise ValueError("Requested refresh contains another source route")
     merged = pd.concat([existing, new_df], ignore_index=True)
     if not merged.empty:
         merged = collapse_exact_content_duplicates(merged)
@@ -2046,13 +2094,17 @@ def save_issue_feed(new_rows):
         dates = pd.to_datetime(merged["date"], errors="coerce")
         cutoff = pd.Timestamp(today_kst_date() - timedelta(days=60))
         merged = merged[dates.isna() | dates.ge(cutoff)].sort_values("date", ascending=False, kind="stable")
+    if not untouched.empty:
+        merged = pd.concat([untouched, merged], ignore_index=True).sort_values("date", ascending=False, kind="stable")
     save_csv(merged, ISSUE_PATH, ISSUE_COLUMNS)
     for route, entry in states.items():
+        if updated_routes is not None and route not in updated_routes:
+            continue
         entry["retained_count"] = sum(source_key(row) == route for row in merged.to_dict("records"))
     return len(new_df), len(merged)
 
 
-def main():
+def main(*, news_only=False):
     # Preserve success history, while clearing errors/diagnostics from prior runs.
     global COLLECTION_STATUS
     previous = {}
@@ -2061,14 +2113,22 @@ def main():
             previous = json.loads(COLLECTION_STATUS_PATH.read_text(encoding="utf-8")).get("sources", {})
         except (ValueError, OSError):
             previous = {}
-    COLLECTION_STATUS = {"schema_version": 1, "collected_at": utc_now_iso(), "sources": {
+    prior_sources = deepcopy(previous) if news_only else {
         route: {"last_success_at": entry["last_success_at"]}
         for route, entry in previous.items() if entry.get("last_success_at")
-    }}
+    }
+    if news_only:
+        prior_sources["news"] = ({"last_success_at": previous["news"]["last_success_at"]}
+                                 if previous.get("news", {}).get("last_success_at") else {})
+    COLLECTION_STATUS = {"schema_version": 1, "collected_at": utc_now_iso(), "sources": prior_sources,
+                         "collection_scope": "news_only" if news_only else "full",
+                         "updated_sources": ["news"] if news_only else ["news", "kobis", "netflix", "youtube"]}
     SOURCE_ERRORS.clear()
     print("외부 이슈 통합 수집 시작")
     all_rows = []
     for route, collector in (("news", collect_google_news), ("kobis", collect_kobis_boxoffice), ("netflix", collect_netflix_top10)):
+        if news_only and route != "news":
+            continue
         try:
             rows = collector()
             all_rows.extend(rows)
@@ -2077,18 +2137,19 @@ def main():
         except (requests.RequestException, RuntimeError, ValueError, OSError) as exc:
             source_error(route, exc)
             source_status(route, "failed")
-    try:
-        discovered = discover_youtube_videos()
-        if COLLECTION_STATUS["sources"].get("youtube", {}).get("state") != "skipped":
-            watchlist = update_youtube_watchlist(discovered)
-            stats = update_youtube_stats(watchlist)
-            all_rows.extend(make_youtube_issues(watchlist, stats))
-    except (requests.RequestException, RuntimeError, ValueError, OSError) as exc:
-        source_error("youtube", exc)
-        source_status("youtube", "failed")
-    if not COLLECTION_STATUS["sources"].get("youtube", {}).get("state"):
-        source_status("youtube", "empty")
-    new_count, total_count = save_issue_feed(all_rows)
+    if not news_only:
+        try:
+            discovered = discover_youtube_videos()
+            if COLLECTION_STATUS["sources"].get("youtube", {}).get("state") != "skipped":
+                watchlist = update_youtube_watchlist(discovered)
+                stats = update_youtube_stats(watchlist)
+                all_rows.extend(make_youtube_issues(watchlist, stats))
+        except (requests.RequestException, RuntimeError, ValueError, OSError) as exc:
+            source_error("youtube", exc)
+            source_status("youtube", "failed")
+        if not COLLECTION_STATUS["sources"].get("youtube", {}).get("state"):
+            source_status("youtube", "empty")
+    new_count, total_count = save_issue_feed(all_rows, updated_routes={"news"}) if news_only else save_issue_feed(all_rows)
     successful = sum(entry.get("state") in {"ok", "empty"} for entry in COLLECTION_STATUS["sources"].values())
     COLLECTION_STATUS["overall_state"] = "ok" if successful == 4 else "partial" if successful or all_rows else "failed"
     COLLECTION_STATUS_PATH.write_text(json.dumps(COLLECTION_STATUS, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -2098,4 +2159,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--news-only", action="store_true", help="Refresh dated public news without calling paid/quota-based APIs")
+    main(news_only=parser.parse_args().news_only)

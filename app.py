@@ -37,6 +37,7 @@ from issue_presentation import present_issue
 from issue_related_news import attach_related_news
 from issue_collection_context import apply_collection_context
 from issue_rules import ISSUE_LOOKBACK_DAYS
+from news_digest import select_news_digest, news_digest_revision
 from ott_collection import collect_public_homes, load_snapshot, save_snapshot
 from ott_view import render_ott_page
 from ai_director_view import activate_director_tab, render_ai_director_page
@@ -167,7 +168,8 @@ def preserve_inactive_inputs():
     groups = {
         "추천 테마": ("weekly_theme_count",),
         "OTT는 지금": ("ott_selected_platform",),
-        "미디어 인사이트": ("media_insight_topic", "media_insight_country", "media_insight_period"),
+        "미디어 인사이트": ("media_insight_topic", "media_insight_country", "media_insight_period",
+                       "public_media_company", "public_media_document"),
         "theme_db": ("theme_quick_search_input", "theme_library_source_filter", "theme_library_page"),
     }
     for view, keys in groups.items():
@@ -212,6 +214,14 @@ def paged_rows(frame, *, namespace, filters, per_page=24):
 
 if "page" not in st.session_state:
     st.session_state["page"] = "home"
+# Retired business conversations must never become input to the public monitor.
+# Saved encrypted files remain intact; only the obsolete browser-session state
+# is released, without reading or transmitting its contents.
+for retired_key in tuple(st.session_state):
+    if str(retired_key).startswith("media_research_") or retired_key in {
+        "media_insight_questions", "media_insight_research_open",
+    }:
+        st.session_state.pop(retired_key, None)
 preserve_inactive_inputs()
 
 
@@ -1295,11 +1305,32 @@ def related_news_html(issue):
 def news_digest_html(issue):
     public = present_issue(issue)
     return (
-        '<article class="news-digest-card"><span class="tag">' + html.escape(public["headline"]) + '</span>'
+        '<article class="news-digest-card" data-published-at="'
+        + html.escape(str(issue.get("published_at", "")), quote=True)
+        + '" data-news-published-at="' + html.escape(str(issue.get("published_at", "")), quote=True)
+        + '"><span class="tag">' + html.escape(public["headline"]) + '</span>'
         '<h3>' + html.escape(str(issue.get("related_content", ""))) + '</h3>'
         '<p>' + html.escape(str(issue.get("issue_title", ""))) + '</p>'
         '<span class="small">' + html.escape(str(issue.get("publisher", ""))) + ' · ' + html.escape(public["period_label"]) + '</span>'
         '<details><summary>선정 근거</summary>' + issue_evidence_html(issue, public) + '</details></article>'
+    )
+
+
+@st.fragment(run_every=300)
+def render_latest_news_digest():
+    # Only saved public data is read. This fragment never collects or calls a
+    # model, and stays independent of the hero's work-level ranking/cache.
+    assessed = cached_prepared_issues(ISSUE_PATH, Path("collection_status.json"), release_version=APP_VERSION)
+    news = select_news_digest(assessed, limit=4)
+    cards = ''.join(news_digest_html(issue) for _, issue in news.iterrows())
+    st.markdown(
+        '<div class="news-digest" data-limit="4" data-count="' + str(len(news))
+        + '" data-news-count="' + str(len(news)) + '" data-news-revision="' + news_digest_revision(news) + '">'
+        '<h3 class="news-digest-heading">새로운 소식</h3>'
+        '<p class="small">최근 7일의 새 기사를 발행일순으로 최대 4개 보여드려요.</p>'
+        + ('<div class="news-digest-grid">' + cards + '</div>' if len(news) else
+           '<p class="small">최근 작품 소식이 확인되면 이곳에 표시됩니다.</p>')
+        + '</div>', unsafe_allow_html=True,
     )
 
 
@@ -1867,15 +1898,7 @@ else:
                     with st.container(key="issue_carousel_script"):
                         st.html(CAROUSEL_SCRIPT, unsafe_allow_javascript=True)
 
-                    news_issues = cached_core_issues(issues[issues["source_group"] == "온라인 화제·뉴스"], news_pool=issues, release_version=APP_VERSION)
-                    if not news_issues.empty:
-                        news_cards = ''.join(news_digest_html(issue) for _, issue in news_issues.head(2).iterrows())
-                        st.markdown(
-                            '<div class="news-digest"><h3 class="news-digest-heading">새로운 소식</h3>'
-                            '<p class="small">개봉·공개·캐스팅·제작 등 작품을 새롭게 이야기할 이유를 모았어요.</p>'
-                            '<div class="news-digest-grid">' + news_cards + '</div></div>',
-                            unsafe_allow_html=True,
-                        )
+                render_latest_news_digest()
 
     with recommendation_tab:
         if recommendation_tab.open:
@@ -2046,23 +2069,20 @@ else:
             )
 
     with media_tab:
-        if media_tab.open or st.session_state.get("media_insight_research_open", False):
+        if media_tab.open:
             media_github_config = dict(github_config)
             media_github_config["media_insights_path"] = get_runtime_secret("MEDIA_INSIGHTS_GITHUB_PATH", "media_insights_snapshot.json")
-            research_storage_config = {
-                "repo": get_runtime_secret("RESEARCH_GITHUB_REPO", github_config.get("repo", "")),
-                "token": get_runtime_secret("RESEARCH_GITHUB_TOKEN", github_config.get("token", "")),
-                "branch": get_runtime_secret("RESEARCH_GITHUB_BRANCH", github_config.get("branch", "main")),
-                "research_path": get_runtime_secret("RESEARCH_GITHUB_PATH", "research_projects"),
-            }
-            render_media_insights_tab(api_key=openai_api_key, model=openai_model,
-                                      github_config=media_github_config, research_storage_config=research_storage_config)
+            if getattr(render_media_insights_tab, "public_data_only", False):
+                render_media_insights_tab(api_key=openai_api_key, model=openai_model,
+                                          github_config=media_github_config)
+            else:
+                st.info("공개 자료 전용 화면을 업데이트하고 있습니다. 잠시 후 다시 확인해 주세요.")
 
 with st.container(key="app_footer"):
     footer_brand, footer_cost = st.columns([3, 2], vertical_alignment="center", gap="small")
     with footer_brand:
         st.markdown(
-            f'<footer class="magazine-footer" data-release="business-research-{html.escape(APP_VERSION, quote=True)}" data-version="{html.escape(APP_VERSION, quote=True)}">'
+            f'<footer class="magazine-footer" data-release="public-monitoring-{html.escape(APP_VERSION, quote=True)}" data-version="{html.escape(APP_VERSION, quote=True)}">'
             f'<span>B tv+ · THEME CURATOR · v{html.escape(APP_VERSION)}</span></footer>',
             unsafe_allow_html=True,
         )

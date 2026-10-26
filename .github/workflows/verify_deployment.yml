@@ -8,6 +8,8 @@ on:
       - VERSION
       - app.py
       - media_insights_view.py
+      - public_media_monitoring.py
+      - news_digest.py
       - media_research_engine.py
       - media_research_runtime.py
       - media_research_sources.py
@@ -46,7 +48,7 @@ jobs:
       - name: Check application syntax before browser verification
         run: |
           rm -f artifacts/deployment_validation.json
-          python -m compileall -q app.py media_insights_runtime.py media_insights_view.py media_research_engine.py media_research_runtime.py media_research_sources.py media_research_storage.py media_research_view.py
+          python -m compileall -q app.py media_insights_runtime.py media_insights_view.py public_media_monitoring.py news_digest.py
       - name: Use the hosted runner's existing browser when available
         run: |
           deployment_browser="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"

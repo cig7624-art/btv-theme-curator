@@ -1,4 +1,4 @@
-# Validated app runtime v1.5.1
+# Validated app runtime v1.6.0
 streamlit==1.66.0
 pandas
 feedparser
@@ -6,8 +6,6 @@ requests
 beautifulsoup4
 openai==3.35.1
 pydantic>=2
-cryptography==47.0.0
-cffi==2.1.1
 pypdf==6.21.2
 playwright
 openpyxl

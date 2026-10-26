@@ -3,6 +3,7 @@ import ast
 from functools import partial
 import html
 from pathlib import Path
+from types import SimpleNamespace
 import re
 import unittest
 from urllib.parse import parse_qs, quote, urlparse
@@ -12,6 +13,7 @@ import pandas as pd
 from issue_presentation import present_issue
 from issue_quality import BOXOFFICE, NEWS, YOUTUBE, assess_issues, build_ranked_issues
 from issue_related_news import attach_related_news
+from news_digest import select_news_digest, news_digest_revision
 
 
 NOW = "2026-10-21T12:00:00+09:00"
@@ -19,12 +21,15 @@ APP_PATH = Path(__file__).resolve().parents[1] / "app.py"
 
 
 def app_helpers():
-    names = {"safe_url", "build_core_issues", "related_news_html", "issue_evidence_html", "news_digest_html"}
+    names = {"safe_url", "build_core_issues", "related_news_html", "issue_evidence_html", "news_digest_html", "render_latest_news_digest"}
     tree = ast.parse(APP_PATH.read_text(encoding="utf-8"), filename=str(APP_PATH))
     selected = [node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name in names]
     if {node.name for node in selected} != names:
         raise AssertionError("Expected app helpers are missing")
     namespace = dict(pd=pd, html=html, re=re, urlparse=urlparse, parse_qs=parse_qs, quote=quote,
+                     Path=Path, st=SimpleNamespace(fragment=lambda **kwargs: lambda function: function),
+                     select_news_digest=partial(select_news_digest, now=NOW),
+                     news_digest_revision=news_digest_revision,
                      build_ranked_issues=build_ranked_issues, present_issue=present_issue,
                      attach_related_news=partial(attach_related_news, now=NOW))
     exec(compile(ast.Module(body=selected, type_ignores=[]), str(APP_PATH), "exec"), namespace)
@@ -114,6 +119,24 @@ class IssueAppIntegrationTests(unittest.TestCase):
         ranked = self.helpers["build_core_issues"](assessed[assessed.source_group == YOUTUBE], news_pool=assessed)
         rendered = self.helpers["issue_evidence_html"](ranked.iloc[0])
         self.assertEqual(rendered.count("<li>"), 3)
+
+    def test_news_digest_reads_new_saved_articles_and_renders_up_to_four(self):
+        titles = ["실낙원", "오디세이", "야행", "해무"]
+        current = [self.assessed([news(related_content=title, issue_title=f"'{title}' 개봉 확정",
+                                      source_url=f"https://ent.example.com/article/{index}") for index,title in enumerate(titles)])]
+        rendered = []
+        self.helpers.update(ISSUE_PATH=Path("issue_feed.csv"), APP_VERSION="test",
+                            cached_prepared_issues=lambda *args, **kwargs: current[0])
+        self.helpers["st"].markdown = lambda value, **kwargs: rendered.append(value)
+        self.helpers["render_latest_news_digest"]()
+        self.assertEqual(rendered[-1].count('class="news-digest-card"'), 4)
+        self.assertIn('data-limit="4"', rendered[-1])
+        current[0] = self.assessed([*current[0].to_dict("records"), news(related_content="새벽 영화",
+            issue_title="'새벽 영화' 공개 확정", published_at="2026-10-21T10:00:00+09:00",
+            source_url="https://ent.example.com/article/new")])
+        self.helpers["render_latest_news_digest"]()
+        self.assertIn("새벽 영화", rendered[-1])
+        self.assertEqual(rendered[-1].count('class="news-digest-card"'), 4)
 
 
 if __name__ == "__main__":

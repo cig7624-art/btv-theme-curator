@@ -58,7 +58,7 @@ class NewsCollectionTests(unittest.TestCase):
         metrics = json.loads(row["metrics_json"])
         self.assertEqual(row["issue_title"], "영화 '실낙원' 개봉")
         self.assertEqual(row["related_content"], "실낙원")
-        self.assertEqual(row["published_at"], "2026-10-21")
+        self.assertEqual(row["published_at"], "2026-10-21T00:00:00+00:00")
         self.assertEqual(row["publisher"], "기사신문")
         self.assertEqual(row["event_type"], "release")
         self.assertEqual(row["source_type"], "news")
@@ -87,6 +87,47 @@ class NewsCollectionTests(unittest.TestCase):
 
     def test_malformed_publication_date_is_not_replaced_by_collection_day(self):
         self.assertIsNone(c.parse_entry_date({"published_parsed": (2026, 99, 21, 0, 0, 0)}))
+        self.assertIsNone(c.parse_entry_date({"updated_parsed": (2026, 10, 21, 0, 0, 0)}))
+
+    def test_latest_valid_feed_entry_is_found_after_old_or_irrelevant_first_twelve(self):
+        old = [entry(title=f"영화 '옛작품' 개봉 {number}", published_parsed=(2026, 9, 1, 0, 0, 0)) for number in range(15)]
+        rows = self.collect([*old, entry(title="영화 '달빛' 공개 - 기사신문",
+                                        published_parsed=(2026, 10, 21, 5, 30, 0))])
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["related_content"], "달빛")
+        self.assertEqual(rows[0]["published_at"], "2026-10-21T05:30:00+00:00")
+
+    def test_rss_request_has_recent_window_without_trusting_collection_date(self):
+        feed = Mock(bozo=False, entries=[])
+        with patch.object(c, "NEWS_QUERY_GROUPS", [("온라인 화제·뉴스", "영화 (개봉 OR 공개)")]), \
+             patch.object(c.requests, "get", return_value=Mock(content=b"rss")) as fetch, \
+             patch.object(c.feedparser, "parse", return_value=feed), \
+             patch.object(c, "enrich_news_images", side_effect=lambda rows: rows):
+            c.collect_google_news()
+        from urllib.parse import parse_qs, urlparse
+        query = parse_qs(urlparse(fetch.call_args.args[0]).query)["q"][0]
+        self.assertIn("when:7d", query)
+        self.assertIn("OR", query)
+
+    def test_repeated_same_work_event_does_not_hide_other_works_after_the_query_cap(self):
+        repeated = [entry(title=f"영화 '실낙원' 개봉 발표 {number} - 기사신문",
+                          link=f"https://news.google.com/rss/articles/repeat-{number}",
+                          published_parsed=(2026, 10, 21, 5, 30, 0)) for number in range(18)]
+        other = entry(title="영화 '달빛' 공개 - 기사신문", link="https://news.google.com/rss/articles/other-work",
+                      published_parsed=(2026, 10, 21, 5, 0, 0))
+        rows = self.collect([*repeated, other])
+        self.assertEqual({row["related_content"] for row in rows}, {"실낙원", "달빛"})
+        self.assertEqual(sum(row["related_content"] == "실낙원" for row in rows), 2)
+
+    def test_editorial_column_label_is_not_a_work_or_selected_news(self):
+        headline = "무료 공개로 웃은 쿠팡플레이, 유료 전환 노린 디플…엇갈린 성적표 [TEN스타필드]"
+        self.assertEqual(c.guess_news_related_content(headline), "")
+        bad = entry(title=headline, summary="OTT 공개 서비스의 성적표")
+        self.assertEqual(self.collect([bad]), [])
+        old_row = dict(date="2026-10-21", source="온라인 화제·뉴스", source_type="news", related_content="TEN스타필드",
+                       issue_title=headline, published_at="2026-10-21", publisher="기사신문",
+                       source_url="https://publisher.example/story/1", event_type="release")
+        self.assertFalse(assess_issues(pd.DataFrame([old_row]), now="2026-10-21T12:00:00+09:00").iloc[0].eligible)
 
     def test_news_title_extraction_handles_publication_punctuation_and_interview(self):
         cases = {

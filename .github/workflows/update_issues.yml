@@ -4,7 +4,14 @@ on:
   schedule:
     # 매일 오전 8시 KST
     - cron: "0 23 * * *"
+    # 뉴스만 6시간마다 보완합니다. YouTube/KOBIS/Netflix의 일일 집계는 위 일정만 사용합니다.
+    - cron: "0 5,11,17 * * *"
   workflow_dispatch:
+    inputs:
+      news_only:
+        description: Refresh only public news without spending YouTube API quota
+        type: boolean
+        default: false
   push:
     branches: [main]
     paths:
@@ -20,6 +27,7 @@ concurrency:
 jobs:
   update-issues:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     permissions:
       contents: write
@@ -35,7 +43,7 @@ jobs:
           cache: pip
 
       - name: Install packages
-        run: pip install -r requirements.txt
+        run: pip install -r requirements-dev.txt
 
       - name: Validate issue selection
         run: python -m unittest discover -s tests -v
@@ -45,7 +53,13 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           KOBIS_API_KEY: ${{ secrets.KOBIS_API_KEY }}
           YOUTUBE_MAX_RESULTS_PER_QUERY: "8"
-        run: python collect_issues.py
+          NEWS_ONLY: ${{ inputs.news_only || github.event_name == 'push' || (github.event_name == 'schedule' && github.event.schedule != '0 23 * * *') }}
+        run: |
+          if [ "$NEWS_ONLY" = 'true' ]; then
+            python collect_issues.py --news-only
+          else
+            python collect_issues.py
+          fi
 
       - name: Commit updated data
         run: |
@@ -58,3 +72,29 @@ jobs:
           git commit -m "Update external issue feed"
           git pull --rebase origin main
           git push
+
+      - name: Verify collected stories on the public PC and mobile screens
+        id: news_screen
+        continue-on-error: true
+        run: |
+          news_browser="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          if [ -n "$news_browser" ]; then
+            python scripts/verify_news_digest_live.py --executable "$news_browser" --timeout 240
+          else
+            python -m playwright install --with-deps chromium
+            python scripts/verify_news_digest_live.py --timeout 240
+          fi
+
+      - name: Record public news refresh verification
+        if: ${{ always() && !cancelled() }}
+        run: |
+          if [ ! -f artifacts/news_digest_live_validation.json ]; then exit 0; fi
+          git add artifacts/news_digest_live_validation.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Record public news refresh verification [skip ci]'
+          git pull --rebase origin main
+          git push
+
+      - name: Require current public news
+        if: ${{ steps.news_screen.outcome != 'success' }}
+        run: exit 1

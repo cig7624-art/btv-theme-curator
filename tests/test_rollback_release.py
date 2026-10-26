@@ -32,7 +32,7 @@ class RollbackReleaseTests(unittest.TestCase):
         self.put("styles.css", "new styles\n")
         (self.repo / "legacy.py").unlink()
         self.new_code = ["ott_view.py", "ott_styles.css", "scripts/collect_ott.py",
-                         "tests/test_ott_view.py", "tests/fixtures/ott/home.html", "packages.txt",
+                         "tests/test_ott_view.py", "tests/fixtures/ott/home.html", "packages.txt", "requirements-dev.txt",
                          ".github/workflows/update_ott.yml", ".github/workflows/verify_ott_public.yml"]
         for path in self.new_code:
             self.put(path, "new OTT release file\n")

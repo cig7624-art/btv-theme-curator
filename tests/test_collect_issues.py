@@ -75,7 +75,7 @@ class CollectorTests(unittest.TestCase):
             rows = c.collect_google_news()
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0]['source_type'], 'news')
-        self.assertEqual(rows[0]['published_at'], '2026-10-21')
+        self.assertEqual(rows[0]['published_at'], '2026-10-21T00:00:00+00:00')
         self.assertEqual(c.COLLECTION_STATUS['sources']['news']['state'], 'partial')
         self.assertEqual(c.COLLECTION_STATUS['sources']['news']['unresolved_original_count'], 1)
 

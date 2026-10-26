@@ -55,7 +55,7 @@ def app_fixture(data=None, note=None, answer=None, *, period=None):
             st.session_state["test_callbacks"]["ask"] += 1
             st.session_state["test_asked"] = (question, identifier)
             return answer
-        render_media_insights_page(data, on_refresh=refresh, on_analyze=analyze, on_ask=ask)
+        render_media_insights_page(data, on_refresh=refresh, on_analyze=analyze)
     app = AppTest.from_function(run_app, args=(data or snapshot(), note or analysis(), answer))
     if period is not None:
         app.session_state["media_insight_period"] = period
@@ -322,22 +322,19 @@ class MediaInsightsAppTests(unittest.TestCase):
         app.run()
         self.assertEqual(app.session_state["test_callbacks"]["analyze"], 1)
 
-    def test_question_uses_explicit_form_and_only_verified_source_link(self):
-        answer = {"status": "supported", "answer": "제휴 발표를 확인했습니다.", "evidence_ids": ["one:e1"],
-                  "sources": [{"url": "https://untrusted.example/"}]}
-        app = app_fixture(answer=answer)
-        app.button(key="media_insights_research_toggle").click().run()
-        self.assertEqual(app.session_state["test_callbacks"]["ask"], 0)
-        app.text_input(key="media_research_question").set_value("어떤 제휴인가요?")
-        next(button for button in app.button if button.label == "근거 찾아 답하기").click().run()
+    def test_public_comparison_has_no_question_inputs_or_paid_callbacks(self):
+        app = app_fixture()
+        app.button(key="media_insights_compare_toggle").click().run()
         self.assertFalse(app.exception)
-        self.assertEqual(app.session_state["test_asked"], ("어떤 제휴인가요?", "one"))
-        self.assertEqual(app.session_state["test_callbacks"]["ask"], 1)
+        self.assertEqual(len(app.text_input), 0)
+        self.assertEqual(len(app.text_area), 0)
+        self.assertEqual(len(app.chat_input), 0)
+        self.assertEqual(app.session_state["test_callbacks"], {"refresh": 0, "analyze": 0, "ask": 0})
         markup = " ".join(widget.value for widget in app.markdown)
-        self.assertIn("https://official.example/one", markup)
-        self.assertNotIn("https://untrusted.example", markup)
-        app.run()
-        self.assertEqual(app.session_state["test_callbacks"]["ask"], 1)
+        self.assertIn("공개 자료 비교", markup)
+        self.assertIn("비교할 이전 기록 없음", markup)
+        self.assertIn("관련 발표 흐름", markup)
+        self.assertFalse(any("프로젝트" in button.label or "리서치 질문" in button.label for button in app.button))
 
     def test_model_and_source_markup_is_escaped(self):
         data = snapshot(); data["items"][0]["excerpt"] = '<script>alert("bad")</script>'
@@ -358,20 +355,16 @@ class MediaInsightsAppTests(unittest.TestCase):
         self.assertFalse(app.exception)
         self.assertFalse(any("provider-secret" in widget.value for widget in app.warning))
 
-    def test_changed_source_hides_old_question_answer_without_repeating_ai_call(self):
+    def test_retired_private_question_and_project_state_is_not_rendered(self):
         app = app_fixture()
-        app.button(key="media_insights_research_toggle").click().run()
-        app.session_state["media_insight_questions"] = [{"question": "앞선 질문", "answer": {
-            "status": "supported", "answer": "이전 버전에서만 확인한 답변", "evidence_ids": ["one:e1"],
-            "context_hashes": {"one": "old-source-hash"}}}]
-        app.run()
+        app.session_state["media_insight_questions"] = [{"question": "비공개-질문", "answer": {"answer": "비공개-답변"}}]
+        app.session_state["media_research_project"] = {"brief": "비공개-사업조건", "decisions": [{"text": "비공개-결정"}]}
+        app.button(key="media_insights_compare_toggle").click().run()
         self.assertFalse(app.exception)
         markup = " ".join(widget.value for widget in app.markdown)
-        self.assertIn("앞선 질문", markup)
-        self.assertIn("공식 자료가 갱신됐어요", markup)
-        self.assertNotIn("이전 버전에서만 확인한 답변", markup)
-        self.assertIsNone(app.session_state["media_insight_questions"][0]["answer"])
-        self.assertEqual(app.session_state["test_callbacks"]["ask"], 0)
+        for value in ("비공개-질문", "비공개-답변", "비공개-사업조건", "비공개-결정"):
+            self.assertNotIn(value, markup)
+        self.assertEqual(app.session_state["test_callbacks"], {"refresh": 0, "analyze": 0, "ask": 0})
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ CONTROL_FILES = {
 DATA_FILES = {"collection_status.json", "ott_home_snapshot.json", "media_insights_snapshot.json"}
 DATA_SUFFIXES = {".csv", ".sqlite", ".sqlite3", ".parquet", ".db"}
 CODE_DIRECTORIES = ("scripts/", "tests/", ".github/workflows/", ".streamlit/", ".devcontainer/")
-CODE_FILES = {"requirements.txt", "packages.txt", ".gitignore", ".dockerignore",
+CODE_FILES = {"requirements.txt", "requirements-dev.txt", "packages.txt", ".gitignore", ".dockerignore",
               "Dockerfile", ".python-version", "package.json", "package-lock.json"}
 CODE_SUFFIXES = {".py", ".css", ".js", ".html", ".toml", ".yml", ".yaml", ".md"}
 

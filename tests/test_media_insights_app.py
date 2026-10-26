@@ -35,13 +35,20 @@ class MediaInsightsAppTests(unittest.TestCase):
               patch("media_insights_runtime.localize_media_items") as localize,
               patch("media_insights_runtime.persist_media_localizations") as localization_save,
               patch("media_insights_runtime.analyze_media_item") as analyze,
-              patch("media_insights_runtime.answer_media_question") as ask,
+              patch("media_research_storage.create_project") as private_create,
+              patch("media_research_storage.open_project") as private_open,
+              patch("media_research_engine.answer_business_question") as business_answer,
               app_fixture(home_tab="미디어 인사이트") as state):
             app = state["app"]
             self.assertFalse(app.exception)
             self.assertEqual([tab.label for tab in app.tabs],
                              ["지금 주목할 이야기", "추천 테마", "AI 디렉터", "OTT는 지금", "미디어 인사이트"])
             self.assertEqual(app.selectbox(key="media_insight_period").value, "최근 30일")
+            app.button(key="media_insights_compare_toggle").click().run()
+            self.assertFalse(app.exception)
+            self.assertEqual(len(app.chat_input), 0)
+            self.assertFalse(any(widget.key == "media_research_question" for widget in app.text_input))
+            self.assertIn("public_media_company", [widget.key for widget in app.selectbox])
             app.radio(key="media_insight_topic").set_value("제휴·유통").run()
             app.selectbox(key="media_insight_period").set_value("최근 90일").run()
             app.radio(key="media_insight_topic").set_value("국내 이슈").run()
@@ -49,7 +56,7 @@ class MediaInsightsAppTests(unittest.TestCase):
             app.run()
             self.assertFalse(app.exception)
             self.assertEqual(app.selectbox(key="media_insight_period").value, "최근 90일")
-            for callback in (collect, analyze, ask, localize, localization_save):
+            for callback in (collect, analyze, localize, localization_save, private_create, private_open, business_answer):
                 callback.assert_not_called()
             state["generate_weekly_themes"].assert_not_called()
             state["persist_files_to_github"].assert_not_called()
@@ -70,7 +77,6 @@ class MediaInsightsAppTests(unittest.TestCase):
               patch("media_insights_runtime.persist_media_localizations", side_effect=persist) as save,
               patch("media_insights_runtime.collect_media_insights") as collect,
               patch("media_insights_runtime.analyze_media_item") as analyze,
-              patch("media_insights_runtime.answer_media_question") as ask,
               app_fixture(home_tab="미디어 인사이트") as state):
             app = state["app"]
             self.assertFalse(app.exception)
@@ -90,7 +96,7 @@ class MediaInsightsAppTests(unittest.TestCase):
             self.assertFalse(any(button.key == "media_insights_localize" for button in app.button))
             localize.assert_called_once()
             save.assert_called_once()
-            for callback in (collect, analyze, ask):
+            for callback in (collect, analyze):
                 callback.assert_not_called()
             state["generate_weekly_themes"].assert_not_called()
             state["persist_files_to_github"].assert_not_called()

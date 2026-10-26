@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 from bs4 import BeautifulSoup
 from ott_collection import collect_public_homes, save_snapshot, load_snapshot
 from ott_editorial import select_editorial_highlights
@@ -62,7 +63,10 @@ class CoupangIntegrationTests(unittest.TestCase):
         self.assertEqual(len(stories), 1); self.assertEqual(stories[0]['scope'], 'official_channel')
         self.assertEqual(stories[0]['headline'], '직장인들 시즌3')
         self.assertNotIn('홈', stories[0]['selection_reason'])
-        markup = ott_comparison_html(snapshot())
+        # Render the already date-validated fixture selection, independent of
+        # when the test suite is run (the fixture is intentionally historical).
+        with patch('ott_view.select_editorial_highlights', return_value=stories):
+            markup = ott_comparison_html(snapshot())
         self.assertIn('공식 채널', markup); self.assertNotIn('메인 홍보작', markup)
 
     def test_video_spoof_links_and_non_official_images_are_removed(self):

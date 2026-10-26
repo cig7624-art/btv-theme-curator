@@ -1,0 +1,4 @@
+-r requirements.txt
+# Historical encrypted-format compatibility tests only; not app runtime.
+cryptography==47.0.0
+cffi==2.1.1
