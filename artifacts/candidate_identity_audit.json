@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "audited_at": "2026-10-26T05:37:40.823829+00:00",
+  "audited_at": "2026-10-26T09:03:11.127953+00:00",
   "mode": "read_only_public_metadata",
   "candidate_count": 2,
   "candidates": [
     {
       "requested_title": "밀그램 프로젝트",
-      "requested_year": "2021",
+      "requested_year": "2015",
       "requested_content_type": "영화",
       "korean_pages": [
         {
@@ -46,7 +46,7 @@
           "english_links": []
         },
         {
-          "title": "밀그램 프로젝트 (2021년 영화)",
+          "title": "밀그램 프로젝트 (2015년 영화)",
           "missing": true,
           "exact_normalized_base_title": true,
           "canonical_release_years": [],
@@ -58,7 +58,7 @@
           "english_links": []
         },
         {
-          "title": "밀그램 프로젝트 (2021년 드라마)",
+          "title": "밀그램 프로젝트 (2015년 드라마)",
           "missing": true,
           "exact_normalized_base_title": true,
           "canonical_release_years": [],
@@ -74,13 +74,11 @@
           "missing": false,
           "exact_normalized_base_title": true,
           "canonical_release_years": [
-            "1960",
-            "1961",
             "2015"
           ],
-          "canonical_content_type": "드라마",
-          "requested_identity_verified": false,
-          "verified_source_url": "",
+          "canonical_content_type": "영화",
+          "requested_identity_verified": true,
+          "verified_source_url": "https://ko.wikipedia.org/wiki/%EB%B0%80%EA%B7%B8%EB%9E%A8_%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8",
           "extract": "《밀그램 프로젝트》(영어: Experimenter: The Stanley Milgram Story 혹은 Experimenter)는 2015년 개봉한 미국의 전기 드라마 영화이다. 마이클 알머레이다가 감독 및 각본을 맡았으며, 스탠리 밀그럼의 밀그럼 실험에 바탕하였다.",
           "categories": [
             "분류:1960년대를 배경으로 한 영화",
@@ -101,15 +99,54 @@
           ]
         }
       ],
-      "english_pages": [],
+      "english_pages": [
+        {
+          "title": "Experimenter (film)",
+          "missing": false,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [
+            "2015"
+          ],
+          "canonical_content_type": "영화",
+          "requested_identity_verified": true,
+          "verified_source_url": "https://en.wikipedia.org/wiki/Experimenter_%28film%29",
+          "extract": "Experimenter: The Stanley Milgram Story also known as the Experimenter, is a 2015 American biographical drama film written, directed and co-produced by Michael Almereyda. It depicts the Milgram experiment in 1961 by social psychologist Stanley Milgram. The film, co-produced by and starring Danny A. Abeckaser, also stars Peter Sarsgaard, Winona Ryder, Jim Gaffigan, Kellan Lutz, Dennis Haysbert, Anthony Edwards, Lori Singer, Josh Hamilton, Anton Yelchin, John Leguizamo.",
+          "categories": [
+            "Category:2015 American films",
+            "Category:2015 English-language films",
+            "Category:2015 biographical drama films",
+            "Category:2015 films",
+            "Category:2015 historical drama films",
+            "Category:All Wikipedia articles with plot summary needing attention",
+            "Category:American biographical drama films",
+            "Category:American historical drama films",
+            "Category:Articles with short description",
+            "Category:Drama films based on actual events",
+            "Category:English-language biographical drama films",
+            "Category:English-language historical drama films",
+            "Category:Films directed by Michael Almereyda",
+            "Category:Films set in 1961",
+            "Category:Films set in Connecticut",
+            "Category:Films set in the 1960s",
+            "Category:Films shot in New York City",
+            "Category:Rotten Tomatoes ID same as Wikidata",
+            "Category:Rotten Tomatoes template using name parameter",
+            "Category:Short description is different from Wikidata",
+            "Category:Template film date with 2 release dates",
+            "Category:Use mdy dates from December 2024",
+            "Category:Wikipedia articles with plot summary needing attention from May 2026"
+          ],
+          "english_links": []
+        }
+      ],
       "errors": [],
-      "requested_identity_confirmed": false,
+      "requested_identity_confirmed": true,
       "verified_alternate_identities": 0
     },
     {
       "requested_title": "룸메이트",
-      "requested_year": "2013",
-      "requested_content_type": "드라마",
+      "requested_year": "2014",
+      "requested_content_type": "예능",
       "korean_pages": [
         {
           "title": "룸메이트 (영화)",
@@ -136,7 +173,7 @@
           "english_links": []
         },
         {
-          "title": "룸메이트 (2013년 영화)",
+          "title": "룸메이트 (2014년 영화)",
           "missing": true,
           "exact_normalized_base_title": true,
           "canonical_release_years": [],
@@ -148,7 +185,7 @@
           "english_links": []
         },
         {
-          "title": "룸메이트 (2013년 드라마)",
+          "title": "룸메이트 (2014년 드라마)",
           "missing": true,
           "exact_normalized_base_title": true,
           "canonical_release_years": [],
@@ -188,7 +225,7 @@
             "2014"
           ],
           "canonical_content_type": "예능",
-          "requested_identity_verified": false,
+          "requested_identity_verified": true,
           "verified_source_url": "https://ko.wikipedia.org/wiki/%EB%A3%B8%EB%A9%94%EC%9D%B4%ED%8A%B8_%28%ED%85%94%EB%A0%88%EB%B9%84%EC%A0%84_%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8%29",
           "extract": "《룸메이트》(영어: Roommate)는 2014년 5월 4일부터 2015년 4월 14일까지 방송된 예능 프로그램이다. 《일요일이 좋다》의 1부 코너로, 1인 가구 25% 시대를 맞이하여 여러 명의 스타들이 개인 공간과 공동 공간으로 구성된 집에 함께 거주하면서 벌어지는 일들을 담았다. 《강심장》의 박상혁 PD가 기획한 셰어하우스를 모티브로 삼은 관찰 형식의 리얼 버라이어티 예능이다.",
           "categories": [
@@ -294,7 +331,7 @@
             "2014"
           ],
           "canonical_content_type": "예능",
-          "requested_identity_verified": false,
+          "requested_identity_verified": true,
           "verified_source_url": "https://en.wikipedia.org/wiki/Roommate_%28TV_program%29",
           "extract": "Roommate (Korean: 룸메이트) is a South Korean reality show; formerly part of SBS's Good Sunday lineup. It was first scheduled to be aired on April 20, 2014, but due to the Sewol ferry tragedy and the temporary broadcast halt, the airing date was pushed to May 4, 2014. The show features eleven celebrities living together in a share house located in the Seongbuk-dong area of Seoul, sharing common spaces such as the kitchen, living room, and washrooms, as well as household tasks.",
           "categories": [
@@ -357,8 +394,8 @@
         }
       ],
       "errors": [],
-      "requested_identity_confirmed": false,
-      "verified_alternate_identities": 2
+      "requested_identity_confirmed": true,
+      "verified_alternate_identities": 1
     }
   ]
 }

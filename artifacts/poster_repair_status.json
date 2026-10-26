@@ -1,25 +1,19 @@
 {
   "schema_version": 1,
-  "applied_at": "2026-10-26T05:38:14.821142+00:00",
+  "applied_at": "2026-10-26T09:03:34.150878+00:00",
   "mode": "write",
   "source_run_id": "20261026-135305-bb90cdfd",
   "latest_run_id": "20261026-135305-bb90cdfd",
-  "checked_unique": 24,
-  "found_unique": 10,
-  "updated_rows": 50,
+  "checked_unique": 14,
+  "found_unique": 5,
+  "updated_rows": 15,
   "per_theme": 10,
   "visible_candidates": 100,
-  "before_visible_with_poster": 74,
-  "visible_with_poster": 85,
-  "visible_verified_with_poster": 76,
+  "before_visible_with_poster": 85,
+  "visible_with_poster": 91,
+  "visible_verified_with_poster": 82,
   "visible_retryable_posters": 9,
   "unresolved": [
-    {
-      "title": "밀그램 프로젝트",
-      "year": "2021",
-      "content_type": "영화",
-      "poster_url": ""
-    },
     {
       "title": "홈커밍",
       "year": "2018",
@@ -30,12 +24,6 @@
       "title": "헝거 게임",
       "year": "2012",
       "content_type": "영화",
-      "poster_url": ""
-    },
-    {
-      "title": "얼티밋 비스트마스터",
-      "year": "2017",
-      "content_type": "예능",
       "poster_url": ""
     },
     {
@@ -57,27 +45,9 @@
       "poster_url": ""
     },
     {
-      "title": "12명의 성난 사람들",
-      "year": "1957",
-      "content_type": "영화",
-      "poster_url": ""
-    },
-    {
-      "title": "미드나잇 인 파리",
-      "year": "2011",
-      "content_type": "영화",
-      "poster_url": ""
-    },
-    {
       "title": "인빅터스",
       "year": "2009",
       "content_type": "영화",
-      "poster_url": ""
-    },
-    {
-      "title": "룸메이트",
-      "year": "2013",
-      "content_type": "드라마",
       "poster_url": ""
     },
     {
@@ -290,6 +260,20 @@
       "height": 326
     },
     {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/501/1253490.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 1790,
+      "height": 2500
+    },
+    {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/465/1162650.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 2160,
+      "height": 2880
+    },
+    {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/5/55/Steel_Troops_2.jpeg/250px-Steel_Troops_2.jpeg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
       "status": "available",
       "reason": "decoded_image",
@@ -309,6 +293,13 @@
       "reason": "decoded_image",
       "width": 267,
       "height": 373
+    },
+    {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/576/1440521.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 1080,
+      "height": 1350
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/e/e3/Network_%281976_poster%29.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
@@ -358,6 +349,13 @@
       "reason": "decoded_image",
       "width": 250,
       "height": 357
+    },
+    {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/41/104565.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 680,
+      "height": 1000
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/9/93/The_Intouchables.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled",
@@ -422,6 +420,34 @@
       "reason": "HTTPError"
     },
     {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/359/898320.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 1200,
+      "height": 1600
+    },
+    {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/486/1215661.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 2000,
+      "height": 3000
+    },
+    {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/481/1202650.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 1080,
+      "height": 1440
+    },
+    {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/595/1489169.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 1200,
+      "height": 1778
+    },
+    {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/c2/Room_%282015_film%29.png/250px-Room_%282015_film%29.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
       "status": "available",
       "reason": "decoded_image",
@@ -430,10 +456,8 @@
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/ko/e/ef/%EB%AF%B8%EC%83%9D_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-      "status": "available",
-      "reason": "decoded_image",
-      "width": 200,
-      "height": 289
+      "status": "retryable",
+      "reason": "HTTPError"
     },
     {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/e/e1/%EC%9D%B8%ED%84%B4.jpg/250px-%EC%9D%B8%ED%84%B4.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
@@ -451,8 +475,10 @@
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/ko/4/49/%EC%8A%AC%EA%B8%B0%EB%A1%9C%EC%9A%B4_%EC%9D%98%EC%82%AC%EC%83%9D%ED%99%9C_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-      "status": "retryable",
-      "reason": "HTTPError"
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 265,
+      "height": 375
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/8/88/Good_Doctor_TV_series-poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
@@ -467,6 +493,20 @@
       "reason": "decoded_image",
       "width": 250,
       "height": 353
+    },
+    {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/402/1007484.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 2000,
+      "height": 3000
+    },
+    {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/215/538434.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 1350,
+      "height": 2000
     },
     {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/5/52/%EC%98%81%ED%99%94_%EC%8A%A4%ED%8F%AC%ED%8A%B8%EB%9D%BC%EC%9D%B4%ED%8A%B8.jpg/250px-%EC%98%81%ED%99%94_%EC%8A%A4%ED%8F%AC%ED%8A%B8%EB%9D%BC%EC%9D%B4%ED%8A%B8.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
@@ -588,91 +628,6 @@
     }
   ],
   "provider_diagnostics": [
-    {
-      "title": "밀그램 프로젝트",
-      "year": "2021",
-      "content_type": "영화",
-      "korean_pages": [
-        {
-          "ns": 0,
-          "title": "밀그램 프로젝트 (영화)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "ns": 0,
-          "title": "밀그램 프로젝트 (2021년 영화)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "pageid": 1474863,
-          "ns": 0,
-          "title": "밀그램 프로젝트",
-          "pageprops": {
-            "wikibase_item": "Q17382885"
-          },
-          "extract": "《밀그램 프로젝트》(영어: Experimenter: The Stanley Milgram Story 혹은 Experimenter)는 2015년 개봉한 미국의 전기 드라마 영화이다. 마이클 알머레이다가 감독 및 각본을 맡았으며, 스탠리 밀그럼의 밀그럼 실험에 바탕하였다.",
-          "categories": [
-            {
-              "ns": 14,
-              "title": "분류:1960년대를 배경으로 한 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:1961년을 배경으로 한 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2015년 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:뉴욕에서 촬영한 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:미국의 역사 드라마 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:미국의 전기 드라마 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:실화를 바탕으로 한 드라마 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:영어 영화 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:영어 표기를 포함한 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:코네티컷주를 배경으로 한 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:해결되지 않은 속성이 있는 문서"
-            }
-          ],
-          "langlinks": [
-            {
-              "lang": "en",
-              "*": "Experimenter (film)"
-            }
-          ],
-          "identity_verified": false
-        }
-      ]
-    },
     {
       "title": "홈커밍",
       "year": "2018",
@@ -823,77 +778,6 @@
             {
               "lang": "en",
               "*": "The Hunger Games"
-            }
-          ],
-          "identity_verified": false
-        }
-      ]
-    },
-    {
-      "title": "얼티밋 비스트마스터",
-      "year": "2017",
-      "content_type": "예능",
-      "korean_pages": [
-        {
-          "ns": 0,
-          "title": "얼티밋 비스트마스터 (드라마)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "ns": 0,
-          "title": "얼티밋 비스트마스터 (텔레비전 프로그램)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "ns": 0,
-          "title": "얼티밋 비스트마스터 (2017년 드라마)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "pageid": 2850860,
-          "ns": 0,
-          "title": "비스트마스터: 최강자 서바이벌",
-          "pageprops": {
-            "wikibase_item": "Q28443619"
-          },
-          "extract": "《비스트마스터: 최강자 서바이벌》(영어: Ultimate Beastmaster 얼티밋 비스트마스터[*])은 2017년 넷플릭스에서 처음 방영된 미국의 스포츠 엔터테인먼트 리얼리티 쇼 대회이다.",
-          "categories": [
-            {
-              "ns": 14,
-              "title": "분류:2017년 시작한 미국의 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2018년 종료한 미국의 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:넷플릭스 오리지널 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:영어 표기를 포함한 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:장애물 경주 텔레비전 게임 쇼"
-            },
-            {
-              "ns": 14,
-              "title": "분류:해결되지 않은 속성이 있는 문서"
-            }
-          ],
-          "langlinks": [
-            {
-              "lang": "en",
-              "*": "Ultimate Beastmaster"
             }
           ],
           "identity_verified": false
@@ -1119,25 +1003,62 @@
       ]
     },
     {
-      "title": "12명의 성난 사람들",
-      "year": "1957",
+      "title": "인빅터스",
+      "year": "2009",
       "content_type": "영화",
       "korean_pages": [
         {
           "ns": 0,
-          "title": "12명의 성난 사람들 (영화)",
+          "title": "인빅터스",
           "missing": "",
           "identity_verified": false
         },
         {
-          "pageid": 567524,
           "ns": 0,
-          "title": "12인의 성난 사람들",
+          "title": "인빅터스 (영화)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "인빅터스 (2009년 영화)",
+          "missing": "",
+          "identity_verified": false
+        }
+      ]
+    },
+    {
+      "title": "풀 하우스",
+      "year": "2004",
+      "content_type": "드라마",
+      "korean_pages": [
+        {
+          "ns": 0,
+          "title": "풀 하우스 (드라마)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "풀 하우스 (텔레비전 프로그램)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "풀 하우스 (2004년 드라마)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "pageid": 10891,
+          "ns": 0,
+          "title": "풀하우스",
           "pageprops": {
             "disambiguation": "",
-            "wikibase_item": "Q522135"
+            "wikibase_item": "Q176105"
           },
-          "extract": "12인의 성난 사람들(영어: Twelve Angry Men)의 다른 뜻은 다음과 같다.\n\n12인의 성난 사람들 - 1954년 미국의 텔레비전 연극.\n12인의 성난 사람들 - 1954년 미국의 희곡, 위의 텔레비전 연극을 원작으로 한 작품.",
+          "extract": "풀하우스(Full House)는 다음과 같은 뜻이 있다.\n\n풀하우스는 포커의 패의 하나이다.\n《풀하우스》는 원수연의 만화이다.",
           "categories": [
             {
               "ns": 14,
@@ -1145,184 +1066,53 @@
             },
             {
               "ns": 14,
-              "title": "분류:모든 동음이의어 문서"
+              "title": "분류:동음이의어 작품"
             },
             {
               "ns": 14,
-              "title": "분류:영어 표기를 포함한 문서"
+              "title": "분류:모든 동음이의어 문서"
             }
           ],
           "langlinks": [
             {
               "lang": "en",
-              "*": "Twelve Angry Men (disambiguation)"
+              "*": "Full house"
             }
           ],
+          "_requested_aliases": [
+            "풀 하우스"
+          ],
+          "identity_verified": false
+        }
+      ]
+    },
+    {
+      "title": "하숙집 오!번지",
+      "year": "2022",
+      "content_type": "드라마",
+      "korean_pages": [
+        {
+          "ns": 0,
+          "title": "하숙집 오!번지",
+          "missing": "",
           "identity_verified": false
         },
         {
-          "pageid": 145625,
           "ns": 0,
-          "title": "12인의 성난 사람들 (1957년 영화)",
-          "original": {
-            "source": "https://upload.wikimedia.org/wikipedia/commons/b/b5/12_Angry_Men_%281957_film_poster%29.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-            "width": 1902,
-            "height": 2907
-          },
-          "pageimage": "12_Angry_Men_(1957_film_poster).jpg",
-          "pageprops": {
-            "page_image_free": "12_Angry_Men_(1957_film_poster).jpg",
-            "wikibase_item": "Q2345"
-          },
-          "extract": "《12명의 성난 사람들》(영어: 12 Angry Men)은 1957년에 개봉한 미국의 흑백 독립 법정 드라마 영화로, 시드니 루멧이 연출하였다. 이 영화는 본래 텔레비전 연출가였던 루멧의 첫 영화 연출작이며, 레지널드 로즈의 텔레비전 연극용 희곡을 영화화하였다. 매카시즘 시대에 미국 배심원 제도에 비판적으로 접근하였다.",
-          "categories": [
-            {
-              "ns": 14,
-              "title": "분류:1957년 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:CS1 - 영어 인용 (en)"
-            },
-            {
-              "ns": 14,
-              "title": "분류:감독 데뷔 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:글로벌세계대백과를 인용한 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:맨해튼을 배경으로 한 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:미국 국립영화등기부 등재 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:미국의 독립 영화 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:미국의 범죄 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:미국의 법률 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:미국의 심리 드라마 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:미국의 흑백 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:변호사를 소재로 한 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:사형을 소재로 한 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:살인을 소재로 한 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:시드니 루멧 감독 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:영어 영화 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:영어 표기를 포함한 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:웹아카이브 틀 웨이백 링크"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P1015를 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P18을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P227을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P244를 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P268을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P269를 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P373을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P7293을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P950을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P9984를 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:유나이티드 아티스츠 배급 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:재판을 소재로 한 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:차별을 소재로 한 영화"
-            },
-            {
-              "ns": 14,
-              "title": "분류:해결되지 않은 속성이 있는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:황금곰상 수상작"
-            },
-            {
-              "ns": 14,
-              "title": "분류:희곡을 바탕으로 한 영화"
-            }
-          ],
-          "langlinks": [
-            {
-              "lang": "en",
-              "*": "12 Angry Men"
-            }
-          ],
+          "title": "하숙집 오!번지 (드라마)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "하숙집 오!번지 (텔레비전 프로그램)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "하숙집 오!번지 (2022년 드라마)",
+          "missing": "",
           "identity_verified": false
         }
       ]
