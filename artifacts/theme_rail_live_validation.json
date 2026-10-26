@@ -4,7 +4,7 @@
   "status": "passed",
   "expected_version": "1.6.1",
   "expected_titles": 0,
-  "started_at": "2026-10-26T05:27:57.272540+00:00",
+  "started_at": "2026-10-26T05:39:32.269355+00:00",
   "tests": {
     "desktop_version": true,
     "desktop_no_horizontal_overflow": true,
@@ -18,12 +18,12 @@
     {
       "code": "poster_artwork_unavailable",
       "viewport": "desktop",
-      "missing": 26
+      "missing": 15
     },
     {
       "code": "poster_artwork_unavailable",
       "viewport": "mobile",
-      "missing": 26
+      "missing": 15
     }
   ],
   "viewports": [
@@ -259,38 +259,38 @@
       {
         "theme": 3,
         "total": 10,
-        "poster_urls": 7,
-        "loaded": 7,
-        "missing_url": 3,
+        "poster_urls": 8,
+        "loaded": 8,
+        "missing_url": 2,
         "failed": 0,
         "timed_out": 0,
-        "missing": 3,
+        "missing": 2,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 3
+        "missing_fallbacks_rendered": 2
       },
       {
         "theme": 4,
         "total": 10,
-        "poster_urls": 3,
-        "loaded": 3,
-        "missing_url": 7,
+        "poster_urls": 5,
+        "loaded": 5,
+        "missing_url": 5,
         "failed": 0,
         "timed_out": 0,
-        "missing": 7,
+        "missing": 5,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 7
+        "missing_fallbacks_rendered": 5
       },
       {
         "theme": 5,
         "total": 10,
-        "poster_urls": 7,
-        "loaded": 7,
-        "missing_url": 3,
+        "poster_urls": 8,
+        "loaded": 8,
+        "missing_url": 2,
         "failed": 0,
         "timed_out": 0,
-        "missing": 3,
+        "missing": 2,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 3
+        "missing_fallbacks_rendered": 2
       },
       {
         "theme": 6,
@@ -307,18 +307,6 @@
       {
         "theme": 7,
         "total": 10,
-        "poster_urls": 2,
-        "loaded": 2,
-        "missing_url": 8,
-        "failed": 0,
-        "timed_out": 0,
-        "missing": 8,
-        "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 8
-      },
-      {
-        "theme": 8,
-        "total": 10,
         "poster_urls": 7,
         "loaded": 7,
         "missing_url": 3,
@@ -327,6 +315,18 @@
         "missing": 3,
         "fallbacks_rendered": 10,
         "missing_fallbacks_rendered": 3
+      },
+      {
+        "theme": 8,
+        "total": 10,
+        "poster_urls": 9,
+        "loaded": 9,
+        "missing_url": 1,
+        "failed": 0,
+        "timed_out": 0,
+        "missing": 1,
+        "fallbacks_rendered": 10,
+        "missing_fallbacks_rendered": 1
       },
       {
         "theme": 9,
@@ -381,38 +381,38 @@
       {
         "theme": 3,
         "total": 10,
-        "poster_urls": 7,
-        "loaded": 7,
-        "missing_url": 3,
+        "poster_urls": 8,
+        "loaded": 8,
+        "missing_url": 2,
         "failed": 0,
         "timed_out": 0,
-        "missing": 3,
+        "missing": 2,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 3
+        "missing_fallbacks_rendered": 2
       },
       {
         "theme": 4,
         "total": 10,
-        "poster_urls": 3,
-        "loaded": 3,
-        "missing_url": 7,
+        "poster_urls": 5,
+        "loaded": 5,
+        "missing_url": 5,
         "failed": 0,
         "timed_out": 0,
-        "missing": 7,
+        "missing": 5,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 7
+        "missing_fallbacks_rendered": 5
       },
       {
         "theme": 5,
         "total": 10,
-        "poster_urls": 7,
-        "loaded": 7,
-        "missing_url": 3,
+        "poster_urls": 8,
+        "loaded": 8,
+        "missing_url": 2,
         "failed": 0,
         "timed_out": 0,
-        "missing": 3,
+        "missing": 2,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 3
+        "missing_fallbacks_rendered": 2
       },
       {
         "theme": 6,
@@ -429,18 +429,6 @@
       {
         "theme": 7,
         "total": 10,
-        "poster_urls": 2,
-        "loaded": 2,
-        "missing_url": 8,
-        "failed": 0,
-        "timed_out": 0,
-        "missing": 8,
-        "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 8
-      },
-      {
-        "theme": 8,
-        "total": 10,
         "poster_urls": 7,
         "loaded": 7,
         "missing_url": 3,
@@ -449,6 +437,18 @@
         "missing": 3,
         "fallbacks_rendered": 10,
         "missing_fallbacks_rendered": 3
+      },
+      {
+        "theme": 8,
+        "total": 10,
+        "poster_urls": 9,
+        "loaded": 9,
+        "missing_url": 1,
+        "failed": 0,
+        "timed_out": 0,
+        "missing": 1,
+        "fallbacks_rendered": 10,
+        "missing_fallbacks_rendered": 1
       },
       {
         "theme": 9,
@@ -752,5 +752,5 @@
       }
     ]
   },
-  "finished_at": "2026-10-26T05:28:41.244362+00:00"
+  "finished_at": "2026-10-26T05:40:19.844359+00:00"
 }
