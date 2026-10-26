@@ -1,0 +1,1097 @@
+{
+  "MappedInfosOutput": {
+    "kind": "OBJECT",
+    "name": "MappedInfosOutput",
+    "fields": [
+      {
+        "name": "items",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MappedInfoOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "totalCount",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      }
+    ],
+    "inputFields": null,
+    "enumValues": null
+  },
+  "MappedInfoOutput": {
+    "kind": "OBJECT",
+    "name": "MappedInfoOutput",
+    "fields": [
+      {
+        "name": "contentId",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "Int",
+          "ofType": null
+        }
+      },
+      {
+        "name": "personId",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "Int",
+          "ofType": null
+        }
+      },
+      {
+        "name": "searchAfter",
+        "args": [],
+        "type": {
+          "kind": "LIST",
+          "name": null,
+          "ofType": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            }
+          }
+        }
+      },
+      {
+        "name": "content",
+        "args": [],
+        "type": {
+          "kind": "OBJECT",
+          "name": "MovieOutput",
+          "ofType": null
+        }
+      },
+      {
+        "name": "person",
+        "args": [],
+        "type": {
+          "kind": "OBJECT",
+          "name": "PersonOutput",
+          "ofType": null
+        }
+      }
+    ],
+    "inputFields": null,
+    "enumValues": null
+  },
+  "MovieOutput": {
+    "kind": "OBJECT",
+    "name": "MovieOutput",
+    "fields": [
+      {
+        "name": "id",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "ID",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "titleKr",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "titleEn",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "String",
+          "ofType": null
+        }
+      },
+      {
+        "name": "titleOri",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "String",
+          "ofType": null
+        }
+      },
+      {
+        "name": "productionYear",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "String",
+          "ofType": null
+        }
+      },
+      {
+        "name": "rating",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "ENUM",
+            "name": "RatingType",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "showTime",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "audienceCount",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "releasedAt",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "String",
+          "ofType": null
+        }
+      },
+      {
+        "name": "upcomingDate",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "String",
+          "ofType": null
+        }
+      },
+      {
+        "name": "lengthType",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "ENUM",
+            "name": "LengthType",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "isPublic",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "isPerfect",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "checkCount",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "imdbScore",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "Float",
+          "ofType": null
+        }
+      },
+      {
+        "name": "rottenTomatoesScore",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "Int",
+          "ofType": null
+        }
+      },
+      {
+        "name": "indexRatingScore",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "Float",
+          "ofType": null
+        }
+      },
+      {
+        "name": "starRatingScore",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "Float",
+          "ofType": null
+        }
+      },
+      {
+        "name": "watchedCount",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "watchListCount",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "indexRatingCount",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "starRatingCount",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "episodeCount",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "openYear",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "String",
+          "ofType": null
+        }
+      },
+      {
+        "name": "createdAt",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "DateTime",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "updatedAt",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "DateTime",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "certifiedAt",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "DateTime",
+          "ofType": null
+        }
+      },
+      {
+        "name": "editionType",
+        "args": [],
+        "type": {
+          "kind": "ENUM",
+          "name": "EditionType",
+          "ofType": null
+        }
+      },
+      {
+        "name": "directors",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ContentCrewMappingOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "crews",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ContentCrewMappingOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "genres",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "nations",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Nation",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "releases",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ContentReleaseMappingOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "relatedContents",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MovieOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "relatedContentCount",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "externalVideos",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ContentExternalVideoMappingOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "contentTheaters",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ContentTheaterMappingOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "vodOfferItems",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "VodOfferItemOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "mainStillCutImage",
+        "args": [],
+        "type": {
+          "kind": "OBJECT",
+          "name": "FileOutput",
+          "ofType": null
+        }
+      },
+      {
+        "name": "posterImage",
+        "args": [],
+        "type": {
+          "kind": "OBJECT",
+          "name": "FileOutput",
+          "ofType": null
+        }
+      },
+      {
+        "name": "indexRatingType",
+        "args": [],
+        "type": {
+          "kind": "ENUM",
+          "name": "IndexRatingType",
+          "ofType": null
+        }
+      },
+      {
+        "name": "isMyBestContent",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "isMyInterest",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "isMyWatched",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "isMyWatching",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "isInTheaters",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "contentTags",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ContentTagOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "isUninterest",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "belongToSeries",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "searchAfter",
+        "args": [],
+        "type": {
+          "kind": "LIST",
+          "name": null,
+          "ofType": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            }
+          }
+        }
+      },
+      {
+        "name": "rankingBadge",
+        "args": [],
+        "type": {
+          "kind": "OBJECT",
+          "name": "RankingBadgeOutput",
+          "ofType": null
+        }
+      },
+      {
+        "name": "insights",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SeasonInsightOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "taxonomy",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "TaxonomyTagOutput",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "synopsis",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "externalSites",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ContentExternalSiteMapping",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "kmrb",
+        "args": [],
+        "type": {
+          "kind": "OBJECT",
+          "name": "ContentKmrb",
+          "ofType": null
+        }
+      },
+      {
+        "name": "titleLogoImage",
+        "args": [],
+        "type": {
+          "kind": "OBJECT",
+          "name": "FileOutput",
+          "ofType": null
+        }
+      },
+      {
+        "name": "seasonLabels",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ContentSeasonLabel",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "contentTypes",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          }
+        }
+      }
+    ],
+    "inputFields": null,
+    "enumValues": null
+  },
+  "VodOfferItemOutput": {
+    "kind": "OBJECT",
+    "name": "VodOfferItemOutput",
+    "fields": [
+      {
+        "name": "id",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "ID",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "externalId",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "String",
+          "ofType": null
+        }
+      },
+      {
+        "name": "title",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "retailPrice",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "Int",
+          "ofType": null
+        }
+      },
+      {
+        "name": "monetizationType",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "url",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "openDate",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "DateTime",
+          "ofType": null
+        }
+      },
+      {
+        "name": "expireDate",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "DateTime",
+          "ofType": null
+        }
+      },
+      {
+        "name": "isActive",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "isDone",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "isRemove",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "properties",
+        "args": [],
+        "type": {
+          "kind": "NON_NULL",
+          "name": null,
+          "ofType": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "providerTechnicalName",
+        "args": [],
+        "type": {
+          "kind": "SCALAR",
+          "name": "String",
+          "ofType": null
+        }
+      }
+    ],
+    "inputFields": null,
+    "enumValues": null
+  }
+}

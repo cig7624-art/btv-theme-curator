@@ -1,0 +1,676 @@
+[
+  {
+    "kind": "search",
+    "keyword": "기생충",
+    "query": "query PublicTitleSearch($keyword:String!){searchContentsByKeyword(keyword:$keyword,limit:8){items{contentId content{id titleKr titleEn openYear}} totalCount}}",
+    "status": 200,
+    "response": {
+      "data": {
+        "searchContentsByKeyword": {
+          "items": [
+            {
+              "contentId": 66957,
+              "content": {
+                "id": "66957",
+                "titleKr": "기생충",
+                "titleEn": "PARASITE",
+                "openYear": "2019"
+              }
+            },
+            {
+              "contentId": 80427,
+              "content": {
+                "id": "80427",
+                "titleKr": "마약기생충",
+                "titleEn": "Running with the Devil",
+                "openYear": "2019"
+              }
+            },
+            {
+              "contentId": 95593,
+              "content": {
+                "id": "95593",
+                "titleKr": "기생춘",
+                "titleEn": null,
+                "openYear": "2020"
+              }
+            },
+            {
+              "contentId": 111963,
+              "content": {
+                "id": "111963",
+                "titleKr": "기생충 흑백판",
+                "titleEn": "PARASITE",
+                "openYear": "2019"
+              }
+            },
+            {
+              "contentId": 74130,
+              "content": {
+                "id": "74130",
+                "titleKr": "파라노말 기생충",
+                "titleEn": "The Unbelievable Ability",
+                "openYear": "2019"
+              }
+            },
+            {
+              "contentId": 115922,
+              "content": {
+                "id": "115922",
+                "titleKr": "사랑하는 기생충",
+                "titleEn": "Parasite in Love",
+                "openYear": "2021"
+              }
+            },
+            {
+              "contentId": 119548,
+              "content": {
+                "id": "119548",
+                "titleKr": "기생충의 하룻밤",
+                "titleEn": "The midnight parasites",
+                "openYear": "1972"
+              }
+            },
+            {
+              "contentId": 113507,
+              "content": {
+                "id": "113507",
+                "titleKr": "기생춘 (감독판)",
+                "titleEn": null,
+                "openYear": "2020"
+              }
+            }
+          ],
+          "totalCount": 265
+        }
+      }
+    }
+  },
+  {
+    "kind": "search",
+    "keyword": "괴물",
+    "query": "query PublicTitleSearch($keyword:String!){searchContentsByKeyword(keyword:$keyword,limit:8){items{contentId content{id titleKr titleEn openYear}} totalCount}}",
+    "status": 200,
+    "response": {
+      "data": {
+        "searchContentsByKeyword": {
+          "items": [
+            {
+              "contentId": 63796,
+              "content": {
+                "id": "63796",
+                "titleKr": "괴물",
+                "titleEn": "The Thing From Another World",
+                "openYear": "1951"
+              }
+            },
+            {
+              "contentId": 90726,
+              "content": {
+                "id": "90726",
+                "titleKr": "괴물",
+                "titleEn": "",
+                "openYear": "2014"
+              }
+            },
+            {
+              "contentId": 144425,
+              "content": {
+                "id": "144425",
+                "titleKr": "괴물",
+                "titleEn": null,
+                "openYear": "2025"
+              }
+            },
+            {
+              "contentId": 70743,
+              "content": {
+                "id": "70743",
+                "titleKr": "괴물",
+                "titleEn": "The Ogre",
+                "openYear": "2017"
+              }
+            },
+            {
+              "contentId": 39436,
+              "content": {
+                "id": "39436",
+                "titleKr": "괴물",
+                "titleEn": "The Monster",
+                "openYear": "2010"
+              }
+            },
+            {
+              "contentId": 122296,
+              "content": {
+                "id": "122296",
+                "titleKr": "괴물",
+                "titleEn": "Monster",
+                "openYear": "2023"
+              }
+            },
+            {
+              "contentId": 8374,
+              "content": {
+                "id": "8374",
+                "titleKr": "괴물",
+                "titleEn": "The Host",
+                "openYear": "2006"
+              }
+            },
+            {
+              "contentId": 88720,
+              "content": {
+                "id": "88720",
+                "titleKr": "괴물",
+                "titleEn": "Beyond Evil",
+                "openYear": "2021"
+              }
+            }
+          ],
+          "totalCount": 176
+        }
+      }
+    }
+  },
+  {
+    "kind": "detail",
+    "movie_id": 66957,
+    "query": "query PublicTitleOffers($movieId:Int!){content(movieId:$movieId){id titleKr titleEn rottenTomatoesScore watchedCount watchListCount openYear vodOfferItems{id externalId title retailPrice monetizationType url openDate expireDate isActive isDone isRemove properties providerTechnicalName} isMyWatched isMyWatching}}",
+    "status": 200,
+    "response": {
+      "data": {
+        "content": {
+          "id": "66957",
+          "titleKr": "기생충",
+          "titleEn": "PARASITE",
+          "rottenTomatoesScore": 99,
+          "watchedCount": 23123,
+          "watchListCount": 1853,
+          "openYear": "2019",
+          "vodOfferItems": [
+            {
+              "id": "144837",
+              "externalId": "mdRL4eL",
+              "title": "(:드라마) 기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://watcha.com/contents/mdRL4eL",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "watcha-play"
+            },
+            {
+              "id": "149790",
+              "externalId": "M000244233",
+              "title": "(:드라마) 기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://www.tving.com/contents/M000244233",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "tving"
+            },
+            {
+              "id": "149793",
+              "externalId": "M000244133",
+              "title": "(:드라마) [4K] 기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://www.tving.com/contents/M000244133",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "tving"
+            },
+            {
+              "id": "149796",
+              "externalId": "M000287633",
+              "title": "(:드라마) [영문자막] 기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://www.tving.com/contents/M000287633",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [
+                "자막"
+              ],
+              "providerTechnicalName": "tving"
+            },
+            {
+              "id": "232225",
+              "externalId": "GMV_EN01_EN000000008",
+              "title": "(:드라마) 기생충",
+              "retailPrice": 1540,
+              "monetizationType": "rental",
+              "url": "https://www.wavve.com/player/movie?movieid=MV_EN01_EN000000008",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "wavve"
+            },
+            {
+              "id": "264522",
+              "externalId": "81221938",
+              "title": "(:코미디 영화) 기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://www.netflix.com/kr/title/81221938",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "netflix"
+            },
+            {
+              "id": "556699",
+              "externalId": "umc.cmc.5j8t2blurpxgpnxeqtm15n8i1",
+              "title": "(:스릴러) 기생충",
+              "retailPrice": 3000,
+              "monetizationType": "rental",
+              "url": "https://tv.apple.com/kr/movie/%E1%84%80%E1%85%B5%E1%84%89%E1%85%A2%E1%86%BC%E1%84%8E%E1%85%AE%E1%86%BC/umc.cmc.5j8t2blurpxgpnxeqtm15n8i1",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "apple"
+            },
+            {
+              "id": "557309",
+              "externalId": "umc.cmc.5j8t2blurpxgpnxeqtm15n8i1",
+              "title": "(:스릴러) 기생충",
+              "retailPrice": 7500,
+              "monetizationType": "buy",
+              "url": "https://tv.apple.com/kr/movie/%E1%84%80%E1%85%B5%E1%84%89%E1%85%A2%E1%86%BC%E1%84%8E%E1%85%AE%E1%86%BC/umc.cmc.5j8t2blurpxgpnxeqtm15n8i1",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "apple"
+            },
+            {
+              "id": "1024883",
+              "externalId": "mdRL4eL",
+              "title": "(:드라마) 기생충",
+              "retailPrice": 2750,
+              "monetizationType": "rental",
+              "url": "https://watcha.com/contents/mdRL4eL",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "watcha-play"
+            },
+            {
+              "id": "1024884",
+              "externalId": "mdRL4eL",
+              "title": "(:드라마) 기생충",
+              "retailPrice": 7150,
+              "monetizationType": "buy",
+              "url": "https://watcha.com/contents/mdRL4eL",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "watcha-play"
+            },
+            {
+              "id": "1243104",
+              "externalId": "GMV_EN01_EN000000008",
+              "title": "(:드라마) 기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://www.wavve.com/player/movie?movieid=MV_EN01_EN000000008",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "wavve"
+            }
+          ],
+          "isMyWatched": false,
+          "isMyWatching": false
+        }
+      }
+    }
+  },
+  {
+    "kind": "detail",
+    "movie_id": 80427,
+    "query": "query PublicTitleOffers($movieId:Int!){content(movieId:$movieId){id titleKr titleEn rottenTomatoesScore watchedCount watchListCount openYear vodOfferItems{id externalId title retailPrice monetizationType url openDate expireDate isActive isDone isRemove properties providerTechnicalName} isMyWatched isMyWatching}}",
+    "status": 200,
+    "response": {
+      "data": {
+        "content": {
+          "id": "80427",
+          "titleKr": "마약기생충",
+          "titleEn": "Running with the Devil",
+          "rottenTomatoesScore": null,
+          "watchedCount": 5,
+          "watchListCount": 11,
+          "openYear": "2019",
+          "vodOfferItems": [
+            {
+              "id": "179227",
+              "externalId": "GMV_C901_SG0000127930",
+              "title": "() 마약기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://www.wavve.com/player/movie?movieid=MV_C901_SG0000127930",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "wavve"
+            },
+            {
+              "id": "184587",
+              "externalId": "mW4YKnY",
+              "title": "(:범죄) 마약기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://watcha.com/contents/mW4YKnY",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "watcha-play"
+            },
+            {
+              "id": "248550",
+              "externalId": "M000302041",
+              "title": "(:액션) 마약기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://www.tving.com/contents/M000302041",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "tving"
+            }
+          ],
+          "isMyWatched": false,
+          "isMyWatching": false
+        }
+      }
+    }
+  },
+  {
+    "kind": "detail",
+    "movie_id": 95593,
+    "query": "query PublicTitleOffers($movieId:Int!){content(movieId:$movieId){id titleKr titleEn rottenTomatoesScore watchedCount watchListCount openYear vodOfferItems{id externalId title retailPrice monetizationType url openDate expireDate isActive isDone isRemove properties providerTechnicalName} isMyWatched isMyWatching}}",
+    "status": 200,
+    "response": {
+      "data": {
+        "content": {
+          "id": "95593",
+          "titleKr": "기생춘",
+          "titleEn": null,
+          "rottenTomatoesScore": null,
+          "watchedCount": 5,
+          "watchListCount": 4,
+          "openYear": "2020",
+          "vodOfferItems": [
+            {
+              "id": "521818",
+              "externalId": "mOkLE4Q",
+              "title": "(:코미디) 기생춘",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://watcha.com/contents/mOkLE4Q",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "watcha-play"
+            },
+            {
+              "id": "823293",
+              "externalId": "M000360250",
+              "title": "(:코미디) 기생춘",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://www.tving.com/contents/M000360250",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "tving"
+            },
+            {
+              "id": "1100486",
+              "externalId": "ebf77f57-f490-4e53-8fe4-5edabfc7c4ba",
+              "title": "() 기생춘",
+              "retailPrice": 1200,
+              "monetizationType": "rental",
+              "url": "https://www.coupangplay.com/titles/ebf77f57-f490-4e53-8fe4-5edabfc7c4ba",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "coupang-play"
+            },
+            {
+              "id": "1100487",
+              "externalId": "ebf77f57-f490-4e53-8fe4-5edabfc7c4ba",
+              "title": "() 기생춘",
+              "retailPrice": 5000,
+              "monetizationType": "buy",
+              "url": "https://www.coupangplay.com/titles/ebf77f57-f490-4e53-8fe4-5edabfc7c4ba",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "coupang-play"
+            }
+          ],
+          "isMyWatched": false,
+          "isMyWatching": false
+        }
+      }
+    }
+  },
+  {
+    "kind": "detail",
+    "movie_id": 111963,
+    "query": "query PublicTitleOffers($movieId:Int!){content(movieId:$movieId){id titleKr titleEn rottenTomatoesScore watchedCount watchListCount openYear vodOfferItems{id externalId title retailPrice monetizationType url openDate expireDate isActive isDone isRemove properties providerTechnicalName} isMyWatched isMyWatching}}",
+    "status": 200,
+    "response": {
+      "data": {
+        "content": {
+          "id": "111963",
+          "titleKr": "기생충 흑백판",
+          "titleEn": "PARASITE",
+          "rottenTomatoesScore": null,
+          "watchedCount": 311,
+          "watchListCount": 66,
+          "openYear": "2019",
+          "vodOfferItems": [
+            {
+              "id": "149414",
+              "externalId": "M000307335",
+              "title": "(:드라마) [흑백판] 기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://www.tving.com/contents/M000307335",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "tving"
+            },
+            {
+              "id": "247125",
+              "externalId": "mOkLgbg",
+              "title": "(:드라마) 기생충 흑백판",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://watcha.com/contents/mOkLgbg",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "watcha-play"
+            },
+            {
+              "id": "1027960",
+              "externalId": "mOkLgbg",
+              "title": "(:드라마) 기생충 흑백판",
+              "retailPrice": 2750,
+              "monetizationType": "rental",
+              "url": "https://watcha.com/contents/mOkLgbg",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "watcha-play"
+            },
+            {
+              "id": "1027961",
+              "externalId": "mOkLgbg",
+              "title": "(:드라마) 기생충 흑백판",
+              "retailPrice": 7150,
+              "monetizationType": "buy",
+              "url": "https://watcha.com/contents/mOkLgbg",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "watcha-play"
+            }
+          ],
+          "isMyWatched": false,
+          "isMyWatching": false
+        }
+      }
+    }
+  },
+  {
+    "kind": "detail",
+    "movie_id": 74130,
+    "query": "query PublicTitleOffers($movieId:Int!){content(movieId:$movieId){id titleKr titleEn rottenTomatoesScore watchedCount watchListCount openYear vodOfferItems{id externalId title retailPrice monetizationType url openDate expireDate isActive isDone isRemove properties providerTechnicalName} isMyWatched isMyWatching}}",
+    "status": 200,
+    "response": {
+      "data": {
+        "content": {
+          "id": "74130",
+          "titleKr": "파라노말 기생충",
+          "titleEn": "The Unbelievable Ability",
+          "rottenTomatoesScore": null,
+          "watchedCount": 0,
+          "watchListCount": 0,
+          "openYear": "2019",
+          "vodOfferItems": [
+            {
+              "id": "136408",
+              "externalId": "GMV_LX01_LX0000000360",
+              "title": "(:스릴러) 파라노말 기생충",
+              "retailPrice": 1200,
+              "monetizationType": "rental",
+              "url": "https://www.wavve.com/player/movie?movieid=MV_LX01_LX0000000360",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "wavve"
+            }
+          ],
+          "isMyWatched": false,
+          "isMyWatching": false
+        }
+      }
+    }
+  },
+  {
+    "kind": "detail",
+    "movie_id": 115922,
+    "query": "query PublicTitleOffers($movieId:Int!){content(movieId:$movieId){id titleKr titleEn rottenTomatoesScore watchedCount watchListCount openYear vodOfferItems{id externalId title retailPrice monetizationType url openDate expireDate isActive isDone isRemove properties providerTechnicalName} isMyWatched isMyWatching}}",
+    "status": 200,
+    "response": {
+      "data": {
+        "content": {
+          "id": "115922",
+          "titleKr": "사랑하는 기생충",
+          "titleEn": "Parasite in Love",
+          "rottenTomatoesScore": null,
+          "watchedCount": 111,
+          "watchListCount": 92,
+          "openYear": "2021",
+          "vodOfferItems": [
+            {
+              "id": "841510",
+              "externalId": "81476481",
+              "title": "(:일본 작품) 사랑하는 기생충",
+              "retailPrice": null,
+              "monetizationType": "streaming",
+              "url": "https://www.netflix.com/kr/title/81476481",
+              "openDate": null,
+              "expireDate": null,
+              "isActive": true,
+              "isDone": true,
+              "isRemove": false,
+              "properties": [],
+              "providerTechnicalName": "netflix"
+            }
+          ],
+          "isMyWatched": false,
+          "isMyWatching": false
+        }
+      }
+    }
+  }
+]
