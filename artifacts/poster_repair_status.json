@@ -1,43 +1,55 @@
 {
   "schema_version": 1,
-  "applied_at": "2026-10-22T05:08:29.456183+00:00",
+  "applied_at": "2026-10-26T04:44:30.209278+00:00",
   "mode": "write",
-  "source_run_id": "20261022-114213-3b59418b",
-  "latest_run_id": "20261022-114213-3b59418b",
-  "checked_unique": 12,
-  "found_unique": 7,
-  "updated_rows": 60,
+  "source_run_id": "20261023-182226-90fe5fe3",
+  "latest_run_id": "20261023-182226-90fe5fe3",
+  "checked_unique": 7,
+  "found_unique": 0,
+  "updated_rows": 0,
   "visible_candidates": 50,
-  "before_visible_with_poster": 38,
-  "visible_with_poster": 45,
+  "before_visible_with_poster": 43,
+  "visible_with_poster": 43,
   "unresolved": [
     {
-      "title": "미스트롯",
-      "year": "2019",
+      "title": "사랑은 아무나 하나",
+      "year": "2000",
+      "content_type": "드라마",
+      "poster_url": ""
+    },
+    {
+      "title": "두 번째 스무살",
+      "year": "2015",
+      "content_type": "드라마",
+      "poster_url": ""
+    },
+    {
+      "title": "재혼 황후",
+      "year": "2024",
+      "content_type": "드라마",
+      "poster_url": ""
+    },
+    {
+      "title": "신병",
+      "year": "2022",
+      "content_type": "드라마",
+      "poster_url": ""
+    },
+    {
+      "title": "푸른거탑",
+      "year": "2013",
+      "content_type": "드라마",
+      "poster_url": ""
+    },
+    {
+      "title": "더 지니어스",
+      "year": "2013",
       "content_type": "예능",
       "poster_url": ""
     },
     {
-      "title": "피지컬: 100",
-      "year": "2023",
-      "content_type": "예능",
-      "poster_url": ""
-    },
-    {
-      "title": "크라임씬",
-      "year": "2014",
-      "content_type": "예능",
-      "poster_url": ""
-    },
-    {
-      "title": "무한도전",
-      "year": "2006",
-      "content_type": "예능",
-      "poster_url": ""
-    },
-    {
-      "title": "닥터X: 외과의 다이몬 미치코",
-      "year": "2012",
+      "title": "오징어 게임",
+      "year": "2021",
       "content_type": "드라마",
       "poster_url": ""
     }
