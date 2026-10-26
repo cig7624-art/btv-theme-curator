@@ -1,7 +1,7 @@
 {
   "version": "1.6.1",
-  "status": "local_passed",
-  "full_tests": 782,
+  "status": "passed",
+  "full_tests": 798,
   "requested_titles_per_theme": 10,
   "poster_lookup_per_theme": 10,
   "normal_view_model_calls": 0,
@@ -15,5 +15,18 @@
     "artifacts/weekly_live_validation.json",
     "artifacts/theme_rail_live_validation.json",
     "artifacts/tab_stability_validation.json"
-  ]
+  ],
+  "live_checks": 44,
+  "live_themes": 10,
+  "live_titles": 100,
+  "live_titles_per_theme": 10,
+  "live_tab_switches": 20,
+  "live_maximum_drift_px": 0,
+  "live_poster_images": {
+    "desktop": 92,
+    "mobile": 92
+  },
+  "title_card_fallbacks": 8,
+  "metadata_corrections": 2,
+  "verified_at": "2026-10-26T09:19:31.531316+00:00"
 }
