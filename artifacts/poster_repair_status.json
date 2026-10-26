@@ -1,29 +1,23 @@
 {
   "schema_version": 1,
-  "applied_at": "2026-10-26T09:03:34.150878+00:00",
+  "applied_at": "2026-10-26T09:12:33.774393+00:00",
   "mode": "write",
   "source_run_id": "20261026-135305-bb90cdfd",
   "latest_run_id": "20261026-135305-bb90cdfd",
-  "checked_unique": 14,
-  "found_unique": 5,
-  "updated_rows": 15,
+  "checked_unique": 9,
+  "found_unique": 1,
+  "updated_rows": 4,
   "per_theme": 10,
   "visible_candidates": 100,
-  "before_visible_with_poster": 85,
-  "visible_with_poster": 91,
-  "visible_verified_with_poster": 82,
-  "visible_retryable_posters": 9,
+  "before_visible_with_poster": 91,
+  "visible_with_poster": 92,
+  "visible_verified_with_poster": 76,
+  "visible_retryable_posters": 16,
   "unresolved": [
     {
       "title": "홈커밍",
       "year": "2018",
       "content_type": "드라마",
-      "poster_url": ""
-    },
-    {
-      "title": "헝거 게임",
-      "year": "2012",
-      "content_type": "영화",
       "poster_url": ""
     },
     {
@@ -239,6 +233,13 @@
       "height": 383
     },
     {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/f/f3/Experimenter_Poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 259,
+      "height": 384
+    },
+    {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/4/44/The_Hunt_%282012_film%29.jpg/250px-The_Hunt_%282012_film%29.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
       "status": "available",
       "reason": "decoded_image",
@@ -302,6 +303,13 @@
       "height": 1350
     },
     {
+      "poster_url": "https://static.tvmaze.com/uploads/images/original_untouched/115/288524.jpg",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 680,
+      "height": 1000
+    },
+    {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/e/e3/Network_%281976_poster%29.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
       "status": "available",
       "reason": "decoded_image",
@@ -317,17 +325,13 @@
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/0/01/In_the_Loop_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
-      "status": "available",
-      "reason": "decoded_image",
-      "width": 363,
-      "height": 275
+      "status": "retryable",
+      "reason": "HTTPError"
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/ko/a/a7/%EC%95%85%EB%A7%88%EB%8A%94%ED%94%84%EB%9D%BC%EB%8B%A4%EB%A5%BC%EC%9E%85%EB%8A%94%EB%8B%A4_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-      "status": "available",
-      "reason": "decoded_image",
-      "width": 300,
-      "height": 395
+      "status": "retryable",
+      "reason": "HTTPError"
     },
     {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/a/a7/Snatch_ver4.jpg/250px-Snatch_ver4.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
@@ -342,6 +346,18 @@
       "reason": "decoded_image",
       "width": 250,
       "height": 370
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/commons/b/b5/12_Angry_Men_%281957_film_poster%29.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "retryable",
+      "reason": "HTTPError"
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/2/2c/%EB%AF%B8%EB%93%9C%EB%82%98%EC%9E%87%EC%9D%B8%ED%8C%8C%EB%A6%AC_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/250px-%EB%AF%B8%EB%93%9C%EB%82%98%EC%9E%87%EC%9D%B8%ED%8C%8C%EB%A6%AC_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 358
     },
     {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/b/b0/%EB%8D%94_%EC%9A%B8%ED%94%84_%EC%98%A4%EB%B8%8C_%EC%9B%94_%EC%8A%A4%ED%8A%B8%EB%A6%AC%ED%8A%B8.jpg/250px-%EB%8D%94_%EC%9A%B8%ED%94%84_%EC%98%A4%EB%B8%8C_%EC%9B%94_%EC%8A%A4%ED%8A%B8%EB%A6%AC%ED%8A%B8.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
@@ -415,6 +431,11 @@
       "reason": "HTTPError"
     },
     {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/7/74/Roommate_%28TV_program%29-_promotional_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "retryable",
+      "reason": "HTTPError"
+    },
+    {
       "poster_url": "https://upload.wikimedia.org/wikipedia/ko/0/01/%EA%B1%B0%EC%B9%A8%EC%97%86%EC%9D%B4_%ED%95%98%EC%9D%B4%ED%82%A5%21_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpeg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
       "status": "retryable",
       "reason": "HTTPError"
@@ -475,10 +496,8 @@
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/ko/4/49/%EC%8A%AC%EA%B8%B0%EB%A1%9C%EC%9A%B4_%EC%9D%98%EC%82%AC%EC%83%9D%ED%99%9C_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-      "status": "available",
-      "reason": "decoded_image",
-      "width": 265,
-      "height": 375
+      "status": "retryable",
+      "reason": "HTTPError"
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/8/88/Good_Doctor_TV_series-poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
@@ -674,110 +693,6 @@
             {
               "lang": "en",
               "*": "Homecoming (disambiguation)"
-            }
-          ],
-          "identity_verified": false
-        }
-      ]
-    },
-    {
-      "title": "헝거 게임",
-      "year": "2012",
-      "content_type": "영화",
-      "korean_pages": [
-        {
-          "ns": 0,
-          "title": "헝거 게임 (영화)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "ns": 0,
-          "title": "헝거 게임 (2012년 영화)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "pageid": 722930,
-          "ns": 0,
-          "title": "헝거 게임",
-          "original": {
-            "source": "https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Hunger_Games_%28Liongate_films%29_logo.svg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-            "width": 313,
-            "height": 120
-          },
-          "pageimage": "The_Hunger_Games_(Liongate_films)_logo.svg",
-          "pageprops": {
-            "page_image_free": "The_Hunger_Games_(Liongate_films)_logo.svg",
-            "wikibase_item": "Q11679"
-          },
-          "extract": "헝거 게임(The Hunger Games)은 영 어덜트 모험 SF 소설 시리즈로, 수잔 콜린스가 지었다. 헝거 게임 (The Hunger Games), 캣칭 파이어 (Catching Fire), 모킹제이 (Mockingjay)로 구성되어 있다. 라이온즈 게이트 엔터테인먼트가 이 소설을 영화화해, 2012년 제1부작 《헝거 게임: 판엠의 불꽃》이 개봉되었다.",
-          "categories": [
-            {
-              "ns": 14,
-              "title": "분류:2008년 시작한 책 시리즈"
-            },
-            {
-              "ns": 14,
-              "title": "분류:가공의 나라를 배경으로 한 소설"
-            },
-            {
-              "ns": 14,
-              "title": "분류:디스토피아 소설"
-            },
-            {
-              "ns": 14,
-              "title": "분류:모든 토막글 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:소설에 관한 토막글"
-            },
-            {
-              "ns": 14,
-              "title": "분류:영어 표기를 포함한 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P18을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P227을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P268을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P269를 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P373을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P8189를 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:해결되지 않은 속성이 있는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:헝거 게임"
-            }
-          ],
-          "langlinks": [
-            {
-              "lang": "en",
-              "*": "The Hunger Games"
             }
           ],
           "identity_verified": false
@@ -1114,6 +1029,86 @@
           "title": "하숙집 오!번지 (2022년 드라마)",
           "missing": "",
           "identity_verified": false
+        }
+      ]
+    },
+    {
+      "title": "파견의 품격",
+      "year": "2007",
+      "content_type": "드라마",
+      "korean_pages": [
+        {
+          "ns": 0,
+          "title": "파견의 품격 (드라마)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "파견의 품격 (텔레비전 프로그램)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "파견의 품격 (2007년 드라마)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "pageid": 380193,
+          "ns": 0,
+          "title": "만능사원 오오마에",
+          "pageprops": {
+            "wikibase_item": "Q5368367"
+          },
+          "extract": "파견의 품격(ハケンの品格)은 일본 NTV에서 2007년 1월 10일 ~ 2007년 3월 14일 매주 수요일 오후 10시부터 10시 54분까지 방영한 드라마로, NTV를 비롯한, 요미우리 TV(이하 YTV - 긴키 광역권), 주쿄 TV 방송(이하 CTV - 주쿄 광역권), 후쿠오카 방송(이하 FBS) 등 26개 NNN 지역 민방 네트워크를 통해서 전국적으로 일제히 송출되어, 총 10화로 구성된 시노하라 료코 주연의 드라마이다. 대한민국에서는 SBS 드라마플러스를 통해 만능사원 오오마에라는 이름으로 방송되었으며, '파견의 품격'이라는 원 제목도 잘 알려져 있다.",
+          "categories": [
+            {
+              "ns": 14,
+              "title": "분류:2007년 텔레비전 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:2020년 텔레비전 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:나카조노 미호 각본 텔레비전 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:닛폰 TV 수요일 밤 10시 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:방송문화기금상 우수상"
+            },
+            {
+              "ns": 14,
+              "title": "분류:웹아카이브 틀 웨이백 링크"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:일본어 표기를 포함한 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:직장 연애를 다룬 작품"
+            },
+            {
+              "ns": 14,
+              "title": "분류:해결되지 않은 속성이 있는 문서"
+            }
+          ],
+          "_requested_aliases": [
+            "파견의 품격"
+          ],
+          "identity_verified": true
         }
       ]
     }
