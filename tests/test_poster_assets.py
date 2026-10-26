@@ -353,6 +353,54 @@ class PosterAssetTests(unittest.TestCase):
             self.assertEqual(posters._poster_for_refresh(identity, 123), live)
         apple.assert_called_once()
 
+    def test_tvmaze_requires_exact_title_premiere_kind_and_unique_show_identity(self):
+        show = dict(id=564, name="Mindhunter", premiered="2017-10-13", type="Scripted",
+                    url="https://www.tvmaze.com/shows/564/mindhunter",
+                    image={"original": "https://static.tvmaze.com/uploads/images/original_untouched/1/123.jpg"})
+        alternatives = [[show], [dict(show, name="Mindhunter: Behind the Scenes")],
+                        [dict(show, premiered="2018-10-13")], [dict(show, type="Feature Film")],
+                        [show, dict(show, id=999)]]
+        for index, shows in enumerate(alternatives):
+            with self.subTest(index=index), patch.object(posters.requests, "get", return_value=response([{"score": 1, "show": value} for value in shows])) as get, \
+                 patch.object(posters, "inspect_poster_url", return_value={"status": "available", "width": 200, "height": 300}):
+                result = posters._tvmaze_poster("Mindhunter (TV series)", "2017")
+            self.assertEqual(bool(result), index == 0)
+            self.assertEqual(get.call_args.kwargs["params"], {"q": "Mindhunter"})
+        with patch.object(posters.requests, "get") as get:
+            self.assertEqual(posters._tvmaze_poster("Mindhunter (TV series)", ""), {})
+        get.assert_not_called()
+
+    def test_tvmaze_rejects_landscape_or_failed_actual_image_bytes(self):
+        show = dict(id=564, name="Mindhunter", premiered="2017-10-13", type="Scripted",
+                    image={"original": "https://static.tvmaze.com/uploads/actual.jpg"})
+        for health in [{"status": "available", "width": 400, "height": 100}, {"status": "invalid"}]:
+            with self.subTest(health=health), patch.object(posters.requests, "get", return_value=response([{"show": show}])), \
+                 patch.object(posters, "inspect_poster_url", return_value=health):
+                self.assertEqual(posters._tvmaze_poster("Mindhunter", "2017"), {})
+
+    def test_verified_wikipedia_language_bridge_supplies_tvmaze_lookup(self):
+        korean = dict(title="마인드헌터", extract="2017년 드라마", categories=[{"title": "분류:드라마"}],
+                      langlinks=[{"lang": "en", "*": "Mindhunter (TV series)"}])
+        english = dict(title="Mindhunter (TV series)", extract="A 2017 television series",
+                       categories=[{"title": "Category:2017 television series debuts"}])
+        with patch.object(posters, "_wikipedia_pages", side_effect=[[korean], [english]]), \
+             patch.object(posters, "_wikipedia_artwork", return_value={}), \
+             patch.object(posters, "_tvmaze_poster", return_value={"poster_url": "https://static.tvmaze.com/actual.jpg"}) as tvmaze:
+            result = posters._wikipedia_poster("마인드헌터", "2017", "드라마")
+        tvmaze.assert_called_once_with("Mindhunter (TV series)", "2017")
+        self.assertTrue(result)
+
+    def test_verified_english_movie_bridge_uses_us_itunes_without_title_guessing(self):
+        korean = dict(title="인빅터스", extract="2009년 영화", categories=[{"title": "분류:2009년 영화"}],
+                      langlinks=[{"lang": "en", "*": "Invictus (film)"}])
+        english = dict(title="Invictus (film)", extract="A 2009 film", categories=[{"title": "Category:2009 films"}])
+        with patch.object(posters, "_wikipedia_pages", side_effect=[[korean], [english]]), \
+             patch.object(posters, "_wikipedia_artwork", return_value={}), \
+             patch.object(posters, "_itunes_poster", return_value={"poster_url": "https://is1-ssl.mzstatic.com/actual.jpg"}) as apple:
+            self.assertTrue(posters._wikipedia_poster("인빅터스", "2009", "영화"))
+        apple.assert_called_once_with("Invictus", "2009", "영화", country="US")
+        self.assertEqual(posters._english_work_title("Example (Part One)"), "Example (Part One)")
+
     def test_confirmed_empty_matches_are_cached_for_this_hour(self):
         with patch.object(posters, "_itunes_poster", return_value={}) as apple, \
              patch.object(posters, "_wikipedia_poster", return_value={}) as wiki:

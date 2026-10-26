@@ -202,13 +202,13 @@ def _verified_artwork(artwork):
     return artwork if health["status"] == "available" else {}
 
 
-def _itunes_poster(title, year, content_type):
+def _itunes_poster(title, year, content_type, *, country="KR"):
     # Movie artwork is never used for a TV series with the same title.
     if _is_tv(content_type):
         return {}
     response = _get_with_retry(
         _ITUNES_URL,
-        params={"term": title, "country": "KR", "media": "movie", "entity": "movie", "limit": 12, "lang": "ko_kr"},
+        params={"term": title, "country": country, "media": "movie", "entity": "movie", "limit": 12, "lang": "ko_kr" if country == "KR" else "en_us"},
     )
     response.raise_for_status()
     payload = response.json()
@@ -242,6 +242,54 @@ def _itunes_poster(title, year, content_type):
                     return verified
             except requests.RequestException as error:
                 unavailable = error
+    if unavailable is not None:
+        raise unavailable
+    return {}
+
+
+def _english_work_title(title):
+    # Preserve meaningful parenthetical title text; remove media qualifiers only.
+    return re.sub(r"\s*\((?=[^()]*\b(?:TV series|television series|film|television program|game show|reality show)\b)[^()]+\)$", "", _text(title), flags=re.I)
+
+
+def _tvmaze_poster(verified_english_title, year):
+    """Resolve only a verified Wikipedia title bridge with an exact premiere."""
+    if not year:
+        return {}
+    title = _english_work_title(verified_english_title)
+    response = _get_with_retry("https://api.tvmaze.com/search/shows", params={"q": title})
+    response.raise_for_status()
+    payload = response.json()
+    matches = {}
+    for result in payload if isinstance(payload, list) else []:
+        show = result.get("show", {}) if isinstance(result, dict) else {}
+        if not isinstance(show, dict) or _key(show.get("name")) != _key(title) or _year(show.get("premiered")) != year:
+            continue
+        if _text(show.get("type")).lower() not in {"scripted", "reality", "game show", "talk show", "documentary", "animation", "variety", "panel show", "award show", "sports"}:
+            continue
+        identifier = show.get("id")
+        if isinstance(identifier, int) and not isinstance(identifier, bool) and identifier > 0:
+            matches[identifier] = show
+    # A same-title/same-year collision is still ambiguous, even if only one
+    # result has artwork. Never choose the first search result by score.
+    if len(matches) != 1:
+        return {}
+    show = next(iter(matches.values()))
+    image = show.get("image")
+    if not isinstance(image, dict):
+        return {}
+    unavailable = None
+    for field in ("original", "medium"):
+        poster = _url(image.get(field), domains=("tvmaze.com",))
+        if not poster:
+            continue
+        health = inspect_poster_url(poster)
+        if health["status"] == "retryable":
+            unavailable = requests.ConnectionError("TVmaze poster image is temporarily unavailable")
+            continue
+        width, height = health.get("width", 0), health.get("height", 0)
+        if health["status"] == "available" and height and .45 <= width / height <= .85:
+            return {"poster_url": poster, "poster_source": "TVmaze", "poster_source_url": _url(show.get("url"), domains=("tvmaze.com",))}
     if unavailable is not None:
         raise unavailable
     return {}
@@ -456,6 +504,18 @@ def _wikipedia_poster(title, year, content_type):
                 return artwork
         except requests.RequestException as error:
             unavailable = error
+    # This bridge comes only from the verified Korean work's declared language
+    # link and an English page that retained its year and media identity.
+    if year:
+        for page in english:
+            try:
+                base_title = _english_work_title(page.get("title"))
+                artwork = (_tvmaze_poster(page["title"], year) if tv
+                           else _itunes_poster(base_title, year, content_type, country="US"))
+                if artwork:
+                    return artwork
+            except requests.RequestException as error:
+                unavailable = error
     if unavailable is not None:
         raise unavailable
     return {}

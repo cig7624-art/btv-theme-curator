@@ -7,6 +7,7 @@ on:
     paths:
       - poster_assets.py
       - scripts/repair_theme_posters.py
+      - scripts/audit_candidate_identity.py
       - .github/workflows/repair_posters.yml
 
 concurrency:
@@ -28,6 +29,13 @@ jobs:
         run: pip install -r requirements-dev.txt
       - name: Validate poster repair
         run: python -m unittest discover -s tests -v
+      - name: Audit ambiguous candidate identities using public metadata only
+        run: python scripts/audit_candidate_identity.py
+      - name: Preserve public identity evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-identity-audit
+          path: artifacts/candidate_identity_audit.json
       - name: Look up existing titles without generating new recommendations
         run: python scripts/repair_theme_posters.py --collect /tmp/theme-poster-updates.json --limit 100 --per-theme 10 --check-existing --diagnose
       - name: Save image validation evidence
@@ -43,7 +51,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add theme_content_candidates.csv artifacts/poster_repair_status.json
+          git add theme_content_candidates.csv artifacts/poster_repair_status.json artifacts/candidate_identity_audit.json
           if git diff --cached --quiet; then
             exit 0
           fi

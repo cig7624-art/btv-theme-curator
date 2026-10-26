@@ -922,7 +922,7 @@ def _latest_content_date(contents):
     return latest.strftime("%Y.%m.%d")
 
 
-def _content_links_html(contents, visible=10):
+def _content_links_html(contents, visible=16):
     if not contents:
         return '<div class="theme-db-content-empty">아직 콘텐츠 후보가 없습니다. 옆의 새로고침 버튼으로 연결할 수 있습니다.</div>'
     links = []
@@ -1036,7 +1036,7 @@ def render_theme_db_card(
 
             st.markdown(
                 '<div class="theme-db-contents" style="border-left:0;padding-left:0;justify-content:flex-start">'
-                f'{_content_links_html(current_contents, visible=10)}'
+                f'{_content_links_html(current_contents, visible=16)}'
                 '</div>',
                 unsafe_allow_html=True,
             )

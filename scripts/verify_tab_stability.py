@@ -14,10 +14,12 @@ import time
 
 if __package__:
     from .benchmark_app_performance import BenchmarkIssue, RerunTracker, Session
-    from .verify_deployment import normalized_version, resolve_app_frame
+    from .verify_deployment import ROOT, VerificationIssue, normalized_version, resolve_app_frame
+    from .verify_theme_rail_live import load_release
 else:
     from benchmark_app_performance import BenchmarkIssue, RerunTracker, Session
-    from verify_deployment import normalized_version, resolve_app_frame
+    from verify_deployment import ROOT, VerificationIssue, normalized_version, resolve_app_frame
+    from verify_theme_rail_live import load_release
 
 
 VIEWPORTS = (("desktop", 1366, 1000), ("mobile", 390, 844))
@@ -79,13 +81,14 @@ def summarize_geometry(samples):
 
 
 def verify(args):
-    from playwright.sync_api import sync_playwright
-
     report = {"protocol": "streamlit-lazy-tab-layout-v1", "status": "failed",
               "expected_version": args.expected_version, "observed_versions": [],
-              "started_at": datetime.now(timezone.utc).isoformat(), "measurements": [], "errors": []}
+              "started_at": datetime.now(timezone.utc).isoformat(), "measurements": [], "tests": {}, "errors": []}
     deadline = time.monotonic() + args.timeout
+    stage = "browser_launch"
     try:
+        from playwright.sync_api import sync_playwright
+
         with sync_playwright() as playwright:
             launch = {"headless": True, "args": ["--disable-dev-shm-usage"]}
             if args.executable:
@@ -93,15 +96,24 @@ def verify(args):
             browser = playwright.chromium.launch(**launch)
             try:
                 for viewport, width, height in VIEWPORTS:
+                    stage = "browser_context"
                     context = browser.new_context(viewport={"width": width, "height": height},
                                                   is_mobile=viewport == "mobile", has_touch=viewport == "mobile")
                     try:
                         page = context.new_page()
+                        stage = "tracker_initialization"
+                        # Subscribe before navigation: attaching after version
+                        # readiness misses the already-open Streamlit socket.
                         tracker = RerunTracker(page)
                         session = Session(page, tracker, deadline)
-                        before, started = tracker.checkpoint(), time.monotonic()
-                        page.goto(args.url)
-                        session.wait(before, started, selector=".magazine-hero", tab="지금 주목할 이야기",
+                        before = tracker.checkpoint()
+                        stage = "release_loading"
+                        load_release(page, args, report, viewport)
+                        stage = "initial_rerun"
+                        # Cloud wake/restart may take longer than Session's
+                        # 40-second action window. Initial timing is discarded;
+                        # start its readiness window after release loading.
+                        session.wait(before, time.monotonic(), selector=".magazine-hero", tab="지금 주목할 이야기",
                                      query=None, source=None)
                         observed = resolve_app_frame(page).locator(".magazine-footer").get_attribute("data-version")
                         report["observed_versions"].append({"viewport": viewport, "version": observed})
@@ -111,15 +123,18 @@ def verify(args):
                         # position; 50px also catches browser scroll clamping
                         # when an empty lazy panel used to collapse the page.
                         for scroll in (0, 50):
+                            stage = "layout_sampling"
                             frame = resolve_app_frame(page)
                             frame.locator('[data-testid="stMain"]').evaluate(
                                 "(main, y) => {main.scrollTop = y}", scroll)
                             for key, label, selector in TABS:
                                 frame = resolve_app_frame(page)
                                 frame.evaluate(START_SAMPLING)
+                                stage = "tab_switch"
                                 timing = session.action(
                                     lambda: resolve_app_frame(page).get_by_role("tab", name=label, exact=True).click(),
                                     selector=selector, tab=label)
+                                stage = "geometry_summary"
                                 geometry = summarize_geometry(resolve_app_frame(page).evaluate(STOP_SAMPLING))
                                 report["measurements"].append({"viewport": viewport, "requested_scroll_px": scroll,
                                                                "tab": key, **geometry, **timing})
@@ -132,12 +147,32 @@ def verify(args):
                     or row["collapsed_shell_frames"] or row["footer_intrusion_frames"]]
         report["status"] = "failed" if failures else "passed"
         report["unstable_switches"] = len(failures)
+    except VerificationIssue as error:
+        report["errors"].append(error.code)
+        report["failure_stage"] = stage
+        if error.blocked:
+            report["status"] = "blocked"
     except BenchmarkIssue as error:
         report["errors"].append(str(error))
+        report["failure_stage"] = stage
         if error.diagnostics:
             report["timeout_diagnostics"] = error.diagnostics
+    except ImportError:
+        report["errors"].append("tracker_dependency_unavailable" if stage == "tracker_initialization"
+                                else "browser_dependency_unavailable")
+        report["failure_stage"] = stage
     except Exception:
-        report["errors"].append("browser_layout_verification_unavailable")
+        report["errors"].append({
+            "browser_launch": "browser_launch_unavailable",
+            "browser_context": "browser_context_unavailable",
+            "tracker_initialization": "tracker_initialization_failed",
+            "release_loading": "release_loading_failed",
+            "initial_rerun": "initial_rerun_unavailable",
+            "layout_sampling": "layout_sampling_failed",
+            "tab_switch": "tab_switch_unavailable",
+            "geometry_summary": "geometry_summary_failed",
+        }[stage])
+        report["failure_stage"] = stage
     report["finished_at"] = datetime.now(timezone.utc).isoformat()
     return report
 
@@ -150,6 +185,9 @@ def main(argv=None):
     parser.add_argument("--timeout", type=float, default=180)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
+    args.expected_version = normalized_version(args.expected_version or (ROOT / "VERSION").read_text(encoding="utf-8"))
+    if not args.expected_version or args.timeout <= 0:
+        parser.error("use an exact release version and a positive timeout")
     report = verify(args)
     output = json.dumps(report, ensure_ascii=False, indent=2)
     if args.output:
