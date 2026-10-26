@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "corrected_at": "2026-10-26T08:59:01.088782+00:00",
+  "scope_run_id": "20261026-135305-bb90cdfd",
+  "preserved_other_rows": 3055,
+  "history_unchanged": true,
+  "corrections": [
+    {
+      "title": "밀그램 프로젝트",
+      "previous_year": "2021",
+      "previous_type": "영화",
+      "year": "2015",
+      "content_type": "영화",
+      "source_url": "https://ko.wikipedia.org/wiki/%EB%B0%80%EA%B7%B8%EB%9E%A8_%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8",
+      "evidence_observed_at": "2026-10-26T05:37:40.823829+00:00",
+      "source_excerpt": "《밀그램 프로젝트》(영어: Experimenter: The Stanley Milgram Story 혹은 Experimenter)는 2015년 개봉한 미국의 전기 드라마 영화이다. 마이클 알머레이다가 감독 및 각본을 맡았으며, 스탠리 밀그럼의 밀그럼 실험에 바탕하였다.",
+      "updated_rows": 2
+    },
+    {
+      "title": "룸메이트",
+      "previous_year": "2013",
+      "previous_type": "드라마",
+      "year": "2014",
+      "content_type": "예능",
+      "source_url": "https://ko.wikipedia.org/wiki/%EB%A3%B8%EB%A9%94%EC%9D%B4%ED%8A%B8_%28%ED%85%94%EB%A0%88%EB%B9%84%EC%A0%84_%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8%29",
+      "evidence_observed_at": "2026-10-26T05:37:40.823829+00:00",
+      "source_excerpt": "《룸메이트》(영어: Roommate)는 2014년 5월 4일부터 2015년 4월 14일까지 방송된 예능 프로그램이다. 《일요일이 좋다》의 1부 코너로, 1인 가구 25% 시대를 맞이하여 여러 명의 스타들이 개인 공간과 공동 공간으로 구성된 집에 함께 거주하면서 벌어지는 일들을 담았다. 《강심장》의 박상혁 PD가 기획한 셰어하우스를 모티브로 삼은 관찰 형식의 리얼 버라이어티 예능이다.",
+      "updated_rows": 2
+    }
+  ]
+}

@@ -249,7 +249,7 @@ def _itunes_poster(title, year, content_type, *, country="KR"):
 
 def _english_work_title(title):
     # Preserve meaningful parenthetical title text; remove media qualifiers only.
-    return re.sub(r"\s*\((?=[^()]*\b(?:TV series|television series|film|television program|game show|reality show)\b)[^()]+\)$", "", _text(title), flags=re.I)
+    return re.sub(r"\s*\((?=[^()]*\b(?:TV series|TV program|television series|film|television program|game show|reality show)\b)[^()]+\)$", "", _text(title), flags=re.I)
 
 
 def _tvmaze_poster(verified_english_title, year):
@@ -315,8 +315,55 @@ def _wikipedia_pages(language, titles, *, english_links=False, search=False):
                       gsrnamespace=0, gsrlimit=5)
     response = _wikipedia_get(language, params)
     payload = response.json()
-    pages = payload.get("query", {}).get("pages", {}) if isinstance(payload, dict) else {}
-    return list(pages.values()) if isinstance(pages, dict) else []
+    query = payload.get("query", {}) if isinstance(payload, dict) else {}
+    if not isinstance(query, dict):
+        return []
+    pages = query.get("pages", {}) if isinstance(query, dict) else {}
+    pages = [dict(page) for page in pages.values() if isinstance(page, dict)] if isinstance(pages, dict) else []
+    if search:
+        return pages
+    # Only the server's explicit normalization/redirect chain can bridge a
+    # requested alias to a differently named canonical work. Search hits and
+    # unrelated aliases in a response never establish that identity.
+    edges = {}
+    for field in ("normalized", "redirects"):
+        for mapping in query.get(field, []):
+            if not isinstance(mapping, dict) or mapping.get("tofragment"):
+                continue
+            source, target = _text(mapping.get("from")), _text(mapping.get("to"))
+            if source and target:
+                edges.setdefault(source, set()).add(target)
+    for page in pages:
+        aliases = []
+        for requested in titles:
+            current, seen = _text(requested), set()
+            for _ in range(8):
+                if current in seen or len(edges.get(current, ())) != 1:
+                    break
+                seen.add(current)
+                current = next(iter(edges[current]))
+                if current == _text(page.get("title")):
+                    aliases.append(_text(requested))
+                    break
+        if aliases:
+            page["_requested_aliases"] = aliases
+    return pages
+
+
+def _wikipedia_release_years(page, tv):
+    """Use release/debut categories, never a story's setting or a decade."""
+    years = set()
+    for category in page.get("categories", []):
+        label = _text(category.get("title")) if isinstance(category, dict) else ""
+        match = re.match(r"^(?:Category|분류):\s*((?:19|20)\d{2})(?=\s|년|$)(.*)$", label, re.I)
+        if not match:
+            continue
+        tail = match.group(2)
+        release = (bool(re.search(r"television series debuts|TV series debuts|년에?\s*(?:시작한|방영을\s*시작한)", tail, re.I))
+                   or bool(re.fullmatch(r"년\s*(?:드라마|텔레비전\s*드라마)", tail))) if tv else bool(re.fullmatch(r"\s*films?\s*|년\s*영화", tail, re.I))
+        if release:
+            years.add(match.group(1))
+    return years
 
 
 def _verified_wikipedia_page(page, requested_titles, year, tv):
@@ -324,7 +371,9 @@ def _verified_wikipedia_page(page, requested_titles, year, tv):
         return False
     page_title = _text(page.get("title"))
     base_title = re.sub(r"\s*\([^()]+\)$", "", page_title)
-    if _key(base_title) not in {_key(re.sub(r"\s*\([^()]+\)$", "", title)) for title in requested_titles}:
+    page_titles = [base_title, *page.get("_requested_aliases", [])]
+    if not ({_key(re.sub(r"\s*\([^()]+\)$", "", title)) for title in page_titles}
+            & {_key(re.sub(r"\s*\([^()]+\)$", "", title)) for title in requested_titles}):
         return False
     qualifier = re.search(r"\(([^()]*)\)$", page_title)
     qualifier = qualifier.group(1) if qualifier else ""
@@ -345,23 +394,13 @@ def _verified_wikipedia_page(page, requested_titles, year, tv):
         return False
     category_labels = [_text(item.get("title")) for item in page.get("categories", []) if isinstance(item, dict)]
     categories = " ".join(category_labels)
-    media_categories = " ".join(label for label in category_labels
+    media_categories = [label for label in category_labels
                                 if not re.search(r"(?:소설|웹툰|만화|novels?|books?|comics?|webtoons?|manga|manhwa)\s*$", label, re.I)
-                                and not re.search(r"\b(?:novels?|books?|comics?|webtoons?)\b.*\badapted (?:into|for)\b", label, re.I))
-    kind_pattern = r"드라마|텔레비전|television|TV series" if tv else r"영화|\bfilms?\b"
-    if not re.search(kind_pattern, " ".join((qualifier, media_categories)), re.I):
+                                and not re.search(r"\b(?:novels?|books?|comics?|webtoons?)\b.*\badapted (?:into|for)\b", label, re.I)]
+    kind_pattern = r"드라마(?!\s*영화)|텔레비전|television|TV series" if tv else r"영화\s*$|\bfilms?\s*$"
+    if not any(re.search(kind_pattern, text, re.I) for text in [qualifier, *media_categories]):
         return False
-    release_years = set()
-    for category in page.get("categories", []):
-        label = _text(category.get("title")) if isinstance(category, dict) else ""
-        category_year = re.match(r"^(?:Category|분류):\s*((?:19|20)\d{2})(.*)$", label, re.I)
-        if not category_year:
-            continue
-        tail = category_year.group(2)
-        release_category = (bool(re.search(r"television series debuts|TV series debuts|년에?\s*(?:시작한|방영을\s*시작한)", tail, re.I))
-                            or bool(re.fullmatch(r"년\s*(?:드라마|텔레비전\s*드라마)", tail))) if tv else bool(re.search(r"(?:\bfilms?|영화)\s*$", tail, re.I))
-        if release_category:
-            release_years.add(category_year.group(1))
+    release_years = _wikipedia_release_years(page, tv)
     # A sequel/next season's year in the intro cannot override an explicitly
     # classified release or first-broadcast year for this article's work.
     if year and release_years and year not in release_years:

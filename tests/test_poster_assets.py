@@ -150,6 +150,49 @@ class PosterAssetTests(unittest.TestCase):
         self.assertEqual(params["gsrlimit"], 5)
         self.assertNotIn("titles", params)
 
+    def test_drama_film_is_not_tv_and_setting_year_is_not_release_year(self):
+        page = dict(title="밀그램 프로젝트", extract="2015년 개봉한 미국의 전기 드라마 영화이다.", categories=[
+            {"title": "분류:미국의 드라마 영화"}, {"title": "분류:2015년 영화"},
+            {"title": "분류:1961년을 배경으로 한 영화"}, {"title": "Category:1960s films"}])
+        self.assertEqual(posters._wikipedia_release_years(page, False), {"2015"})
+        self.assertTrue(posters._verified_wikipedia_page(page, ["밀그램 프로젝트"], "2015", False))
+        self.assertFalse(posters._verified_wikipedia_page(page, ["밀그램 프로젝트"], "1961", False))
+        self.assertFalse(posters._verified_wikipedia_page(page, ["밀그램 프로젝트"], "2015", True))
+
+    def test_documented_normalization_redirect_chain_retains_year_and_media_guards(self):
+        page = dict(title="Canonical: Subtitle (film)", extract="A 2012 film", categories=[{"title": "Category:2012 films"}])
+        query = {"normalized": [{"from": "alias (film)", "to": "Alias (film)"}],
+                 "redirects": [{"from": "Alias (film)", "to": page["title"]}], "pages": {"1": page}}
+        with patch.object(posters.requests, "get", return_value=response({"query": query})):
+            resolved = posters._wikipedia_pages("en", ["alias (film)"])[0]
+        self.assertEqual(resolved["_requested_aliases"], ["alias (film)"])
+        self.assertTrue(posters._verified_wikipedia_page(resolved, ["alias"], "2012", False))
+        self.assertFalse(posters._verified_wikipedia_page(resolved, ["alias"], "2014", False))
+        self.assertFalse(posters._verified_wikipedia_page(resolved, ["alias"], "2012", True))
+        self.assertFalse(posters._verified_wikipedia_page(resolved, ["different work"], "2012", False))
+
+    def test_redirect_alias_requires_requested_origin_and_unambiguous_bounded_chain(self):
+        page = dict(title="Canonical (film)", extract="A 2012 film")
+        mappings = [
+            [{"from": "unrequested", "to": page["title"]}],
+            [{"from": "alias", "to": "cycle"}, {"from": "cycle", "to": "alias"}],
+            [{"from": "alias", "to": page["title"], "tofragment": "Different work"}],
+            [{"from": "alias", "to": page["title"]}, {"from": "alias", "to": "Other (film)"}],
+            [{"from": "alias" if index == 0 else str(index), "to": page["title"] if index == 8 else str(index + 1)} for index in range(9)],
+        ]
+        for redirects in mappings:
+            with self.subTest(redirects=redirects), patch.object(posters.requests, "get", return_value=response({"query": {"redirects": redirects, "pages": {"1": page}}})):
+                resolved = posters._wikipedia_pages("en", ["alias"])[0]
+            self.assertNotIn("_requested_aliases", resolved)
+            self.assertFalse(posters._verified_wikipedia_page(resolved, ["alias"], "2012", False))
+
+    def test_search_does_not_establish_a_redirect_identity(self):
+        page = dict(title="Canonical (film)", extract="A 2012 film")
+        query = {"redirects": [{"from": "alias", "to": page["title"]}], "pages": {"1": page}}
+        with patch.object(posters.requests, "get", return_value=response({"query": query})):
+            resolved = posters._wikipedia_pages("en", ["alias"], search=True)[0]
+        self.assertNotIn("_requested_aliases", resolved)
+
     def test_title_search_rejects_wrong_year_media_similar_title_and_ambiguous_work(self):
         base = dict(title="하얀 거탑 (2007년 드라마)", extract="2007년 텔레비전 드라마이다.",
                     pageimage="White_Tower_poster.jpg", original={"source": "https://upload.wikimedia.org/tower-poster.jpg"})

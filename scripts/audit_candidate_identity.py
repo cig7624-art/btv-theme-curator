@@ -13,7 +13,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from poster_assets import _is_tv, _key, _verified_wikipedia_page, _wikipedia_pages
+from poster_assets import _is_tv, _key, _verified_wikipedia_page, _wikipedia_pages, _wikipedia_release_years
 
 
 DEFAULT_CANDIDATES = (("밀그램 프로젝트", "2021", "영화"), ("룸메이트", "2013", "드라마"))
@@ -34,17 +34,7 @@ def describe_page(page, requested, *, language="ko", requested_titles=None):
     if television:
         media_type = "예능" if re.search(r"예능|리얼리티|버라이어티|\b(?:reality|variety|game show|talk show)\b",
                                        " ".join([extract, *labels]), re.I) else "드라마"
-    years = set()
-    for label in labels:
-        match = re.match(r"^(?:분류|Category):\s*((?:19|20)\d{2})(.*)$", label, re.I)
-        if not match:
-            continue
-        tail = match.group(2)
-        release = (bool(re.search(r"(?:영화|\bfilms?)\s*$", tail, re.I)) if movie else
-                   bool(re.search(r"television series debuts|TV series debuts|년에?\s*(?:시작한|방영을\s*시작한)", tail, re.I)
-                        or re.fullmatch(r"년\s*(?:드라마|텔레비전\s*드라마)", tail))) if media_type else False
-        if release:
-            years.add(match.group(1))
+    years = _wikipedia_release_years(page, television) if media_type else set()
     verified_source = ""
     if len(years) == 1 and media_type and _verified_wikipedia_page(page, names, next(iter(years)), television):
         verified_source = f"https://{language}.wikipedia.org/wiki/" + quote(canonical.replace(" ", "_"))
