@@ -4,7 +4,7 @@
   "status": "passed",
   "expected_version": "1.6.1",
   "expected_titles": 0,
-  "started_at": "2026-10-26T05:39:32.269355+00:00",
+  "started_at": "2026-10-26T09:03:36.212019+00:00",
   "tests": {
     "desktop_version": true,
     "desktop_no_horizontal_overflow": true,
@@ -18,12 +18,12 @@
     {
       "code": "poster_artwork_unavailable",
       "viewport": "desktop",
-      "missing": 15
+      "missing": 9
     },
     {
       "code": "poster_artwork_unavailable",
       "viewport": "mobile",
-      "missing": 15
+      "missing": 9
     }
   ],
   "viewports": [
@@ -259,38 +259,38 @@
       {
         "theme": 3,
         "total": 10,
-        "poster_urls": 8,
-        "loaded": 8,
-        "missing_url": 2,
+        "poster_urls": 9,
+        "loaded": 9,
+        "missing_url": 1,
         "failed": 0,
         "timed_out": 0,
-        "missing": 2,
+        "missing": 1,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 2
+        "missing_fallbacks_rendered": 1
       },
       {
         "theme": 4,
         "total": 10,
-        "poster_urls": 5,
-        "loaded": 5,
-        "missing_url": 5,
+        "poster_urls": 6,
+        "loaded": 6,
+        "missing_url": 4,
         "failed": 0,
         "timed_out": 0,
-        "missing": 5,
+        "missing": 4,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 5
+        "missing_fallbacks_rendered": 4
       },
       {
         "theme": 5,
         "total": 10,
-        "poster_urls": 8,
-        "loaded": 8,
-        "missing_url": 2,
+        "poster_urls": 10,
+        "loaded": 10,
+        "missing_url": 0,
         "failed": 0,
         "timed_out": 0,
-        "missing": 2,
+        "missing": 0,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 2
+        "missing_fallbacks_rendered": 0
       },
       {
         "theme": 6,
@@ -307,14 +307,14 @@
       {
         "theme": 7,
         "total": 10,
-        "poster_urls": 7,
-        "loaded": 7,
-        "missing_url": 3,
+        "poster_urls": 8,
+        "loaded": 8,
+        "missing_url": 2,
         "failed": 0,
         "timed_out": 0,
-        "missing": 3,
+        "missing": 2,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 3
+        "missing_fallbacks_rendered": 2
       },
       {
         "theme": 8,
@@ -331,14 +331,14 @@
       {
         "theme": 9,
         "total": 10,
-        "poster_urls": 9,
-        "loaded": 9,
-        "missing_url": 1,
+        "poster_urls": 10,
+        "loaded": 10,
+        "missing_url": 0,
         "failed": 0,
         "timed_out": 0,
-        "missing": 1,
+        "missing": 0,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 1
+        "missing_fallbacks_rendered": 0
       },
       {
         "theme": 10,
@@ -381,38 +381,38 @@
       {
         "theme": 3,
         "total": 10,
-        "poster_urls": 8,
-        "loaded": 8,
-        "missing_url": 2,
+        "poster_urls": 9,
+        "loaded": 9,
+        "missing_url": 1,
         "failed": 0,
         "timed_out": 0,
-        "missing": 2,
+        "missing": 1,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 2
+        "missing_fallbacks_rendered": 1
       },
       {
         "theme": 4,
         "total": 10,
-        "poster_urls": 5,
-        "loaded": 5,
-        "missing_url": 5,
+        "poster_urls": 6,
+        "loaded": 6,
+        "missing_url": 4,
         "failed": 0,
         "timed_out": 0,
-        "missing": 5,
+        "missing": 4,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 5
+        "missing_fallbacks_rendered": 4
       },
       {
         "theme": 5,
         "total": 10,
-        "poster_urls": 8,
-        "loaded": 8,
-        "missing_url": 2,
+        "poster_urls": 10,
+        "loaded": 10,
+        "missing_url": 0,
         "failed": 0,
         "timed_out": 0,
-        "missing": 2,
+        "missing": 0,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 2
+        "missing_fallbacks_rendered": 0
       },
       {
         "theme": 6,
@@ -429,14 +429,14 @@
       {
         "theme": 7,
         "total": 10,
-        "poster_urls": 7,
-        "loaded": 7,
-        "missing_url": 3,
+        "poster_urls": 8,
+        "loaded": 8,
+        "missing_url": 2,
         "failed": 0,
         "timed_out": 0,
-        "missing": 3,
+        "missing": 2,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 3
+        "missing_fallbacks_rendered": 2
       },
       {
         "theme": 8,
@@ -453,14 +453,14 @@
       {
         "theme": 9,
         "total": 10,
-        "poster_urls": 9,
-        "loaded": 9,
-        "missing_url": 1,
+        "poster_urls": 10,
+        "loaded": 10,
+        "missing_url": 0,
         "failed": 0,
         "timed_out": 0,
-        "missing": 1,
+        "missing": 0,
         "fallbacks_rendered": 10,
-        "missing_fallbacks_rendered": 1
+        "missing_fallbacks_rendered": 0
       },
       {
         "theme": 10,
@@ -752,5 +752,5 @@
       }
     ]
   },
-  "finished_at": "2026-10-26T05:40:19.844359+00:00"
+  "finished_at": "2026-10-26T09:04:24.172953+00:00"
 }
