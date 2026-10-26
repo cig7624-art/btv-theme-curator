@@ -879,7 +879,207 @@
       "image_kind": "article_image",
       "image_recorded_at": "2026-10-26T08:56:15+00:00",
       "source_updated_at": "2026-10-14",
-      "last_checked_at": "2026-10-26T08:56:15+00:00"
+      "last_checked_at": "2026-10-26T08:56:15+00:00",
+      "analysis": {
+        "headline": "CJ ENM, MENA 24개 지역 MBC 샤히드에 티빙 브랜드관 론칭",
+        "summary": "CJ ENM은 MBC 그룹과 전략적 파트너십을 체결하고 MENA 24개 지역에서 이용 가능한 MBC 샤히드에 티빙 브랜드관을 론칭한다. 2026년 신작 13편과 주요 라이브러리 20편을 순차 공개하고, 아랍어 더빙·자막 및 일부 최신 드라마의 한국 동시 공개를 추진한다.",
+        "facts": [
+          {
+            "text": "협력의 핵심은 MENA 24개 지역에서 이용 가능한 MBC 샤히드에 티빙 브랜드관을 론칭하는 것이다.",
+            "evidence_ids": [
+              "mi-a303133114790649d8-p002",
+              "mi-a303133114790649d8-p006"
+            ]
+          },
+          {
+            "text": "티빙 브랜드관에서는 2026년 공개되는 신작 13편과 CJ ENM의 주요 라이브러리 콘텐츠 20편을 순차적으로 선보일 예정이다.",
+            "evidence_ids": [
+              "mi-a303133114790649d8-p003",
+              "mi-a303133114790649d8-p007"
+            ]
+          },
+          {
+            "text": "아랍어 더빙과 자막을 제공하는 콘텐츠를 확대하고, 최신 드라마는 한국 공개 시점에 맞춰 MENA 지역에서도 동시 공개할 예정이다.",
+            "evidence_ids": [
+              "mi-a303133114790649d8-p007"
+            ]
+          },
+          {
+            "text": "MBC 그룹의 대표 채널 MBC4를 통해 CJ ENM 콘텐츠를 일정 기간 독점적으로 선보일 예정이다.",
+            "evidence_ids": [
+              "mi-a303133114790649d8-p008"
+            ]
+          }
+        ],
+        "interpretation": "이번 발표는 단순 콘텐츠 공급을 넘어 MENA 지역에서 OTT 브랜드관과 방송채널을 함께 활용하는 유통 확대 사례로 볼 수 있다. 다만 브랜드관의 이용 요금, 실제 공개일, 콘텐츠별 권리 범위, 가입자·시청 데이터와 사업 성과는 제공된 자료만으로 확인할 수 없다.",
+        "btv_options": [
+          "해외 OTT·채널과의 제휴 시 콘텐츠 브랜드관과 B tv 내 전용관을 결합하는 조건부 유통 모델 검토",
+          "한국 동시 공개, 다국어 자막·더빙 등 공개 편의성을 차별화 요소로 삼는 콘텐츠 패키지 검토",
+          "제휴 검토 시 지역, 독점 기간, 콘텐츠 수, 번역 범위, 최소보장금 및 성과지표를 계약 조건으로 확인"
+        ],
+        "questions": [
+          "티빙 브랜드관과 MBC4 콘텐츠의 실제 서비스 개시일, 요금제, 광고 포함 여부는 무엇인가?",
+          "13편과 20편의 콘텐츠별 지역 권리, 독점 여부, 공개 기간 및 한국 동시 공개 대상은 무엇인가?",
+          "B tv 내부에서 유사 제휴를 검토할 때 적용 가능한 원가·가입자·광고 계약 조건은 무엇인가?"
+        ],
+        "comparison": [
+          {
+            "company": "Disney",
+            "aspect": "파트너십 기반 콘텐츠 제작·유통",
+            "detail": "Disney는 Dude Perfect와 엔터테인먼트·스포츠·소비재·파크·체험 영역을 아우르는 회사 차원의 창작 파트너십을 발표했다. Dude Perfect가 Disney 프랜차이즈·이벤트에서 영감을 받은 오리지널 콘텐츠를 자체 채널용으로 개발하고, 일부 콘텐츠는 Disney+에 소개된다. 기존 숏폼 라이브러리는 Disney+, ESPN 및 Disney 소셜 플랫폼에 유통될 예정이다. CJ ENM 사례는 MENA 24개 지역의 MBC 샤히드에 티빙 브랜드관을 론칭하고 MBC4 방송채널 유통까지 확대하는 구조다.",
+            "evidence_ids": [
+              "mi-525e4bb84089078f44-p002",
+              "mi-525e4bb84089078f44-p003",
+              "mi-525e4bb84089078f44-p005",
+              "mi-a303133114790649d8-p002",
+              "mi-a303133114790649d8-p006",
+              "mi-a303133114790649d8-p008"
+            ]
+          },
+          {
+            "company": "LG유플러스",
+            "aspect": "복수 디지털 서비스의 번들형 판매",
+            "detail": "LG유플러스는 유독에서 Google AI Pro와 YouTube Premium을 함께 이용할 수 있는 특별한 혜택을 국내 최초로 준비했다고 밝혔다. 원문에는 두 서비스 이용 비용에 대한 부담과 번들 혜택이 언급되지만, 구체적인 가격·할인액·가입자 수는 제공되지 않았다. CJ ENM 사례는 가격 번들보다 MENA 지역 OTT 브랜드관과 방송채널을 통한 콘텐츠 유통 제휴에 해당한다.",
+            "evidence_ids": [
+              "mi-e0f0c296689441b0ae-p002",
+              "mi-e0f0c296689441b0ae-p004",
+              "mi-e0f0c296689441b0ae-p005",
+              "mi-a303133114790649d8-p006",
+              "mi-a303133114790649d8-p008"
+            ]
+          },
+          {
+            "company": "Netflix",
+            "aspect": "대형 플랫폼·콘텐츠 기업 거래의 진행 상태",
+            "detail": "Netflix와 Warner Bros. Discovery는 인수 거래를 전제로 합의를 수정하고 규제 당국과 협의 중이라고 발표했다. 이후 Netflix는 Warner Bros. 인수 제안을 상향하지 않겠다고 밝혔다. 이는 CJ ENM의 실행된 콘텐츠 유통 파트너십과 달리, 제공된 원문상 거래 종결이 확인되지 않은 대형 기업 거래 사례이므로 직접적인 유통 성과 비교는 어렵다.",
+            "evidence_ids": [
+              "mi-794e58b4f8209e8d01-p003",
+              "mi-794e58b4f8209e8d01-p015",
+              "mi-9067619953f803ee73-p001"
+            ]
+          }
+        ],
+        "verification": {
+          "facts_omitted": 1,
+          "comparisons_omitted": 0,
+          "summary_fallback": false,
+          "headline_fallback": false,
+          "interpretation_omitted": false,
+          "btv_options_omitted": 0,
+          "questions_omitted": 0
+        },
+        "generated_at": "2026-10-26T08:57:02.254381+00:00",
+        "model": "gpt-5.6-luna",
+        "source_engine_revision": "1.3.4",
+        "source_hash": "f9117c14941bff5cc78bc5fa1eab1757d2c37d5557599cbea092ff375b053c41",
+        "context_hashes": {
+          "mi-a303133114790649d8": "f9117c14941bff5cc78bc5fa1eab1757d2c37d5557599cbea092ff375b053c41",
+          "mi-525e4bb84089078f44": "60d467a44a6681d8ea04718c3c902263342ae875d7de373d944293b956a16986",
+          "mi-e0f0c296689441b0ae": "bf017e490433dc81a7d2662961beeaf88a50343cb5428f758556ed75a3c1401b",
+          "mi-794e58b4f8209e8d01": "317445884687100e21d6e4df531c49a79ce80af82bbd250ddf35e1c36f7091f9",
+          "mi-9067619953f803ee73": "05ac069470d7041d12fa2cd31a7bf06eb3632ffdfb0be9b462915040cb192920"
+        },
+        "evidence": [
+          {
+            "id": "mi-a303133114790649d8-p002",
+            "text": "- MENA 24개 지역에서 이용 가능한 MBC 샤히드에 ‘티빙 브랜드관’ 론칭… 프리미엄 K-콘텐츠 제공",
+            "locator": "p002",
+            "url": "https://www.cjenm.com/ko/news/cj-enm-mbc-그룹과-전략적-파트너십-체결-mena-지역-1위-ott-mbc-샤히드에-티빙-브랜드관-론칭/",
+            "title": "CJ ENM, MBC 그룹과 전략적 파트너십 체결… MENA 지역 1위 OTT ‘MBC 샤히드’에 티빙 브랜드관 론칭"
+          },
+          {
+            "id": "mi-a303133114790649d8-p006",
+            "text": "이번 협력의 핵심은 MENA 24개 지역에서 이용 가능한 MBC 그룹의 OTT 플랫폼 ‘MBC 샤히드’에 ‘티빙 브랜드관’을 론칭하는 것이다. 티빙 브랜드관에서는 CJ ENM과 티빙 오리지널을 비롯한 국내 주요 제작사의 프리미엄 K-콘텐츠를 선별해 선보인다. 이를 통해 MENA 지역 시청자들이 다양한 한국 콘텐츠를 한곳에서 보다 편리하게 만나볼 수 있도록 할 예정이다.",
+            "locator": "p006",
+            "url": "https://www.cjenm.com/ko/news/cj-enm-mbc-그룹과-전략적-파트너십-체결-mena-지역-1위-ott-mbc-샤히드에-티빙-브랜드관-론칭/",
+            "title": "CJ ENM, MBC 그룹과 전략적 파트너십 체결… MENA 지역 1위 OTT ‘MBC 샤히드’에 티빙 브랜드관 론칭"
+          },
+          {
+            "id": "mi-a303133114790649d8-p003",
+            "text": "- 신작 13편 및 주요 라이브러리 20편 공개… <최애의 사원> 등 최신 K-콘텐츠 순차 서비스",
+            "locator": "p003",
+            "url": "https://www.cjenm.com/ko/news/cj-enm-mbc-그룹과-전략적-파트너십-체결-mena-지역-1위-ott-mbc-샤히드에-티빙-브랜드관-론칭/",
+            "title": "CJ ENM, MBC 그룹과 전략적 파트너십 체결… MENA 지역 1위 OTT ‘MBC 샤히드’에 티빙 브랜드관 론칭"
+          },
+          {
+            "id": "mi-a303133114790649d8-p007",
+            "text": "티빙 브랜드관에서는 2026년 공개되는 신작 13편을 비롯해 CJ ENM의 주요 라이브러리 콘텐츠 20편을 순차적으로 선보일 예정이다. 특히 로맨틱 코미디 <최애의 사원>을 비롯해 <은밀한 감사>, <우주를 줄게> 등 다양한 K-콘텐츠와 함께, 티빙 오리지널 <취사병 전설이 되다>와 <판사 이한영>도 만나볼 수 있다. 또한 아랍어 더빙과 자막을 제공하는 콘텐츠를 확대하는 한편, 최신 드라마는 한국 공개 시점에 맞춰 MENA 지역에서도 동시 공개한다.",
+            "locator": "p007",
+            "url": "https://www.cjenm.com/ko/news/cj-enm-mbc-그룹과-전략적-파트너십-체결-mena-지역-1위-ott-mbc-샤히드에-티빙-브랜드관-론칭/",
+            "title": "CJ ENM, MBC 그룹과 전략적 파트너십 체결… MENA 지역 1위 OTT ‘MBC 샤히드’에 티빙 브랜드관 론칭"
+          },
+          {
+            "id": "mi-a303133114790649d8-p008",
+            "text": "OTT에 이어 방송채널을 통한 K-콘텐츠 유통도 확대한다. MBC 그룹의 대표 채널인 MBC4를 통해 CJ ENM 콘텐츠를 일정 기간 독점적으로 선보이며 현지 시청자와의 접점을 더욱 확대해 나갈 예정이다.",
+            "locator": "p008",
+            "url": "https://www.cjenm.com/ko/news/cj-enm-mbc-그룹과-전략적-파트너십-체결-mena-지역-1위-ott-mbc-샤히드에-티빙-브랜드관-론칭/",
+            "title": "CJ ENM, MBC 그룹과 전략적 파트너십 체결… MENA 지역 1위 OTT ‘MBC 샤히드’에 티빙 브랜드관 론칭"
+          },
+          {
+            "id": "mi-525e4bb84089078f44-p002",
+            "text": "Collaboration Spans Entertainment, Sports, Consumer Products, Parks and Experiences Across Some of Disney’s Biggest Franchises and Cultural Moments",
+            "locator": "p002",
+            "url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
+            "title": "The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership"
+          },
+          {
+            "id": "mi-525e4bb84089078f44-p003",
+            "text": "The Walt Disney Company and Dude Perfect today announced an integrated creative partnership combining Dude Perfect’s signature sports and comedy entertainment with some of Disney’s most beloved franchises and biggest cultural moments. As part of the partnership, Dude Perfect will develop original content for its own channels inspired by Disney franchises and events, with select Dude Perfect content also featured on Disney+ .",
+            "locator": "p003",
+            "url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
+            "title": "The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership"
+          },
+          {
+            "id": "mi-525e4bb84089078f44-p005",
+            "text": "The partnership additionally gives Disney access to a selection of Dude Perfect’s existing short-form library for distribution across Disney+, ESPN , and Disney social platforms .",
+            "locator": "p005",
+            "url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
+            "title": "The Walt Disney Company and Dude Perfect Announce Company-Wide Creative Partnership"
+          },
+          {
+            "id": "mi-e0f0c296689441b0ae-p002",
+            "text": "YouTube Premium과 Google AI Pro, 이미 많은 분들이 일상에서 활용하고 계시죠.",
+            "locator": "p002",
+            "url": "https://news.lguplus.com/22099",
+            "title": "유독에서 구글 AI Pro와 YouTube Premium 더욱 합리적으로 즐기세요"
+          },
+          {
+            "id": "mi-e0f0c296689441b0ae-p004",
+            "text": "하지만 막상 모두 구독하려고 하면 매달 나가는 비용이 부담스러운 것도 사실입니다.",
+            "locator": "p004",
+            "url": "https://news.lguplus.com/22099",
+            "title": "유독에서 구글 AI Pro와 YouTube Premium 더욱 합리적으로 즐기세요"
+          },
+          {
+            "id": "mi-e0f0c296689441b0ae-p005",
+            "text": "그래서 유플러스가 국내 최초로 준비했습니다. 자주 사용하는 서비스를 더 합리적으로 이용할 수 있는 특별한 혜택을요!",
+            "locator": "p005",
+            "url": "https://news.lguplus.com/22099",
+            "title": "유독에서 구글 AI Pro와 YouTube Premium 더욱 합리적으로 즐기세요"
+          },
+          {
+            "id": "mi-794e58b4f8209e8d01-p003",
+            "text": "HOLLYWOOD, Calif. and NEW YORK , Jan. 20, 2026 /PRNewswire/ -- Netflix, Inc. (NASDAQ:NFLX) (\"Netflix\") and Warner Bros. Discovery, Inc. (\"WBD\" or \"Warner Bros. Discovery\") announced they have amended their definitive agreement for Netflix's pending acquisition of Warner Bros. to an all-cash transaction. The revised agreement simplifies the transaction structure, provides greater certainty of value for WBD stockholders, and accelerates the path to a WBD stockholder vote.",
+            "locator": "p003",
+            "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx",
+            "title": "Netflix and Warner Bros. Discovery Amend Agreement to All-Cash Transaction"
+          },
+          {
+            "id": "mi-794e58b4f8209e8d01-p015",
+            "text": "Netflix and WBD have each submitted their Hart-Scott-Rodino (HSR) filings and are engaging with competition authorities, including the U.S. Department of Justice and European Commission. Netflix and WBD remain committed to working closely with regulators and all stakeholders to ensure a smooth and successful transaction. As previously disclosed, the transaction is expected to close 12-18 months from the date that Netflix and WBD originally entered into their merger agreement.",
+            "locator": "p015",
+            "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx",
+            "title": "Netflix and Warner Bros. Discovery Amend Agreement to All-Cash Transaction"
+          },
+          {
+            "id": "mi-9067619953f803ee73-p001",
+            "text": "HOLLYWOOD, Calif. , Feb. 26, 2026 /PRNewswire/ -- Netflix, Inc. today announced that it has declined to raise its offer for Warner Bros. Netflix had earlier received notice from Warner Bros. Discovery (WBD) that its Board of Directors has determined Paramount Skydance's (PSKY) latest proposal constitutes a \"Superior Proposal\" under the terms of WBD's existing merger agreement with Netflix. Netflix issued the following statement in response from co-CEOs Ted Sarandos and Greg Peters:",
+            "locator": "p001",
+            "url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx",
+            "title": "Netflix Declines to Raise Offer for Warner Bros."
+          }
+        ]
+      }
     },
     {
       "id": "mi-e5577dde5187375575",
