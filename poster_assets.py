@@ -560,10 +560,70 @@ def _wikipedia_poster(title, year, content_type):
     return {}
 
 
+def _wikidata_get(params):
+    response = requests.get("https://www.wikidata.org/w/api.php", params=params,
+                            headers={"User-Agent": _USER_AGENT}, timeout=REQUEST_TIMEOUT)
+    response.raise_for_status()
+    return response.json()
+
+
+def _wikidata_poster(title, year, content_type):
+    """Bridge an exact documented Korean label/alias to verified English media."""
+    if not year or not re.search(r"[가-힣]", title):
+        return {}
+    search = _wikidata_get({"action": "wbsearchentities", "format": "json", "language": "ko",
+                            "uselang": "ko", "search": title, "type": "item", "limit": 5})
+    identifiers = list(dict.fromkeys(item.get("id") for item in search.get("search", [])
+                                    if isinstance(item, dict) and re.fullmatch(r"Q[1-9]\d*", str(item.get("id", "")))))[:5]
+    if not identifiers:
+        return {}
+    payload = _wikidata_get({"action": "wbgetentities", "format": "json", "ids": "|".join(identifiers),
+                            "props": "labels|aliases|sitelinks", "languages": "ko|en", "sitefilter": "enwiki"})
+    links = {}
+    for identifier, entity in payload.get("entities", {}).items():
+        if identifier not in identifiers or not isinstance(entity, dict) or "missing" in entity:
+            continue
+        label = entity.get("labels", {}).get("ko", {})
+        aliases = entity.get("aliases", {}).get("ko", [])
+        names = [label, *aliases] if isinstance(aliases, list) else [label]
+        if not any(isinstance(name, dict) and _key(name.get("value")) == _key(title) for name in names):
+            continue
+        link = entity.get("sitelinks", {}).get("enwiki", {})
+        english = _text(link.get("title")) if isinstance(link, dict) else ""
+        if english and "|" not in english and link.get("site", "enwiki") == "enwiki":
+            links.setdefault(english, set()).add(identifier)
+    if not links:
+        return {}
+    tv = _is_tv(content_type)
+    pages = [page for page in _wikipedia_pages("en", list(links))
+             if _verified_wikipedia_page(page, list(links), year, tv)]
+    # Reject distinct matching works before inspecting their images or ranking.
+    identities = {(page.get("pageid"), _text(page.get("title"))) for page in pages}
+    if len(identities) != 1:
+        return {}
+    page = pages[0]
+    unavailable = None
+    try:
+        if artwork := _wikipedia_artwork("en", page):
+            return artwork
+    except requests.RequestException as error:
+        unavailable = error
+    try:
+        artwork = (_tvmaze_poster(page["title"], year) if tv else
+                   _itunes_poster(_english_work_title(page["title"]), year, content_type, country="US"))
+        if artwork:
+            return artwork
+    except requests.RequestException as error:
+        unavailable = error
+    if unavailable is not None:
+        raise unavailable
+    return {}
+
+
 @lru_cache(maxsize=2048)
 def _cached_poster(title, year, content_type, hour_bucket):
     unavailable = None
-    for provider in (_itunes_poster, _wikipedia_poster):
+    for provider in (_itunes_poster, _wikipedia_poster, _wikidata_poster):
         try:
             poster = provider(title, year, content_type)
             if poster:

@@ -38,6 +38,62 @@ class PosterAssetTests(unittest.TestCase):
         posters._WIKIPEDIA_HOSTS.clear()
         self.sleep = self.enterContext(patch.object(posters.time, "sleep"))
         self.image_health = self.enterContext(patch.object(posters, "inspect_poster_url", return_value={"status": "available"}))
+        self.wikidata_requests = self.enterContext(patch.object(posters, "_wikidata_get", return_value={}))
+
+    def test_wikidata_exact_documented_korean_alias_reaches_verified_english_artwork(self):
+        entity = {"labels": {"ko": {"value": "헝거 게임: 판엠의 불꽃"}},
+                  "aliases": {"ko": [{"value": "헝거 게임"}]},
+                  "sitelinks": {"enwiki": {"site": "enwiki", "title": "The Hunger Games (film)"}}}
+        page = {"title": "The Hunger Games (film)", "pageid": 123, "extract": "A 2012 film.",
+                "categories": [{"title": "Category:2012 films"}]}
+        artwork = {"poster_url": "https://upload.wikimedia.org/actual-poster.jpg"}
+        with patch.object(posters, "_wikidata_get", side_effect=[{"search": [{"id": "Q1"}]}, {"entities": {"Q1": entity}}]) as get, \
+             patch.object(posters, "_wikipedia_pages", return_value=[page]) as pages, \
+             patch.object(posters, "_wikipedia_artwork", return_value=artwork):
+            self.assertEqual(posters._wikidata_poster("헝거 게임", "2012", "영화"), artwork)
+        self.assertEqual(get.call_count, 2)
+        self.assertEqual(get.call_args_list[0].args[0]["limit"], 5)
+        pages.assert_called_once_with("en", ["The Hunger Games (film)"])
+
+    def test_wikidata_search_label_cannot_replace_exact_entity_korean_identity(self):
+        entity = {"labels": {"ko": {"value": "전혀 다른 영화"}},
+                  "sitelinks": {"enwiki": {"title": "The Hunger Games (film)"}}}
+        with patch.object(posters, "_wikidata_get", side_effect=[{"search": [{"id": "Q1", "label": "헝거 게임"}]},
+                                                                  {"entities": {"Q1": entity}}]), \
+             patch.object(posters, "_wikipedia_pages") as pages:
+            self.assertEqual(posters._wikidata_poster("헝거 게임", "2012", "영화"), {})
+        pages.assert_not_called()
+
+    def test_wikidata_rejects_wrong_year_kind_and_multiple_matching_works(self):
+        entity = {"labels": {"ko": {"value": "홈커밍"}},
+                  "sitelinks": {"enwiki": {"title": "Homecoming (TV series)"}}}
+        valid = {"title": "Homecoming (TV series)", "pageid": 1, "extract": "A 2018 television series.",
+                 "categories": [{"title": "Category:2018 American television series debuts"}]}
+        variants = [[{**valid, "extract": "A 2020 television series.",
+                      "categories": [{"title": "Category:2020 American television series debuts"}]}],
+                    [{"title": "Homecoming (film)", "extract": "A 2018 film.", "categories": [{"title": "Category:2018 films"}]}],
+                    [valid, {**valid, "pageid": 2}]]
+        for pages in variants:
+            with self.subTest(pages=pages), \
+                 patch.object(posters, "_wikidata_get", side_effect=[{"search": [{"id": "Q1"}]}, {"entities": {"Q1": entity}}]), \
+                 patch.object(posters, "_wikipedia_pages", return_value=pages), \
+                 patch.object(posters, "_wikipedia_artwork") as artwork:
+                self.assertEqual(posters._wikidata_poster("홈커밍", "2018", "드라마"), {})
+                artwork.assert_not_called()
+
+    def test_wikidata_requires_year_and_reuses_verified_tv_bridge_for_tvmaze(self):
+        entity = {"labels": {"ko": {"value": "홈커밍"}},
+                  "sitelinks": {"enwiki": {"title": "Homecoming (TV series)"}}}
+        page = {"title": "Homecoming (TV series)", "extract": "A 2018 television series.",
+                "categories": [{"title": "Category:2018 American television series debuts"}]}
+        with patch.object(posters, "_wikidata_get", side_effect=[{"search": [{"id": "Q1"}]}, {"entities": {"Q1": entity}}]) as get, \
+             patch.object(posters, "_wikipedia_pages", return_value=[page]), \
+             patch.object(posters, "_wikipedia_artwork", return_value={}), \
+             patch.object(posters, "_tvmaze_poster", return_value={"poster_url": "https://static.tvmaze.com/real.jpg"}) as tvmaze:
+            self.assertEqual(posters._wikidata_poster("홈커밍", "", "드라마"), {})
+            self.assertTrue(posters._wikidata_poster("홈커밍", "2018", "드라마"))
+        self.assertEqual(get.call_count, 2)
+        tvmaze.assert_called_once_with("Homecoming (TV series)", "2018")
 
     def test_wikipedia_recovers_once_from_rate_limit_with_actual_artwork(self):
         page = dict(title="더 글로리 (드라마)", extract="2022년 드라마", pageimage="더글로리_포스터.jpg",
