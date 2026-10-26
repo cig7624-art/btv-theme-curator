@@ -1,0 +1,19 @@
+{
+  "version": "1.6.1",
+  "status": "local_passed",
+  "full_tests": 782,
+  "requested_titles_per_theme": 10,
+  "poster_lookup_per_theme": 10,
+  "normal_view_model_calls": 0,
+  "local_pc_mobile_rail_checks": "passed",
+  "local_pc_mobile_tab_switches": 20,
+  "baseline_scroll_drift_px": 50,
+  "fixed_scroll_drift_px": 0,
+  "data_preservation": "prior theme/history and other-run candidates retained",
+  "live_reports": [
+    "artifacts/deployment_validation.json",
+    "artifacts/weekly_live_validation.json",
+    "artifacts/theme_rail_live_validation.json",
+    "artifacts/tab_stability_validation.json"
+  ]
+}

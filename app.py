@@ -30,7 +30,7 @@ from llm_theme_generator import (
 from kinolights_candidates import content_rows_to_frame, validate_content_suggestions
 from poster_assets import enrich_poster_candidates
 from theme_editorial import theme_card_html
-from issue_carousel import CAROUSEL_SCRIPT, issue_carousel_html
+from issue_carousel import CAROUSEL_SCRIPT, THEME_CAROUSEL_SCRIPT, issue_carousel_html
 from issue_quality import assess_issues, build_ranked_issues
 # Independent video/news signals and related articles share the same evidence.
 from issue_presentation import present_issue
@@ -922,7 +922,7 @@ def _latest_content_date(contents):
     return latest.strftime("%Y.%m.%d")
 
 
-def _content_links_html(contents, visible=16):
+def _content_links_html(contents, visible=10):
     if not contents:
         return '<div class="theme-db-content-empty">아직 콘텐츠 후보가 없습니다. 옆의 새로고침 버튼으로 연결할 수 있습니다.</div>'
     links = []
@@ -1015,7 +1015,7 @@ def render_theme_db_card(
                                 api_key=api_key,
                                 model=model,
                                 github_config=github_config or {},
-                                per_theme=16,
+                                per_theme=10,
                                 persist=True,
                                 mirror_theme_db=False,
                             )
@@ -1036,7 +1036,7 @@ def render_theme_db_card(
 
             st.markdown(
                 '<div class="theme-db-contents" style="border-left:0;padding-left:0;justify-content:flex-start">'
-                f'{_content_links_html(current_contents, visible=16)}'
+                f'{_content_links_html(current_contents, visible=10)}'
                 '</div>',
                 unsafe_allow_html=True,
             )
@@ -1058,7 +1058,7 @@ def build_and_store_content_candidates(
     api_key,
     model,
     github_config,
-    per_theme=16,
+    per_theme=10,
     persist=True,
     mirror_theme_db=False,
 ):
@@ -1075,8 +1075,24 @@ def build_and_store_content_candidates(
     )
     if not any(validated.values()):
         raise ThemeGenerationError("연결할 추천 작품을 받지 못했습니다. 콘텐츠를 다시 불러와 주세요.")
-    # Fetch art only during an explicit content load, for the five visible
-    # candidates per theme. Ordinary page loads never perform poster searches.
+    # Catalog normalization can merge aliases. Require complete unique lists
+    # before replacing any saved candidates, including the mirrored library.
+    normalized = {}
+    for position, rec in enumerate(recommendations, start=1):
+        key = str((rec.get("theme") or {}).get("theme_id", "")).strip() or f"R{position:02d}"
+        items, identities = [], set()
+        for item in validated.get(key, []):
+            title = re.sub(r"[^0-9a-z가-힣]", "", unicodedata.normalize("NFKC", str(item.get("title", ""))).lower())
+            identity = (title, str(item.get("year", "")).strip())
+            if title and identity not in identities:
+                identities.add(identity)
+                items.append(item)
+        if len(items) < per_theme:
+            raise ThemeGenerationError(f"작품 확인 후 추천 후보가 {per_theme}편보다 적어 기존 목록을 유지했습니다. 콘텐츠를 다시 불러와 주세요.")
+        normalized[key] = items[:per_theme]
+    validated = normalized
+    # All ten scrollable posters are connected during explicit loading only.
+    # Ordinary page loads never perform poster searches or image checks.
     visible_candidates = []
     for key, items in validated.items():
         seen = set()
@@ -1087,9 +1103,7 @@ def build_and_store_content_candidates(
                 continue
             seen.add(identity)
             visible_candidates.append({**item, "_theme_key": key, "_candidate_index": index})
-            if len(seen) == 5:
-                break
-    for item in enrich_poster_candidates(visible_candidates, limit=50):
+    for item in enrich_poster_candidates(visible_candidates, limit=len(visible_candidates), repair_existing=True):
         validated[item["_theme_key"]][item["_candidate_index"]]["poster_url"] = item.get("poster_url", "")
     candidate_frame = content_rows_to_frame(
         run_id=str(scope_run_id),
@@ -1136,7 +1150,7 @@ def fill_weekly_content_candidates(recommendations, *, run_id, api_key, model, g
             api_key=api_key,
             model=model,
             github_config=github_config,
-            per_theme=16,
+            per_theme=10,
             persist=True,
             mirror_theme_db=True,
         )
@@ -1730,7 +1744,7 @@ elif st.session_state["page"] == "theme_db":
 
     st.markdown("### 콘텐츠 후보 구축 현황")
     st.caption(
-        f"테마 DB {coverage['total_themes']}개 각각에 추천 콘텐츠 후보 16편을 한 번씩 저장하는 초기 구축 작업입니다. "
+        f"테마 DB {coverage['total_themes']}개 각각에 추천 콘텐츠 후보 10편을 한 번씩 저장하는 초기 구축 작업입니다. "
         f"현재 연결된 테마 수가 {coverage['total_themes']}개가 되면 최초 구축이 끝납니다."
     )
     cov1, cov2, cov3 = st.columns(3)
@@ -1772,7 +1786,7 @@ elif st.session_state["page"] == "theme_db":
                     api_key=openai_api_key,
                     model=openai_model,
                     github_config=github_config,
-                    per_theme=16,
+                    per_theme=10,
                     persist=True,
                     mirror_theme_db=False,
                 )
@@ -2051,6 +2065,8 @@ else:
                     for index, rec in enumerate(recs, start=1):
                         rec["recommended_at"] = selected_run.get("recommended_at", "")
                         render_theme_card(index, rec, issue_records_for_cards)
+                    with st.container(key="theme_carousel_script"):
+                        st.html(THEME_CAROUSEL_SCRIPT, unsafe_allow_javascript=True)
 
     with ott_tab:
         if ott_tab.open:

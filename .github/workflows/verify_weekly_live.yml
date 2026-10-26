@@ -1,11 +1,11 @@
-name: Verify real weekly theme generation
+name: Verify real weekly content refresh
 
-# This paid check intentionally saves one normal weekly run. It never retries
-# generation after clicking; it does not run on ordinary main deployments.
+# This paid check refreshes only the latest saved run's content candidates once.
+# It never creates themes or retries the click, and never runs on main pushes.
 on:
   workflow_dispatch:
   push:
-    branches: [codex/intuitive-weekly-themes]
+    branches: [codex/theme-titles-v161]
     paths:
       - scripts/verify_weekly_live.py
       - .github/workflows/verify_weekly_live.yml
@@ -41,15 +41,15 @@ jobs:
           fi
       - name: Verify single-click and data preservation rules without API calls
         run: python -m unittest discover -s tests -p test_weekly_live_verification.py -v
-      - name: Generate and save one normal weekly run
+      - name: Refresh ten titles per existing theme once
         id: verify
         continue-on-error: true
-        run: python scripts/verify_weekly_live.py
+        run: python scripts/verify_weekly_live.py --content-refresh-only
       - name: Preserve sanitized verification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: public-weekly-generation-verification
+          name: public-weekly-content-refresh-verification
           path: artifacts/weekly_live_validation.json
           retention-days: 7
       - name: Record sanitized result on this development branch
@@ -66,13 +66,13 @@ jobs:
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m 'Record real weekly generation verification [skip ci]'
+          git commit -m 'Record real weekly content refresh verification [skip ci]'
           git pull --rebase origin "$TARGET_BRANCH"
           checked_version="$(python -c 'import json; print(json.load(open("artifacts/weekly_live_validation.json"))["expected_version"])')"
           current_version="$(tr -d '[:space:]' < VERSION)"
           if [ "$checked_version" = "$current_version" ]; then
             git push origin HEAD:"$TARGET_BRANCH"
           fi
-      - name: Require genuine generation validation
+      - name: Require genuine content refresh validation
         if: ${{ steps.verify.outcome != 'success' }}
         run: exit 1

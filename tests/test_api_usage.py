@@ -90,7 +90,8 @@ class ApiUsageTests(unittest.TestCase):
                 contents=pd.DataFrame(), api_key="test", model="model", client=sdk)),
             ("weekly_themes", lambda: _generate_candidates(sdk, "model", [], pd.DataFrame(), 1)),
             ("theme_search", lambda: interpret_theme_search_query("공포", "test", "model")),
-            ("content_candidates", lambda: generate_content_candidates_for_themes([], "test", "model")),
+            ("content_candidates", lambda: generate_content_candidates_for_themes(
+                [{"theme": {"theme_id": "T1", "theme_name": "가족의 비밀"}}], "test", "model")),
         ]
         with patch("api_usage._session_state", return_value=state), patch("llm_theme_generator.OpenAI", return_value=sdk):
             for feature, call in calls:

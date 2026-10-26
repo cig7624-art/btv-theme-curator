@@ -10,6 +10,8 @@ from urllib.parse import quote, urlparse
 
 import pandas as pd
 
+from poster_assets import is_poster_url
+
 
 def _text(value):
     if value is None:
@@ -157,7 +159,7 @@ def _candidate(item):
         return None
     return {"title": title, "year": _text(item.get("year")),
             "type": _text(item.get("type") or item.get("content_type")),
-            "url": _url(item.get("source_url")), "poster": _url(item.get("poster_url")),
+            "url": _url(item.get("source_url")), "poster": _url(item.get("poster_url")) if is_poster_url(item.get("poster_url")) else "",
             "reason": _text(item.get("reason"))}
 
 
@@ -202,7 +204,7 @@ def theme_card_html(index, rec, issue_pool=None):
         if identity not in seen:
             candidates.append(candidate)
             seen.add(identity)
-    posters = ''.join(_poster_html(item, position) for position, item in enumerate(candidates[:5]))
+    posters = ''.join(_poster_html(item, position) for position, item in enumerate(candidates))
     more = ''
     if len(candidates) > 5:
         links = []
@@ -214,8 +216,13 @@ def theme_card_html(index, rec, issue_pool=None):
         more = ('<details class="theme-more-candidates"><summary>전체 ' + str(len(candidates)) + '편 보기</summary>'
                 '<ul class="theme-candidate-list">' + ''.join(links) + '</ul></details>')
     if candidates:
-        poster_area = ('<div class="theme-poster-head">추천 작품 <strong>' + str(len(candidates)) + '편</strong></div>'
-                       '<div class="theme-poster-rail" tabindex="0" aria-label="' + html.escape(name, quote=True) + ' 추천 작품">' + posters + '</div>' + more)
+        rail_id = 'theme-title-rail-' + str(int(index))
+        poster_area = ('<section class="theme-carousel" aria-label="' + html.escape(name, quote=True) + ' 추천 작품">'
+                       '<div class="theme-poster-head"><span>추천 작품 <strong>' + str(len(candidates)) + '편</strong></span>'
+                       '<div class="carousel-controls"><span class="carousel-position" aria-live="polite"></span>'
+                       '<button type="button" class="carousel-prev" aria-label="이전 작품" aria-controls="' + rail_id + '" disabled>‹</button>'
+                       '<button type="button" class="carousel-next" aria-label="다음 작품" aria-controls="' + rail_id + '">›</button></div></div>'
+                       '<div class="theme-poster-rail" id="' + rail_id + '" tabindex="0" aria-label="' + html.escape(name, quote=True) + ' 추천 작품, 가로로 넘겨 보기">' + posters + '</div>' + more + '</section>')
     else:
         poster_area = '<div class="theme-content-empty">아직 연결된 작품이 없어요.<br>상단의 ‘콘텐츠 채우기’로 추천 작품을 불러오세요.</div>'
     return (

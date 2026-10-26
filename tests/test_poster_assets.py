@@ -1,11 +1,13 @@
 """Artwork must belong to the requested work, without changing its identity."""
 import copy
+from io import BytesIO
 from concurrent.futures import ThreadPoolExecutor
 from email.utils import formatdate
 import unittest
 from unittest.mock import Mock, patch
 
 import requests
+from PIL import Image
 
 import kinolights_candidates as kino
 import poster_assets as posters
@@ -32,8 +34,10 @@ def movie(**changes):
 class PosterAssetTests(unittest.TestCase):
     def setUp(self):
         posters._cached_poster.cache_clear()
+        posters._cached_image_health.cache_clear()
         posters._WIKIPEDIA_HOSTS.clear()
         self.sleep = self.enterContext(patch.object(posters.time, "sleep"))
+        self.image_health = self.enterContext(patch.object(posters, "inspect_poster_url", return_value={"status": "available"}))
 
     def test_wikipedia_recovers_once_from_rate_limit_with_actual_artwork(self):
         page = dict(title="더 글로리 (드라마)", extract="2022년 드라마", pageimage="더글로리_포스터.jpg",
@@ -314,6 +318,41 @@ class PosterAssetTests(unittest.TestCase):
         self.assertEqual(result[0]["poster_url"], result[1]["poster_url"])
         self.assertEqual(result[2]["poster_url"], "")
 
+    def test_existing_image_is_repaired_only_after_a_definite_failure(self):
+        item = dict(title="타짜", year="2006", poster_url="https://images.example.com/dead.jpg", reason="original reason")
+        for status in ("available", "retryable", "invalid"):
+            with self.subTest(status=status), patch.object(posters, "inspect_poster_url", side_effect=lambda url: {"status": status if "dead" in url else "available"}), \
+                 patch.object(posters, "_cached_poster", return_value={"poster_url": "https://images.example.com/real.jpg"}) as lookup:
+                result = posters.enrich_poster_candidates([item], repair_existing=True)[0]
+            self.assertEqual(result["poster_url"], "https://images.example.com/real.jpg" if status == "invalid" else item["poster_url"])
+            self.assertEqual(result["reason"], item["reason"])
+            self.assertEqual(lookup.call_count, int(status == "invalid"))
+
+    def test_unavailable_original_artwork_uses_actual_returned_smaller_artwork(self):
+        returned = movie(artworkUrl600="https://is1-ssl.mzstatic.com/image/actual-600.jpg")
+        with patch.object(posters.requests, "get", return_value=response({"results": [returned]})), \
+             patch.object(posters, "inspect_poster_url", side_effect=[{"status": "invalid"}, {"status": "available"}]):
+            result = posters._itunes_poster("타짜", "2006", "영화")
+        self.assertEqual(result["poster_url"], returned["artworkUrl100"])
+
+    def test_transient_first_image_still_tries_a_provider_returned_alternative(self):
+        returned = movie(artworkUrl600="https://is1-ssl.mzstatic.com/image/actual-600.jpg")
+        with patch.object(posters.requests, "get", return_value=response({"results": [returned]})), \
+             patch.object(posters, "inspect_poster_url", side_effect=[{"status": "retryable"}, {"status": "available"}]):
+            result = posters._itunes_poster("타짜", "2006", "영화")
+        self.assertEqual(result["poster_url"], returned["artworkUrl100"])
+
+    def test_removed_cached_image_is_resolved_again_instead_of_saved_again(self):
+        dead = {"poster_url": "https://is1-ssl.mzstatic.com/dead.jpg"}
+        live = {"poster_url": "https://is1-ssl.mzstatic.com/live.jpg"}
+        identity = ("타짜", "2006", "영화")
+        with patch.object(posters, "_itunes_poster", return_value=dead):
+            self.assertEqual(posters._cached_poster(*identity, 123), dead)
+        with patch.object(posters, "inspect_poster_url", side_effect=lambda url: {"status": "invalid" if "dead" in url else "available"}), \
+             patch.object(posters, "_itunes_poster", return_value=live) as apple:
+            self.assertEqual(posters._poster_for_refresh(identity, 123), live)
+        apple.assert_called_once()
+
     def test_confirmed_empty_matches_are_cached_for_this_hour(self):
         with patch.object(posters, "_itunes_poster", return_value={}) as apple, \
              patch.object(posters, "_wikipedia_poster", return_value={}) as wiki:
@@ -360,6 +399,70 @@ class PosterAssetTests(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["poster_url"], "https://images.example.com/lazy.jpg")
         self.assertEqual(kino._image_url({"url": "javascript:alert(1)"}, "https://m.kinolights.com"), "")
+
+
+class PosterImageHealthTests(unittest.TestCase):
+    def setUp(self):
+        posters._cached_image_health.cache_clear()
+        self.enterContext(patch.object(posters.time, "sleep"))
+
+    def image_response(self, *, status=200, media_type="image/png", data=None):
+        if data is None:
+            stream = BytesIO()
+            Image.new("RGB", (100, 150), "red").save(stream, format="PNG")
+            data = stream.getvalue()
+        result = response({}, status=status, headers={"Content-Type": media_type})
+        result.iter_content.return_value = iter([data])
+        return result
+
+    def test_actual_image_bytes_are_decoded_and_success_is_cached(self):
+        with patch.object(posters.requests, "get", return_value=self.image_response()) as get:
+            for _ in range(2):
+                result = posters.inspect_poster_url("https://images.example.com/live.png")
+        self.assertEqual(result, {"status": "available", "reason": "decoded_image", "width": 100, "height": 150})
+        get.assert_called_once()
+        self.assertTrue(get.call_args.kwargs["stream"])
+
+    def test_http200_html_and_corrupt_image_are_definitely_invalid(self):
+        for media_type, data, reason in [("text/html", b"<html>blocked</html>", "not_an_image"),
+                                        ("image/png", b"not image bytes", "undecodable_image")]:
+            posters._cached_image_health.cache_clear()
+            with self.subTest(media_type=media_type), patch.object(posters.requests, "get", return_value=self.image_response(media_type=media_type, data=data)):
+                self.assertEqual(posters.inspect_poster_url("https://images.example.com/wrong.png"), {"status": "invalid", "reason": reason})
+
+    def test_truncated_jpeg_fails_actual_pixel_decode(self):
+        stream = BytesIO()
+        Image.new("RGB", (100, 150), "red").save(stream, format="JPEG")
+        with patch.object(posters.requests, "get", return_value=self.image_response(media_type="image/jpeg", data=stream.getvalue()[:-2])):
+            self.assertEqual(posters.inspect_poster_url("https://images.example.com/truncated.jpg"), {"status": "invalid", "reason": "undecodable_image"})
+
+    def test_probe_budget_exhaustion_preserves_image_as_retryable(self):
+        for budget in ("MAX_POSTER_BYTES", "MAX_POSTER_PIXELS"):
+            posters._cached_image_health.cache_clear()
+            with self.subTest(budget=budget), patch.object(posters, budget, 10), \
+                 patch.object(posters.requests, "get", side_effect=lambda *a, **k: self.image_response()):
+                self.assertEqual(posters.inspect_poster_url("https://images.example.com/large.png")["status"], "retryable")
+
+    def test_missing_image_is_invalid_but_forbidden_and_outages_stay_retryable(self):
+        for status, expected in [(404, "invalid"), (403, "retryable"), (429, "retryable"), (503, "retryable")]:
+            posters._cached_image_health.cache_clear()
+            with self.subTest(status=status), patch.object(posters.requests, "get", side_effect=lambda *a, **k: self.image_response(status=status)) as get:
+                for _ in range(2):
+                    self.assertEqual(posters.inspect_poster_url("https://images.example.com/remote.png")["status"], expected)
+            self.assertEqual(get.call_count, 1 if status == 404 else 2 if status == 403 else 4)
+
+    def test_network_timeout_is_retried_and_not_cached(self):
+        with patch.object(posters.requests, "get", side_effect=requests.Timeout("offline")) as get:
+            for _ in range(2):
+                self.assertEqual(posters.inspect_poster_url("https://images.example.com/live.png")["status"], "retryable")
+        self.assertEqual(get.call_count, 4)
+
+    def test_event_photo_is_rejected_without_network_access(self):
+        url = "https://upload.wikimedia.org/wikipedia/commons/e/ee/Nakache_Omar_Sy_Toledano_Lumi%C3%A8res_2012.jpg"
+        with patch.object(posters.requests, "get") as get:
+            self.assertFalse(posters.is_poster_url(url))
+            self.assertEqual(posters.inspect_poster_url(url), {"status": "invalid", "reason": "cast_or_event_photo"})
+        get.assert_not_called()
 
 
 if __name__ == "__main__":

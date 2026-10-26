@@ -54,7 +54,7 @@ class PosterRepairTests(unittest.TestCase):
                 self.assertEqual([item["title"] for item in items], ["더 글로리", "부부의 세계"])
                 return [dict(item, poster_url="https://upload.wikimedia.org/real.jpg", poster_source="위키백과") for item in items]
             with patch.object(repair, "enrich_poster_candidates", side_effect=enrich) as lookup:
-                manifest = repair.collect_updates(root, limit=2)
+                manifest = repair.collect_updates(root, limit=2, per_theme=5)
             lookup.assert_called_once()
             self.assertEqual(manifest["source_run_id"], "new-run")
             self.assertEqual(manifest["visible_candidates"], 7)
@@ -63,32 +63,97 @@ class PosterRepairTests(unittest.TestCase):
             self.assertEqual((root / "theme_content_candidates.csv").read_bytes(), before)
             self.assertNotIn("화면 밖 작품", str(manifest["updates"]))
 
-    def test_default_budget_covers_five_unique_visible_works_for_ten_themes(self):
+    def test_default_budget_covers_ten_unique_visible_works_for_ten_themes(self):
         with TemporaryDirectory() as temporary:
             root = Path(temporary)
             rows = []
             expected_titles = []
             for theme in range(10):
                 theme_key = f"T{theme}"
-                # Duplicate rows must not displace the fifth unique visible work.
+                # Duplicate rows must not displace the tenth unique visible work.
                 rows.append(candidate(f"작품 {theme}-1", theme_key=theme_key, rank="1.5"))
                 rows.extend(candidate(f"작품 {theme}-{rank}", theme_key=theme_key, rank=str(rank))
-                            for rank in range(6, 0, -1))
-                expected_titles.extend(f"작품 {theme}-{rank}" for rank in range(1, 6))
+                            for rank in range(11, 0, -1))
+                expected_titles.extend(f"작품 {theme}-{rank}" for rank in range(1, 11))
             save(root, rows)
 
             def enrich(items, **kwargs):
-                self.assertEqual(kwargs["limit"], 50)
+                self.assertEqual(kwargs["limit"], 100)
                 self.assertEqual([item["title"] for item in items], expected_titles)
                 return [dict(item, poster_url="https://images.example.com/poster.jpg") for item in items]
 
             with patch.object(repair, "enrich_poster_candidates", side_effect=enrich) as lookup:
                 manifest = repair.collect_updates(root)
             lookup.assert_called_once()
-            self.assertEqual(manifest["visible_candidates"], 50)
-            self.assertEqual(manifest["checked_unique"], 50)
-            self.assertEqual(manifest["found_unique"], 50)
+            self.assertEqual(manifest["visible_candidates"], 100)
+            self.assertEqual(manifest["checked_unique"], 100)
+            self.assertEqual(manifest["found_unique"], 100)
             self.assertEqual([item["title"] for item in manifest["updates"]], expected_titles)
+
+    def test_existing_validation_preserves_outages_and_repairs_definite_bad_images(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            rows = [candidate("완료", poster_url="https://images.example.com/live.jpg"),
+                    candidate("차단", rank="2", poster_url="https://images.example.com/blocked.jpg"),
+                    candidate("사진", rank="3", poster_url="https://images.example.com/cast.jpg"),
+                    candidate("삭제", rank="4", poster_url="https://images.example.com/dead.jpg")]
+            save(root, rows)
+
+            def inspect(url):
+                return {"status": "available" if "live" in url else "retryable" if "blocked" in url else "invalid", "reason": "audit"}
+
+            def enrich(items, **kwargs):
+                self.assertEqual([item["title"] for item in items], ["사진", "삭제"])
+                return [dict(item, poster_url="https://images.example.com/real.jpg" if item["title"] == "사진" else "") for item in items]
+
+            with patch.object(repair, "inspect_poster_url", side_effect=inspect), patch.object(repair, "enrich_poster_candidates", side_effect=enrich):
+                manifest = repair.collect_updates(root, check_existing=True)
+            report = repair.apply_updates(manifest, root, write=True)
+            after = pd.read_csv(root / "theme_content_candidates.csv", sep="|", dtype=str).fillna("")
+            self.assertEqual(after.poster_url.tolist(), [rows[0]["poster_url"], rows[1]["poster_url"], "https://images.example.com/real.jpg", ""])
+            self.assertEqual(report["updated_rows"], 2)
+            self.assertEqual(len(report["validated_existing"]), 4)
+            pd.testing.assert_frame_equal(pd.DataFrame(rows).drop(columns="poster_url"), after.drop(columns="poster_url"))
+
+    def test_stale_invalid_url_replacement_preserves_concurrently_fixed_artwork(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            save(root, [candidate(poster_url="https://images.example.com/concurrent.jpg")])
+            manifest = dict(schema_version=1, updates=[dict(title="더 글로리", year="2022", content_type="드라마",
+                poster_url="https://images.example.com/proposed.jpg", expected_poster_url="https://images.example.com/dead.jpg")])
+            self.assertEqual(repair.apply_updates(manifest, root, write=True)["updated_rows"], 0)
+            self.assertEqual(pd.read_csv(root / "theme_content_candidates.csv", sep="|", dtype=str).iloc[0].poster_url, "https://images.example.com/concurrent.jpg")
+
+    def test_one_lookup_repairs_same_identity_with_different_bad_urls_and_blank_copies(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            rows = [candidate(theme_key="T1", poster_url="https://images.example.com/dead1.jpg"),
+                    candidate(theme_key="T2", poster_url="https://images.example.com/dead2.jpg"),
+                    candidate(theme_key="T3"), candidate(run_id="THEME_DB")]
+            save(root, rows)
+            def enrich(items, **kwargs):
+                self.assertEqual(len(items), 1)
+                return [dict(items[0], poster_url="https://images.example.com/live.jpg")]
+            with patch.object(repair, "inspect_poster_url", return_value={"status": "invalid", "reason": "http_404"}), \
+                 patch.object(repair, "enrich_poster_candidates", side_effect=enrich):
+                manifest = repair.collect_updates(root, check_existing=True)
+            self.assertEqual(repair.apply_updates(manifest, root, write=True)["updated_rows"], 4)
+            after = pd.read_csv(root / "theme_content_candidates.csv", sep="|", dtype=str).fillna("")
+            self.assertEqual(after.poster_url.tolist(), ["https://images.example.com/live.jpg"] * 4)
+
+    def test_revision_change_during_atomic_write_aborts_without_overwriting(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            save(root, [candidate()])
+            path = root / "theme_content_candidates.csv"
+            before = path.read_bytes()
+            concurrent = before + b"\n"
+            def write_temporary(temporary_path):
+                temporary_path.write_bytes(b"poster result")
+                path.write_bytes(concurrent)
+            with self.assertRaisesRegex(RuntimeError, "changed while applying"):
+                repair._atomic_write(path, write_temporary, expected_bytes=before)
+            self.assertEqual(path.read_bytes(), concurrent)
 
     def test_apply_changes_only_blank_poster_identity_preserving_rows_order_and_all_fields(self):
         with TemporaryDirectory() as temporary:

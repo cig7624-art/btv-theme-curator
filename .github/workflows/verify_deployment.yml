@@ -26,6 +26,11 @@ on:
       - ott_view.py
       - ott_styles.css
       - styles.css
+      - issue_carousel.py
+      - theme_editorial.py
+      - theme_content_candidates.csv
+      - scripts/verify_theme_rail_live.py
+      - scripts/verify_tab_stability.py
       - scripts/verify_deployment.py
       - tests/test_deployment_verification.py
       - .github/workflows/verify_deployment.yml
@@ -49,7 +54,7 @@ jobs:
         run: python -m pip install playwright
       - name: Check application syntax before browser verification
         run: |
-          rm -f artifacts/deployment_validation.json
+          rm -f artifacts/deployment_validation.json artifacts/tab_stability_validation.json artifacts/theme_rail_live_validation.json
           python -m compileall -q app.py media_insights_runtime.py media_insights_view.py public_media_monitoring.py news_digest.py news_subjects.py issue_quality.py
       - name: Use the hosted runner's existing browser when available
         run: |
@@ -70,6 +75,18 @@ jobs:
           else
             python scripts/verify_deployment.py --timeout 480 --poll 30
           fi
+      - name: Check PC and mobile tab layout stability
+        id: tab_stability
+        if: ${{ steps.verify.outcome == 'success' }}
+        continue-on-error: true
+        run: |
+          python scripts/verify_tab_stability.py --url https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/ --expected-version "$(cat VERSION)" --executable "$DEPLOYMENT_CHROMIUM_PATH" --timeout 240 --output artifacts/tab_stability_validation.json
+      - name: Check poster dragging and actual image loading
+        id: theme_rail
+        if: ${{ steps.verify.outcome == 'success' }}
+        continue-on-error: true
+        run: |
+          python scripts/verify_theme_rail_live.py --expected-version "$(cat VERSION)" --executable "$DEPLOYMENT_CHROMIUM_PATH" --output artifacts/theme_rail_live_validation.json
       - name: Preserve public deployment evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -77,6 +94,8 @@ jobs:
           name: public-streamlit-deployment-verification
           path: |
             artifacts/deployment_validation.json
+            artifacts/tab_stability_validation.json
+            artifacts/theme_rail_live_validation.json
             artifacts/deployment-screenshots/
           retention-days: 3
       - name: Record sanitized deployment result on main
@@ -88,6 +107,9 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- artifacts/deployment_validation.json
+          for evidence in artifacts/tab_stability_validation.json artifacts/theme_rail_live_validation.json; do
+            if [ -f "$evidence" ]; then git add -- "$evidence"; fi
+          done
           if git diff --cached --quiet; then
             exit 0
           fi
@@ -107,5 +129,5 @@ jobs:
           echo 'Could not record evidence after three concurrent data updates.'
           exit 1
       - name: Require successful live verification
-        if: ${{ steps.verify.outcome != 'success' }}
+        if: ${{ steps.verify.outcome != 'success' || steps.tab_stability.outcome != 'success' || steps.theme_rail.outcome != 'success' }}
         run: exit 1

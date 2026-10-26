@@ -76,13 +76,30 @@ class ThemeEditorialTests(unittest.TestCase):
         self.assertNotIn('a\");color:red', rendered)
         self.assertNotIn('url(https://evil.example', rendered)
 
-    def test_more_than_five_candidates_keep_all_accessible_in_native_details(self):
+    def test_all_candidates_have_posters_in_the_keyboard_and_drag_rail(self):
         rendered = theme_card_html(1, recommendation(contents=[content(number) for number in range(8)]))
-        self.assertEqual(rendered.count('class="theme-poster-tile"'), 5)
+        self.assertEqual(rendered.count('class="theme-poster-tile"'), 8)
+        self.assertIn('class="theme-carousel"', rendered)
+        self.assertIn('aria-label="다음 작품"', rendered)
+        self.assertIn('aria-controls="theme-title-rail-1"', rendered)
         self.assertIn('<details class="theme-more-candidates">', rendered)
         self.assertIn("전체 8편 보기", rendered)
         self.assertEqual(rendered.count("<li>"), 8)
         self.assertIn('href="https://m.kinolights.com/title/7"', rendered)
+
+    def test_ten_candidates_are_in_order_and_other_themes_have_independent_controls(self):
+        first = theme_card_html(1, recommendation(contents=[content(number) for number in range(10)]))
+        second = theme_card_html(2, recommendation(contents=[content(number) for number in range(10)]))
+        self.assertEqual(first.count('class="theme-poster-tile"'), 10)
+        self.assertLess(first.index('/poster/0.jpg'), first.index('/poster/9.jpg'))
+        self.assertIn('id="theme-title-rail-1"', first)
+        self.assertNotIn('id="theme-title-rail-1"', second)
+        self.assertIn('aria-controls="theme-title-rail-2"', second)
+
+    def test_known_event_photo_is_not_presented_as_a_film_poster(self):
+        rendered = theme_card_html(1, recommendation(contents=[content(poster_url='https://upload.wikimedia.org/wikipedia/commons/c/c1/Nakache_Omar_Sy_Toledano_Lumières_2012.jpg')]))
+        self.assertIn('theme-poster-placeholder', rendered)
+        self.assertNotIn('background-image:', rendered)
 
     def test_exactly_five_candidates_are_visible_without_a_redundant_expander(self):
         rendered = theme_card_html(1, recommendation(contents=[content(number) for number in range(5)]))

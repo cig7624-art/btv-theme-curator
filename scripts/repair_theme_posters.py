@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import json
 import os
@@ -17,7 +18,8 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from poster_assets import enrich_poster_candidates
+from poster_assets import enrich_poster_candidates, inspect_poster_url
+from data_storage_lock import with_data_write_lock
 
 
 def lookup_diagnostics(unresolved):
@@ -111,8 +113,8 @@ def latest_run_id(history, content):
     return max(runs, key=lambda key: (runs[key], key)) if runs else ""
 
 
-def visible_candidates(content, run_id):
-    """Match the five initially displayed unique works for each saved theme."""
+def visible_candidates(content, run_id, *, per_theme=10):
+    """Match the displayed unique works for every saved recommendation theme."""
     if not run_id:
         return content.iloc[:0].copy()
     scoped = content[content["run_id"].eq(run_id)].copy()
@@ -130,37 +132,61 @@ def visible_candidates(content, run_id):
                 continue
             seen.add(identity)
             selected.append(index)
-            if len(seen) == 5:
+            if len(seen) == max(1, int(per_theme)):
                 break
     return content.loc[selected].copy()
 
 
-def collect_updates(root=ROOT, *, limit=50):
+def collect_updates(root=ROOT, *, limit=100, per_theme=10, check_existing=False):
     root = Path(root)
     content, history = _load(root)
     run_id = latest_run_id(history, content)
-    visible = visible_candidates(content, run_id)
+    visible = visible_candidates(content, run_id, per_theme=per_theme)
+    health = {}
+    if check_existing:
+        urls = list(dict.fromkeys(_text(value) for value in visible["poster_url"] if _text(value)))
+        if urls:
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                health = dict(zip(urls, executor.map(inspect_poster_url, urls)))
     requested = {}
+    existing = {}
     for row in visible.to_dict("records"):
-        if not _text(row.get("poster_url")) and _identity(row) not in requested and len(requested) < max(0, int(limit)):
+        poster = _text(row.get("poster_url"))
+        invalid = (not _url(poster)) or (check_existing and health[poster]["status"] == "invalid")
+        if invalid and (_identity(row) in requested or len(requested) < max(0, int(limit))):
             identity = _identity(row)
             requested[identity] = dict(zip(("title", "year", "content_type"), identity), poster_url="")
+            if poster not in existing.setdefault(identity, []):
+                existing[identity].append(poster)
     results = enrich_poster_candidates(list(requested.values()), limit=max(0, int(limit))) if requested else []
     updates = {}
     for row in results:
         identity = _identity(row)
         if identity in requested and _url(row.get("poster_url")):
             updates[identity] = {**requested[identity], "poster_url": _text(row["poster_url"]),
+                                 "expected_poster_urls": list(dict.fromkeys([*existing[identity], ""])), "image_verified": True,
                                  "poster_source": _text(row.get("poster_source")),
                                  "poster_source_url": _text(row.get("poster_source_url"))}
+    # Proven cast photos, missing files and non-images must not keep masquerading
+    # as posters if no replacement exists. Network outages never enter this path.
+    for identity, posters in existing.items():
+        invalid_posters = [poster for poster in posters if poster]
+        if invalid_posters and identity not in updates:
+            updates[identity] = {**requested[identity], "expected_poster_urls": invalid_posters,
+                                 "invalid_poster_reason": "confirmed_invalid_image"}
     return {"schema_version": 1, "collected_at": datetime.now(timezone.utc).isoformat(),
             "source_run_id": run_id, "visible_candidates": len(visible),
+            "per_theme": max(1, int(per_theme)), "check_existing": check_existing,
             "visible_with_poster": sum(_url(value) for value in visible["poster_url"]),
-            "checked_unique": len(requested), "found_unique": len(updates), "updates": list(updates.values()),
-            "unresolved": [item for identity, item in requested.items() if identity not in updates]}
+            "visible_verified_with_poster": sum(health.get(_text(value), {}).get("status") == "available" for value in visible["poster_url"]),
+            "visible_retryable_posters": sum(health.get(_text(value), {}).get("status") == "retryable" for value in visible["poster_url"]),
+            "checked_unique": len(requested), "found_unique": sum(bool(row["poster_url"]) for row in updates.values()),
+            "validated_existing": [{"poster_url": url, **result} for url, result in health.items()],
+            "updates": list(updates.values()),
+            "unresolved": [item for identity, item in requested.items() if not updates.get(identity, {}).get("poster_url")]}
 
 
-def _atomic_write(path, write):
+def _atomic_write(path, write, *, expected_bytes=None):
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary_name = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=path.parent)
     os.close(descriptor)
@@ -169,46 +195,67 @@ def _atomic_write(path, write):
         write(temporary)
         if path.exists():
             temporary.chmod(path.stat().st_mode & 0o777)
+        if expected_bytes is not None and path.read_bytes() != expected_bytes:
+            raise RuntimeError("Saved candidates changed while applying posters; collect/apply again")
         temporary.replace(path)
     finally:
         temporary.unlink(missing_ok=True)
 
 
+@with_data_write_lock
 def apply_updates(manifest, root=ROOT, *, write=False):
     root = Path(root)
     if not isinstance(manifest, dict) or manifest.get("schema_version") != 1 or not isinstance(manifest.get("updates"), list):
         raise ValueError("Unsupported poster update manifest")
     updates = {}
     for row in manifest["updates"]:
-        if isinstance(row, dict) and _identity(row)[0] and _url(row.get("poster_url")):
-            updates[_identity(row)] = _text(row["poster_url"])
+        if not isinstance(row, dict) or not _identity(row)[0]:
+            continue
+        expected = row.get("expected_poster_urls", [row.get("expected_poster_url", "")])
+        if not isinstance(expected, list) or not all(isinstance(value, str) for value in expected):
+            continue
+        if _url(row.get("poster_url")) or (not _text(row.get("poster_url")) and any(expected) and _text(row.get("invalid_poster_reason"))):
+            updates[_identity(row)] = row
+    content_path = root / "theme_content_candidates.csv"
+    original_bytes = content_path.read_bytes()
     content, history = _load(root)
     latest = latest_run_id(history, content)
-    before = visible_candidates(content, latest)
+    per_theme = max(1, int(manifest.get("per_theme", 10)))
+    before = visible_candidates(content, latest, per_theme=per_theme)
     enriched = content.copy()
     updated = 0
     for index, row in content.iterrows():
-        poster = updates.get(_identity(row))
-        if poster and not _text(row["poster_url"]):
-            enriched.at[index, "poster_url"] = poster
+        update = updates.get(_identity(row))
+        if update is None:
+            continue
+        expected = update.get("expected_poster_urls", [_text(update.get("expected_poster_url"))])
+        if _text(row["poster_url"]) in expected and _text(row["poster_url"]) != _text(update.get("poster_url")):
+            enriched.at[index, "poster_url"] = _text(update.get("poster_url"))
             updated += 1
     # Only the poster column may change; rank, titles, row order, all recommendation
-    # fields, unknown future fields and existing nonempty artwork remain intact.
+    # fields, unknown future fields and existing usable artwork remain intact.
     pd.testing.assert_frame_equal(content.drop(columns="poster_url"), enriched.drop(columns="poster_url"))
-    after = visible_candidates(enriched, latest)
+    after = visible_candidates(enriched, latest, per_theme=per_theme)
+    verified_urls = {item["poster_url"] for item in manifest.get("validated_existing", []) if item.get("status") == "available"}
+    verified_urls.update(_text(item.get("poster_url")) for item in updates.values() if item.get("image_verified") and _text(item.get("poster_url")))
+    retryable_urls = {item["poster_url"] for item in manifest.get("validated_existing", []) if item.get("status") == "retryable"}
     report = {"schema_version": 1, "applied_at": datetime.now(timezone.utc).isoformat(),
               "mode": "write" if write else "dry_run", "source_run_id": manifest.get("source_run_id", ""),
               "latest_run_id": latest, "checked_unique": int(manifest.get("checked_unique", 0)),
-              "found_unique": len(updates), "updated_rows": updated,
+              "found_unique": sum(bool(_text(row.get("poster_url"))) for row in updates.values()), "updated_rows": updated,
+              "per_theme": per_theme,
               "visible_candidates": len(after),
               "before_visible_with_poster": sum(_url(value) for value in before["poster_url"]),
-              "visible_with_poster": sum(_url(value) for value in after["poster_url"])}
+              "visible_with_poster": sum(_url(value) for value in after["poster_url"]),
+              "visible_verified_with_poster": sum(_text(value) in verified_urls for value in after["poster_url"]),
+              "visible_retryable_posters": sum(_text(value) in retryable_urls for value in after["poster_url"])}
     report["unresolved"] = manifest.get("unresolved", [])
+    report["validated_existing"] = manifest.get("validated_existing", [])
     if "provider_diagnostics" in manifest:
         report["provider_diagnostics"] = manifest["provider_diagnostics"]
     if write:
         if updated:
-            _atomic_write(root / "theme_content_candidates.csv", lambda path: enriched.to_csv(path, sep="|", index=False, encoding="utf-8-sig"))
+            _atomic_write(content_path, lambda path: enriched.to_csv(path, sep="|", index=False, encoding="utf-8-sig"), expected_bytes=original_bytes)
         _atomic_write(root / "artifacts" / "poster_repair_status.json",
                       lambda path: path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"))
     return report
@@ -220,12 +267,14 @@ def main():
     mode.add_argument("--collect", type=Path, help="Look up missing visible artwork and save an update manifest; never change recommendations")
     mode.add_argument("--apply", type=Path, help="Apply a previously collected manifest to the latest saved candidates")
     parser.add_argument("--root", type=Path, default=ROOT)
-    parser.add_argument("--limit", type=int, default=50)
+    parser.add_argument("--limit", type=int, default=100)
+    parser.add_argument("--per-theme", type=int, default=10)
+    parser.add_argument("--check-existing", action="store_true", help="Decode saved image URLs too; replace or clear only definite invalid images")
     parser.add_argument("--diagnose", action="store_true", help="Include public provider responses in the repair report")
     parser.add_argument("--write", action="store_true", help="Write poster-only changes and an audit report; default apply is dry run")
     args = parser.parse_args()
     if args.collect:
-        manifest = collect_updates(args.root, limit=args.limit)
+        manifest = collect_updates(args.root, limit=args.limit, per_theme=args.per_theme, check_existing=args.check_existing)
         if args.diagnose:
             manifest["provider_diagnostics"] = lookup_diagnostics(manifest["unresolved"])
         _atomic_write(args.collect, lambda path: path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"))

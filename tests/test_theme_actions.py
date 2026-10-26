@@ -71,13 +71,13 @@ def app_fixture(*, with_history=True, home_tab="추천 테마"):
         mock("llm_theme_generator.persist_files_to_github", return_value={"status": "success"})
         def generate_contents(**kwargs):
             state["events"].append("generate_contents")
-            return {rec["theme"]["theme_id"]: [{"title": "타짜", "year": "2006"}]
+            return {rec["theme"]["theme_id"]: [{"title": "타짜" if index == 0 else f"후보{index}", "year": "2006"} for index in range(10)]
                     for rec in kwargs["recommendations"]}, {}
         mock("llm_theme_generator.generate_content_candidates_for_themes", side_effect=generate_contents)
         def validate(suggestions, **kwargs):
-            return {key: [dict(title="타짜", year="2006", content_type="영화", status="verified",
-                               source_url="https://m.kinolights.com/title/test", reason="공범과 배신")]
-                    for key in suggestions}, {"verified_count": len(suggestions)}
+            return {key: [dict(title=item["title"], year="2006", content_type="영화", status="verified",
+                               source_url="https://m.kinolights.com/title/test", reason="공범과 배신") for item in items]
+                    for key, items in suggestions.items()}, {"verified_count": sum(map(len, suggestions.values()))}
         mock("kinolights_candidates.validate_content_suggestions", side_effect=validate)
         mock("poster_assets.enrich_poster_candidates", side_effect=lambda items, **kwargs: [dict(item, poster_url="https://images.example.com/tazza.jpg") for item in items])
         mock("theme_content_manager.load_content_frame", side_effect=lambda *args: state["frame"].copy())
@@ -132,7 +132,7 @@ class ThemeActionTests(unittest.TestCase):
             self.assertEqual(app.session_state["github_writeback_result"]["status"], "success")
             content = state["generate_content_candidates_for_themes"]
             content.assert_called_once()
-            self.assertEqual(content.call_args.kwargs["per_theme"], 16)
+            self.assertEqual(content.call_args.kwargs["per_theme"], 10)
             self.assertEqual(content.call_args.kwargs["recommendations"][0]["theme"]["theme_id"], "NEW-1")
             self.assertLess(state["events"].index("persist_themes"), state["events"].index("generate_contents"))
             state["enrich_poster_candidates"].assert_called_once()
@@ -157,7 +157,7 @@ class ThemeActionTests(unittest.TestCase):
             self.assert_no_errors(app)
             candidates = state["generate_content_candidates_for_themes"]
             candidates.assert_called_once()
-            self.assertEqual(candidates.call_args.kwargs["per_theme"], 16)
+            self.assertEqual(candidates.call_args.kwargs["per_theme"], 10)
             self.assertEqual(candidates.call_args.kwargs["recommendations"][0]["theme"]["theme_id"], "TEST-1")
             state["enrich_poster_candidates"].assert_called_once()
             saved = state["frame"]
@@ -207,12 +207,12 @@ class ThemeActionTests(unittest.TestCase):
             self.assertEqual(app.button(key="load_weekly_contents").label, "콘텐츠 새로고침")
             self.assertFalse(any("content provider unavailable" in item.value for item in app.warning))
 
-    def test_poster_loading_covers_five_visible_unique_works_after_duplicate_rows(self):
+    def test_poster_loading_covers_all_ten_unique_works_after_duplicate_rows(self):
         with app_fixture() as state:
             def validate(suggestions, **kwargs):
                 return {key: [dict(title=title, year="2020", content_type="영화", status="verified",
                                    source_url="https://m.kinolights.com/title/test")
-                              for title in ["작품1", "작품1", "작품2", "작품3", "작품4", "작품5", "작품6"]]
+                              for title in ["작품1", *[f"작품{number}" for number in range(1, 11)]]]
                         for key in suggestions}, {}
             state["validate_content_suggestions"].side_effect = validate
             app = state["app"]
@@ -221,9 +221,24 @@ class ThemeActionTests(unittest.TestCase):
             lookup = state["enrich_poster_candidates"]
             lookup.assert_called_once()
             self.assertEqual([item["title"] for item in lookup.call_args.args[0]],
-                             ["작품1", "작품2", "작품3", "작품4", "작품5"])
-            self.assertEqual(lookup.call_args.kwargs["limit"], 50)
+                             [f"작품{number}" for number in range(1, 11)])
+            self.assertEqual(lookup.call_args.kwargs["limit"], 10)
             self.assertIn("작품6", set(state["frame"].title))
+
+    def test_short_normalized_list_keeps_prior_saved_candidates(self):
+        with app_fixture() as state:
+            original = ensure_content_schema(pd.DataFrame([dict(run_id="test-run", theme_key="TEST-1", theme_id="TEST-1", rank="1", title="기존 작품")]))
+            state["frame"] = original.copy()
+            state["validate_content_suggestions"].side_effect = lambda suggestions, **kwargs: (
+                {key: [dict(title=f"부족한 작품{number}", year="2020") for number in range(9)] for key in suggestions}, {})
+            app = state["app"]
+            app.button(key="load_weekly_contents").click().run()
+            self.assert_no_errors(app)
+            pd.testing.assert_frame_equal(state["frame"], original)
+            self.assertTrue(app.session_state["content_candidate_error"])
+            state["enrich_poster_candidates"].assert_not_called()
+            state["upsert_content_frame"].assert_not_called()
+            state["persist_content_candidates_to_github"].assert_not_called()
 
     def test_empty_content_response_is_reported_without_saving_empty_results(self):
         with app_fixture() as state:

@@ -1,4 +1,4 @@
-"""Horizontal issue navigation; scripts contain only fixed application code."""
+"""Shared drag, touch and keyboard navigation for issue and title rails."""
 
 
 def issue_carousel_html(cards):
@@ -13,17 +13,21 @@ def issue_carousel_html(cards):
     )
 
 
-CAROUSEL_SCRIPT = """<script>
+_CAROUSEL_TEMPLATE = """<script>
 (() => {
   let attempts = 0;
   function mount() {
-    const root = document.getElementById('home-issue-carousel');
-    if (!root) {
+    const roots = document.querySelectorAll('__ROOT_SELECTOR__');
+    if (!roots.length) {
       if (++attempts < 60) requestAnimationFrame(mount);
       return;
     }
-    if (window.__btvIssueCarouselCleanup) window.__btvIssueCarouselCleanup();
-    const rail = root.querySelector('.editorial-grid');
+    if (window.__CLEANUP_NAME__) window.__CLEANUP_NAME__();
+    const cleanups = Array.from(roots, mountCarousel);
+    window.__CLEANUP_NAME__ = () => cleanups.forEach(cleanup => cleanup());
+  }
+  function mountCarousel(root) {
+    const rail = root.querySelector('__RAIL_SELECTOR__');
     const previous = root.querySelector('.carousel-prev');
     const next = root.querySelector('.carousel-next');
     const position = root.querySelector('.carousel-position');
@@ -36,7 +40,6 @@ CAROUSEL_SCRIPT = """<script>
       events.abort(); if (resize) resize.disconnect();
       finishDrag(false); clearTimeout(clickTimer);
     };
-    window.__btvIssueCarouselCleanup = cleanup;
     const step = () => (rail.firstElementChild?.getBoundingClientRect().width || rail.clientWidth)
       + (parseFloat(getComputedStyle(rail).columnGap) || 0);
     function update() {
@@ -108,7 +111,19 @@ CAROUSEL_SCRIPT = """<script>
     resize = new ResizeObserver(update);
     resize.observe(rail);
     update();
+    return cleanup;
   }
   mount();
 })();
 </script>"""
+
+
+def _carousel_script(root_selector, rail_selector, cleanup_name):
+    # Arguments are fixed selectors owned by this module; content never enters JS.
+    return (_CAROUSEL_TEMPLATE.replace('__ROOT_SELECTOR__', root_selector)
+            .replace('__RAIL_SELECTOR__', rail_selector)
+            .replace('__CLEANUP_NAME__', cleanup_name))
+
+
+CAROUSEL_SCRIPT = _carousel_script('#home-issue-carousel', '.editorial-grid', '__btvIssueCarouselCleanup')
+THEME_CAROUSEL_SCRIPT = _carousel_script('.theme-carousel', '.theme-poster-rail', '__btvThemeCarouselCleanup')

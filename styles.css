@@ -22,6 +22,9 @@
 [data-testid="stHeader"] { height: 36px; background: rgba(23, 25, 26, .96); }
 [data-testid="stToolbar"] { color: var(--muted); }
 [data-testid="stAppViewContainer"], [data-testid="stMain"] { background: var(--page); }
+[data-testid="stMain"] { scrollbar-gutter: stable; }
+/* Lazy tabs retain a viewport while the next section streams in. */
+.st-key-home_sections { min-height: 100vh; min-height: 100dvh; }
 [data-testid="stMarkdownContainer"] { color: var(--ink); }
 [data-testid="stMarkdownContainer"] :is(h1, h2, h3, h4, p, li),
 [data-testid="stWidgetLabel"] p, [data-testid="stCaptionContainer"] p {
@@ -137,7 +140,7 @@ button[kind="primary"]:disabled :is(div, p, span) { color: #b6b8b0 !important; }
 /* Issue covers remain complete when external artwork is unavailable. */
 .editorial-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 0; }
 .editorial-carousel { width: 100%; max-width: 100%; min-width: 0; }
-.st-key-issue_carousel_script { display: none; }
+.st-key-issue_carousel_script, .st-key-theme_carousel_script { display: none; }
 .editorial-carousel .editorial-grid { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: calc((100% - 36px) / 4); align-items: start; width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-color: #565e50 transparent; scrollbar-width: thin; padding-bottom: 8px; }
 .editorial-carousel .editorial-grid { cursor: grab; }
 .editorial-carousel .editorial-grid :is(a, img) { -webkit-user-drag: none; }
@@ -511,6 +514,13 @@ label.weight-chip { cursor: pointer; }
 .theme-content-empty { display: flex; flex-direction: column; justify-content: center; min-height: 160px; padding: 20px; border: 1px dashed #454d40; border-radius: 6px; color: var(--muted); font-size: 12px; line-height: 1.8; }
 .theme-poster-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; min-height: 20px; margin-bottom: 5px; color: var(--muted); font-size: 11px; }
 .theme-poster-rail { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 32px) / 5); gap: 8px; align-items: start; width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-color: #565e50 transparent; scrollbar-width: thin; padding-bottom: 2px; }
+.theme-poster-rail { cursor: grab; }
+.theme-poster-rail :is(a, img) { -webkit-user-drag: none; }
+.theme-poster-rail.is-dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; }
+.theme-poster-rail.is-dragging * { cursor: grabbing !important; user-select: none !important; }
+.theme-carousel .carousel-controls { margin: 0; gap: 6px; }
+.theme-carousel .carousel-controls button { width: 28px; height: 28px; flex-basis: 28px; }
+.theme-carousel .carousel-position { font-size: 10px; }
 [data-testid="stMarkdownContainer"] .theme-poster-tile { display: block; min-width: 0; margin: 0; padding: 0; color: var(--ink); text-decoration: none; scroll-snap-align: start; }
 [data-testid="stMarkdownContainer"] a.theme-poster-tile:hover { color: var(--accent); text-decoration: none; }
 .theme-poster-art { position: relative; display: block; width: 100%; aspect-ratio: 2 / 3; overflow: hidden; border: 1px solid #3c4438; border-radius: 5px; background: #252d25; }
@@ -562,6 +572,7 @@ label.weight-chip { cursor: pointer; }
     .theme-poster-area { max-width: 100%; justify-self: stretch; }
     .theme-content-empty { min-height: 0; padding: 12px; }
     .theme-poster-rail { grid-auto-columns: 100px; gap: 8px; padding-bottom: 6px; }
+    .theme-carousel .carousel-controls button { width: 44px; height: 44px; flex-basis: 44px; }
     .theme-poster-placeholder { padding: 10px; }
     .theme-more-candidates summary, .theme-candidate-list a { min-height: 44px; }
     .theme-candidate-list { grid-template-columns: minmax(0, 1fr); }

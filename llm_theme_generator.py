@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import re
+import unicodedata
 from datetime import date, datetime
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -756,16 +757,20 @@ def generate_content_candidates_for_themes(
     recommendations: list[dict[str, Any]],
     api_key: str,
     model: str = "gpt-5.6-luna",
-    per_theme: int = 8,
+    per_theme: int = 10,
 ) -> tuple[dict[str, list[dict[str, Any]]], dict[str, int]]:
-    """Generate real-title candidate lists for all recommended themes in one LLM call.
+    """Generate complete, unique real-title lists, refilling a shortage once.
 
     Kinolights verification is performed separately. This call only proposes known titles
-    so that title-oriented Kinolights search can validate them.
+    so that title-oriented Kinolights search can validate them. Incomplete lists raise
+    instead of silently replacing saved candidates with fewer than requested.
     """
+    totals = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0, "api_call_count": 0}
+    if not recommendations:
+        return {}, totals
     if not api_key:
         raise ThemeGenerationError("OPENAI_API_KEY가 설정되지 않았습니다.")
-    per_theme = max(4, min(int(per_theme or 8), 20))
+    per_theme = max(4, min(int(per_theme or 10), 20))
     payload_themes: list[dict[str, Any]] = []
     key_order: list[str] = []
     for index, rec in enumerate(recommendations, start=1):
@@ -784,11 +789,12 @@ def generate_content_candidates_for_themes(
             "selection_rule": _clean_short_text(rec.get("selection_rule") or theme.get("content_selection_rule", ""), 220),
             "exclusion_rule": _clean_short_text(rec.get("exclusion_rule") or theme.get("content_exclusion_rule", ""), 160),
             "reference_titles": _reference_titles(rec.get("reference_titles") or theme.get("content_reference_titles", "")),
+            "candidate_count": per_theme,
         })
 
     system_prompt = f"""
 당신은 한국 IPTV 편성용 콘텐츠 큐레이터다.
-입력된 모든 테마에 대해 실제 존재하고 공개된 영화·드라마·예능·애니메이션·다큐 후보를 각각 최대 {per_theme}개 제안한다.
+입력된 모든 테마에 대해 실제 존재하고 공개된 영화·드라마·예능·애니메이션·다큐 후보를 각각 정확히 candidate_count편(기본 {per_theme}편) 제안한다.
 한국에서 통용되는 공식 제목을 쓰고, 존재 여부가 불확실한 작품은 절대 만들지 않는다.
 한 테마 안에서는 같은 시리즈가 과도하게 반복되지 않게 한다. 국내·해외, 신작·기성작의 분배보다 주제 적합성을 우선한다.
 selection_rule은 모든 작품이 충족할 핵심 포함 기준이며 exclusion_rule에 해당하면 제외한다.
@@ -797,62 +803,75 @@ reference_titles는 기획 단계의 검증 전 참고 후보이다. 실제 존�
 테마의 핵심 소재·관계·상황에 직접 맞는 작품만 고르고 단순히 장르만 같은 작품은 제외한다.
 reason에는 이 작품이 해당 포함 기준에 맞는 구체적인 관계·소재·정서·서사 특징을 쓴다. '주제에 적합하다' 같은 반복 설명은 쓰지 않는다.
 source_issue와 rationale은 기획의 계기이며 후보의 조회수·순위·바이럴 여부를 증명하지 않는다. 그런 수집 지표로 작품을 골랐다고 주장하지 않는다.
-적합한 작품이 적으면 {per_theme}편보다 적게 반환한다. 편수를 맞추려고 존재가 불확실하거나 주제와 먼 작품을 넣지 않는다.
+제목 표기만 바꾼 같은 작품이나 excluded_titles에 있는 작품을 다시 제안하지 않는다.
+편수를 맞추려고 존재가 불확실하거나 주제와 먼 작품을 넣지 않는다. 실제로 적합한 작품을 확보할 수 없으면 확인 가능한 후보만 반환한다.
+작품 존재 확인은 B tv 판권·현재 서비스 가능 여부 확인이 아니다. 제공되지 않은 서비스 여부를 단정하지 않는다.
 year는 확실한 경우에만 적고 content_type은 영화/드라마/예능/애니메이션/다큐 중 하나로 쓴다.
 입력받은 theme_key를 그대로 반환한다.
 """.strip()
 
+    result: dict[str, list[dict[str, Any]]] = {key: [] for key in key_order}
+    seen: dict[str, set[str]] = {key: set() for key in key_order}
     try:
         client = OpenAI(api_key=api_key)
-        response = client.responses.parse(
-            model=model,
-            input=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": json.dumps({"themes": payload_themes}, ensure_ascii=False)},
-            ],
-            text_format=ThemeContentCandidateBatch,
-            reasoning={"effort": "none"},
-            max_output_tokens=max(3000, min(24000, len(payload_themes) * per_theme * 85)),
-        )
-        record_llm_response(response, feature="content_candidates", model=model)
     except Exception as exc:
         raise ThemeGenerationError(f"콘텐츠 후보 생성 실패: {exc}") from exc
+    pending = payload_themes
+    for _attempt in range(2):
+        try:
+            response = client.responses.parse(
+                model=model,
+                input=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": json.dumps({"themes": pending}, ensure_ascii=False)},
+                ],
+                text_format=ThemeContentCandidateBatch,
+                reasoning={"effort": "none"},
+                max_output_tokens=max(3000, min(24000, sum(item["candidate_count"] for item in pending) * 140)),
+            )
+            record_llm_response(response, feature="content_candidates", model=model)
+        except Exception as exc:
+            raise ThemeGenerationError(f"콘텐츠 후보 생성 실패: {exc}") from exc
 
-    parsed = response.output_parsed
-    if parsed is None:
-        raise ThemeGenerationError("콘텐츠 후보를 생성하지 못했습니다.")
+        usage = getattr(response, "usage", None)
+        inputs = int(getattr(usage, "input_tokens", 0) or 0) if usage is not None else 0
+        outputs = int(getattr(usage, "output_tokens", 0) or 0) if usage is not None else 0
+        totals["input_tokens"] += inputs
+        totals["output_tokens"] += outputs
+        totals["total_tokens"] += int(getattr(usage, "total_tokens", inputs + outputs) or (inputs + outputs)) if usage is not None else 0
+        totals["api_call_count"] += 1
+        parsed = response.output_parsed
+        if parsed is None:
+            raise ThemeGenerationError("콘텐츠 후보를 생성하지 못했습니다.")
 
-    result: dict[str, list[dict[str, Any]]] = {key: [] for key in key_order}
-    for theme_set in parsed.themes:
-        key = _clean_short_text(theme_set.theme_key, 40)
-        if key not in result:
-            continue
-        seen: set[str] = set()
-        for item in theme_set.candidates:
-            title = _clean_short_text(item.title, 80)
-            title_key = normalize_theme_text(title)
-            if not title_key or title_key in seen:
+        pending_keys = {item["theme_key"] for item in pending}
+        for theme_set in parsed.themes:
+            key = str(theme_set.theme_key).strip()
+            if key not in pending_keys:
                 continue
-            seen.add(title_key)
-            result[key].append({
-                "title": title,
-                "content_type": _clean_short_text(item.content_type, 20),
-                "year": _clean_short_text(item.year, 8),
-                "reason": _clean_short_text(item.reason, 70),
-            })
-            if len(result[key]) >= per_theme:
-                break
+            for item in theme_set.candidates:
+                if len(result[key]) >= per_theme:
+                    break
+                title = _clean_short_text(item.title, 80)
+                title_key = normalize_theme_text(unicodedata.normalize("NFKC", title))
+                if not title_key or title_key in seen[key]:
+                    continue
+                seen[key].add(title_key)
+                result[key].append({
+                    "title": title,
+                    "content_type": _clean_short_text(item.content_type, 20),
+                    "year": _clean_short_text(item.year, 8),
+                    "reason": _clean_short_text(item.reason, 70),
+                })
 
-    usage = getattr(response, "usage", None)
-    input_tokens = int(getattr(usage, "input_tokens", 0) or 0) if usage is not None else 0
-    output_tokens = int(getattr(usage, "output_tokens", 0) or 0) if usage is not None else 0
-    total_tokens = int(getattr(usage, "total_tokens", input_tokens + output_tokens) or (input_tokens + output_tokens)) if usage is not None else 0
-    return result, {
-        "input_tokens": input_tokens,
-        "output_tokens": output_tokens,
-        "total_tokens": total_tokens,
-        "api_call_count": 1,
-    }
+        pending = [{**item, "candidate_count": per_theme - len(result[item["theme_key"]]),
+                    "excluded_titles": [candidate["title"] for candidate in result[item["theme_key"]]]}
+                   for item in payload_themes if len(result[item["theme_key"]]) < per_theme]
+        if not pending:
+            return result, totals
+
+    counts = ", ".join(f'{item["theme_key"]} {len(result[item["theme_key"]])}/{per_theme}편' for item in pending)
+    raise ThemeGenerationError(f"중복을 제외한 콘텐츠 후보가 부족합니다 ({counts}). 기존 작품 목록을 유지합니다. 다시 불러와 주세요.")
 
 
 def _candidate_text(candidate: dict[str, Any]) -> str:

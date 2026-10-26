@@ -62,6 +62,15 @@ def sdk_response(parsed):
         input_tokens=100, output_tokens=80, input_tokens_details=SimpleNamespace(cached_tokens=0)))
 
 
+def content_response(theme_key, count=10):
+    titles = ["나이브스 아웃", "그을린 사랑", "기생충", "마더", "올드보이",
+              "장화, 홍련", "유전", "오펀: 천사의 비밀", "식스 센스", "시크릿"]
+    return sdk_response(SimpleNamespace(themes=[SimpleNamespace(theme_key=theme_key, candidates=[
+        SimpleNamespace(title=title, content_type="영화", year="", reason="가족의 비밀이 이야기의 중심")
+        for title in titles[:count]
+    ])]))
+
+
 class WeeklyThemeContractTests(unittest.TestCase):
     def candidates(self, rows):
         return _sanitize_generated([GeneratedTheme(**row) for row in rows], len(rows))
@@ -144,10 +153,11 @@ class WeeklyThemeContractTests(unittest.TestCase):
                                            ("library-refresh", library_recommendations)]:
                 with self.subTest(scope=scope):
                     sdk = Mock()
-                    sdk.responses.parse.return_value = sdk_response(SimpleNamespace(themes=[]))
+                    sdk.responses.parse.return_value = content_response(recommendations[0]["theme"]["theme_id"])
                     with patch("llm_theme_generator.OpenAI", return_value=sdk):
-                        generate_content_candidates_for_themes(recommendations, "test-key", "test-model", 8)
+                        rows, _ = generate_content_candidates_for_themes(recommendations, "test-key", "test-model")
                     sdk.responses.parse.assert_called_once()
+                    self.assertEqual(len(next(iter(rows.values()))), 10)
                     request = sdk.responses.parse.call_args.kwargs
                     payload = json.loads(request["input"][-1]["content"])["themes"][0]
                     self.assertEqual(payload["selection_rule"], row["selection_rule"])
@@ -173,12 +183,12 @@ class WeeklyThemeContractTests(unittest.TestCase):
 
     def test_legacy_theme_without_contract_still_generates_candidates(self):
         sdk = Mock()
-        sdk.responses.parse.return_value = sdk_response(SimpleNamespace(themes=[]))
+        sdk.responses.parse.return_value = content_response("T001")
         legacy = [{"theme": {"theme_id": "T001", "theme_name": "가족의 비밀",
                                "genre": "미스터리", "copy": "가까운 사람들의 낯선 얼굴"}}]
         with patch("llm_theme_generator.OpenAI", return_value=sdk):
-            rows, _ = generate_content_candidates_for_themes(legacy, "test-key", "test-model", 8)
-        self.assertEqual(rows, {"T001": []})
+            rows, _ = generate_content_candidates_for_themes(legacy, "test-key", "test-model")
+        self.assertEqual(len(rows["T001"]), 10)
         sdk.responses.parse.assert_called_once()
 
 
