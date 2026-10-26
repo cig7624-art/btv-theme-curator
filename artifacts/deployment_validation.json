@@ -3,8 +3,8 @@
   "status": "passed",
   "expected_version": "1.6.1",
   "observed_version": "1.6.1",
-  "started_at": "2026-10-26T05:21:59.860103+00:00",
-  "finished_at": "2026-10-26T05:22:36.357861+00:00",
+  "started_at": "2026-10-26T05:27:27.780191+00:00",
+  "finished_at": "2026-10-26T05:27:56.580242+00:00",
   "attempts": 1,
   "tests": {
     "desktop_version": true,
@@ -68,7 +68,7 @@
       "lead_loaded": true
     }
   },
-  "source_commit": "9050a7558225c430c802836ded8ed63b227dc322",
+  "source_commit": "5eb528efa3bacbd451e2775de464ef0edbfcdb32",
   "frame_state": "matched_release",
   "news_digest": {
     "desktop": {
