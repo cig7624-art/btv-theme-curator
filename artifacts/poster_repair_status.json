@@ -1,47 +1,29 @@
 {
   "schema_version": 1,
-  "applied_at": "2026-10-26T05:24:03.550142+00:00",
+  "applied_at": "2026-10-26T05:38:14.821142+00:00",
   "mode": "write",
   "source_run_id": "20261026-135305-bb90cdfd",
   "latest_run_id": "20261026-135305-bb90cdfd",
-  "checked_unique": 40,
-  "found_unique": 20,
-  "updated_rows": 83,
+  "checked_unique": 24,
+  "found_unique": 10,
+  "updated_rows": 50,
   "per_theme": 10,
-  "visible_candidates": 80,
-  "before_visible_with_poster": 41,
-  "visible_with_poster": 60,
-  "visible_verified_with_poster": 57,
-  "visible_retryable_posters": 5,
+  "visible_candidates": 100,
+  "before_visible_with_poster": 74,
+  "visible_with_poster": 85,
+  "visible_verified_with_poster": 76,
+  "visible_retryable_posters": 9,
   "unresolved": [
     {
-      "title": "고전",
-      "year": "2003",
-      "content_type": "영화",
-      "poster_url": ""
-    },
-    {
-      "title": "마인드헌터",
-      "year": "2017",
-      "content_type": "드라마",
-      "poster_url": ""
-    },
-    {
-      "title": "오징어 게임",
+      "title": "밀그램 프로젝트",
       "year": "2021",
-      "content_type": "드라마",
-      "poster_url": ""
-    },
-    {
-      "title": "더 디보스",
-      "year": "2019",
       "content_type": "영화",
       "poster_url": ""
     },
     {
-      "title": "피지컬: 100",
-      "year": "2023",
-      "content_type": "예능",
+      "title": "홈커밍",
+      "year": "2018",
+      "content_type": "드라마",
       "poster_url": ""
     },
     {
@@ -51,27 +33,39 @@
       "poster_url": ""
     },
     {
-      "title": "앨리스 인 보더랜드",
-      "year": "2020",
-      "content_type": "드라마",
-      "poster_url": ""
-    },
-    {
-      "title": "더 챌린지",
-      "year": "1998",
+      "title": "얼티밋 비스트마스터",
+      "year": "2017",
       "content_type": "예능",
       "poster_url": ""
     },
     {
-      "title": "보랏: 카자흐스탄 킹카의 미국 문화 배우기",
-      "year": "2006",
+      "title": "서바이버",
+      "year": "2000",
+      "content_type": "예능",
+      "poster_url": ""
+    },
+    {
+      "title": "아메리칸 닌자 워리어",
+      "year": "2009",
+      "content_type": "예능",
+      "poster_url": ""
+    },
+    {
+      "title": "남극의 쉐프",
+      "year": "2009",
       "content_type": "영화",
       "poster_url": ""
     },
     {
-      "title": "대화의 희열",
-      "year": "2018",
-      "content_type": "예능",
+      "title": "12명의 성난 사람들",
+      "year": "1957",
+      "content_type": "영화",
+      "poster_url": ""
+    },
+    {
+      "title": "미드나잇 인 파리",
+      "year": "2011",
+      "content_type": "영화",
       "poster_url": ""
     },
     {
@@ -81,8 +75,8 @@
       "poster_url": ""
     },
     {
-      "title": "하숙집 오!번지",
-      "year": "",
+      "title": "룸메이트",
+      "year": "2013",
       "content_type": "드라마",
       "poster_url": ""
     },
@@ -93,45 +87,15 @@
       "poster_url": ""
     },
     {
-      "title": "모던 패밀리",
-      "year": "2009",
+      "title": "하숙집 오!번지",
+      "year": "2022",
       "content_type": "드라마",
       "poster_url": ""
     },
     {
-      "title": "프렌즈",
-      "year": "1994",
+      "title": "파견의 품격",
+      "year": "2007",
       "content_type": "드라마",
-      "poster_url": ""
-    },
-    {
-      "title": "브루클린 나인-나인",
-      "year": "2013",
-      "content_type": "드라마",
-      "poster_url": ""
-    },
-    {
-      "title": "더 오피스",
-      "year": "2005",
-      "content_type": "드라마",
-      "poster_url": ""
-    },
-    {
-      "title": "슈츠",
-      "year": "2011",
-      "content_type": "드라마",
-      "poster_url": ""
-    },
-    {
-      "title": "12명의 성난 사람들",
-      "year": "1957",
-      "content_type": "영화",
-      "poster_url": ""
-    },
-    {
-      "title": "모든 것을 벗어던진 남자",
-      "year": "2021",
-      "content_type": "영화",
       "poster_url": ""
     }
   ],
@@ -142,13 +106,6 @@
       "reason": "decoded_image",
       "width": 248,
       "height": 369
-    },
-    {
-      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/4/47/%EC%9D%B4%ED%84%B0%EB%84%90_%EC%84%A0%EC%83%A4%EC%9D%B8_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-      "status": "available",
-      "reason": "decoded_image",
-      "width": 349,
-      "height": 500
     },
     {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/a/ab/La_La_Land_%28film%29.png/250px-La_La_Land_%28film%29.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
@@ -165,11 +122,53 @@
       "height": 326
     },
     {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/4/47/%EC%9D%B4%ED%84%B0%EB%84%90_%EC%84%A0%EC%83%A4%EC%9D%B8_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 349,
+      "height": 500
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/e/eb/Love%2C_Rosie_%28film%29_UK_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 188
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/0/03/%EB%B9%84%EA%B8%B4_%EC%96%B4%EA%B2%8C%EC%9D%B8.jpg/250px-%EB%B9%84%EA%B8%B4_%EC%96%B4%EA%B2%8C%EC%9D%B8.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 356
+    },
+    {
       "poster_url": "https://upload.wikimedia.org/wikipedia/ko/4/49/%EB%B8%8C%EB%A3%A8%ED%81%B4%EB%A6%B0_%EC%98%81%ED%99%94_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
       "status": "available",
       "reason": "decoded_image",
       "width": 348,
       "height": 500
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/d/d5/%EB%B4%84%EB%82%A0%EC%9D%80%EA%B0%84%EB%8B%A4_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 359
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/b/b4/%EA%B1%B4%EC%B6%95%ED%95%99%EA%B0%9C%EB%A1%A0.jpg/250px-%EA%B1%B4%EC%B6%95%ED%95%99%EA%B0%9C%EB%A1%A0.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 358
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/7/76/A_Moment_to_Remember_Poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 228,
+      "height": 325
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/b/bc/Romeo_and_Juliet_1968_film_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
@@ -186,18 +185,60 @@
       "height": 500
     },
     {
-      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/d/d5/%EB%B4%84%EB%82%A0%EC%9D%80%EA%B0%84%EB%8B%A4_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-      "status": "available",
-      "reason": "decoded_image",
-      "width": 250,
-      "height": 359
-    },
-    {
-      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/0/06/%ED%8C%A8%EC%99%95%EB%B3%84%ED%9D%AC_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/d/d3/%ED%83%80%EC%98%A4%EB%A5%B4%EB%8A%94%EC%97%AC%EC%9D%B8%EC%9D%98%EC%B4%88%EC%83%81_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
       "status": "available",
       "reason": "decoded_image",
       "width": 350,
       "height": 500
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/2/20/%EC%BA%90%EB%A1%A4_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 349,
+      "height": 500
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/b/bc/Love%2C_Simon_poster.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 220,
+      "height": 326
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/5/52/%EC%98%81%ED%99%94_%EB%AC%B8%EB%9D%BC%EC%9D%B4%ED%8A%B8.jpg/250px-%EC%98%81%ED%99%94_%EB%AC%B8%EB%9D%BC%EC%9D%B4%ED%8A%B8.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 357
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/c/c9/CallMeByYourName2017.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 220,
+      "height": 326
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/b/b6/Pretty_woman_movie.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 375
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/4/41/Ghost_%281990_movie_poster%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 259,
+      "height": 383
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/0/02/Loversinparis.jpg/250px-Loversinparis.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 187
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/ko/5/56/%EC%9C%A0%EC%A3%BC%EC%96%BC_%EC%84%9C%EC%8A%A4%ED%8E%99%ED%8A%B8_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
@@ -214,11 +255,25 @@
       "height": 500
     },
     {
-      "poster_url": "https://upload.wikimedia.org/wikipedia/en/2/22/The_Game_film_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/8/81/%EC%98%A4%EB%A6%AC%EC%97%94%ED%8A%B8%ED%8A%B9%EA%B8%89%EC%82%B4%EC%9D%B82017_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
       "status": "available",
       "reason": "decoded_image",
-      "width": 220,
-      "height": 326
+      "width": 250,
+      "height": 366
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/4/44/Identity_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 259,
+      "height": 383
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/4/44/The_Hunt_%282012_film%29.jpg/250px-The_Hunt_%282012_film%29.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 367
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/2/2d/Insidious_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
@@ -228,11 +283,18 @@
       "height": 383
     },
     {
-      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/8/81/%EC%98%A4%EB%A6%AC%EC%97%94%ED%8A%B8%ED%8A%B9%EA%B8%89%EC%82%B4%EC%9D%B82017_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/2/22/The_Game_film_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 220,
+      "height": 326
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/5/55/Steel_Troops_2.jpeg/250px-Steel_Troops_2.jpeg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
       "status": "available",
       "reason": "decoded_image",
       "width": 250,
-      "height": 366
+      "height": 355
     },
     {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/5/56/Running_Man_%28TV_series%29.jpg/250px-Running_Man_%28TV_series%29.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
@@ -247,13 +309,6 @@
       "reason": "decoded_image",
       "width": 267,
       "height": 373
-    },
-    {
-      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/4/43/%EC%9D%B4%EC%8A%A4%EC%BC%80%EC%9D%B4%ED%94%84_%EB%A3%B8_2019.jpg/250px-%EC%9D%B4%EC%8A%A4%EC%BC%80%EC%9D%B4%ED%94%84_%EB%A3%B8_2019.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-      "status": "available",
-      "reason": "decoded_image",
-      "width": 250,
-      "height": 357
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/e/e3/Network_%281976_poster%29.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
@@ -277,6 +332,13 @@
       "height": 275
     },
     {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/a/a7/%EC%95%85%EB%A7%88%EB%8A%94%ED%94%84%EB%9D%BC%EB%8B%A4%EB%A5%BC%EC%9E%85%EB%8A%94%EB%8B%A4_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 300,
+      "height": 395
+    },
+    {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/a/a7/Snatch_ver4.jpg/250px-Snatch_ver4.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
       "status": "available",
       "reason": "decoded_image",
@@ -284,9 +346,25 @@
       "height": 187
     },
     {
-      "poster_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Nakache_Omar_Sy_Toledano_Lumi%C3%A8res_2012.jpg/250px-Nakache_Omar_Sy_Toledano_Lumi%C3%A8res_2012.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-      "status": "invalid",
-      "reason": "cast_or_event_photo"
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/2/2b/Invention_of_lying_ver2.jpg/250px-Invention_of_lying_ver2.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 370
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/b/b0/%EB%8D%94_%EC%9A%B8%ED%94%84_%EC%98%A4%EB%B8%8C_%EC%9B%94_%EC%8A%A4%ED%8A%B8%EB%A6%AC%ED%8A%B8.jpg/250px-%EB%8D%94_%EC%9A%B8%ED%94%84_%EC%98%A4%EB%B8%8C_%EC%9B%94_%EC%8A%A4%ED%8A%B8%EB%A6%AC%ED%8A%B8.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 357
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/9/93/The_Intouchables.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 220,
+      "height": 299
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/2/23/A_Taxi_Driver.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled",
@@ -304,22 +382,51 @@
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/ko/7/71/%EB%9D%BC%EC%9D%B4%EC%96%B8_%EC%9D%BC%EB%B3%91_%EA%B5%AC%ED%95%98%EA%B8%B0_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-      "status": "available",
-      "reason": "decoded_image",
-      "width": 367,
-      "height": 500
-    },
-    {
-      "poster_url": "https://upload.wikimedia.org/wikipedia/en/7/74/Roommate_%28TV_program%29-_promotional_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
       "status": "retryable",
       "reason": "HTTPError"
     },
     {
-      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/0/02/%EC%B2%AD%EC%B6%98%EC%8B%9C%EB%8C%80.jpg/250px-%EC%B2%AD%EC%B6%98%EC%8B%9C%EB%8C%80.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/e/e1/%EC%87%BC%EC%83%9D%ED%81%AC_%ED%83%88%EC%B6%9C_30%EC%A3%BC%EB%85%84_%EB%A6%AC%EB%A7%88%EC%8A%A4%ED%84%B0%EB%A7%81.jpg/250px-%EC%87%BC%EC%83%9D%ED%81%AC_%ED%83%88%EC%B6%9C_30%EC%A3%BC%EB%85%84_%EB%A6%AC%EB%A7%88%EC%8A%A4%ED%84%B0%EB%A7%81.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
       "status": "available",
       "reason": "decoded_image",
       "width": 250,
-      "height": 377
+      "height": 357
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/f/fd/%EA%B5%BF_%EC%9C%8C_%ED%97%8C%ED%8C%85.jpg/250px-%EA%B5%BF_%EC%9C%8C_%ED%97%8C%ED%8C%85.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 355
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/f/f6/%EB%AF%B8%EB%82%98%EB%A6%AC_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "retryable",
+      "reason": "HTTPError"
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/a/a2/%ED%9E%88%EB%93%A0_%ED%94%BC%EA%B2%A8%EC%8A%A4.jpg/250px-%ED%9E%88%EB%93%A0_%ED%94%BC%EA%B2%A8%EC%8A%A4.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 357
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/5/5f/%EC%8A%AC%EB%9F%BC%EB%8F%85_%EB%B0%80%EB%A6%AC%EC%96%B4%EB%84%A4%EC%96%B4_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "retryable",
+      "reason": "HTTPError"
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/0/01/%EA%B1%B0%EC%B9%A8%EC%97%86%EC%9D%B4_%ED%95%98%EC%9D%B4%ED%82%A5%21_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpeg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "retryable",
+      "reason": "HTTPError"
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/c2/Room_%282015_film%29.png/250px-Room_%282015_film%29.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 370
     },
     {
       "poster_url": "https://upload.wikimedia.org/wikipedia/ko/e/ef/%EB%AF%B8%EC%83%9D_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
@@ -336,11 +443,6 @@
       "height": 357
     },
     {
-      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/a/a7/%EC%95%85%EB%A7%88%EB%8A%94%ED%94%84%EB%9D%BC%EB%8B%A4%EB%A5%BC%EC%9E%85%EB%8A%94%EB%8B%A4_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-      "status": "retryable",
-      "reason": "HTTPError"
-    },
-    {
       "poster_url": "https://upload.wikimedia.org/wikipedia/en/8/8e/Office_space_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
       "status": "available",
       "reason": "decoded_image",
@@ -351,6 +453,20 @@
       "poster_url": "https://upload.wikimedia.org/wikipedia/ko/4/49/%EC%8A%AC%EA%B8%B0%EB%A1%9C%EC%9A%B4_%EC%9D%98%EC%82%AC%EC%83%9D%ED%99%9C_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
       "status": "retryable",
       "reason": "HTTPError"
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/8/88/Good_Doctor_TV_series-poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 260,
+      "height": 378
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/3/35/%EC%9D%91%EB%8B%B5%ED%95%98%EB%9D%BC_1988.jpg/250px-%EC%9D%91%EB%8B%B5%ED%95%98%EB%9D%BC_1988.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 353
     },
     {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/5/52/%EC%98%81%ED%99%94_%EC%8A%A4%ED%8F%AC%ED%8A%B8%EB%9D%BC%EC%9D%B4%ED%8A%B8.jpg/250px-%EC%98%81%ED%99%94_%EC%8A%A4%ED%8F%AC%ED%8A%B8%EB%9D%BC%EC%9D%B4%ED%8A%B8.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
@@ -374,11 +490,39 @@
       "height": 364
     },
     {
-      "poster_url": "https://upload.wikimedia.org/wikipedia/en/4/45/A_Few_Good_Men_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/9/9e/Apollo_thirteen_movie.jpg/250px-Apollo_thirteen_movie.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
       "status": "available",
       "reason": "decoded_image",
-      "width": 248,
-      "height": 367
+      "width": 250,
+      "height": 371
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/5/5c/Towering_inferno_movie_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 256,
+      "height": 389
+    },
+    {
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/f/f6/%EB%8D%94_%ED%8F%AC%EC%8A%A4%ED%8A%B8.jpg/250px-%EB%8D%94_%ED%8F%AC%EC%8A%A4%ED%8A%B8.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 357
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/6/64/Dark_Waters_poster.jpeg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 259,
+      "height": 383
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/c/cd/The_Martian_film_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 250,
+      "height": 375
     },
     {
       "poster_url": "https://thumb.wikimedia.org/wikipedia/en/thumb/a/a0/Incendies.jpg/250px-Incendies.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
@@ -407,512 +551,100 @@
       "height": 358
     },
     {
-      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/d/d3/%EB%A6%AC%ED%8B%80%ED%8F%AC%EB%A0%88%EC%8A%A4%ED%8A%B82018_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "poster_url": "https://thumb.wikimedia.org/wikipedia/ko/thumb/5/5d/%EB%82%98%EB%A5%BC_%EC%B0%BE%EC%95%84%EC%A4%98.jpg/250px-%EB%82%98%EB%A5%BC_%EC%B0%BE%EC%95%84%EC%A4%98.jpg?utm_source=ko.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
       "status": "available",
       "reason": "decoded_image",
-      "width": 349,
-      "height": 500
+      "width": 250,
+      "height": 357
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/4/40/%EC%96%B4%ED%86%A4%EB%A8%BC%ED%8A%B8_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "retryable",
+      "reason": "HTTPError"
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/5/5a/%EB%8D%94%EB%A6%AC%EB%8D%94%EC%B1%85%EC%9D%BD%EC%96%B4%EC%A3%BC%EB%8A%94%EB%82%A8%EC%9E%90_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "retryable",
+      "reason": "HTTPError"
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/f/ff/Monster_%282003_poster%29.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 260,
+      "height": 385
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/ko/4/4f/%ED%83%80%EC%9D%B8%EC%9D%98%EC%82%B6_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "retryable",
+      "reason": "HTTPError"
+    },
+    {
+      "poster_url": "https://upload.wikimedia.org/wikipedia/en/d/d4/Secrets-and-lies-movie-poster-1996-UK.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+      "status": "available",
+      "reason": "decoded_image",
+      "width": 360,
+      "height": 277
     }
   ],
   "provider_diagnostics": [
     {
-      "title": "고전",
-      "year": "2003",
-      "content_type": "영화",
-      "korean_pages": [
-        {
-          "ns": 0,
-          "title": "고전 (영화)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "ns": 0,
-          "title": "고전 (2003년 영화)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "pageid": 48469,
-          "ns": 0,
-          "title": "고전",
-          "pageprops": {
-            "disambiguation": "",
-            "wikibase_item": "Q1744649"
-          },
-          "extract": "고전(古典, 영어: classic)은 옛날 법식(法式), 또는 오랜 시대를 거치며 많은 사람들에게 널리 가치를 인정받아 전범(典範)을 이룬 작품을 말한다.\n다음과 같이 여러 쓰임이 있다.",
-          "categories": [
-            {
-              "ns": 14,
-              "title": "분류:동음이의어 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:모든 동음이의어 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:영어 표기를 포함한 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키낱말사전과 연결된 문서"
-            }
-          ],
-          "langlinks": [
-            {
-              "lang": "en",
-              "*": "Classical"
-            }
-          ],
-          "identity_verified": false
-        }
-      ]
-    },
-    {
-      "title": "마인드헌터",
-      "year": "2017",
-      "content_type": "드라마",
-      "korean_pages": [
-        {
-          "ns": 0,
-          "title": "마인드헌터 (텔레비전 프로그램)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "ns": 0,
-          "title": "마인드헌터 (2017년 드라마)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "pageid": 3878264,
-          "ns": 0,
-          "title": "마인드헌터",
-          "pageprops": {
-            "disambiguation": "",
-            "wikibase_item": "Q134492948"
-          },
-          "extract": "마인드헌터는 다음 뜻으로 쓰인다.\n\n《마인드헌터》(Die Unbesiegbaren, 2000) - 독일의 영화.\n《마인드헌터》(Mindhunters, 2004) - 미국의 영화.",
-          "categories": [
-            {
-              "ns": 14,
-              "title": "분류:독일어 표기를 포함한 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:동음이의어 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:동음이의어 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:모든 동음이의어 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:영어 표기를 포함한 문서"
-            }
-          ],
-          "identity_verified": false
-        },
-        {
-          "pageid": 1848062,
-          "ns": 0,
-          "title": "마인드헌터 (드라마)",
-          "pageprops": {
-            "wikibase_item": "Q25340152"
-          },
-          "extract": "《마인드헌터》(영어: Mindhunter)는 2017년부터 2019년까지 넷플릭스에서 공개된 미국의 범죄 드라마이다. 존 E. 더글러스의 실제 범죄 기록서를 원작으로, 데이비드 핀처와 샤를리즈 테론이 제작하고 조 펜홀이 총연출을 담당한 작품이다.\n시즌 1은 10부작으로 2017년 10월 13일에 시즌 2는 9부작으로 2019년 8월 16일에 전세계 넷플릭스에서 공개되었다.",
-          "categories": [
-            {
-              "ns": 14,
-              "title": "분류:1970년대를 배경으로 한 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:1977년을 배경으로 한 텔레비전 드라마"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2010년대 미국의 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2017년 시작한 미국의 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2017년 텔레비전 드라마"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2019년 종료한 미국의 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:넷플릭스 오리지널 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:레즈비언 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:모든 토막글 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:미국의 범죄 드라마"
-            },
-            {
-              "ns": 14,
-              "title": "분류:보스턴을 배경으로 한 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:애틀랜타를 배경으로 한 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:영어 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:영어 표기를 포함한 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:오리건주를 배경으로 한 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:워싱턴 D.C.를 배경으로 한 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P154를 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P227을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:일리노이주를 배경으로 한 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:책의 텔레비전 프로그램화 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:텔레비전 드라마에 관한 토막글"
-            },
-            {
-              "ns": 14,
-              "title": "분류:해결되지 않은 속성이 있는 문서"
-            }
-          ],
-          "langlinks": [
-            {
-              "lang": "en",
-              "*": "Mindhunter (TV series)"
-            }
-          ],
-          "identity_verified": true
-        }
-      ],
-      "english_pages": [
-        {
-          "pageid": 49681637,
-          "ns": 0,
-          "title": "Mindhunter (TV series)",
-          "pageprops": {
-            "displaytitle": "<i>Mindhunter</i> (TV series)",
-            "wikibase-shortdesc": "2017 American crime thriller television series",
-            "wikibase_item": "Q25340152"
-          },
-          "extract": "Mindhunter is an American psychological crime thriller television series created by Joe Penhall, based on the 1995 true-crime book Mindhunter: Inside the FBI's Elite Serial Crime Unit by John E. Douglas and Mark Olshaker. The series debuted in 2017 and ran for two seasons. Executive producers included Penhall, Charlize Theron, and David Fincher, with Fincher serving as the series' most frequent director and de facto showrunner, overseeing many of the scriptwriting and production processes.",
-          "categories": [
-            {
-              "ns": 14,
-              "title": "Category:2010s American LGBTQ-related drama television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:2010s American crime drama television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:2017 American television series debuts"
-            },
-            {
-              "ns": 14,
-              "title": "Category:2017 English-language television series debuts"
-            },
-            {
-              "ns": 14,
-              "title": "Category:2019 American television series endings"
-            },
-            {
-              "ns": 14,
-              "title": "Category:2019 English-language television series endings"
-            },
-            {
-              "ns": 14,
-              "title": "Category:All Wikipedia articles written in American English"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Articles with short description"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Crime thriller television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Cultural depictions of Charles Manson"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Cultural depictions of David Berkowitz"
-            },
-            {
-              "ns": 14,
-              "title": "Category:English-language American television shows"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Lesbian-related television shows"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Netflix television dramas"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Pages containing links to subscription-only content"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Psychological television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Serial drama television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Short description is different from Wikidata"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television series about real serial killers"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television series about the Federal Bureau of Investigation"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television series set in 1977"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows based on non-fiction books"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Atlanta"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Boston"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Illinois"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Iowa"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Kansas"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Oregon"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Pennsylvania"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Sacramento, California"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Virginia"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Washington, D.C."
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows shot in Pennsylvania"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows shot in Pittsburgh"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Use American English from October 2026"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Use mdy dates from January 2022"
-            }
-          ],
-          "identity_verified": true
-        }
-      ]
-    },
-    {
-      "title": "오징어 게임",
+      "title": "밀그램 프로젝트",
       "year": "2021",
-      "content_type": "드라마",
+      "content_type": "영화",
       "korean_pages": [
         {
           "ns": 0,
-          "title": "오징어 게임 (드라마)",
+          "title": "밀그램 프로젝트 (영화)",
           "missing": "",
           "identity_verified": false
         },
         {
           "ns": 0,
-          "title": "오징어 게임 (텔레비전 프로그램)",
+          "title": "밀그램 프로젝트 (2021년 영화)",
           "missing": "",
           "identity_verified": false
         },
         {
+          "pageid": 1474863,
           "ns": 0,
-          "title": "오징어 게임 (2021년 드라마)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "pageid": 3941421,
-          "ns": 0,
-          "title": "오징어 게임",
-          "original": {
-            "source": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Squid_Game_2021_vector_logo.svg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
-            "width": 1801,
-            "height": 718
-          },
-          "pageimage": "Squid_Game_2021_vector_logo.svg",
+          "title": "밀그램 프로젝트",
           "pageprops": {
-            "page_image_free": "Squid_Game_2021_vector_logo.svg",
-            "wikibase_item": "Q106582931"
+            "wikibase_item": "Q17382885"
           },
-          "extract": "오징어 게임(영어: Squid Game)은 황동혁이 제작, 각본, 감독을 맡아 2021년 9월 17일부터 공개 된 대한민국의 디스토피아 생존 스릴러 넷플릭스 TV 시리즈이다.",
+          "extract": "《밀그램 프로젝트》(영어: Experimenter: The Stanley Milgram Story 혹은 Experimenter)는 2015년 개봉한 미국의 전기 드라마 영화이다. 마이클 알머레이다가 감독 및 각본을 맡았으며, 스탠리 밀그럼의 밀그럼 실험에 바탕하였다.",
           "categories": [
             {
               "ns": 14,
-              "title": "분류:2020년대 대한민국의 텔레비전 프로그램"
+              "title": "분류:1960년대를 배경으로 한 영화"
             },
             {
               "ns": 14,
-              "title": "분류:2020년을 배경으로 한 작품"
+              "title": "분류:1961년을 배경으로 한 영화"
             },
             {
               "ns": 14,
-              "title": "분류:2020년을 배경으로 한 텔레비전 드라마"
+              "title": "분류:2015년 영화"
             },
             {
               "ns": 14,
-              "title": "분류:2021년 시작한 대한민국의 텔레비전 프로그램"
+              "title": "분류:뉴욕에서 촬영한 영화"
             },
             {
               "ns": 14,
-              "title": "분류:2021년 인터넷 문화"
+              "title": "분류:미국의 역사 드라마 영화"
             },
             {
               "ns": 14,
-              "title": "분류:2021년을 배경으로 한 작품"
+              "title": "분류:미국의 전기 드라마 영화"
             },
             {
               "ns": 14,
-              "title": "분류:2021년을 배경으로 한 텔레비전 드라마"
+              "title": "분류:실화를 바탕으로 한 드라마 영화"
             },
             {
               "ns": 14,
-              "title": "분류:2022년을 배경으로 한 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2023년을 배경으로 한 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2024년을 배경으로 한 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2024년을 배경으로 한 텔레비전 드라마"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2025년 종료한 대한민국의 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:2025년을 배경으로 한 텔레비전 드라마"
-            },
-            {
-              "ns": 14,
-              "title": "분류:가공의 섬을 배경으로 한 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:넷플릭스 오리지널 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:대한민국의 공포 드라마"
-            },
-            {
-              "ns": 14,
-              "title": "분류:대한민국의 스릴러 드라마"
-            },
-            {
-              "ns": 14,
-              "title": "분류:대한민국의 액션 드라마"
-            },
-            {
-              "ns": 14,
-              "title": "분류:배틀 로열 (장르)"
-            },
-            {
-              "ns": 14,
-              "title": "분류:백상예술대상 TV부문 대상 수상자(작)"
-            },
-            {
-              "ns": 14,
-              "title": "분류:서울특별시를 배경으로 한 텔레비전 프로그램"
+              "title": "분류:영어 영화 작품"
             },
             {
               "ns": 14,
@@ -920,63 +652,11 @@
             },
             {
               "ns": 14,
-              "title": "분류:영화 및 텔레비전 밈"
-            },
-            {
-              "ns": 14,
-              "title": "분류:오징어 게임"
-            },
-            {
-              "ns": 14,
               "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
             },
             {
               "ns": 14,
-              "title": "분류:위키데이터 속성 P154를 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P227을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P244를 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P268을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P373을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P648을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P691을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P7293을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P950을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P9984를 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:죽음의 게임을 소재로 한 작품"
-            },
-            {
-              "ns": 14,
-              "title": "분류:한국어 텔레비전 프로그램"
+              "title": "분류:코네티컷주를 배경으로 한 영화"
             },
             {
               "ns": 14,
@@ -986,437 +666,62 @@
           "langlinks": [
             {
               "lang": "en",
-              "*": "Squid Game"
+              "*": "Experimenter (film)"
             }
           ],
-          "identity_verified": true
-        }
-      ],
-      "english_pages": [
-        {
-          "pageid": 68455171,
-          "ns": 0,
-          "title": "Squid Game",
-          "original": {
-            "source": "https://upload.wikimedia.org/wikipedia/commons/5/57/Squid_Game_2021_vector_logo_english.svg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
-            "width": 2700,
-            "height": 1398
-          },
-          "pageimage": "Squid_Game_2021_vector_logo_english.svg",
-          "pageprops": {
-            "displaytitle": "<i>Squid Game</i>",
-            "page_image_free": "Squid_Game_2021_vector_logo_english.svg",
-            "toc": "",
-            "wikibase-shortdesc": "South Korean television series (2021–2025)",
-            "wikibase_item": "Q106582931"
-          },
-          "extract": "Squid Game (Korean: 오징어 게임; RR: Ojingeo geim) is a South Korean dystopian survival thriller drama television series created, written, and directed by Hwang Dong-hyuk for Netflix. The series depicts a secret contest where 456 players, all of whom are in deep financial hardship, risk their lives to play a series of children's games that result in death if eliminated, for the chance to win a ₩45.6 billion (US$34.02 million) prize. The series' title draws from ojingeo (\"squid\"), a Korean children's game.",
-          "categories": [
-            {
-              "ns": 14,
-              "title": "Category:2020s fads and trends"
-            },
-            {
-              "ns": 14,
-              "title": "Category:2021 South Korean television series debuts"
-            },
-            {
-              "ns": 14,
-              "title": "Category:2025 South Korean television series endings"
-            },
-            {
-              "ns": 14,
-              "title": "Category:All articles lacking reliable references"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Articles containing Korean-language text"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Articles lacking reliable references from January 2024"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Articles lacking reliable references from March 2025"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Articles with short description"
-            },
-            {
-              "ns": 14,
-              "title": "Category:CS1 Dutch-language sources (nl)"
-            },
-            {
-              "ns": 14,
-              "title": "Category:CS1 Indonesian-language sources (id)"
-            },
-            {
-              "ns": 14,
-              "title": "Category:CS1 Korean-language sources (ko)"
-            },
-            {
-              "ns": 14,
-              "title": "Category:CS1 Spanish-language sources (es)"
-            },
-            {
-              "ns": 14,
-              "title": "Category:CS1 uses Korean-language script (ko)"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Criticism of capitalism"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Culture of South Korea"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Dystopian television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Fiction about Russian roulette"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Fiction about gambling"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Film and television memes"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Grand Prize Baeksang Arts Award (television) winners"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Korean-language television shows"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Media franchises introduced in 2021"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Netflix television dramas"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Pages containing links to subscription-only content"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Pages including recorded pronunciations"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Pages using multiple image with auto scaled images"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Pages using the Phonos extension"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Pages with Korean IPA"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Pages with non-numeric formatnum arguments"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Short description is different from Wikidata"
-            },
-            {
-              "ns": 14,
-              "title": "Category:South Korean action television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:South Korean black comedy television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:South Korean drama television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:South Korean thriller television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Squid Game"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television controversies in South Korea"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television series impacted by the COVID-19 pandemic"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television series set in 2020"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television series set in 2021"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television series set in 2024"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television series set in 2025"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television series set on fictional islands"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows about death games"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows scored by Jung Jae-il"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Television shows set in Seoul"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Transgender-related television shows"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Use mdy dates from December 2024"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Wikipedia indefinitely move-protected pages"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Wikipedia pending changes protected pages"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Works about North Korean defectors"
-            }
-          ],
-          "identity_verified": true
-        }
-      ]
-    },
-    {
-      "title": "더 디보스",
-      "year": "2019",
-      "content_type": "영화",
-      "korean_pages": [
-        {
-          "ns": 0,
-          "title": "더 디보스",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "ns": 0,
-          "title": "더 디보스 (영화)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "ns": 0,
-          "title": "더 디보스 (2019년 영화)",
-          "missing": "",
           "identity_verified": false
         }
       ]
     },
     {
-      "title": "피지컬: 100",
-      "year": "2023",
-      "content_type": "예능",
+      "title": "홈커밍",
+      "year": "2018",
+      "content_type": "드라마",
       "korean_pages": [
         {
           "ns": 0,
-          "title": "피지컬: 100 (드라마)",
+          "title": "홈커밍 (드라마)",
           "missing": "",
           "identity_verified": false
         },
         {
           "ns": 0,
-          "title": "피지컬: 100 (텔레비전 프로그램)",
+          "title": "홈커밍 (텔레비전 프로그램)",
           "missing": "",
           "identity_verified": false
         },
         {
           "ns": 0,
-          "title": "피지컬: 100 (2023년 드라마)",
+          "title": "홈커밍 (2018년 드라마)",
           "missing": "",
           "identity_verified": false
         },
         {
-          "pageid": 3525484,
+          "pageid": 3043624,
           "ns": 0,
-          "title": "피지컬: 100",
+          "title": "홈커밍",
           "pageprops": {
-            "wikibase_item": "Q116009655"
+            "disambiguation": "",
+            "wikibase_item": "Q400264"
           },
-          "extract": "《피지컬: 100》은 넷플릭스에서 2023년 1월 24일부터 2023년 2월 21일까지 방송되고 있는 웹예능으로 가장 강력한 피지컬을 가진 최고의 ‘몸’을 찾기 위해, 최강 피지컬이라 자부하는 100인이 벌이는 극강의 서바이벌 게임 예능이다.",
+          "extract": "홈커밍(homecoming)의 다른 뜻은 다음과 같다.\n\n홈커밍은 수많은 북아메리카 학교의 전통이다.",
           "categories": [
             {
               "ns": 14,
-              "title": "분류:2023년 시작한 대한민국의 텔레비전 프로그램"
+              "title": "분류:동음이의어 문서"
             },
             {
               "ns": 14,
-              "title": "분류:2023년 종료한 대한민국의 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:넷플릭스 오리지널 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:한국어 텔레비전 프로그램"
-            },
-            {
-              "ns": 14,
-              "title": "분류:해결되지 않은 속성이 있는 문서"
+              "title": "분류:모든 동음이의어 문서"
             }
           ],
           "langlinks": [
             {
               "lang": "en",
-              "*": "Physical: 100"
+              "*": "Homecoming (disambiguation)"
             }
           ],
-          "identity_verified": true
-        }
-      ],
-      "english_pages": [
-        {
-          "pageid": 72842339,
-          "ns": 0,
-          "title": "Physical: 100",
-          "original": {
-            "source": "https://upload.wikimedia.org/wikipedia/en/0/00/Physical_100_logo.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
-            "width": 421,
-            "height": 237
-          },
-          "pageimage": "Physical_100_logo.png",
-          "pageprops": {
-            "displaytitle": "<i>Physical: 100</i>",
-            "page_image": "Physical_100_logo.png",
-            "wikibase-shortdesc": "South Korean reality television series",
-            "wikibase_item": "Q116009655"
-          },
-          "extract": "Physical: 100 (Korean: 피지컬: 100) is a South Korean reality competition series on Netflix created by MBC producer Jang Ho-gi. The first season premiered on January 24, 2023. The second season premiered on March 19, 2024.",
-          "categories": [
-            {
-              "ns": 14,
-              "title": "Category:2020s reality television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:2020s variety television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:2023 South Korean television series debuts"
-            },
-            {
-              "ns": 14,
-              "title": "Category:2023 South Korean television series endings"
-            },
-            {
-              "ns": 14,
-              "title": "Category:All articles lacking reliable references"
-            },
-            {
-              "ns": 14,
-              "title": "Category:All articles needing additional references"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Articles containing Korean-language text"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Articles lacking reliable references from December 2023"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Articles lacking reliable references from November 2024"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Articles needing additional references from February 2023"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Articles with short description"
-            },
-            {
-              "ns": 14,
-              "title": "Category:CS1 Korean-language sources (ko)"
-            },
-            {
-              "ns": 14,
-              "title": "Category:CS1 uses Korean-language script (ko)"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Korean-language television shows"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Netflix original programming"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Pages containing links to subscription-only content"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Pages with non-numeric formatnum arguments"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Reality competition television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Short description is different from Wikidata"
-            },
-            {
-              "ns": 14,
-              "title": "Category:South Korean reality television series"
-            },
-            {
-              "ns": 14,
-              "title": "Category:South Korean variety television shows"
-            },
-            {
-              "ns": 14,
-              "title": "Category:Use mdy dates from February 2023"
-            }
-          ],
-          "identity_verified": true
+          "identity_verified": false
         }
       ]
     },
@@ -1525,73 +830,103 @@
       ]
     },
     {
-      "title": "앨리스 인 보더랜드",
-      "year": "2020",
-      "content_type": "드라마",
+      "title": "얼티밋 비스트마스터",
+      "year": "2017",
+      "content_type": "예능",
       "korean_pages": [
         {
           "ns": 0,
-          "title": "앨리스 인 보더랜드",
+          "title": "얼티밋 비스트마스터 (드라마)",
           "missing": "",
           "identity_verified": false
         },
         {
           "ns": 0,
-          "title": "앨리스 인 보더랜드 (드라마)",
+          "title": "얼티밋 비스트마스터 (텔레비전 프로그램)",
           "missing": "",
           "identity_verified": false
         },
         {
           "ns": 0,
-          "title": "앨리스 인 보더랜드 (텔레비전 프로그램)",
+          "title": "얼티밋 비스트마스터 (2017년 드라마)",
           "missing": "",
           "identity_verified": false
         },
         {
+          "pageid": 2850860,
           "ns": 0,
-          "title": "앨리스 인 보더랜드 (2020년 드라마)",
-          "missing": "",
+          "title": "비스트마스터: 최강자 서바이벌",
+          "pageprops": {
+            "wikibase_item": "Q28443619"
+          },
+          "extract": "《비스트마스터: 최강자 서바이벌》(영어: Ultimate Beastmaster 얼티밋 비스트마스터[*])은 2017년 넷플릭스에서 처음 방영된 미국의 스포츠 엔터테인먼트 리얼리티 쇼 대회이다.",
+          "categories": [
+            {
+              "ns": 14,
+              "title": "분류:2017년 시작한 미국의 텔레비전 프로그램"
+            },
+            {
+              "ns": 14,
+              "title": "분류:2018년 종료한 미국의 텔레비전 프로그램"
+            },
+            {
+              "ns": 14,
+              "title": "분류:넷플릭스 오리지널 프로그램"
+            },
+            {
+              "ns": 14,
+              "title": "분류:영어 표기를 포함한 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:장애물 경주 텔레비전 게임 쇼"
+            },
+            {
+              "ns": 14,
+              "title": "분류:해결되지 않은 속성이 있는 문서"
+            }
+          ],
+          "langlinks": [
+            {
+              "lang": "en",
+              "*": "Ultimate Beastmaster"
+            }
+          ],
           "identity_verified": false
         }
       ]
     },
     {
-      "title": "더 챌린지",
-      "year": "1998",
+      "title": "서바이버",
+      "year": "2000",
       "content_type": "예능",
       "korean_pages": [
         {
           "ns": 0,
-          "title": "더 챌린지 (드라마)",
+          "title": "서바이버 (드라마)",
           "missing": "",
           "identity_verified": false
         },
         {
           "ns": 0,
-          "title": "더 챌린지 (텔레비전 프로그램)",
+          "title": "서바이버 (2000년 드라마)",
           "missing": "",
           "identity_verified": false
         },
         {
+          "pageid": 594327,
           "ns": 0,
-          "title": "더 챌린지 (1998년 드라마)",
-          "missing": "",
-          "identity_verified": false
-        },
-        {
-          "pageid": 1804984,
-          "ns": 0,
-          "title": "챌린지",
+          "title": "서바이버",
           "pageprops": {
             "disambiguation": "",
-            "wikibase_item": "Q6554155"
+            "wikibase_item": "Q4050430"
           },
-          "extract": "챌린지(영어: challenge, 문화어: 챨렌지)는 도전을 가리키는 영어 낱말이다.",
+          "extract": "서바이버(Survivor)는 다음과 같은 뜻이 있다.",
           "categories": [
-            {
-              "ns": 14,
-              "title": "분류:독일어 표기를 포함한 문서"
-            },
             {
               "ns": 14,
               "title": "분류:동음이의어 문서"
@@ -1602,23 +937,215 @@
             },
             {
               "ns": 14,
-              "title": "분류:동음이의어 지명"
+              "title": "분류:모든 동음이의어 문서"
+            }
+          ],
+          "langlinks": [
+            {
+              "lang": "en",
+              "*": "Survivor"
+            }
+          ],
+          "identity_verified": false
+        },
+        {
+          "pageid": 594324,
+          "ns": 0,
+          "title": "서바이버 (텔레비전 프로그램)",
+          "pageprops": {
+            "wikibase_item": "Q755975"
+          },
+          "extract": "서바이버(Survivor)는 전 세계를 대상으로 하는 리얼리티 방송 게임 쇼 TV 프로그램이다. 참가자들은 사회와 동 떨어져 지내게 되며 상금과 기타 상품들을 두고 경쟁을 벌인다. 이 프로그램은 게임을 진행시켜 나가면서 도중 투표를 통해 참가자들을 탈락시켜 나가는 구조를 갖고 있으며 최후의 한 사람은 \"Sole Survivor\"라는 칭호를 받게 된다.",
+          "categories": [
+            {
+              "ns": 14,
+              "title": "분류:게임 쇼"
             },
             {
               "ns": 14,
-              "title": "분류:러시아어 표기를 포함한 문서"
+              "title": "분류:모든 토막글 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:방송에 관한 토막글"
+            },
+            {
+              "ns": 14,
+              "title": "분류:생존 능력을 소재로 한 작품"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P373을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:해결되지 않은 속성이 있는 문서"
+            }
+          ],
+          "langlinks": [
+            {
+              "lang": "en",
+              "*": "Survivor (franchise)"
+            }
+          ],
+          "identity_verified": false
+        }
+      ]
+    },
+    {
+      "title": "아메리칸 닌자 워리어",
+      "year": "2009",
+      "content_type": "예능",
+      "korean_pages": [
+        {
+          "ns": 0,
+          "title": "아메리칸 닌자 워리어",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "아메리칸 닌자 워리어 (드라마)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "아메리칸 닌자 워리어 (텔레비전 프로그램)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "아메리칸 닌자 워리어 (2009년 드라마)",
+          "missing": "",
+          "identity_verified": false
+        }
+      ]
+    },
+    {
+      "title": "남극의 쉐프",
+      "year": "2009",
+      "content_type": "영화",
+      "korean_pages": [
+        {
+          "ns": 0,
+          "title": "남극의 쉐프 (영화)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "ns": 0,
+          "title": "남극의 쉐프 (2009년 영화)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "pageid": 776554,
+          "ns": 0,
+          "title": "남극의 쉐프",
+          "pageprops": {
+            "wikibase_item": "Q10856056"
+          },
+          "extract": "《남극의 쉐프》(南極料理人)는 2009년 하반기에 개봉된 일본 영화이다. 원작은 해상보안관 출신 니시무라 준의 수필 《남극의 쉐프》 (面白南極料理人)이다. 제50회 일본영화감독협회 신인상 최종후보에 오른 작품으로, 2009년도 신도 가네토상 금상, 제29회 후지모토상 신인상을 수상했다.",
+          "categories": [
+            {
+              "ns": 14,
+              "title": "분류:2009년 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:2019년 텔레비전 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:남극을 배경으로 한 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:실화를 바탕으로 한 텔레비전 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:실화에 바탕한 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:오키타 슈이치 감독 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:요리 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:요리 텔레비전 프로그램"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:일본어 표기를 포함한 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:일본의 심야 드라마"
+            },
+            {
+              "ns": 14,
+              "title": "분류:일본의 코미디 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:해결되지 않은 속성이 있는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:홋카이도를 배경으로 한 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:홋카이도를 배경으로 한 작품"
+            }
+          ],
+          "identity_verified": true
+        }
+      ]
+    },
+    {
+      "title": "12명의 성난 사람들",
+      "year": "1957",
+      "content_type": "영화",
+      "korean_pages": [
+        {
+          "ns": 0,
+          "title": "12명의 성난 사람들 (영화)",
+          "missing": "",
+          "identity_verified": false
+        },
+        {
+          "pageid": 567524,
+          "ns": 0,
+          "title": "12인의 성난 사람들",
+          "pageprops": {
+            "disambiguation": "",
+            "wikibase_item": "Q522135"
+          },
+          "extract": "12인의 성난 사람들(영어: Twelve Angry Men)의 다른 뜻은 다음과 같다.\n\n12인의 성난 사람들 - 1954년 미국의 텔레비전 연극.\n12인의 성난 사람들 - 1954년 미국의 희곡, 위의 텔레비전 연극을 원작으로 한 작품.",
+          "categories": [
+            {
+              "ns": 14,
+              "title": "분류:동음이의어 문서"
             },
             {
               "ns": 14,
               "title": "분류:모든 동음이의어 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:문화어 표기를 포함한 문서"
-            },
-            {
-              "ns": 14,
-              "title": "분류:스페인어 표기를 포함한 문서"
             },
             {
               "ns": 14,
@@ -1628,7 +1155,172 @@
           "langlinks": [
             {
               "lang": "en",
-              "*": "Challenge"
+              "*": "Twelve Angry Men (disambiguation)"
+            }
+          ],
+          "identity_verified": false
+        },
+        {
+          "pageid": 145625,
+          "ns": 0,
+          "title": "12인의 성난 사람들 (1957년 영화)",
+          "original": {
+            "source": "https://upload.wikimedia.org/wikipedia/commons/b/b5/12_Angry_Men_%281957_film_poster%29.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+            "width": 1902,
+            "height": 2907
+          },
+          "pageimage": "12_Angry_Men_(1957_film_poster).jpg",
+          "pageprops": {
+            "page_image_free": "12_Angry_Men_(1957_film_poster).jpg",
+            "wikibase_item": "Q2345"
+          },
+          "extract": "《12명의 성난 사람들》(영어: 12 Angry Men)은 1957년에 개봉한 미국의 흑백 독립 법정 드라마 영화로, 시드니 루멧이 연출하였다. 이 영화는 본래 텔레비전 연출가였던 루멧의 첫 영화 연출작이며, 레지널드 로즈의 텔레비전 연극용 희곡을 영화화하였다. 매카시즘 시대에 미국 배심원 제도에 비판적으로 접근하였다.",
+          "categories": [
+            {
+              "ns": 14,
+              "title": "분류:1957년 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:CS1 - 영어 인용 (en)"
+            },
+            {
+              "ns": 14,
+              "title": "분류:감독 데뷔 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:글로벌세계대백과를 인용한 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:맨해튼을 배경으로 한 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:미국 국립영화등기부 등재 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:미국의 독립 영화 작품"
+            },
+            {
+              "ns": 14,
+              "title": "분류:미국의 범죄 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:미국의 법률 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:미국의 심리 드라마 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:미국의 흑백 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:변호사를 소재로 한 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:사형을 소재로 한 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:살인을 소재로 한 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:시드니 루멧 감독 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:영어 영화 작품"
+            },
+            {
+              "ns": 14,
+              "title": "분류:영어 표기를 포함한 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:웹아카이브 틀 웨이백 링크"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P1015를 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P1273을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P18을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P227을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P244를 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P268을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P269를 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P373을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P7293을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P950을 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:위키데이터 속성 P9984를 사용하는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:유나이티드 아티스츠 배급 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:재판을 소재로 한 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:차별을 소재로 한 영화"
+            },
+            {
+              "ns": 14,
+              "title": "분류:해결되지 않은 속성이 있는 문서"
+            },
+            {
+              "ns": 14,
+              "title": "분류:황금곰상 수상작"
+            },
+            {
+              "ns": 14,
+              "title": "분류:희곡을 바탕으로 한 영화"
+            }
+          ],
+          "langlinks": [
+            {
+              "lang": "en",
+              "*": "12 Angry Men"
             }
           ],
           "identity_verified": false

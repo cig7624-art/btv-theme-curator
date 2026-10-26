@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "audited_at": "2026-10-26T05:37:40.823829+00:00",
+  "mode": "read_only_public_metadata",
+  "candidate_count": 2,
+  "candidates": [
+    {
+      "requested_title": "밀그램 프로젝트",
+      "requested_year": "2021",
+      "requested_content_type": "영화",
+      "korean_pages": [
+        {
+          "title": "밀그램 프로젝트 (영화)",
+          "missing": true,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "",
+          "categories": [],
+          "english_links": []
+        },
+        {
+          "title": "밀그램 프로젝트 (드라마)",
+          "missing": true,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "",
+          "categories": [],
+          "english_links": []
+        },
+        {
+          "title": "밀그램 프로젝트 (텔레비전 프로그램)",
+          "missing": true,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "",
+          "categories": [],
+          "english_links": []
+        },
+        {
+          "title": "밀그램 프로젝트 (2021년 영화)",
+          "missing": true,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "",
+          "categories": [],
+          "english_links": []
+        },
+        {
+          "title": "밀그램 프로젝트 (2021년 드라마)",
+          "missing": true,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "",
+          "categories": [],
+          "english_links": []
+        },
+        {
+          "title": "밀그램 프로젝트",
+          "missing": false,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [
+            "1960",
+            "1961",
+            "2015"
+          ],
+          "canonical_content_type": "드라마",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "《밀그램 프로젝트》(영어: Experimenter: The Stanley Milgram Story 혹은 Experimenter)는 2015년 개봉한 미국의 전기 드라마 영화이다. 마이클 알머레이다가 감독 및 각본을 맡았으며, 스탠리 밀그럼의 밀그럼 실험에 바탕하였다.",
+          "categories": [
+            "분류:1960년대를 배경으로 한 영화",
+            "분류:1961년을 배경으로 한 영화",
+            "분류:2015년 영화",
+            "분류:뉴욕에서 촬영한 영화",
+            "분류:미국의 역사 드라마 영화",
+            "분류:미국의 전기 드라마 영화",
+            "분류:실화를 바탕으로 한 드라마 영화",
+            "분류:영어 영화 작품",
+            "분류:영어 표기를 포함한 문서",
+            "분류:위키데이터 속성 P1273을 사용하는 문서",
+            "분류:코네티컷주를 배경으로 한 영화",
+            "분류:해결되지 않은 속성이 있는 문서"
+          ],
+          "english_links": [
+            "Experimenter (film)"
+          ]
+        }
+      ],
+      "english_pages": [],
+      "errors": [],
+      "requested_identity_confirmed": false,
+      "verified_alternate_identities": 0
+    },
+    {
+      "requested_title": "룸메이트",
+      "requested_year": "2013",
+      "requested_content_type": "드라마",
+      "korean_pages": [
+        {
+          "title": "룸메이트 (영화)",
+          "missing": true,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "",
+          "categories": [],
+          "english_links": []
+        },
+        {
+          "title": "룸메이트 (드라마)",
+          "missing": true,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "",
+          "categories": [],
+          "english_links": []
+        },
+        {
+          "title": "룸메이트 (2013년 영화)",
+          "missing": true,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "",
+          "categories": [],
+          "english_links": []
+        },
+        {
+          "title": "룸메이트 (2013년 드라마)",
+          "missing": true,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "",
+          "categories": [],
+          "english_links": []
+        },
+        {
+          "title": "룸메이트",
+          "missing": false,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "룸메이트(roommate)는 본인이 아닌 다른 사람과 한 방을 함께 쓰는 사람을 일컫는다.",
+          "categories": [
+            "분류:가정경제학",
+            "분류:위키데이터 속성 P1273을 사용하는 문서",
+            "분류:위키데이터 속성 P18을 사용하는 문서",
+            "분류:위키데이터 속성 P373을 사용하는 문서",
+            "분류:인간 관계",
+            "분류:해결되지 않은 속성이 있는 문서"
+          ],
+          "english_links": [
+            "Roommate"
+          ]
+        },
+        {
+          "title": "룸메이트 (텔레비전 프로그램)",
+          "missing": false,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [
+            "2014"
+          ],
+          "canonical_content_type": "예능",
+          "requested_identity_verified": false,
+          "verified_source_url": "https://ko.wikipedia.org/wiki/%EB%A3%B8%EB%A9%94%EC%9D%B4%ED%8A%B8_%28%ED%85%94%EB%A0%88%EB%B9%84%EC%A0%84_%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8%29",
+          "extract": "《룸메이트》(영어: Roommate)는 2014년 5월 4일부터 2015년 4월 14일까지 방송된 예능 프로그램이다. 《일요일이 좋다》의 1부 코너로, 1인 가구 25% 시대를 맞이하여 여러 명의 스타들이 개인 공간과 공동 공간으로 구성된 집에 함께 거주하면서 벌어지는 일들을 담았다. 《강심장》의 박상혁 PD가 기획한 셰어하우스를 모티브로 삼은 관찰 형식의 리얼 버라이어티 예능이다.",
+          "categories": [
+            "분류:2010년대 대한민국의 텔레비전 프로그램",
+            "분류:2014년 시작한 대한민국의 텔레비전 프로그램",
+            "분류:2015년 종료한 대한민국의 텔레비전 프로그램",
+            "분류:SBS의 예능 프로그램",
+            "분류:대한민국의 리얼리티 텔레비전 프로그램",
+            "분류:리얼리티 연애 텔레비전 프로그램",
+            "분류:영어 표기를 포함한 문서",
+            "분류:위키데이터 속성 P1273을 사용하는 문서",
+            "분류:해결되지 않은 속성이 있는 문서"
+          ],
+          "english_links": [
+            "Roommate (TV program)"
+          ]
+        },
+        {
+          "title": "룸메이트 (2011년 영화)",
+          "missing": false,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [
+            "2011"
+          ],
+          "canonical_content_type": "영화",
+          "requested_identity_verified": false,
+          "verified_source_url": "https://ko.wikipedia.org/wiki/%EB%A3%B8%EB%A9%94%EC%9D%B4%ED%8A%B8_%282011%EB%85%84_%EC%98%81%ED%99%94%29",
+          "extract": "《룸메이트》(영어: The Roommate)는 2011년 공개된 미국의 심리 스릴러 영화이다. 레이턴 미스터, 밍카 켈리, 캠 지간데이, 더닐 해리스, 맷 랜터, 앨리 미샤카 등이 출연하였다.",
+          "categories": [
+            "분류:2011년 성소수자 영화",
+            "분류:2011년 스릴러 영화",
+            "분류:2011년 영화",
+            "분류:대학교를 배경으로 한 영화",
+            "분류:레즈비언 영화",
+            "분류:로스앤젤레스를 배경으로 한 영화",
+            "분류:로스앤젤레스에서 촬영한 영화",
+            "분류:모든 토막글 문서",
+            "분류:미국의 성소수자 영화",
+            "분류:미국의 심리 스릴러 영화",
+            "분류:스크린 젬스 영화",
+            "분류:스토킹을 소재로 한 영화",
+            "분류:영어 영화 작품",
+            "분류:영어 표기를 포함한 문서",
+            "분류:영화에 관한 토막글",
+            "분류:위키데이터 속성 P1273을 사용하는 문서",
+            "분류:위키데이터 속성 P18을 사용하는 문서",
+            "분류:해결되지 않은 속성이 있는 문서"
+          ],
+          "english_links": [
+            "The Roommate"
+          ]
+        },
+        {
+          "title": "싸이코패스 룸메이트",
+          "missing": false,
+          "exact_normalized_base_title": false,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "《싸이코패스 룸메이트》(영어: A Father's Nightmare)는 캐나다의 텔레비전 스릴러 영화로, 비크 사린과 비제이 사린이 감독을 맡았다. 2018년 7월 22일 라이프타임에서 첫 방영하였다.",
+          "categories": [
+            "분류:2018년 스릴러 영화",
+            "분류:2018년 영화",
+            "분류:2018년 텔레비전 영화",
+            "분류:CS1 - 영어 인용 (en)",
+            "분류:모든 토막글 문서",
+            "분류:영어 영화 작품",
+            "분류:영어 표기를 포함한 문서",
+            "분류:영화에 관한 토막글",
+            "분류:위키데이터 속성 P1273을 사용하는 문서",
+            "분류:캐나다의 드라마 영화",
+            "분류:캐나다의 스릴러 영화",
+            "분류:캐나다의 텔레비전 영화",
+            "분류:해결되지 않은 속성이 있는 문서"
+          ],
+          "english_links": []
+        },
+        {
+          "title": "완벽한 룸메이트",
+          "missing": false,
+          "exact_normalized_base_title": false,
+          "canonical_release_years": [],
+          "canonical_content_type": "",
+          "requested_identity_verified": false,
+          "verified_source_url": "",
+          "extract": "《완벽한 룸메이트》는 2004년 9월 3일에 MBC에서 방영한 베스트극장이다.",
+          "categories": [
+            "분류:2000년대 대한민국의 텔레비전 프로그램",
+            "분류:2004년 텔레비전 드라마",
+            "분류:MBC 베스트극장",
+            "분류:위키데이터 속성 P1273을 사용하는 문서"
+          ],
+          "english_links": []
+        }
+      ],
+      "english_pages": [
+        {
+          "title": "Roommate (TV program)",
+          "missing": false,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [
+            "2014"
+          ],
+          "canonical_content_type": "예능",
+          "requested_identity_verified": false,
+          "verified_source_url": "https://en.wikipedia.org/wiki/Roommate_%28TV_program%29",
+          "extract": "Roommate (Korean: 룸메이트) is a South Korean reality show; formerly part of SBS's Good Sunday lineup. It was first scheduled to be aired on April 20, 2014, but due to the Sewol ferry tragedy and the temporary broadcast halt, the airing date was pushed to May 4, 2014. The show features eleven celebrities living together in a share house located in the Seongbuk-dong area of Seoul, sharing common spaces such as the kitchen, living room, and washrooms, as well as household tasks.",
+          "categories": [
+            "Category:2014 South Korean television series debuts",
+            "Category:All articles with dead external links",
+            "Category:Articles containing Korean-language text",
+            "Category:Articles with Korean-language sources (ko)",
+            "Category:Articles with dead external links from July 2026",
+            "Category:Articles with short description",
+            "Category:CS1 Korean-language sources (ko)",
+            "Category:CS1 uses Korean-language script (ko)",
+            "Category:Korean-language television shows",
+            "Category:Seoul Broadcasting System original programming",
+            "Category:Short description is different from Wikidata",
+            "Category:South Korean reality television series",
+            "Category:South Korean variety television shows",
+            "Category:Track listings with input errors",
+            "Category:Webarchive template wayback links"
+          ],
+          "english_links": []
+        },
+        {
+          "title": "The Roommate",
+          "missing": false,
+          "exact_normalized_base_title": true,
+          "canonical_release_years": [
+            "2011"
+          ],
+          "canonical_content_type": "영화",
+          "requested_identity_verified": false,
+          "verified_source_url": "https://en.wikipedia.org/wiki/The_Roommate",
+          "extract": "The Roommate is a 2011 American psychological thriller film directed by Christian E. Christiansen and written by Sonny Mallhi. The film stars Leighton Meester, Minka Kelly, Cam Gigandet, Aly Michalka, Danneel Harris, Frances Fisher, and Billy Zane, and follows Sara Matthews (Kelly), a college freshman whose roommate, Rebecca Evans (Meester), is dangerously obsessed with her.\nThe Roommate was released in the United States on February 4, 2011, by Sony Pictures Releasing.",
+          "categories": [
+            "Category:2011 American films",
+            "Category:2011 English-language films",
+            "Category:2011 LGBTQ-related films",
+            "Category:2011 films",
+            "Category:2011 psychological thriller films",
+            "Category:American lesbian-related films",
+            "Category:American psychological thriller films",
+            "Category:Articles with short description",
+            "Category:English-language psychological thriller films",
+            "Category:Films about stalking",
+            "Category:Films directed by Christian E. Christiansen",
+            "Category:Films produced by Roy Lee",
+            "Category:Films scored by John Frizzell (composer)",
+            "Category:Films set in Los Angeles",
+            "Category:Films set in universities and colleges",
+            "Category:Films shot in Los Angeles",
+            "Category:Lesbian-related psychological thriller films",
+            "Category:Rotten Tomatoes ID same as Wikidata",
+            "Category:Screen Gems films",
+            "Category:Short description matches Wikidata",
+            "Category:Template film date with 1 release date",
+            "Category:Unofficial film adaptations",
+            "Category:Use mdy dates from February 2026",
+            "Category:Vertigo Entertainment films"
+          ],
+          "english_links": []
+        }
+      ],
+      "errors": [],
+      "requested_identity_confirmed": false,
+      "verified_alternate_identities": 2
+    }
+  ]
+}
