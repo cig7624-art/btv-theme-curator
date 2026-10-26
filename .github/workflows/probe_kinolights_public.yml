@@ -6,6 +6,7 @@ on:
     branches: [codex/ott-watch-v162]
     paths:
       - scripts/probe_kinolights_public.py
+      - scripts/probe_media_topic_archives.py
       - .github/workflows/probe_kinolights_public.yml
 
 jobs:
@@ -20,23 +21,19 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install public source inspection tools
-        run: python -m pip install requests beautifulsoup4 playwright
-      - name: Select existing browser
-        run: |
-          public_probe_browser="$(command -v google-chrome || command -v chromium || true)"
-          if [ -n "$public_probe_browser" ]; then
-            echo "PUBLIC_PROBE_BROWSER=$public_probe_browser" >> "$GITHUB_ENV"
-          else
-            python -m playwright install --with-deps chromium
-          fi
-      - name: Inspect logged-out public searches and content responses
-        run: python scripts/probe_kinolights_public.py --browser --chromium-path "${PUBLIC_PROBE_BROWSER:-}"
+        run: python -m pip install requests beautifulsoup4
+      - name: Inspect confirmed public search and provider queries
+        run: python scripts/probe_kinolights_public.py --graphql-only
+      - name: Inspect dated official topic archives
+        run: python scripts/probe_media_topic_archives.py
       - name: Retain sanitized source evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: kinolights-public-content-evidence
-          path: artifacts/kinolights_public_probe/
+          path: |
+            artifacts/kinolights_public_probe/
+            artifacts/topic_archive_probe.json
           retention-days: 3
       - name: Record sanitized evidence on the development branch
         env:
@@ -44,7 +41,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- artifacts/kinolights_public_probe/
+          git add -- artifacts/kinolights_public_probe/ artifacts/topic_archive_probe.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Record public Kinolights content source evidence [skip ci]'
           for attempt in 1 2 3; do

@@ -84,7 +84,7 @@ def http_probe(folder):
             schema_response = requests.post("https://gateway.kinolights.com/graphql", json=schema_query, headers=HEADERS, timeout=(5, 20))
             schema = schema_response.json()
             fields = ((schema.get("data") or {}).get("__schema") or {}).get("queryType", {}).get("fields", [])
-            fields = [item for item in fields if re.search(r"content|title|provider|platform|stream|watch", item.get("name", ""), re.I)]
+            fields = [item for item in fields if item.get("name") in {"content", "searchContentsByKeyword", "searchContentsBy", "contentsBy", "contentsByKeyword", "contentTypes", "providers"}]
             dump(folder / "public-query-fields.json", {"status": schema_response.status_code, "fields": fields, "errors": schema.get("errors", [])})
     except (requests.RequestException, ValueError) as exc:
         dump(folder / "legacy-graphql.json", {"error": type(exc).__name__})
@@ -158,13 +158,117 @@ def browser_probe(folder, title_links, chromium_path=""):
         browser.close()
 
 
+def graphql_probe(folder):
+    """Discover public content field shapes, then query only those exact fields."""
+    endpoint = "https://gateway.kinolights.com/graphql"
+    ref = "kind name ofType{kind name ofType{kind name ofType{kind name ofType{kind name}}}}"
+    schema_query = "query PublicContentType($name:String!){__type(name:$name){kind name fields{name args{name type{" + ref + "}} type{" + ref + "}} inputFields{name type{" + ref + "}} enumValues{name}}}"
+    schema = {}
+    calls = []
+    forbidden = re.compile(r"auth|user|admin|token|review|comment|^my|login|session|cookie|password|secret|credential|email", re.I)
+
+    def request(query, variables=None):
+        response = requests.post(endpoint, json={"query": query, "variables": variables or {}}, headers=HEADERS, timeout=(5, 20))
+        return {"status": response.status_code, "response": response.json()}
+
+    def load_type(name):
+        if name not in schema:
+            if len(schema) >= 24:
+                return {}
+            reply = request(schema_query, {"name": name})
+            value = (reply.get("response", {}).get("data") or {}).get("__type") or {}
+            value["fields"] = [field for field in value.get("fields", []) or [] if not forbidden.search(field["name"])]
+            schema[name] = value
+        return schema[name]
+
+    def unwrap(value):
+        while value.get("ofType"):
+            value = value["ofType"]
+        return value
+
+    identity = {"id", "movieId", "contentId", "title", "titleKr", "titleEn", "name", "nameKr", "openYear", "releaseYear", "year", "posterUrl", "poster", "contentType", "type", "totalCount", "total", "count", "infos", "mappedInfos", "items", "contents", "results"}
+    offer = re.compile(r"provider|platform|stream|vod|watch|ott|rent|purchas|subscri|price|cost|offer", re.I)
+
+    def selection(name, mode, depth=0, inside_offer=False):
+        if depth > 4:
+            return ""
+        value = load_type(name)
+        fields = []
+        for field in value.get("fields", []):
+            field_name = field["name"]
+            if any(arg["type"].get("kind") == "NON_NULL" for arg in field.get("args", [])):
+                continue
+            leaf = unwrap(field["type"])
+            is_offer = inside_offer or bool(offer.search(field_name))
+            if leaf.get("kind") in {"SCALAR", "ENUM"}:
+                if field_name in identity or (mode == "detail" and is_offer):
+                    fields.append(field_name)
+                elif mode == "detail" and inside_offer:
+                    fields.append(field_name)
+            elif leaf.get("kind") == "OBJECT":
+                if mode == "search" and name == "MovieOutput" and field_name not in identity:
+                    continue
+                if mode == "search" and depth >= 1 and field_name not in identity and not re.search(r"^(?:content|movie|info|item|result|node|edge)s?$", field_name, re.I):
+                    continue
+                if mode == "detail" and name == "MovieOutput" and not (is_offer or field_name in identity):
+                    continue
+                nested = selection(leaf["name"], mode, depth + 1, is_offer)
+                if nested:
+                    fields.append(field_name + "{" + nested + "}")
+            if len(fields) >= 24:
+                break
+        return " ".join(fields)
+
+    search_fields = selection("MappedInfosOutput", "search")
+    detail_fields = selection("MovieOutput", "detail")
+    ids = []
+    if search_fields:
+        query = "query PublicTitleSearch($keyword:String!){searchContentsByKeyword(keyword:$keyword,limit:8){" + search_fields + "}}"
+        for keyword in ("기생충", "괴물"):
+            reply = request(query, {"keyword": keyword})
+            calls.append({"kind": "search", "keyword": keyword, "query": query, **reply})
+            def walk(value):
+                if isinstance(value, dict):
+                    candidate = value.get("id") or value.get("movieId") or value.get("contentId")
+                    if str(candidate).isdigit() and any(value.get(key) for key in ("titleKr", "titleEn", "title")):
+                        ids.append(int(candidate))
+                    for child in value.values():
+                        walk(child)
+                elif isinstance(value, list):
+                    for child in value:
+                        walk(child)
+                elif isinstance(value, str) and value.lstrip().startswith(("{", "[")):
+                    try:
+                        walk(json.loads(value))
+                    except ValueError:
+                        pass
+            walk(reply["response"])
+    if detail_fields:
+        query = "query PublicTitleOffers($movieId:Int!){content(movieId:$movieId){" + detail_fields + "}}"
+        for movie_id in list(dict.fromkeys(ids))[:6]:
+            calls.append({"kind": "detail", "movie_id": movie_id, "query": query, **request(query, {"movieId": movie_id})})
+    dump(folder / "public-content-schema.json", schema)
+    dump(folder / "public-content-queries.json", calls)
+    # Remove unnecessary schema root names from the first observation.
+    previous = folder / "public-query-fields.json"
+    if previous.exists():
+        value = json.loads(previous.read_text())
+        value["fields"] = [field for field in value.get("fields", []) if field.get("name") in {"content", "searchContentsByKeyword", "searchContentsBy", "contentsBy", "contentsByKeyword", "contentTypes", "providers"}]
+        dump(previous, value)
+    print(json.dumps({"public_types": list(schema), "queries": len(calls), "title_ids": list(dict.fromkeys(ids))[:6]}))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--browser", action="store_true")
+    parser.add_argument("--graphql-only", action="store_true")
     parser.add_argument("--chromium-path", default="")
     args = parser.parse_args()
     folder = ROOT / "artifacts" / "kinolights_public_probe"
     folder.mkdir(parents=True, exist_ok=True)
+    if args.graphql_only:
+        graphql_probe(folder)
+        return
     links = http_probe(folder)
     if args.browser:
         browser_probe(folder, links, args.chromium_path)
