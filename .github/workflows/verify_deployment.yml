@@ -28,6 +28,7 @@ on:
       - styles.css
       - issue_carousel.py
       - theme_editorial.py
+      - poster_assets.py
       - theme_content_candidates.csv
       - scripts/verify_theme_rail_live.py
       - scripts/verify_tab_stability.py
