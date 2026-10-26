@@ -1,7 +1,7 @@
 {
   "version": "1.6.0",
-  "status": "local_passed",
-  "full_tests": 744,
+  "status": "passed",
+  "full_tests": 749,
   "public_only": true,
   "freeform_business_inputs": false,
   "project_storage_in_runtime": false,
@@ -41,5 +41,11 @@
   "live_reports": [
     "artifacts/deployment_validation.json",
     "artifacts/news_digest_live_validation.json"
-  ]
+  ],
+  "live_checks": 44,
+  "live_news_count": 4,
+  "live_news_revision": "08c2f3efac6df0166287dbeace4a5093ff957988d8dd5806646701becf157bed",
+  "live_verified_at": "2026-10-26T05:00:03.839448+00:00",
+  "news_collection_at": "2026-10-26T04:59:31+00:00",
+  "news_collection_state": "partial"
 }
