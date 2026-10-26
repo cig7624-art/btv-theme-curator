@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  verify-one-weekly-run:
+  verify-one-content-refresh:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
