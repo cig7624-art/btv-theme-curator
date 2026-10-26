@@ -1,0 +1,120 @@
+[
+  {
+    "url": "https://kinolights.com:443/_next/static/chunks/2dv_dmcut7qn-.js",
+    "documents": [],
+    "identifiers": [
+      "hasSpanStreamingEnabled",
+      "spanStreamingEnabled",
+      "trackFetchStreamPerformance"
+    ]
+  },
+  {
+    "url": "https://kinolights.com:443/_next/static/chunks/2yh8b86val6i4.js",
+    "documents": [],
+    "identifiers": [
+      "hasSpanStreamingEnabled"
+    ]
+  },
+  {
+    "url": "https://kinolights.com:443/_next/static/chunks/0aq89d91oeh0i.js",
+    "documents": [],
+    "identifiers": []
+  },
+  {
+    "url": "https://kinolights.com:443/_next/static/chunks/04ez28us2ll5g.js",
+    "documents": [],
+    "identifiers": [
+      "getProviderPriority",
+      "subscribedProviderIdSet"
+    ]
+  },
+  {
+    "url": "https://kinolights.com:443/_next/static/chunks/0c8y7_0_0w-p3.js",
+    "documents": [
+      "fragment AboutReviewFragment on UserReviewOutput {\n  id\n  review\n  reviewTitle\n}\n    ",
+      "fragment FragmentContentCollection on ContentCollectionOutput {\n  id\n  title\n  description\n  contentCount\n  isMyInterest\n  isPrivate\n  author {\n    id\n    name\n  }\n  contents(limit: 1) {\n    stillCutImage {\n      id\n      pathUrl\n    }\n    posterImage {\n      id\n      pathUrl\n    }\n  }\n}\n    ",
+      "fragment FragmentContentCollectionPreview on ContentCollectionOutput {\n  id\n  title\n  description\n  contentCount\n  isMyInterest\n  isPrivate\n  author {\n    id\n    name\n  }\n  contents(limit: 4) {\n    id\n    titleKr\n    indexRatingType\n    indexRatingScore\n    stillCutImage {\n      id\n      pathUrl\n    }\n    posterImage {\n      id\n      pathUrl\n    }\n  }\n}\n    ",
+      "fragment FragmentCollectionInterestStatus on ContentCollectionOutput {\n  id\n  isMyInterest\n}\n    ",
+      "fragment FragmentInventoryImage on BannerOutput {\n  id\n  inventory\n  inventoryImage {\n    id\n    pathUrl\n  }\n  link\n  provider\n  title\n  type\n}\n    ",
+      "fragment FragmentPersonBase on PersonOutput {\n  id\n  nameKr\n}\n    ",
+      "fragment FragmentPersonLikeStatus on PersonOutput {\n  id\n  isMyLike\n}\n    ",
+      "fragment FragmentReviewLikeStatus on UserReviewOutput {\n  id\n  isMyLike\n  likeCount\n  isPrivate\n}\n    ",
+      "fragment ContentEntryCardContent on MovieOutput {\n  id\n  titleKr\n  openYear\n  contentTypes\n  genres\n  certifiedAt\n  indexRatingTyp",
+      "fragment FragmentContentCollectionPreview on ContentCollectionOutput {\n  id\n  title\n  description\n  contentCount\n  isMyInterest\n  isPrivate\n  author {\n    id\n    name\n  }\n  contents(limit: 4) {\n    id\n    titleKr\n    indexRatingType\n    indexRatingScore\n    stillCutImage {\n      id\n      pathUrl\n    }\n    posterImage {\n      id\n      pathUrl\n    }\n  }\n}\n    ",
+      "fragment FragmentCollectionInterestStatus on ContentCollectionOutput {\n  id\n  isMyInterest\n}\n    ",
+      "fragment FragmentInventoryImage on BannerOutput {\n  id\n  inventory\n  inventoryImage {\n    id\n    pathUrl\n  }\n  link\n  provider\n  title\n  type\n}\n    ",
+      "fragment FragmentPersonBase on PersonOutput {\n  id\n  nameKr\n}\n    ",
+      "fragment FragmentPersonLikeStatus on PersonOutput {\n  id\n  isMyLike\n}\n    ",
+      "fragment FragmentReviewLikeStatus on UserReviewOutput {\n  id\n  isMyLike\n  likeCount\n  isPrivate\n}\n    "
+    ],
+    "identifiers": [
+      "FragmentSeasonDetailContentMyWatchManagerStatus",
+      "HomeExclusiveOttContents",
+      "HomeSectionContinueWatchingContents",
+      "OauthProvider",
+      "continueWatchingContents",
+      "excludeWatched",
+      "exclusiveOttCont",
+      "isMyWatched",
+      "isMyWatching",
+      "newContentsProviderIds",
+      "oauthProvider",
+      "rankingProviderIds",
+      "sMyWatched",
+      "tinueWatchingContents",
+      "userWatched"
+    ]
+  },
+  {
+    "url": "https://kinolights.com:443/_next/static/chunks/0teb_jl90-abl.js",
+    "documents": [
+      "fragment with name ",
+      "fragment names across your application to be unique",
+      "fragment with name ",
+      "fragment names across your application to be unique"
+    ],
+    "identifiers": []
+  },
+  {
+    "url": "https://kinolights.com:443/_next/static/chunks/3r68h7bk36m_0.js",
+    "documents": [
+      "query could be fully transported, rerunning:",
+      "query could be fully transported, rerunning:",
+      "query could be fully transported, rerunning:",
+      "query could be fully transported, rerunning:"
+    ],
+    "identifiers": [
+      "ApolloProvider",
+      "JSONDecodeStream",
+      "ReadableStream",
+      "readableStream",
+      "readableStreamController",
+      "simulatedStreamingQueries"
+    ]
+  },
+  {
+    "url": "https://kinolights.com:443/_next/static/chunks/1qhrp25zmu8wg.js",
+    "documents": [],
+    "identifiers": [
+      "onWatchUpdated"
+    ]
+  },
+  {
+    "url": "https://kinolights.com:443/_next/static/chunks/23b6w3vhwbx6j.js",
+    "documents": [
+      "fragment WatchedButtonMovieWatchingStatus on MovieOutput {\n    id\n    isMyWatching\n  }\n",
+      "fragment MovieWatchingStatus on MovieOutput {\n    id\n    isMyWatching\n  }\n"
+    ],
+    "identifiers": [
+      "MovieWatchingStatus",
+      "WatchedButtonMovieWatchingStatus",
+      "isMyWatching",
+      "myWatchedContentCountOfFilmography"
+    ]
+  },
+  {
+    "url": "https://kinolights.com:443/_next/static/chunks/0eyjzizjic_6w.js",
+    "documents": [],
+    "identifiers": []
+  }
+]

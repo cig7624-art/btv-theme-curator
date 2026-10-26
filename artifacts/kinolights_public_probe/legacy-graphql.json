@@ -1,0 +1,13 @@
+{
+  "status": 400,
+  "response": {
+    "errors": [
+      {
+        "message": "Cannot query field \"contents\" on type \"Query\". Did you mean \"content\", \"contentsBy\", or \"contentTypes\"?",
+        "extensions": {
+          "code": "GRAPHQL_VALIDATION_FAILED"
+        }
+      }
+    ]
+  }
+}

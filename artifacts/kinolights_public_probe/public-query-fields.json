@@ -1,0 +1,4640 @@
+{
+  "status": 200,
+  "fields": [
+    {
+      "name": "content",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "OBJECT",
+        "name": "MovieOutput",
+        "ofType": null
+      }
+    },
+    {
+      "name": "userBestContents",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "filmographyContents",
+      "args": [
+        {
+          "name": "personId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "crewTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "FilmographyMoviesOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "interestContents",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "myIndexRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "myStarRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "includeEtcNations",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ratingTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYearRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "runningTimeRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "starRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rottenScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "imdbScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isCertified",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isSubscription",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isYoutubeVideoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "InterestMovieOrderType"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "interestContentsHome",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "InterestMovieOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "LIST",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "uninterestContents",
+      "args": [
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "UninterestMovieOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "watchedContents",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "myIndexRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "myStarRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "includeEtcNations",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ratingTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYearRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "runningTimeRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "starRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rottenScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "imdbScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isCertified",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isSubscription",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isYoutubeVideoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "WatchedMovieOrderType"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "watchingContents",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "myIndexRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "myStarRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "includeEtcNations",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ratingTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYearRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "runningTimeRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "starRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rottenScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "imdbScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isCertified",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isSubscription",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isYoutubeVideoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "WatchingMovieOrderType"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "continueWatchingContents",
+      "args": [
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "userReviewContents",
+      "args": [
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ReviewMoviesOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "collectionContents",
+      "args": [
+        {
+          "name": "collectionId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "CollectionContentsOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentEvaluationList",
+      "args": [
+        {
+          "name": "offset",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "exploreContentsForMembers",
+      "args": [
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ExploreMoviesOrderType"
+            }
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "includeEtcNations",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ratingTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYearRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "runningTimeRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "starRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rottenScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "imdbScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isCertified",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isSubscription",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isYoutubeVideoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "exploreContentsForTrustedClients",
+      "args": [
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "includeEtcNations",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ratingTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYearRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "runningTimeRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "starRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rottenScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "imdbScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isCertified",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isSubscription",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isYoutubeVideoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ExploreMoviesOrderType"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "exploreContentsPreview",
+      "args": [
+        {
+          "name": "offset",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ExploreMoviesOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "exploreContentCountForMembers",
+      "args": [
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "includeEtcNations",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ratingTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYearRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "runningTimeRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "starRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rottenScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "imdbScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isCertified",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isSubscription",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isYoutubeVideoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "exploreContentCountForTrustedClients",
+      "args": [
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "includeEtcNations",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ratingTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYearRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "runningTimeRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "starRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rottenScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "imdbScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isCertified",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isSubscription",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isYoutubeVideoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "filmographyContentCount",
+      "args": [
+        {
+          "name": "personId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "crewTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "interestContentCount",
+      "args": [
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "includeEtcNations",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ratingTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYearRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "runningTimeRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "starRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rottenScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "imdbScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isCertified",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isSubscription",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isYoutubeVideoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "myIndexRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "myStarRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "uninterestContentCount",
+      "args": [],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "watchedContentCount",
+      "args": [
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "includeEtcNations",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ratingTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYearRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "runningTimeRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "starRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rottenScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "imdbScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isCertified",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isSubscription",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isYoutubeVideoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "myIndexRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "myStarRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "watchingContentCount",
+      "args": [
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "includeEtcNations",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ratingTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYearRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "runningTimeRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "starRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rottenScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "imdbScoreRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isCertified",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isSubscription",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isYoutubeVideoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "myIndexRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "myStarRatings",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "userReviewContentCount",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "collectionContentCount",
+      "args": [
+        {
+          "name": "collectionId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "OBJECT",
+          "name": "CollectionContentCountOutput"
+        }
+      }
+    },
+    {
+      "name": "todayContents",
+      "args": [],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentByAdmin",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "OBJECT",
+          "name": "MovieOutput"
+        }
+      }
+    },
+    {
+      "name": "contentsByAdmin",
+      "args": [
+        {
+          "name": "keyword",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "contentTypeIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "publicType",
+          "type": {
+            "kind": "ENUM",
+            "name": "PublicType",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasImdbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasTmdbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasRottenId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasKobisMovieCd",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasRelatedContent",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "belongToSeries",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "checkCount",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "ENUM",
+            "name": "ContentOrderType",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "ENUM",
+            "name": "OrderOptionType",
+            "ofType": null
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentsByIdsByAdmin",
+      "args": [
+        {
+          "name": "movieIds",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "LIST",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentCountByAdmin",
+      "args": [
+        {
+          "name": "keyword",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "contentTypeIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "publicType",
+          "type": {
+            "kind": "ENUM",
+            "name": "PublicType",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasImdbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasTmdbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasRottenId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasKobisMovieCd",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasRelatedContent",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "belongToSeries",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "checkCount",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "mergeContentPreviewByAdmin",
+      "args": [
+        {
+          "name": "fromContentId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "toContentId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "OBJECT",
+          "name": "MergeContentPreviewOutput"
+        }
+      }
+    },
+    {
+      "name": "exclusiveOttContents",
+      "args": [
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "LIST",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeGenres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "isStillCutRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isTitleLogoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "exclusiveOttContentCount",
+      "args": [
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "LIST",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "excludeWatched",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "excludeGenres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "isStillCutRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "indexRatingRange",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "isTitleLogoRequired",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "providers",
+      "args": [],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "movieWatchedFollowingUsers",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentCollectionsInterestedBy",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ContentCollectionsInterestedByOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentCollectionCountInterestedBy",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "contentCollection",
+      "args": [
+        {
+          "name": "id",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "OBJECT",
+        "name": "ContentCollectionOutput",
+        "ofType": null
+      }
+    },
+    {
+      "name": "contentCollections",
+      "args": [
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ContentCollectionsOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "keyword",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "contentId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "authorId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentCollectionCount",
+      "args": [
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ContentCollectionsOrderType"
+            }
+          }
+        },
+        {
+          "name": "keyword",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "contentId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "authorId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "interestedUserIdsByContentIdByAdmin",
+      "args": [
+        {
+          "name": "contentId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "targetDate",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentCrewsByTypes",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "crewTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentCrewsByAdmin",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "monthlyWatchedContents",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "month",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "WatchedContentOrderBy"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "dailyWatchedContents",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "date",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "DateTime"
+            }
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "WatchedContentOrderBy"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "monthlyWatchedContentCount",
+      "args": [
+        {
+          "name": "userId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "month",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentExternalVideos",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "nationId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "platformTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ContentExternalVideoOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentExternalVideoCount",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "nationId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "platformTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "contentExternalVideoByAdmin",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "platformTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentNationsByAdmin",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "relatedContents",
+      "args": [
+        {
+          "name": "contentId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentRelatedMappingsByAdmin",
+      "args": [
+        {
+          "name": "contentId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentReleasesByAdmin",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentTheatersByAdmin",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentTagsByAdmin",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "taxonomyContents",
+      "args": [
+        {
+          "name": "taxonomyId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "offset",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "orderType",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ExploreMoviesOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "taxonomyContentCount",
+      "args": [
+        {
+          "name": "taxonomyId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "SCALAR",
+          "name": "Int"
+        }
+      }
+    },
+    {
+      "name": "contentSynonymsByAdmin",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentSynonyms",
+      "args": [
+        {
+          "name": "contentId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "localeCode",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "LocaleCode"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentTypes",
+      "args": [],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "genresByContentType",
+      "args": [
+        {
+          "name": "contentTypeId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentGenresByAdmin",
+      "args": [
+        {
+          "name": "movieId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "contentRankingsV2",
+      "args": [
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "providerIds",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "isInTheaters",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "LIST",
+          "name": null
+        }
+      }
+    },
+    {
+      "name": "searchContentsByKeyword",
+      "args": [
+        {
+          "name": "keyword",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "OBJECT",
+          "name": "MappedInfosOutput"
+        }
+      }
+    },
+    {
+      "name": "searchContentsBy",
+      "args": [
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ContentsOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "indexRating",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYear",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "providers",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "OBJECT",
+          "name": "MappedInfosOutput"
+        }
+      }
+    },
+    {
+      "name": "seriesByContentId",
+      "args": [
+        {
+          "name": "contentId",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "OBJECT",
+        "name": "SeriesOutput",
+        "ofType": null
+      }
+    },
+    {
+      "name": "contentsByKeyword",
+      "args": [
+        {
+          "name": "keyword",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "String"
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "OBJECT",
+          "name": "MappedInfosOutput"
+        }
+      }
+    },
+    {
+      "name": "contentsBy",
+      "args": [
+        {
+          "name": "orderBy",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "ContentsOrderType"
+            }
+          }
+        },
+        {
+          "name": "orderOption",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "ENUM",
+              "name": "OrderOptionType"
+            }
+          }
+        },
+        {
+          "name": "contentTypes",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "genres",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "indexRating",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "FloatRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "nations",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "openYear",
+          "type": {
+            "kind": "INPUT_OBJECT",
+            "name": "IntRangeInput",
+            "ofType": null
+          }
+        },
+        {
+          "name": "providers",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        },
+        {
+          "name": "limit",
+          "type": {
+            "kind": "NON_NULL",
+            "name": null,
+            "ofType": {
+              "kind": "SCALAR",
+              "name": "Int"
+            }
+          }
+        },
+        {
+          "name": "searchAfter",
+          "type": {
+            "kind": "LIST",
+            "name": null,
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": null
+            }
+          }
+        }
+      ],
+      "type": {
+        "kind": "NON_NULL",
+        "name": null,
+        "ofType": {
+          "kind": "OBJECT",
+          "name": "MappedInfosOutput"
+        }
+      }
+    }
+  ],
+  "errors": []
+}
