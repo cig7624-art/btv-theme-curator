@@ -3,11 +3,11 @@
   "tests": {
     "localization_version": true
   },
-  "expected_version": "1.5.1",
+  "expected_version": "1.6.1",
   "button_submitted": false,
   "stage": "media_open",
-  "checked_at": "2026-10-26T02:11:24.712057+00:00",
-  "observed_version": "1.5.1",
+  "checked_at": "2026-10-27T02:48:08.480227+00:00",
+  "observed_version": "1.6.1",
   "frame_state": "matched_release",
   "translation_control_count": 0
 }
