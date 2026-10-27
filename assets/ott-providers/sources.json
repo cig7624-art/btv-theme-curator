@@ -1,0 +1,85 @@
+{
+  "checked_at": "2026-10-27T05:44:21.830161+00:00",
+  "credential_use": false,
+  "purpose": "Identify services in public subscription availability results; trademarks belong to their owners.",
+  "providers": {
+    "netflix": {
+      "name": "넷플릭스",
+      "official_home": "https://www.netflix.com/kr/",
+      "status": "downloaded",
+      "source_url": "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2023.ico",
+      "width": 48,
+      "height": 48,
+      "sha256": "dc41b441101f34747d7c32b88a2f4a051a2991f0e101fc94ec78f7ec268c692e",
+      "bytes": 1526
+    },
+    "tving": {
+      "name": "티빙",
+      "official_home": "https://www.tving.com/",
+      "status": "downloaded",
+      "source_url": "https://www.tving.com/favicon.ico",
+      "width": 96,
+      "height": 96,
+      "sha256": "d591822c4699b86cae91f0430f7fcfc23167305cc9c422e903d7afec76252194",
+      "bytes": 4789
+    },
+    "wavve": {
+      "name": "웨이브",
+      "official_home": "https://www.wavve.com/",
+      "status": "downloaded",
+      "source_url": "https://www.wavve.com/favicon.ico",
+      "width": 96,
+      "height": 96,
+      "sha256": "cc6827b84136608f4a34e005444f49867daf30138e738c1f39e1481e7826c792",
+      "bytes": 2521
+    },
+    "watcha-play": {
+      "name": "왓챠",
+      "official_home": "https://watcha.com/",
+      "status": "downloaded",
+      "source_url": "https://watcha.com/favicon.ico",
+      "width": 96,
+      "height": 96,
+      "sha256": "532f6fa02da2329c6a14f4e25e3675692be21eb69f04e3050417339f61c44724",
+      "bytes": 2736
+    },
+    "coupang-play": {
+      "name": "쿠팡플레이",
+      "official_home": "https://www.coupangplay.com/",
+      "status": "downloaded",
+      "source_url": "https://assets.coupangplay.com/favicon.ico",
+      "width": 48,
+      "height": 48,
+      "sha256": "f9339d59a1690d058dd5101bca12ff9a971ddb026c69734a99776e16c489d104",
+      "bytes": 2408
+    },
+    "disney": {
+      "name": "디즈니+",
+      "official_home": "https://www.disneyplus.com/ko-kr",
+      "status": "downloaded",
+      "source_url": "https://www.disneyplus.com/favicon.ico",
+      "width": 48,
+      "height": 48,
+      "sha256": "4add9f479446b03634ad252a7800f3bc6ad892179eb83230e9f4953afe4ac46b",
+      "bytes": 2065
+    },
+    "apple": {
+      "name": "Apple TV",
+      "official_home": "https://tv.apple.com/kr",
+      "status": "downloaded",
+      "source_url": "https://tv.apple.com/assets/favicon/favicon-180.png",
+      "width": 96,
+      "height": 96,
+      "sha256": "a6b64c87d9a12b995d3703615485a6fafd20190cd37e4261ffbb3c559ebc82b9",
+      "bytes": 7278
+    }
+  },
+  "errors": [
+    {
+      "stage": "public_provider_metadata",
+      "code": "KeyError"
+    }
+  ],
+  "public_request_count": 15,
+  "status": "passed"
+}
