@@ -117,6 +117,13 @@ class DomesticMediaSourcesTests(unittest.TestCase):
         self.assertEqual(domestic_media_topic(title, "지역 주민의 건강과 복지를 위한 활동을 안내합니다."), "")
         self.assertEqual(domestic_product_topic(title, "B tv 지역채널에서 방송합니다."), "")
 
+    def test_festival_accessibility_is_content_while_accessibility_features_are_technology(self):
+        title = "SKB, 서울국제여성영화제 4년 연속 후원…독립·예술영화 접근성 넓힌다"
+        self.assertEqual(domestic_media_topic(title, "B tv 독립·예술영화 특집관을 운영합니다."), "sports_content")
+        self.assertEqual(domestic_media_topic("B tv, 독립영화 특집관 운영", "B tv 영화 콘텐츠를 제공합니다."), "sports_content")
+        self.assertEqual(domestic_media_topic("B tv, 접근성 기능 도입", "음성 안내 기능을 제공합니다."), "ai_technology")
+        self.assertEqual(domestic_media_topic("SKB, 지역 행사 후원", "지역 복지 행사를 지원합니다."), "")
+
     def test_phone_broadband_nonmedia_corporate_and_guides_stay_excluded(self):
         titles = ["KT 휴대폰 요금제 출시", "SK브로드밴드 인터넷 요금제 출시",
                   "SK브로드밴드, 인적자원개발 우수기관 인증", "CJ ENM, 신입 공개 채용 시작",

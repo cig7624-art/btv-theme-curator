@@ -11,6 +11,7 @@ from urllib.parse import quote, urlparse
 from zoneinfo import ZoneInfo
 
 from ott_editorial import EDITORIAL_CRITERIA, select_editorial_highlights
+from ott_title_search_view import render_ott_title_search
 
 
 OTT_SERVICES = (
@@ -451,6 +452,7 @@ def render_ott_page(snapshot, *, on_refresh: Callable | None = None):
             except Exception:
                 _LOGGER.exception("Public OTT homepage refresh failed")
                 st.warning("이번에는 홈 자료를 갱신하지 못했습니다. 저장된 확인 자료를 보여드립니다.")
+        render_ott_title_search()
         labels = {"all": "주요 소식", **{service_id: name for service_id, name, _ in OTT_SERVICES}}
         with st.container(key="ott_platform_selector"):
             selected = st.segmented_control("OTT 선택", options=list(labels), format_func=labels.get,

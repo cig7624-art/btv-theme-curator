@@ -624,7 +624,13 @@ def _collect_source(source, previous_source, *, fetcher, observed, limit):
                     {"url": seed_url, "title": _text(configured_document.get("title", ""), 300)}))
                 seeded_urls.add(seed_url)
         links = seeded_links + [link for link in links if link["url"] not in seeded_urls]
-        for link in links[:max(0, limit - len(items))]:
+        # A dead link or a listing excerpt is not a collected document. Keep
+        # looking for eligible documents, within a fixed attempt budget, so a
+        # failed first candidate cannot starve the later official articles.
+        attempt_limit = min(36, max(0, limit * 3))
+        for link in links[:attempt_limit]:
+            if len(items) >= limit:
+                break
             try:
                 item = None
                 if link.get("inline_html"):

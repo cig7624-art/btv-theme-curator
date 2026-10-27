@@ -75,10 +75,10 @@ _NON_MEDIA_PRODUCT = re.compile(r"휴대폰|스마트폰|아이폰|갤럭시|(?<
 _LAUNCH_BODY = re.compile(r"국내\s*최초|새롭게\s*(?:선보|출시)|신규\s*(?:상품|구독|이용권|패키지)|(?:상품|패키지|이용권|구독)\S*\s*(?:출시|선보)", re.I)
 _MEDIA_COMPANY = re.compile(r"CJ\s*ENM|스튜디오\s*드래곤|SLL|tvN|JTBC|MBC|SBS|KBS|ENA|EBS", re.I)
 _MEDIA_CONTENT = re.compile(r"미디어|콘텐츠|방송|영화|드라마|시리즈|예능|다큐|프로그램|중계|채널|VOD|\bIP\b", re.I)
-_CONTENT_EVENT = re.compile(r"신작|라인업|편성|공개|첫\s*방송|첫\s*공개|개봉|제작|론칭|런칭|선보|시즌\s*\d|성과|흥행|수상|후보|노미네이트|노미니|차트|제공|신설", re.I)
+_CONTENT_EVENT = re.compile(r"신작|라인업|편성|공개|첫\s*방송|첫\s*공개|개봉|제작|론칭|런칭|선보|시즌\s*\d|성과|흥행|수상|후보|노미네이트|노미니|차트|제공|신설|후원|특집관", re.I)
 _MEDIA_PARTNERSHIP = re.compile(r"제휴|파트너십|파트너쉽|협력|공급|수출|유통|합병|인수|계약|브랜드관", re.I)
 _MEDIA_EARNINGS = re.compile(r"실적|매출|영업\s*이익|수익|판매액|거래액|가입자|시청\s*시간|시청률|관객|박스\s*오피스", re.I)
-_MEDIA_TECH = re.compile(r"\bAI\b|인공지능|검색|추천\s*기술|화질|멀티뷰|셋톱|접근성|스트리밍\s*기술", re.I)
+_MEDIA_TECH = re.compile(r"\bAI\b|인공지능|검색|추천\s*기술|화질|멀티뷰|셋톱|접근성\s*기능|스트리밍\s*기술", re.I)
 _NON_MEDIA_CORPORATE = re.compile(r"채용|인적\s*자원|우수\s*기관|사회\s*공헌|봉사|어린이\s*(?:대상|체험)|제작\s*체험|보이스피싱|보안\s*인증|기부|임직원|조직\s*개편|CEO\s*선임|경영진\s*선임", re.I)
 
 

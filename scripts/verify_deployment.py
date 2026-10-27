@@ -15,7 +15,7 @@ from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_URL = "https://btv-theme-curator-moec8jpeyjkp9skzhefihq.streamlit.app/"
-CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow", "media_magazine", "media_domestic", "media_korean", "media_default_period", "media_public_only", "news_digest")
+CHECKS = ("version", "five_tabs", "weekly_actions", "library_director_filter", "director_screen", "api_cost_control", "ott_magazine", "ott_feature", "no_exception", "no_horizontal_overflow", "lead_artwork", "coupang_content", "coupang_artwork", "media_insights", "media_evidence", "media_no_overflow", "media_magazine", "media_domestic", "media_korean", "media_default_period", "media_public_only", "news_digest", "ott_title_search", "media_reader", "media_topic_archive")
 
 
 def normalized_version(value):
@@ -156,6 +156,62 @@ def _load_version(page, args, report, label):
     return frame
 
 
+def _check_title_lookup(frame, report, label):
+    lookup = frame.locator('.st-key-ott_title_search')
+    lookup.get_by_role('textbox', name='작품으로 OTT 찾기', exact=True).fill('기생충')
+    lookup.get_by_role('button', name='검색', exact=True).click()
+    result = lookup.locator('.ott-title-result[data-status]')
+    result.wait_for(state='visible', timeout=45000)
+    status = result.get_attribute('data-status')
+    source = result.get_by_role('link', name='키노라이츠 원문 ↗', exact=True)
+    source_url = urlsplit(source.get_attribute('href') or '') if source.count() else None
+    providers = int(result.get_attribute('data-provider-count') or 0)
+    valid = (status in {'available', 'unavailable'} and source_url is not None
+             and source_url.hostname in {'kinolights.com', 'm.kinolights.com'}
+             and '/title/' in source_url.path and (status != 'available' or providers > 0))
+    report['tests'][f'{label}_ott_title_search'] = valid
+    report.setdefault('ott_title_search', {})[label] = {'status': status, 'providers': providers, 'original_link': source.count() == 1}
+    if not valid:
+        raise VerificationIssue('ott_title_service_lookup_failed', retry=True)
+
+
+def _check_media_usability(frame, report, label):
+    topic_control = frame.locator('.st-key-media_insight_topic')
+    counts = {}
+    for topic, code in (('국내 이슈', None), ('광고·요금제', 'advertising_pricing'),
+                        ('스포츠·콘텐츠', 'sports_content'), ('AI·기술', 'ai_technology')):
+        topic_control.get_by_text(topic, exact=True).click()
+        frame.wait_for_function('''code => {
+          if (document.querySelector('[data-stale=true]')) return false;
+          const cards=Array.from(document.querySelectorAll('.st-key-media_insights_workspace [class*="st-key-media_story_"] .media-story-meta'));
+          return cards.length >= 3 && (!code || cards.every(el=>el.dataset.topics.split(' ').includes(code)));
+        }''', arg=code, timeout=30000)
+        cards = frame.locator('.st-key-media_insights_workspace [class*="st-key-media_story_"]')
+        counts[topic] = cards.count()
+    report['tests'][f'{label}_media_topic_archive'] = all(value >= 3 for value in counts.values())
+    report.setdefault('media_topic_archive', {})[label] = counts
+    card = cards.last
+    article_id = card.locator('.media-story-meta').get_attribute('data-item-id')
+    button = card.get_by_role('button').first
+    button.scroll_into_view_if_needed()
+    before = frame.locator('[data-testid="stMain"]').evaluate('(el)=>el.scrollTop')
+    button.click()
+    heading = frame.locator('#media-insight-reading-detail')
+    heading.wait_for(state='visible', timeout=30000)
+    matched = heading.get_attribute('data-item-id') == article_id
+    frame.get_by_role('button', name='목록으로 돌아가기', exact=True).click()
+    heading.wait_for(state='detached', timeout=30000)
+    frame.wait_for_function('() => !document.querySelector("[data-stale=true]")', timeout=30000)
+    after = frame.locator('[data-testid="stMain"]').evaluate('(el)=>el.scrollTop')
+    drift = abs(after-before)
+    report['tests'][f'{label}_media_reader'] = matched and drift <= 2
+    report.setdefault('media_reader', {})[label] = {'matching_note': matched, 'scroll_drift_px': drift}
+    if not report['tests'][f'{label}_media_reader']:
+        raise VerificationIssue('media_reader_scroll_or_identity_failed')
+    topic_control.get_by_text('전체', exact=True).click()
+    frame.wait_for_function('() => !document.querySelector("[data-stale=true]")', timeout=30000)
+
+
 def _check_editorial(frame, report, label, screenshots):
     page = frame.page
     tab_names = frame.get_by_role("tab").all_text_contents()
@@ -294,6 +350,7 @@ def _check_editorial(frame, report, label, screenshots):
         raise VerificationIssue('coupang_artwork_unavailable')
     frame.get_by_role('radio', name='주요 소식', exact=True).click()
     frame.locator('.ott-magazine').wait_for(state='visible')
+    _check_title_lookup(frame, report, label)
     frame.get_by_role('tab', name='미디어 인사이트', exact=True).click()
     frame.locator('.media-insights-heading').wait_for(state='visible', timeout=30000)
     frame.wait_for_function('''() => {
@@ -366,6 +423,7 @@ def _check_editorial(frame, report, label, screenshots):
     }''')
     if not report['tests'][f'{label}_media_public_only']:
         raise VerificationIssue('private_research_controls_present')
+    _check_media_usability(frame, report, label)
     if has_app_exception(page):
         raise VerificationIssue('media_insights_exception')
     screenshots.mkdir(parents=True, exist_ok=True)

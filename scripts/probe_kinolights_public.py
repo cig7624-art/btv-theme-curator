@@ -165,7 +165,7 @@ def graphql_probe(folder):
     schema_query = "query PublicContentType($name:String!){__type(name:$name){kind name fields{name args{name type{" + ref + "}} type{" + ref + "}} inputFields{name type{" + ref + "}} enumValues{name}}}"
     schema = {}
     calls = []
-    forbidden = re.compile(r"auth|user|admin|token|review|comment|^my|login|session|cookie|password|secret|credential|email", re.I)
+    forbidden = re.compile(r"auth|user|admin|token|review|comment|^my|^isMy|login|session|cookie|password|secret|credential|email|watched|watching|watchList|interest|wish|bookmark|favorite|like", re.I)
 
     def request(query, variables=None):
         response = requests.post(endpoint, json={"query": query, "variables": variables or {}}, headers=HEADERS, timeout=(5, 20))
@@ -187,10 +187,10 @@ def graphql_probe(folder):
         return value
 
     identity = {"id", "movieId", "contentId", "title", "titleKr", "titleEn", "name", "nameKr", "openYear", "releaseYear", "year", "posterUrl", "poster", "contentType", "type", "totalCount", "total", "count", "infos", "mappedInfos", "items", "contents", "results"}
-    offer = re.compile(r"provider|platform|stream|vod|watch|ott|rent|purchas|subscri|price|cost|offer", re.I)
+    offer = re.compile(r"provider|platform|stream|vod|watch|(?:^|_)ott(?:_|$)|rent|purchas|subscri|price|cost|offer", re.I)
 
-    def selection(name, mode, depth=0, inside_offer=False):
-        if depth > 4:
+    def selection(name, mode, depth=0, inside_offer=False, trail=()):
+        if depth > 4 or name in trail:
             return ""
         value = load_type(name)
         fields = []
@@ -212,7 +212,7 @@ def graphql_probe(folder):
                     continue
                 if mode == "detail" and name == "MovieOutput" and not (is_offer or field_name in identity):
                     continue
-                nested = selection(leaf["name"], mode, depth + 1, is_offer)
+                nested = selection(leaf["name"], mode, depth + 1, is_offer, trail + (name,))
                 if nested:
                     fields.append(field_name + "{" + nested + "}")
             if len(fields) >= 24:

@@ -14,7 +14,7 @@
 .st-key-media_insights_workspace > [data-testid="stLayoutWrapper"] > [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] > [data-testid="stVerticalBlock"] { gap: 8px; }
 .media-section-label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 650; margin: 13px 0 8px; }
 .media-section-label > span { color: var(--muted, #aaa99f); font-size: 11px; font-weight: 400; }
-[class*="st-key-media_story_"] { border-bottom: 1px solid var(--line, #343734); padding: 12px 0 13px; gap: 0; }
+[class*="st-key-media_story_"] { border-bottom: 1px solid var(--line, #343734); border-left: 2px solid transparent; padding: 12px 0 13px 12px; gap: 0; }
 .media-story-meta { display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--muted, #aaa99f); flex-wrap: wrap; }
 .media-story-meta time { margin-left: auto; font-size: 10px; }
 .media-story-index { color: var(--accent, #e7bd86); font-size: 10px; }
@@ -28,6 +28,14 @@
 [data-testid="stMarkdownContainer"] .media-story-excerpt { font-size: 12px; line-height: 1.75; color: var(--muted, #aaa99f); margin: 2px 0 8px; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .media-story-source { font-size: 10px; color: var(--quiet, #7d817e); margin-top: 5px; overflow-wrap: anywhere; }
 .st-key-media_insights_detail { border-left: 1px solid var(--line, #343734); padding: 12px 0 12px 20px; min-width: 0; gap: 8px; }
+.media-archive-expansion { margin: 0 0 8px; color: var(--muted, #aaa99f); font-size: 11px; line-height: 1.7; }
+[data-testid="stDialog"]:has(.st-key-media_insight_reading) [role="dialog"] { max-height: calc(100dvh - 48px); max-width: 900px; margin-inline: auto; }
+.st-key-media_insight_reading { min-width: 0; gap: 8px; }
+.st-key-media_insight_reading .st-key-media_reading_close { position: sticky; top: 0; z-index: 2; background: var(--background-color, #0e1117); padding-bottom: 5px; }
+.st-key-media_insight_reading .media-detail-heading h3 { font-size: 24px; }
+.st-key-media_insight_reading .media-detail-summary, .st-key-media_insight_reading .media-note-section :is(p, li) { font-size: 14px; line-height: 1.9; }
+.st-key-media_insight_reading .media-source-first p { font-size: 14px; line-height: 1.9; }
+.st-key-media_insight_reading .media-evidence-row blockquote { font-size: 13px; line-height: 1.9; }
 .media-detail-heading { scroll-margin-top: 60px; }
 .media-detail-heading > span { color: var(--accent, #e7bd86); font-size: 10px; }
 [data-testid="stMarkdownContainer"] .media-detail-heading h3 { font-size: 20px; line-height: 1.45; padding: 0; margin: 7px 0; overflow-wrap: anywhere; }
@@ -59,8 +67,13 @@
 .media-research-answer strong { color: var(--accent, #e7bd86); font-size: 12px; }
 [data-testid="stMarkdownContainer"] .media-research-answer p { margin-top: 7px; font-size: 13px; line-height: 1.85; }
 .media-answer-sources { display: flex; flex-wrap: wrap; gap: 5px 12px; font-size: 11px; }
-.media-mobile-detail-link { display: none; }
+@media (min-width: 761px) {
+    .st-key-media_insights_workspace > [data-testid="stLayoutWrapper"] > [data-testid="stHorizontalBlock"] > [data-testid="stColumn"]:last-child { position: sticky; top: 70px; align-self: flex-start; }
+    .st-key-media_insights_detail { max-height: calc(100dvh - 100px); overflow-y: auto; overscroll-behavior: contain; padding-right: 8px; }
+}
 @media (max-width: 760px) {
+    [data-testid="stDialog"]:has(.st-key-media_insight_reading) [role="dialog"] { max-height: calc(100dvh - 24px); max-width: calc(100vw - 24px); width: calc(100vw - 24px); margin: 0; }
+    .st-key-media_insight_reading .media-detail-heading h3 { font-size: 20px; }
     .st-key-media_insights_header > [data-testid="stLayoutWrapper"] > [data-testid="stHorizontalBlock"] { flex-wrap: wrap; gap: 10px; }
     .st-key-media_insights_header [data-testid="stColumn"] { flex: 1 1 calc(50% - 5px) !important; width: auto !important; min-width: 0 !important; }
     .st-key-media_insights_header [data-testid="stColumn"]:first-child { flex: 1 1 100% !important; width: 100% !important; }
@@ -74,7 +87,6 @@
     [class*="st-key-media_story_"] .stButton button p { font-size: 16px; }
     .media-story-meta time { margin-left: 0; }
     .media-source-status strong { flex-basis: 100%; }
-    .media-mobile-detail-link { display: block; font-size: 12px; margin: 5px 0 10px; }
 }
 
 /* An edition of photographed stories, followed by its full source archive. */

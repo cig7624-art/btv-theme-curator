@@ -2222,6 +2222,90 @@
       }
     },
     {
+      "id": "mi-693790a24546f976fe",
+      "source_id": "disney_news",
+      "company": "Disney",
+      "topic": "advertising_pricing",
+      "title": "Disney Ad Creative Studio Begins Closed Beta with Select Advertisers",
+      "url": "https://thewaltdisneycompany.com/news/ad-creative-studio-beta/",
+      "published_at": "2026-07-23",
+      "collected_at": "2026-10-26T09:46:42+00:00",
+      "country": "",
+      "period": "",
+      "source_name": "The Walt Disney Company News",
+      "source_type": "official_announcement",
+      "excerpt": "At Disney, we have a long history of embracing emerging technology to create meaningful value for both our fans and our business. Earlier this year at Disney’s Tech & Data Showcase , we shared a vision for how artificial intelligence can help simplify advertising workflows, unlock new creative possibilities, and make it easier for advertisers to connect with streaming audiences with greater reach and relevance. Since",
+      "body_text": "At Disney, we have a long history of embracing emerging technology to create meaningful value for both our fans and our business. Earlier this year at Disney’s Tech & Data Showcase , we shared a vision for how artificial intelligence can help simplify advertising workflows, unlock new creative possibilities, and make it easier for advertisers to connect with streaming audiences with greater reach and relevance. Since then, we’ve been testing it internally and today, we’re taking the next step in that journey.\nWe’ve officially kicked off our Disney Ad Creative Studio closed beta with a select group of advertisers. They are among the first to experiment with a new tool within Disney Campaign Manager that unlocks creative access to connected TV for small and mid-sized businesses, giving us in turn an opportunity to test the platform in real-world workflows and refine the product before its wider release.\nCreative development remains one of the most time-intensive steps of advertising. Disney Ad Creative Studio brings together multiple AI models within a single workflow to transform existing brand materials — including logos, product imagery, brand guidelines, and prior creative assets — into video ads for connected TV.\nAnd rather than focusing on a single output, the platform will be able to generate multiple creative variations tailored for different audiences, geographies, content, and campaign goals. While especially valuable for small and mid-sized businesses, it’s also an opportunity for larger brands and agencies to quickly adapt and scale — all while maintaining control throughout the process.\nBecause, as with everything we build, technology is only one part of the equation. Human creativity, strategy, and oversight remain essential to the process. Disney Ad Creative Studio is designed to enable small and mid-sized businesses to drive more effective advertising by accelerating production workflows, extending ideas, and scaling creative execution.\nJust as important, we’re approaching this work with a strong focus on responsibility and trust. Safeguards are designed to respect intellectual property rights and help protect image, voice, and likeness alongside advertiser controls, compliance requirements, and human oversight. These principles will remain foundational to how we bring the product to market.\nWe’re excited to begin collaborating with our beta partners and look forward to sharing more as the program grows and evolves.\nThe post Disney Ad Creative Studio Begins Closed Beta with Select Advertisers appeared first on The Walt Disney Company .",
+      "image_url": "https://thewaltdisneycompany.com/app/uploads/2026/07/Ad-Creative-Hero-1024x576.png",
+      "evidence": [
+        {
+          "id": "mi-693790a24546f976fe-p002",
+          "text": "At Disney, we have a long history of embracing emerging technology to create meaningful value for both our fans and our business. Earlier this year at Disney’s Tech & Data Showcase , we shared a vision for how artificial intelligence can help simplify advertising workflows, unlock new creative possibilities, and make it easier for advertisers to connect with streaming audiences with greater reach and relevance. Since then, we’ve been testing it internally and today, we’re taking the next step in that journey.",
+          "locator": "p002",
+          "url": "https://thewaltdisneycompany.com/news/ad-creative-studio-beta/"
+        },
+        {
+          "id": "mi-693790a24546f976fe-p003",
+          "text": "We’ve officially kicked off our Disney Ad Creative Studio closed beta with a select group of advertisers. They are among the first to experiment with a new tool within Disney Campaign Manager that unlocks creative access to connected TV for small and mid-sized businesses, giving us in turn an opportunity to test the platform in real-world workflows and refine the product before its wider release.",
+          "locator": "p003",
+          "url": "https://thewaltdisneycompany.com/news/ad-creative-studio-beta/"
+        },
+        {
+          "id": "mi-693790a24546f976fe-p004",
+          "text": "Creative development remains one of the most time-intensive steps of advertising. Disney Ad Creative Studio brings together multiple AI models within a single workflow to transform existing brand materials — including logos, product imagery, brand guidelines, and prior creative assets — into video ads for connected TV.",
+          "locator": "p004",
+          "url": "https://thewaltdisneycompany.com/news/ad-creative-studio-beta/"
+        },
+        {
+          "id": "mi-693790a24546f976fe-p005",
+          "text": "And rather than focusing on a single output, the platform will be able to generate multiple creative variations tailored for different audiences, geographies, content, and campaign goals. While especially valuable for small and mid-sized businesses, it’s also an opportunity for larger brands and agencies to quickly adapt and scale — all while maintaining control throughout the process.",
+          "locator": "p005",
+          "url": "https://thewaltdisneycompany.com/news/ad-creative-studio-beta/"
+        },
+        {
+          "id": "mi-693790a24546f976fe-p006",
+          "text": "Because, as with everything we build, technology is only one part of the equation. Human creativity, strategy, and oversight remain essential to the process. Disney Ad Creative Studio is designed to enable small and mid-sized businesses to drive more effective advertising by accelerating production workflows, extending ideas, and scaling creative execution.",
+          "locator": "p006",
+          "url": "https://thewaltdisneycompany.com/news/ad-creative-studio-beta/"
+        },
+        {
+          "id": "mi-693790a24546f976fe-p007",
+          "text": "Just as important, we’re approaching this work with a strong focus on responsibility and trust. Safeguards are designed to respect intellectual property rights and help protect image, voice, and likeness alongside advertiser controls, compliance requirements, and human oversight. These principles will remain foundational to how we bring the product to market.",
+          "locator": "p007",
+          "url": "https://thewaltdisneycompany.com/news/ad-creative-studio-beta/"
+        },
+        {
+          "id": "mi-693790a24546f976fe-p008",
+          "text": "We’re excited to begin collaborating with our beta partners and look forward to sharing more as the program grows and evolves.",
+          "locator": "p008",
+          "url": "https://thewaltdisneycompany.com/news/ad-creative-studio-beta/"
+        },
+        {
+          "id": "mi-693790a24546f976fe-p009",
+          "text": "The post Disney Ad Creative Studio Begins Closed Beta with Select Advertisers appeared first on The Walt Disney Company .",
+          "locator": "p009",
+          "url": "https://thewaltdisneycompany.com/news/ad-creative-studio-beta/"
+        }
+      ],
+      "content_hash": "062f199248dcef89de6409fed6c4b9e53f7f01012e4fef3264e92d542d92a721",
+      "fetched_from": "https://thewaltdisneycompany.com/feed/?s=advertising",
+      "image_alt": "",
+      "image_source_url": "https://thewaltdisneycompany.com/news/ad-creative-studio-beta/",
+      "image_attribution": "디즈니 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-26T09:46:42+00:00",
+      "image_fetched_from": "https://thewaltdisneycompany.com/feed/?s=advertising",
+      "localization": {
+        "language": "ko",
+        "source_hash": "062f199248dcef89de6409fed6c4b9e53f7f01012e4fef3264e92d542d92a721",
+        "generated_at": "2026-10-26T09:46:42+00:00",
+        "model": "editorial_translation",
+        "method": "editorial_translation",
+        "title": "디즈니, 광고 제작 도구 Ad Creative Studio 비공개 베타 시작",
+        "summary": "디즈니가 일부 광고주를 대상으로 커넥티드 TV 영상 광고 제작 도구의 비공개 베타를 시작했다. 기존 브랜드 자료를 여러 AI 모델로 영상 광고로 바꾸는 기능을 시험하며, 대상·지역·캠페인 목적에 맞춘 여러 시안으로 확장할 계획이다."
+      }
+    },
+    {
       "id": "mi-8eb352c71b06ac9ae5",
       "source_id": "skb_products",
       "company": "SK브로드밴드",
@@ -2414,6 +2498,148 @@
       "image_recorded_at": "2026-10-26T08:56:15+00:00",
       "source_updated_at": "2026-06-19",
       "last_checked_at": "2026-10-26T08:56:15+00:00"
+    },
+    {
+      "id": "mi-660f6ebda3c280ab1b",
+      "source_id": "skb_products",
+      "company": "SK브로드밴드",
+      "topic": "ai_technology",
+      "title": "SKB, 지역뉴스 제작에 AI 접목해 시청자 반응과 지역채널 활성화 ‘일거양득’",
+      "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/",
+      "published_at": "2026-05-26",
+      "collected_at": "2026-10-26T09:46:42+00:00",
+      "country": "KR",
+      "period": "",
+      "source_name": "SK브로드밴드 공식 블로그",
+      "source_type": "official_media_announcement",
+      "excerpt": "SK브로드밴드(대표이사 사장 김성수, http://www.skbroadband.com )는 케이블TV 가입자 감소와 미디어 환경 변화에 직면한 지역채널 활성화를 위해 지역뉴스 제작에 AI를 접목함으로써 시청자 반응과 지역채널 활성화라는 ‘일거양득’의 효과를 거두는 데 성공했다고 21일 밝혔다.\n최근 미디어 소비 환경이 급변하면서 케이블TV를 통해 방송하는 지역채널은 영향력 악화, 제작비 부담, 인력 효율화 등 다양한 과제에 직면해 있다.\n하지만 수도권 집중화의 영향으로 오히려 지역채널의 공공성과 지역정보 전달 기능은 더욱 중요해지고 있으며, SK브로드밴드는 이를 타개하기 위해 AI 솔루션과 디지털 전략을 통해 지역채널의 새로운 전성기를 열어가고 있다.\nSK브로드밴드는 자체 개발한 AI 방송 제작 솔루션 ‘B tv AI -Studio’를 올해 ",
+      "body_text": "SK브로드밴드(대표이사 사장 김성수, http://www.skbroadband.com )는 케이블TV 가입자 감소와 미디어 환경 변화에 직면한 지역채널 활성화를 위해 지역뉴스 제작에 AI를 접목함으로써 시청자 반응과 지역채널 활성화라는 ‘일거양득’의 효과를 거두는 데 성공했다고 21일 밝혔다.\n최근 미디어 소비 환경이 급변하면서 케이블TV를 통해 방송하는 지역채널은 영향력 악화, 제작비 부담, 인력 효율화 등 다양한 과제에 직면해 있다.\n하지만 수도권 집중화의 영향으로 오히려 지역채널의 공공성과 지역정보 전달 기능은 더욱 중요해지고 있으며, SK브로드밴드는 이를 타개하기 위해 AI 솔루션과 디지털 전략을 통해 지역채널의 새로운 전성기를 열어가고 있다.\nSK브로드밴드는 자체 개발한 AI 방송 제작 솔루션 ‘B tv AI -Studio’를 올해 초부터 도입, 뉴스 제작에 따른 인력 개선과 시간 효율을 극대화했다.\n무엇보다 중요한 변화는 AI의 도움을 받아 혼자서도 방송 뉴스 제작이 가능해졌다는 것이다. 이를 통해 SK브로드밴드는 기존 저녁 1~2회 방송에 그쳤던 지역뉴스를 평일 오전 9시부터 익일 오전 7시까지 매 정시마다 지역의 주요 이슈와 정보를 신속하게 전달하는 정시뉴스 체계로 전환할 수 있게 됐다.\n정시뉴스 체계 도입 이후 SK브로드밴드의 지역채널 ‘ch B tv’의 시청률은 지난해 0.08%에서 올해 5월 기준 0.22%로 0.14%p 상승하고, B tv 케이블 내 채널 순위 또한 42위에서 10위로 32계단 상승하는 등 실질적인 성과를 거두고 있다.\n기존 방송 뉴스 제작을 위해 필요했던 아나운서, 기자, 스태프 등 많은 인력과 리소스 없이도 지역의 재난, 재해, 사건사고 등 긴급하게 발생하는 현장 상황에 즉각 대응하고, 이와 함께 생활정보, 교통, 행정, 지역 이슈 등 다양한 소식을 실시간으로 제공할 수 있게 된 것이다.\nSK브로드밴드는 TV 중심의 뉴스 제공 형태에서 벗어나 디지털 전담 조직 신설, 온라인 및 모바일 뉴스 유통 확대 등 다양한 플랫폼으로의 확장 전략을 본격화했다.\n특히 홈페이지, 모바일 등 온라인 속보 체계 구축으로 전년 대비 기사량 50.7%, 홈페이지 방문자 4.6%, 페이지뷰 3.1% 증가 등 뉴스 소비와 지역정보에 대한 접근성이 한층 높아져 지역민들의 만족도 또한 크게 향상되고 있다.\n지역 속보 체계를 강화해 지역민들이 TV는 물론, 모바일로도 언제 어디서나 생활밀착형 정보를 빠르게 확인할 수 있도록 접점을 넓혀가고 있는 SK브로드밴드는 지역정보를 네이버, 다음과 같은 주요 포털 서비스와 연계하는 방안도 추진하고 있다.\n이러한 플랫폼 확장은 TV 뉴스가 모바일 뉴스를 거쳐 속보 플랫폼으로 이어지는 지역채널의 진화하는 모습을 보여준다. 생활밀착형 지역정보의 실시간 제공과 모바일 기반의 접근성 강화, 속보 기능 구축 등은 케이블TV가 제공하는 지역채널로서의 역할을 한 단계 더 끌어올리고 있다.\n정시뉴스 시행 이후 지역사회와 시청자, 기관 관계자들의 반응은 대체로 긍정적이다. “지역 소식을 자주 접할 수 있다”, “생활밀착형 정보 접근성이 좋아졌다”, “지역 이슈 노출 빈도가 크게 늘었다”, “지자체와 기관 홍보 효과가 확대됐다”는 의견이 다수 확인됐다.\n특히 “TV를 켜면 지역 소식을 계속 접할 수 있어 좋다”, “기관의 정책과 활동이 신속하게 전달된다”, “생활밀착형 채널이라는 인식이 강화됐다” 등 지역정보 노출 확대와 공공성 강화에 대한 평가가 높았다.\n이화행 동명대학교 언론커뮤니케이션학과 교수는 “’B tv AI-Studio’의 AI 앵커와 기상캐스터는 이질감 없이 자연스럽고 기술적 완성도도 매우 높다”며 “지역주민의 실생활 등 작은 소재부터 지역밀착형 콘텐츠를 다루는 뉴스 트렌드의 변화를 향한 방향성이 적절해 보인다”고 평했다.\nSK브로드밴드는 지역채널 발전을 위해 이번 ‘B tv AI-Studio’를 통한 AI 제작 솔루션 도입을 발판 삼아 디지털 콘텐츠 제작에도 박차를 가하고 있다. TV 플랫폼에서 디지털 플랫폼으로의 확장을 통해 지역민들과의 접점을 확보하고 새로운 시청자들을 끌어들이고 있는 것이다.\n사회 이슈를 다루는 시사토크 ‘이슈러너’, 공무원들의 지역 부심 토크 배틀 ‘로컬로스팅’, 기자들의 이슈 토크 ‘만약에 if’, 경제 상식을 다루는 ‘경제한입 OX 퀴즈’ 등 유튜브 향의 다양한 디지털 콘텐츠를 제작해 큰 호응을 얻고 있다.\n이들 콘텐츠는 SK브로드밴드가 운영하는 유튜브 채널 ‘삐맥: B tv 매거진’을 통해 시청할 수 있다. 이는 기존 TV 기반의 지역뉴스 영역이 시대의 트렌드를 반영하며 유튜브 등 디지털 플랫폼으로 확장하고 있음을 보여준다.\nSK브로드밴드는 앞으로도 AI 기반 지역뉴스 제작 혁신과 디지털 전환을 통해 지역민들에게 더 빠르고 깊이 있는 정보를 제공하는 등 지역채널의 역할과 정체성을 더욱 확고히 해나갈 계획이다.\n김혁 SK브로드밴드 미디어사업본부장은 “AI 솔루션인 ‘B tv AI-Studio’를 적용한 정시뉴스 체계 도입을 계기로 지역정보의 전달 속도와 빈도가 혁신적으로 개선됐다”며 “디지털 중심의 플랫폼 확장 등 지속적인 변화와 혁신 시도를 통해 지역채널의 새로운 전성기를 만들어 나가겠다”고 말했다.",
+      "image_url": "https://i0.wp.com/blog.bworld.co.kr/wp-content/uploads/2026/05/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C-SKB-%EC%A7%80%EC%97%AD%EB%89%B4%EC%8A%A4-%EC%A0%9C%EC%9E%91%EC%97%90-AI-%EC%A0%91%EB%AA%A9%ED%95%B4-%EC%8B%9C%EC%B2%AD%EC%9E%90-%EB%B0%98%EC%9D%91%EA%B3%BC-%EC%A7%80%EC%97%AD%EC%B1%84%EB%84%90-%ED%99%9C%EC%84%B1%ED%99%94-_%EC%9D%BC%EA%B1%B0%EC%96%91%EB%93%9D_260521.png?fit=800%2C339&ssl=1",
+      "evidence": [
+        {
+          "id": "mi-660f6ebda3c280ab1b-p001",
+          "text": "SK브로드밴드(대표이사 사장 김성수, http://www.skbroadband.com )는 케이블TV 가입자 감소와 미디어 환경 변화에 직면한 지역채널 활성화를 위해 지역뉴스 제작에 AI를 접목함으로써 시청자 반응과 지역채널 활성화라는 ‘일거양득’의 효과를 거두는 데 성공했다고 21일 밝혔다.",
+          "locator": "p001",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p002",
+          "text": "최근 미디어 소비 환경이 급변하면서 케이블TV를 통해 방송하는 지역채널은 영향력 악화, 제작비 부담, 인력 효율화 등 다양한 과제에 직면해 있다.",
+          "locator": "p002",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p003",
+          "text": "하지만 수도권 집중화의 영향으로 오히려 지역채널의 공공성과 지역정보 전달 기능은 더욱 중요해지고 있으며, SK브로드밴드는 이를 타개하기 위해 AI 솔루션과 디지털 전략을 통해 지역채널의 새로운 전성기를 열어가고 있다.",
+          "locator": "p003",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p004",
+          "text": "SK브로드밴드는 자체 개발한 AI 방송 제작 솔루션 ‘B tv AI -Studio’를 올해 초부터 도입, 뉴스 제작에 따른 인력 개선과 시간 효율을 극대화했다.",
+          "locator": "p004",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p005",
+          "text": "무엇보다 중요한 변화는 AI의 도움을 받아 혼자서도 방송 뉴스 제작이 가능해졌다는 것이다. 이를 통해 SK브로드밴드는 기존 저녁 1~2회 방송에 그쳤던 지역뉴스를 평일 오전 9시부터 익일 오전 7시까지 매 정시마다 지역의 주요 이슈와 정보를 신속하게 전달하는 정시뉴스 체계로 전환할 수 있게 됐다.",
+          "locator": "p005",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p006",
+          "text": "정시뉴스 체계 도입 이후 SK브로드밴드의 지역채널 ‘ch B tv’의 시청률은 지난해 0.08%에서 올해 5월 기준 0.22%로 0.14%p 상승하고, B tv 케이블 내 채널 순위 또한 42위에서 10위로 32계단 상승하는 등 실질적인 성과를 거두고 있다.",
+          "locator": "p006",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p007",
+          "text": "기존 방송 뉴스 제작을 위해 필요했던 아나운서, 기자, 스태프 등 많은 인력과 리소스 없이도 지역의 재난, 재해, 사건사고 등 긴급하게 발생하는 현장 상황에 즉각 대응하고, 이와 함께 생활정보, 교통, 행정, 지역 이슈 등 다양한 소식을 실시간으로 제공할 수 있게 된 것이다.",
+          "locator": "p007",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p008",
+          "text": "SK브로드밴드는 TV 중심의 뉴스 제공 형태에서 벗어나 디지털 전담 조직 신설, 온라인 및 모바일 뉴스 유통 확대 등 다양한 플랫폼으로의 확장 전략을 본격화했다.",
+          "locator": "p008",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p009",
+          "text": "특히 홈페이지, 모바일 등 온라인 속보 체계 구축으로 전년 대비 기사량 50.7%, 홈페이지 방문자 4.6%, 페이지뷰 3.1% 증가 등 뉴스 소비와 지역정보에 대한 접근성이 한층 높아져 지역민들의 만족도 또한 크게 향상되고 있다.",
+          "locator": "p009",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p010",
+          "text": "지역 속보 체계를 강화해 지역민들이 TV는 물론, 모바일로도 언제 어디서나 생활밀착형 정보를 빠르게 확인할 수 있도록 접점을 넓혀가고 있는 SK브로드밴드는 지역정보를 네이버, 다음과 같은 주요 포털 서비스와 연계하는 방안도 추진하고 있다.",
+          "locator": "p010",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p011",
+          "text": "이러한 플랫폼 확장은 TV 뉴스가 모바일 뉴스를 거쳐 속보 플랫폼으로 이어지는 지역채널의 진화하는 모습을 보여준다. 생활밀착형 지역정보의 실시간 제공과 모바일 기반의 접근성 강화, 속보 기능 구축 등은 케이블TV가 제공하는 지역채널로서의 역할을 한 단계 더 끌어올리고 있다.",
+          "locator": "p011",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p012",
+          "text": "정시뉴스 시행 이후 지역사회와 시청자, 기관 관계자들의 반응은 대체로 긍정적이다. “지역 소식을 자주 접할 수 있다”, “생활밀착형 정보 접근성이 좋아졌다”, “지역 이슈 노출 빈도가 크게 늘었다”, “지자체와 기관 홍보 효과가 확대됐다”는 의견이 다수 확인됐다.",
+          "locator": "p012",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p013",
+          "text": "특히 “TV를 켜면 지역 소식을 계속 접할 수 있어 좋다”, “기관의 정책과 활동이 신속하게 전달된다”, “생활밀착형 채널이라는 인식이 강화됐다” 등 지역정보 노출 확대와 공공성 강화에 대한 평가가 높았다.",
+          "locator": "p013",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p014",
+          "text": "이화행 동명대학교 언론커뮤니케이션학과 교수는 “’B tv AI-Studio’의 AI 앵커와 기상캐스터는 이질감 없이 자연스럽고 기술적 완성도도 매우 높다”며 “지역주민의 실생활 등 작은 소재부터 지역밀착형 콘텐츠를 다루는 뉴스 트렌드의 변화를 향한 방향성이 적절해 보인다”고 평했다.",
+          "locator": "p014",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p015",
+          "text": "SK브로드밴드는 지역채널 발전을 위해 이번 ‘B tv AI-Studio’를 통한 AI 제작 솔루션 도입을 발판 삼아 디지털 콘텐츠 제작에도 박차를 가하고 있다. TV 플랫폼에서 디지털 플랫폼으로의 확장을 통해 지역민들과의 접점을 확보하고 새로운 시청자들을 끌어들이고 있는 것이다.",
+          "locator": "p015",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p016",
+          "text": "사회 이슈를 다루는 시사토크 ‘이슈러너’, 공무원들의 지역 부심 토크 배틀 ‘로컬로스팅’, 기자들의 이슈 토크 ‘만약에 if’, 경제 상식을 다루는 ‘경제한입 OX 퀴즈’ 등 유튜브 향의 다양한 디지털 콘텐츠를 제작해 큰 호응을 얻고 있다.",
+          "locator": "p016",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p017",
+          "text": "이들 콘텐츠는 SK브로드밴드가 운영하는 유튜브 채널 ‘삐맥: B tv 매거진’을 통해 시청할 수 있다. 이는 기존 TV 기반의 지역뉴스 영역이 시대의 트렌드를 반영하며 유튜브 등 디지털 플랫폼으로 확장하고 있음을 보여준다.",
+          "locator": "p017",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p018",
+          "text": "SK브로드밴드는 앞으로도 AI 기반 지역뉴스 제작 혁신과 디지털 전환을 통해 지역민들에게 더 빠르고 깊이 있는 정보를 제공하는 등 지역채널의 역할과 정체성을 더욱 확고히 해나갈 계획이다.",
+          "locator": "p018",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        },
+        {
+          "id": "mi-660f6ebda3c280ab1b-p019",
+          "text": "김혁 SK브로드밴드 미디어사업본부장은 “AI 솔루션인 ‘B tv AI-Studio’를 적용한 정시뉴스 체계 도입을 계기로 지역정보의 전달 속도와 빈도가 혁신적으로 개선됐다”며 “디지털 중심의 플랫폼 확장 등 지속적인 변화와 혁신 시도를 통해 지역채널의 새로운 전성기를 만들어 나가겠다”고 말했다.",
+          "locator": "p019",
+          "url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/"
+        }
+      ],
+      "content_hash": "ce6a1a73a34c030e069cbc569e12f9125f4a2fd38583cf915398c0fcef415e4d",
+      "market_scope": "domestic_media",
+      "fetched_from": "https://blog.bworld.co.kr/feed/?s=AI",
+      "image_alt": "SK브로드밴드, 지역뉴스 제작에 AI 접목",
+      "image_source_url": "https://blog.bworld.co.kr/2026/05/26/skb-regional-news-ai-btv-ai-studio/",
+      "image_attribution": "SK브로드밴드 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-26T09:46:42+00:00",
+      "image_fetched_from": "https://blog.bworld.co.kr/feed/?s=AI"
     },
     {
       "id": "mi-5f320346020eccf5b8",

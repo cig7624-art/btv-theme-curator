@@ -8,6 +8,9 @@ on:
       - VERSION
       - app.py
       - media_insights_view.py
+      - media_insights_topics.py
+      - media_insights_collection.py
+      - domestic_product_sources.py
       - public_media_monitoring.py
       - news_digest.py
       - news_subjects.py
@@ -24,6 +27,8 @@ on:
       - media_insights_localization.py
       - ott_editorial.py
       - ott_view.py
+      - ott_title_search_view.py
+      - kinolights_availability.py
       - ott_styles.css
       - styles.css
       - issue_carousel.py
@@ -56,7 +61,7 @@ jobs:
       - name: Check application syntax before browser verification
         run: |
           rm -f artifacts/deployment_validation.json artifacts/tab_stability_validation.json artifacts/theme_rail_live_validation.json
-          python -m compileall -q app.py media_insights_runtime.py media_insights_view.py public_media_monitoring.py news_digest.py news_subjects.py issue_quality.py
+          python -m compileall -q app.py media_insights_runtime.py media_insights_view.py media_insights_topics.py media_insights_collection.py domestic_product_sources.py ott_title_search_view.py kinolights_availability.py public_media_monitoring.py news_digest.py news_subjects.py issue_quality.py
       - name: Use the hosted runner's existing browser when available
         run: |
           deployment_browser="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"

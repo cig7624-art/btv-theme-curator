@@ -197,6 +197,36 @@ class TransportAndDiscoveryTests(unittest.TestCase):
         self.assertEqual(len(requests_seen), 4)
         self.assertEqual(len(snapshot["items"]), 1)
 
+    def test_failed_or_ineligible_candidates_do_not_exhaust_successful_document_slots(self):
+        entries = [{"url": "https://official.example/news/failed"},
+                   {"url": "https://official.example/news/listing"},
+                   {"url": "https://official.example/news/good"}]
+        calls = []
+        def fetcher(url):
+            calls.append(url)
+            if url == SOURCE["url"]:
+                return feed(entries)
+            if url.endswith("failed"):
+                raise requests.Timeout()
+            if url.endswith("listing"):
+                return "<h1>Company advertising partnership</h1><p>Read more</p>"
+            return article()
+        snapshot = collection.collect_media_insights(fetcher=fetcher, sources=[SOURCE], max_documents=1, now=NOW)
+        self.assertEqual(snapshot["items"][0]["url"], entries[-1]["url"])
+        self.assertEqual(len(calls), 4)
+        self.assertEqual(snapshot["sources"][0]["status"], "partial")
+
+    def test_unsuccessful_candidate_scan_has_a_fixed_request_budget(self):
+        calls = []
+        def fetcher(url):
+            calls.append(url)
+            if url == SOURCE["url"]:
+                return feed([{"url": f"https://official.example/news/{i}"} for i in range(100)])
+            raise requests.Timeout()
+        snapshot = collection.collect_media_insights(fetcher=fetcher, sources=[SOURCE], max_documents=2, now=NOW)
+        self.assertEqual(snapshot["items"], [])
+        self.assertEqual(len(calls), 1 + 2 * 3)
+
     def test_verified_official_seed_is_refetched_when_promotions_push_it_off_listing(self):
         seed_url = "https://official.example/news/nba"
         source = {**SOURCE, "document_urls": [{"url": seed_url, "title": "NBA streaming partnership"},

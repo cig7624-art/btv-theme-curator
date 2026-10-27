@@ -109,6 +109,28 @@
 }
 
 /* Editorial overview: stories lead the layout, rather than a service matrix. */
+/* Title lookup uses explicit forms and stays scoped to its own compact row. */
+.st-key-ott_title_search { min-width: 0; padding: 1px 0 13px; margin-bottom: 3px; border-bottom: 1px solid var(--line, #343734); }
+.st-key-ott_title_search [data-testid="stForm"] { padding: 0; min-width: 0; }
+.st-key-ott_title_search [data-testid="stHorizontalBlock"] { gap: 10px; flex-wrap: nowrap; }
+.st-key-ott_title_search [data-testid="stColumn"]:first-child { min-width: 0; flex: 1 1 auto; width: auto; }
+.st-key-ott_title_search [data-testid="stColumn"]:last-child { min-width: 82px; flex: 0 0 82px; width: 82px; }
+.st-key-ott_title_search [data-testid="stWidgetLabel"] p { color: var(--ink, #f3eee5); font-size: 12px; }
+.st-key-ott_title_search [data-testid="stFormSubmitButton"] button { min-height: 44px; padding: .45rem .5rem; font-size: 12px; white-space: nowrap; }
+.st-key-ott_title_search :is(input, [data-baseweb="select"]) { min-width: 0; font-size: 13px; }
+.ott-title-result { min-width: 0; padding-top: 1px; }
+[data-testid="stMarkdownContainer"] .ott-title-result-title { margin: 2px 0 8px; padding: 0; font-size: 15px; line-height: 1.55; overflow-wrap: anywhere; }
+.ott-title-services { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+[data-testid="stMarkdownContainer"] .ott-title-service { display: inline-flex; align-items: center; min-height: 36px; max-width: 100%; padding: 5px 10px; border: 1px solid #51554b; border-radius: 4px; color: var(--ink, #f3eee5); background: var(--surface-deep, #111314); font-size: 12px; line-height: 1.6; text-decoration: none; overflow-wrap: anywhere; }
+[data-testid="stMarkdownContainer"] a.ott-title-service:hover { color: var(--accent, #e7bd86); border-color: #9b835f; }
+[data-testid="stMarkdownContainer"] .ott-title-lookup-note { color: var(--muted, #aaa99f); margin: 1px 0 4px; font-size: 12px; line-height: 1.75; overflow-wrap: anywhere; }
+[data-testid="stMarkdownContainer"] .ott-title-lookup-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 4px; color: var(--muted, #aaa99f); margin: 6px 0 0; font-size: 10px; line-height: 1.7; }
+[data-testid="stMarkdownContainer"] .ott-title-lookup-meta a { display: inline-flex; align-items: center; min-height: 30px; font-size: inherit; color: var(--muted, #aaa99f); }
+@media (max-width: 640px) {
+  .st-key-ott_title_search [data-testid="stHorizontalBlock"] { gap: 8px; }
+  .st-key-ott_title_search [data-testid="stColumn"]:last-child { min-width: 75px; flex-basis: 75px; width: 75px; }
+  [data-testid="stMarkdownContainer"] :is(.ott-title-service, .ott-title-lookup-meta a) { min-height: 44px; }
+}
 .ott-magazine { min-width: 0; margin-top: 8px; }
 .ott-edit-folio { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 0 0 12px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
 .ott-edit-folio > span:first-child, .ott-edit-kicker { color: var(--accent); font-size: 10px; font-weight: 650; letter-spacing: 2.5px; }

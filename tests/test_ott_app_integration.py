@@ -18,7 +18,7 @@ class OttAppIntegrationTests(unittest.TestCase):
         st.cache_data.clear()
 
     def test_order_and_reruns_do_not_request_public_sites(self):
-        with patch('ott_collection.collect_public_homes') as collect, patch('ott_collection.load_snapshot',return_value=SNAPSHOT), app_fixture(home_tab='OTT는 지금') as state:
+        with patch('ott_collection.collect_public_homes') as collect, patch('ott_title_search_view._search_titles') as search, patch('ott_title_search_view._get_title_availability') as lookup, patch('ott_collection.load_snapshot',return_value=SNAPSHOT), app_fixture(home_tab='OTT는 지금') as state:
             app=state['app']
             self.assertEqual([tab.label for tab in app.tabs],TABS)
             self.assertFalse(app.exception)
@@ -29,6 +29,33 @@ class OttAppIntegrationTests(unittest.TestCase):
             app.session_state['home_sections']='AI 디렉터'
             app.run()
             self.assertFalse(app.exception)
+            collect.assert_not_called()
+            search.assert_not_called()
+            lookup.assert_not_called()
+
+    def test_title_search_result_survives_filters_and_navigation_without_refetching(self):
+        candidate = {'id':'104','title':'기생충','year':'2019','content_type':'movie',
+                     'source_url':'https://m.kinolights.com/title/104','fetched_at':NOW}
+        availability = {**candidate,'status':'available','providers':[{
+            'name':'TVING','offer_type':'subscription','url':'https://www.tving.com/contents/P104'}]}
+        with patch('ott_collection.collect_public_homes') as collect, patch('ott_title_search_view._search_titles',return_value=[candidate]) as search, patch('ott_title_search_view._get_title_availability',return_value=availability) as lookup, patch('ott_collection.load_snapshot',return_value=SNAPSHOT), app_fixture(home_tab='OTT는 지금') as state:
+            app=state['app']
+            app.text_input(key='ott_title_search_query').set_value('기생충')
+            app.button(key='ott_title_search_submit').click().run()
+            self.assertFalse(app.exception)
+            self.assertIn('TVING · 구독',' '.join(m.value for m in app.markdown))
+            app.session_state['ott_selected_platform']='tving'
+            app.run()
+            self.assertFalse(app.exception)
+            app.session_state['home_sections']='AI 디렉터'
+            app.run()
+            app.session_state['home_sections']='OTT는 지금'
+            app.run()
+            self.assertFalse(app.exception)
+            self.assertIn('TVING · 구독',' '.join(m.value for m in app.markdown))
+            self.assertEqual(app.session_state['ott_selected_platform'],'tving')
+            search.assert_called_once_with('기생충')
+            lookup.assert_called_once_with(candidate)
             collect.assert_not_called()
 
     def test_explicit_refresh_uses_browser_once_and_keeps_result_on_shared_cache(self):

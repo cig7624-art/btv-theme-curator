@@ -28,6 +28,9 @@
 | `v1.5.1` | 후속 질문의 사업 조건 보존 · 공식 원문 재확인 · 출처 귀속 검증 | PC·모바일 실화면 42항목 통과 |
 | `v1.6.0` | 미디어 공개 자료 비교 · 발행일 기준 새로운 소식 최대 4개 · 6시간 뉴스 수집 | 749개 테스트 · PC·모바일 실화면 44항목 · 새 기사 4건 반영 확인 |
 | `v1.6.1` | 추천 작품 10편 · 전체 포스터 드래그 · 포스터 보완 · 탭 전환 안정화 | 798개 테스트 · PC·모바일 실화면 44항목 · 탭 20회 전환 0px 흔들림 |
+| `v1.6.2` | 키노라이츠 OTT 검색 · 기사 읽기 창 · 분류별 최소 3건 기간 확대 | 실제 배포 결과는 검증 보고서 참조 |
+
+v1.6.2의 변경만 되돌리려면 `--version v1.6.1`을 사용합니다. 추가한 공개 원문과 기존 번역·분석·테마·추천 이력을 보존하고 코드만 복구합니다. 키노라이츠 실제 원문 조회는 `artifacts/kinolights_live_verification.json`, 분류별 확보 자료는 `artifacts/media_archive_validation.json`, 배포 화면은 `artifacts/deployment_validation.json`을 확인합니다.
 
 v1.6.1의 변경만 되돌리려면 `--version v1.6.0`을 사용합니다. 최신 추천 작품·포스터·테마·추천 이력은 보존하고 코드만 복구합니다. 실제 10편 저장 결과는 `artifacts/weekly_live_validation.json`, 드래그·이미지 결과는 `artifacts/theme_rail_live_validation.json`, 탭 전환 위치 측정은 `artifacts/tab_stability_validation.json`에서 확인합니다.
 

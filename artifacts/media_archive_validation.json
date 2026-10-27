@@ -1,0 +1,62 @@
+{
+  "source_probe": "2026-10-26T09:46:42+00:00",
+  "appended_article_ids": [
+    "mi-693790a24546f976fe",
+    "mi-660f6ebda3c280ab1b"
+  ],
+  "prior_articles_preserved": 24,
+  "category_coverage": {
+    "국내 이슈": {
+      "count": 5,
+      "effective_days": 30,
+      "initial_count": 5
+    },
+    "광고·요금제": {
+      "count": 4,
+      "effective_days": 365,
+      "initial_count": 1
+    },
+    "스포츠·콘텐츠": {
+      "count": 5,
+      "effective_days": 30,
+      "initial_count": 5
+    },
+    "AI·기술": {
+      "count": 4,
+      "effective_days": 365,
+      "initial_count": 0
+    }
+  },
+  "secondary_topic_evidence": {
+    "mi-e5577dde5187375575": {
+      "advertising_pricing": [
+        "mi-e5577dde5187375575-p013"
+      ]
+    },
+    "mi-15674e74de373a7bff": {
+      "ai_technology": [
+        "mi-15674e74de373a7bff-p027",
+        "mi-15674e74de373a7bff-p028"
+      ]
+    },
+    "mi-693790a24546f976fe": {
+      "ai_technology": [
+        "mi-693790a24546f976fe-p002",
+        "mi-693790a24546f976fe-p004"
+      ]
+    },
+    "mi-5f320346020eccf5b8": {
+      "advertising_pricing": [
+        "mi-5f320346020eccf5b8-p047"
+      ]
+    },
+    "mi-80909bc46e109903db": {
+      "advertising_pricing": [
+        "mi-80909bc46e109903db-page4-p002"
+      ],
+      "ai_technology": [
+        "mi-80909bc46e109903db-page6-p003"
+      ]
+    }
+  }
+}
