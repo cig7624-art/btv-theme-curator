@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "status": "failed",
+  "expected_version": "1.6.2",
+  "observed_version": "1.6.2",
+  "started_at": "2026-10-27T04:27:48.794989+00:00",
+  "finished_at": "2026-10-27T04:35:48.885319+00:00",
+  "attempts": 5,
+  "tests": {
+    "desktop_version": true,
+    "desktop_five_tabs": true,
+    "desktop_weekly_actions": true,
+    "desktop_library_director_filter": true,
+    "desktop_director_screen": true,
+    "desktop_api_cost_control": true,
+    "desktop_ott_magazine": true,
+    "desktop_ott_feature": true,
+    "desktop_no_exception": true,
+    "desktop_no_horizontal_overflow": true,
+    "desktop_lead_artwork": true,
+    "desktop_coupang_content": true,
+    "desktop_coupang_artwork": true,
+    "desktop_media_insights": false,
+    "desktop_media_evidence": false,
+    "desktop_media_no_overflow": false,
+    "desktop_media_magazine": false,
+    "desktop_media_domestic": false,
+    "desktop_media_korean": false,
+    "desktop_media_default_period": false,
+    "desktop_media_public_only": false,
+    "desktop_news_digest": true,
+    "desktop_ott_title_search": false,
+    "desktop_media_reader": false,
+    "desktop_media_topic_archive": false,
+    "mobile_version": false,
+    "mobile_five_tabs": false,
+    "mobile_weekly_actions": false,
+    "mobile_library_director_filter": false,
+    "mobile_director_screen": false,
+    "mobile_api_cost_control": false,
+    "mobile_ott_magazine": false,
+    "mobile_ott_feature": false,
+    "mobile_no_exception": false,
+    "mobile_no_horizontal_overflow": false,
+    "mobile_lead_artwork": false,
+    "mobile_coupang_content": false,
+    "mobile_coupang_artwork": false,
+    "mobile_media_insights": false,
+    "mobile_media_evidence": false,
+    "mobile_media_no_overflow": false,
+    "mobile_media_magazine": false,
+    "mobile_media_domestic": false,
+    "mobile_media_korean": false,
+    "mobile_media_default_period": false,
+    "mobile_media_public_only": false,
+    "mobile_news_digest": false,
+    "mobile_ott_title_search": false,
+    "mobile_media_reader": false,
+    "mobile_media_topic_archive": false
+  },
+  "errors": [
+    "browser_navigation_unavailable"
+  ],
+  "warnings": [],
+  "artwork": {
+    "desktop": {
+      "checked": 6,
+      "loaded": 6,
+      "unavailable": 0,
+      "lead_loaded": true
+    }
+  },
+  "source_commit": "412a7d3f48df69edf55abdb185a07f4d583d6c7c",
+  "frame_state": "matched_release",
+  "news_digest": {
+    "desktop": {
+      "count": 4,
+      "maximum": 4
+    },
+    "mobile": {
+      "count": 4,
+      "maximum": 4
+    }
+  },
+  "ott_title_search": {
+    "desktop": {
+      "status": "available",
+      "providers": 9,
+      "original_link": true
+    }
+  },
+  "media_artwork": {
+    "desktop": {
+      "checked": 6,
+      "loaded": 4
+    }
+  },
+  "media_topic_archive": {
+    "desktop": {
+      "\uad6d\ub0b4 \uc774\uc288": 4,
+      "\uad11\uace0\u00b7\uc694\uae08\uc81c": 3,
+      "\uc2a4\ud3ec\uce20\u00b7\ucf58\ud150\uce20": 4,
+      "AI\u00b7\uae30\uc220": 3
+    }
+  },
+  "media_reader": {
+    "desktop": {
+      "matching_note": true,
+      "scroll_drift_px": 0
+    }
+  }
+}
