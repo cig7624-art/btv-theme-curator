@@ -118,7 +118,7 @@ class ArticleReadingTests(unittest.TestCase):
         rows.append(document("outside-region", country="US", published=current.isoformat()))
         return {"items": rows, "sources": []}
 
-    def test_lower_article_opens_its_saved_note_and_return_preserves_filters_and_selection(self):
+    def test_lower_article_updates_side_note_and_only_explicit_read_opens_dialog(self):
         app = app_fixture(self.data(), period="최근 90일")
         app.radio(key="media_insight_topic").set_value("광고·요금제").run()
         app.selectbox(key="media_insight_country").set_value("한국").run()
@@ -128,6 +128,14 @@ class ArticleReadingTests(unittest.TestCase):
         app.button(key=key).click().run()
         self.assertFalse(app.exception)
         self.assertEqual(app.session_state["media_insight_selected_id"], selected_id)
+        self.assertNotIn("media_insight_reading_id", app.session_state)
+        self.assertEqual(len(app.get("dialog")), 0)
+        side_note = " ".join(row.value for row in app.markdown)
+        self.assertIn('id="media-insight-detail" data-item-id="reading-2"', side_note)
+        self.assertIn("저장된 분석 제목 2", side_note)
+        self.assertEqual(app.session_state["test_callbacks"], {"refresh": 0, "analyze": 0, "ask": 0})
+        app.button(key="media_insights_read_selected").click().run()
+        self.assertFalse(app.exception)
         self.assertEqual(app.session_state["media_insight_reading_id"], selected_id)
         dialog = app.get("dialog")
         self.assertEqual(len(dialog), 1)
@@ -144,6 +152,19 @@ class ArticleReadingTests(unittest.TestCase):
         self.assertEqual(app.selectbox(key="media_insight_country").value, "한국")
         self.assertEqual(app.selectbox(key="media_insight_period").value, "최근 90일")
         self.assertEqual(app.session_state["media_insight_selected_id"], selected_id)
+        self.assertEqual(app.session_state["test_callbacks"], {"refresh": 0, "analyze": 0, "ask": 0})
+
+    def test_archive_article_selection_updates_the_side_note_without_opening_a_dialog(self):
+        app = app_fixture(self.data(), period="최근 90일")
+        selected_id = "reading-2"
+        key = "media_archive_select_" + hashlib.sha256(selected_id.encode()).hexdigest()[:16]
+        app.button(key=key).click().run()
+        self.assertFalse(app.exception)
+        self.assertEqual(app.session_state["media_insight_selected_id"], selected_id)
+        self.assertNotIn("media_insight_reading_id", app.session_state)
+        self.assertEqual(len(app.get("dialog")), 0)
+        markup = " ".join(row.value for row in app.markdown)
+        self.assertIn('id="media-insight-detail" data-item-id="reading-2"', markup)
         self.assertEqual(app.session_state["test_callbacks"], {"refresh": 0, "analyze": 0, "ask": 0})
 
     def test_automatic_expansion_is_visible_without_changing_the_period_preference(self):

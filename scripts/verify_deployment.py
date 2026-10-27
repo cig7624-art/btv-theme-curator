@@ -307,8 +307,21 @@ def _check_media_usability_steps(frame, report, label):
     button = card.get_by_role('button').first
     button.scroll_into_view_if_needed()
     before = frame.locator('[data-testid="stMain"]').evaluate('(el)=>el.scrollTop')
-    _stage(report, label, 'media_reader_open')
+    _stage(report, label, 'media_article_select')
     button.click()
+    frame.wait_for_function('''identifier =>
+      document.querySelector('#media-insight-detail')?.dataset.itemId === identifier
+    ''', arg=article_id, timeout=30000)
+    _wait_app_idle(frame, report, label, selector='#media-insight-detail', stage='media_article_select_complete_idle')
+    no_auto_popup = frame.get_by_role('dialog').count() == 0
+    selected_drift = abs(frame.locator('[data-testid="stMain"]').evaluate('(el)=>el.scrollTop') - before)
+    if not no_auto_popup or selected_drift > 2:
+        raise VerificationIssue('media_article_selection_opened_dialog_or_scrolled')
+    expand = frame.locator('.st-key-media_insights_read_selected').get_by_role('button')
+    expand.scroll_into_view_if_needed()
+    dialog_before = frame.locator('[data-testid="stMain"]').evaluate('(el)=>el.scrollTop')
+    _stage(report, label, 'media_optional_reader_open')
+    expand.click()
     heading = frame.locator('#media-insight-reading-detail')
     heading.wait_for(state='visible', timeout=30000)
     matched = heading.get_attribute('data-item-id') == article_id
@@ -318,9 +331,12 @@ def _check_media_usability_steps(frame, report, label):
     heading.wait_for(state='detached', timeout=30000)
     frame.wait_for_function('() => !document.querySelector("[data-stale=true]")', timeout=30000)
     after = frame.locator('[data-testid="stMain"]').evaluate('(el)=>el.scrollTop')
-    drift = abs(after-before)
-    report['tests'][f'{label}_media_reader'] = matched and drift <= 2
-    report.setdefault('media_reader', {})[label] = {'matching_note': matched, 'scroll_drift_px': drift}
+    drift = abs(after-dialog_before)
+    report['tests'][f'{label}_media_reader'] = matched and no_auto_popup and selected_drift <= 2 and drift <= 2
+    report.setdefault('media_reader', {})[label] = {
+        'matching_note': matched, 'no_automatic_popup': no_auto_popup,
+        'article_click_scroll_drift_px': selected_drift, 'scroll_drift_px': drift,
+    }
     if not report['tests'][f'{label}_media_reader']:
         raise VerificationIssue('media_reader_scroll_or_identity_failed')
     _wait_app_idle(frame, report, label, selector='.st-key-media_insights_workspace', stage='media_topic_reset_idle')

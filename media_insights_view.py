@@ -303,6 +303,11 @@ def _item_analysis(item, context_items):
 
 def _select_item(item_id):
     st.session_state[_SELECTED] = item_id
+    _close_reading()
+
+
+def _open_reading(item_id):
+    st.session_state[_SELECTED] = item_id
     st.session_state[_READING] = item_id
 
 
@@ -826,7 +831,7 @@ def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on
             with detail:
                 with st.container(key="media_insights_detail"):
                     st.button("분석 노트 크게 읽기 ↗", key="media_insights_read_selected", type="tertiary",
-                              on_click=_select_item, args=(selected["id"],), width="stretch")
+                              on_click=_open_reading, args=(selected["id"],), width="stretch")
                     _render_detail(selected, analysis, on_analyze=on_analyze, context_items=items,
                                    copy=presentation.copy(selected, analysis))
                     _render_comparison(selected, analysis)
