@@ -1,0 +1,592 @@
+{
+  "version": "1.6.4",
+  "checked_at": "2026-10-27T09:36:21.534351+00:00",
+  "full_regression_tests": 862,
+  "subsequent_targeted_tests": {
+    "ott": 80,
+    "ai_and_media": 233,
+    "deployment_verification": 14
+  },
+  "local_browser": {
+    "tests": {
+      "desktop_ott_title_search": true,
+      "mobile_ott_title_search": true
+    },
+    "requests": {
+      "desktop": {
+        "after_unique_and_reset": {
+          "search": "1",
+          "detail": "1"
+        },
+        "after_typing": {
+          "search": "1",
+          "detail": "1"
+        },
+        "before_choice": {
+          "search": "2",
+          "detail": "1"
+        },
+        "after_choice": {
+          "search": "2",
+          "detail": "2"
+        },
+        "after_reset": {
+          "search": "2",
+          "detail": "2"
+        }
+      },
+      "mobile": {
+        "after_unique_and_reset": {
+          "search": "1",
+          "detail": "1"
+        },
+        "after_typing": {
+          "search": "1",
+          "detail": "1"
+        },
+        "before_choice": {
+          "search": "2",
+          "detail": "1"
+        },
+        "after_choice": {
+          "search": "2",
+          "detail": "2"
+        },
+        "after_reset": {
+          "search": "2",
+          "detail": "2"
+        }
+      }
+    },
+    "ambiguous": {
+      "desktop": {
+        "year_selected": "2023",
+        "direct_selection": true,
+        "logos": 4,
+        "popup_bounds": {
+          "x": 907,
+          "y": 232,
+          "width": 420,
+          "height": 272.25
+        },
+        "popup_overflow": false
+      },
+      "mobile": {
+        "year_selected": "2023",
+        "direct_selection": true,
+        "logos": 4,
+        "popup_bounds": {
+          "x": 16,
+          "y": 322,
+          "width": 358,
+          "height": 330.25
+        },
+        "popup_overflow": false
+      }
+    },
+    "active_check": "mobile_ambiguous_reset_idle",
+    "shared_header_metrics": {
+      "desktop": {
+        "story": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 28,
+          "title_weight": 600,
+          "title_line_px": 35,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 94.296875,
+          "y_px": 163.59375
+        },
+        "recommendation": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 28,
+          "title_weight": 600,
+          "title_line_px": 35,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 94.296875,
+          "y_px": 163.59375
+        },
+        "director": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 28,
+          "title_weight": 600,
+          "title_line_px": 35,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 94.296875,
+          "y_px": 163.59375
+        },
+        "ott": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 28,
+          "title_weight": 600,
+          "title_line_px": 35,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 94.296875,
+          "y_px": 163.59375
+        },
+        "media": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 28,
+          "title_weight": 600,
+          "title_line_px": 35,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 94.296875,
+          "y_px": 163.59375
+        }
+      },
+      "mobile": {
+        "story": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 23,
+          "title_weight": 600,
+          "title_line_px": 29.9,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 106,
+          "y_px": 167.59375
+        },
+        "recommendation": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 23,
+          "title_weight": 600,
+          "title_line_px": 29.9,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 106,
+          "y_px": 167.59375
+        },
+        "director": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 23,
+          "title_weight": 600,
+          "title_line_px": 29.9,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 106,
+          "y_px": 167.59375
+        },
+        "ott": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 23,
+          "title_weight": 600,
+          "title_line_px": 29.9,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 106,
+          "y_px": 167.59375
+        },
+        "media": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 23,
+          "title_weight": 600,
+          "title_line_px": 29.9,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 106,
+          "y_px": 167.59375
+        }
+      }
+    },
+    "ott_title_search": {
+      "desktop": {
+        "status": "available",
+        "providers": 4,
+        "logos": 4,
+        "original_link": true,
+        "search_control_width_px": 165.56,
+        "refresh_control_width_px": 165.56,
+        "reset_to_initial": true,
+        "platform_tabs_drift_px": 0.0
+      },
+      "mobile": {
+        "status": "available",
+        "providers": 4,
+        "logos": 4,
+        "original_link": true,
+        "search_control_width_px": 175,
+        "refresh_control_width_px": 175,
+        "reset_to_initial": true,
+        "platform_tabs_drift_px": 0.0
+      }
+    }
+  },
+  "shared_headers": {
+    "tests": {
+      "desktop_uniform_fonts": true,
+      "desktop_no_overflow": true,
+      "mobile_uniform_fonts": true,
+      "mobile_no_overflow": true,
+      "desktop_uniform_header_geometry": true,
+      "mobile_uniform_header_geometry": true
+    },
+    "viewports": {
+      "desktop": [
+        {
+          "page": "story",
+          "tag": "H1",
+          "titleSize": "28px",
+          "titleWeight": "600",
+          "descriptionSize": "12px",
+          "descriptionLineHeight": "19.8px",
+          "header": {
+            "x": 110,
+            "y": 163.59375,
+            "width": 1136,
+            "height": 94.296875
+          },
+          "titleHeight": 35,
+          "descriptionHeight": 19.796875,
+          "mainOverflow": false,
+          "documentOverflow": false
+        },
+        {
+          "page": "recommendation",
+          "tag": "H1",
+          "titleSize": "28px",
+          "titleWeight": "600",
+          "descriptionSize": "12px",
+          "descriptionLineHeight": "19.8px",
+          "header": {
+            "x": 110,
+            "y": 163.59375,
+            "width": 1136,
+            "height": 94.296875
+          },
+          "titleHeight": 35,
+          "descriptionHeight": 19.796875,
+          "mainOverflow": false,
+          "documentOverflow": false
+        },
+        {
+          "page": "director",
+          "tag": "H1",
+          "titleSize": "28px",
+          "titleWeight": "600",
+          "descriptionSize": "12px",
+          "descriptionLineHeight": "19.8px",
+          "header": {
+            "x": 110,
+            "y": 163.59375,
+            "width": 1136,
+            "height": 94.296875
+          },
+          "titleHeight": 35,
+          "descriptionHeight": 19.796875,
+          "mainOverflow": false,
+          "documentOverflow": false
+        },
+        {
+          "page": "ott",
+          "tag": "H1",
+          "titleSize": "28px",
+          "titleWeight": "600",
+          "descriptionSize": "12px",
+          "descriptionLineHeight": "19.8px",
+          "header": {
+            "x": 110,
+            "y": 163.59375,
+            "width": 780.875,
+            "height": 94.296875
+          },
+          "titleHeight": 35,
+          "descriptionHeight": 19.796875,
+          "mainOverflow": false,
+          "documentOverflow": false
+        },
+        {
+          "page": "media",
+          "tag": "H1",
+          "titleSize": "28px",
+          "titleWeight": "600",
+          "descriptionSize": "12px",
+          "descriptionLineHeight": "19.8px",
+          "header": {
+            "x": 110,
+            "y": 163.59375,
+            "width": 688.40625,
+            "height": 94.296875
+          },
+          "titleHeight": 35,
+          "descriptionHeight": 19.796875,
+          "mainOverflow": false,
+          "documentOverflow": false
+        }
+      ],
+      "mobile": [
+        {
+          "page": "story",
+          "tag": "H1",
+          "titleSize": "23px",
+          "titleWeight": "600",
+          "descriptionSize": "12px",
+          "descriptionLineHeight": "19.8px",
+          "header": {
+            "x": 16,
+            "y": 167.59375,
+            "width": 358,
+            "height": 106
+          },
+          "titleHeight": 29.890625,
+          "descriptionHeight": 39.59375,
+          "mainOverflow": false,
+          "documentOverflow": false
+        },
+        {
+          "page": "recommendation",
+          "tag": "H1",
+          "titleSize": "23px",
+          "titleWeight": "600",
+          "descriptionSize": "12px",
+          "descriptionLineHeight": "19.8px",
+          "header": {
+            "x": 16,
+            "y": 167.59375,
+            "width": 358,
+            "height": 106
+          },
+          "titleHeight": 29.890625,
+          "descriptionHeight": 39.59375,
+          "mainOverflow": false,
+          "documentOverflow": false
+        },
+        {
+          "page": "director",
+          "tag": "H1",
+          "titleSize": "23px",
+          "titleWeight": "600",
+          "descriptionSize": "12px",
+          "descriptionLineHeight": "19.8px",
+          "header": {
+            "x": 16,
+            "y": 167.59375,
+            "width": 358,
+            "height": 106
+          },
+          "titleHeight": 29.890625,
+          "descriptionHeight": 39.59375,
+          "mainOverflow": false,
+          "documentOverflow": false
+        },
+        {
+          "page": "ott",
+          "tag": "H1",
+          "titleSize": "23px",
+          "titleWeight": "600",
+          "descriptionSize": "12px",
+          "descriptionLineHeight": "19.8px",
+          "header": {
+            "x": 16,
+            "y": 167.59375,
+            "width": 358,
+            "height": 106
+          },
+          "titleHeight": 29.890625,
+          "descriptionHeight": 39.59375,
+          "mainOverflow": false,
+          "documentOverflow": false
+        },
+        {
+          "page": "media",
+          "tag": "H1",
+          "titleSize": "23px",
+          "titleWeight": "600",
+          "descriptionSize": "12px",
+          "descriptionLineHeight": "19.8px",
+          "header": {
+            "x": 16,
+            "y": 167.59375,
+            "width": 358,
+            "height": 106
+          },
+          "titleHeight": 29.890625,
+          "descriptionHeight": 39.59375,
+          "mainOverflow": false,
+          "documentOverflow": false
+        }
+      ]
+    },
+    "active_check": "mobile_header_media_ready",
+    "status": "passed"
+  },
+  "branding_provenance": "assets/ott-providers/sources.json",
+  "paid_model_calls": 0,
+  "status": "passed",
+  "live_browser": {
+    "source_commit": "6ee2b80377c253aaea78fa182c7c0c93139e0699",
+    "checks_passed": 50,
+    "search": {
+      "desktop": {
+        "status": "available",
+        "providers": 4,
+        "logos": 4,
+        "original_link": true,
+        "search_control_width_px": 165.56,
+        "refresh_control_width_px": 165.56,
+        "reset_to_initial": true,
+        "platform_tabs_drift_px": 0.0
+      },
+      "mobile": {
+        "status": "available",
+        "providers": 4,
+        "logos": 4,
+        "original_link": true,
+        "search_control_width_px": 175,
+        "refresh_control_width_px": 175,
+        "reset_to_initial": true,
+        "platform_tabs_drift_px": 0.0
+      }
+    },
+    "headers": {
+      "desktop": {
+        "story": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 28,
+          "title_weight": 600,
+          "title_line_px": 35,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 94.296875,
+          "y_px": 163.59375
+        },
+        "recommendation": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 28,
+          "title_weight": 600,
+          "title_line_px": 35,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 94.296875,
+          "y_px": 163.59375
+        },
+        "director": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 28,
+          "title_weight": 600,
+          "title_line_px": 35,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 94.296875,
+          "y_px": 163.59375
+        },
+        "ott": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 28,
+          "title_weight": 600,
+          "title_line_px": 35,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 94.296875,
+          "y_px": 163.59375
+        },
+        "media": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 28,
+          "title_weight": 600,
+          "title_line_px": 35,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 94.296875,
+          "y_px": 163.59375
+        }
+      },
+      "mobile": {
+        "story": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 23,
+          "title_weight": 600,
+          "title_line_px": 29.9,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 106,
+          "y_px": 167.59375
+        },
+        "recommendation": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 23,
+          "title_weight": 600,
+          "title_line_px": 29.9,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 106,
+          "y_px": 167.59375
+        },
+        "director": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 23,
+          "title_weight": 600,
+          "title_line_px": 29.9,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 106,
+          "y_px": 167.59375
+        },
+        "ott": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 23,
+          "title_weight": 600,
+          "title_line_px": 29.9,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 106,
+          "y_px": 167.59375
+        },
+        "media": {
+          "h1_count": 1,
+          "eyebrow_count": 1,
+          "description_count": 1,
+          "title_px": 23,
+          "title_weight": 600,
+          "title_line_px": 29.9,
+          "description_px": 12,
+          "description_line_px": 19.8,
+          "height_px": 106,
+          "y_px": 167.59375
+        }
+      }
+    }
+  },
+  "tab_stability": "passed",
+  "poster_rail": "passed"
+}
