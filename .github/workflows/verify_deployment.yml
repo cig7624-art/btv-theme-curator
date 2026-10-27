@@ -112,10 +112,9 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- artifacts/deployment_validation.json
-          for evidence in artifacts/tab_stability_validation.json artifacts/theme_rail_live_validation.json; do
-            if [ -f "$evidence" ]; then git add -- "$evidence"; fi
-          done
+          # Stage removals too: failed browser checks do not recreate optional
+          # reports, and unstaged deletions would block pull --rebase.
+          git add -A -- artifacts/deployment_validation.json artifacts/tab_stability_validation.json artifacts/theme_rail_live_validation.json
           if git diff --cached --quiet; then
             exit 0
           fi
