@@ -1,0 +1,275 @@
+{
+  "version": "1.6.2",
+  "checked_at": "2026-10-27T04:28:17.941160+00:00",
+  "status": "passed",
+  "regression_tests": {
+    "passed": 849,
+    "log": "ott-media-v162-final-tests.log"
+  },
+  "kinolights_public_client": {
+    "status": "passed",
+    "evidence": "artifacts/kinolights_live_verification.json"
+  },
+  "local_media_ui": {
+    "tests": {
+      "desktop_media_topic_archive": true,
+      "desktop_media_reader": true,
+      "mobile_media_topic_archive": true,
+      "mobile_media_reader": true
+    },
+    "media_topic_archive": {
+      "desktop": {
+        "국내 이슈": 4,
+        "광고·요금제": 3,
+        "스포츠·콘텐츠": 4,
+        "AI·기술": 3
+      },
+      "mobile": {
+        "국내 이슈": 4,
+        "광고·요금제": 3,
+        "스포츠·콘텐츠": 4,
+        "AI·기술": 3
+      }
+    },
+    "media_reader": {
+      "desktop": {
+        "matching_note": true,
+        "scroll_drift_px": 0
+      },
+      "mobile": {
+        "matching_note": true,
+        "scroll_drift_px": 0
+      }
+    }
+  },
+  "data_preservation": {
+    "source_probe": "2026-10-26T09:46:42+00:00",
+    "validated_at": "2026-10-27T04:21:33.904777+00:00",
+    "appended_article_ids": [
+      "mi-693790a24546f976fe",
+      "mi-660f6ebda3c280ab1b"
+    ],
+    "prior_articles_preserved": 24,
+    "category_coverage": {
+      "국내 이슈": {
+        "count": 5,
+        "effective_days": 30,
+        "initial_count": 5
+      },
+      "광고·요금제": {
+        "count": 4,
+        "effective_days": 365,
+        "initial_count": 1
+      },
+      "스포츠·콘텐츠": {
+        "count": 5,
+        "effective_days": 30,
+        "initial_count": 5
+      },
+      "AI·기술": {
+        "count": 4,
+        "effective_days": 365,
+        "initial_count": 0
+      }
+    },
+    "secondary_topic_evidence": {
+      "mi-e5577dde5187375575": {
+        "advertising_pricing": [
+          "mi-e5577dde5187375575-p013"
+        ]
+      },
+      "mi-15674e74de373a7bff": {
+        "ai_technology": [
+          "mi-15674e74de373a7bff-p027",
+          "mi-15674e74de373a7bff-p028"
+        ]
+      },
+      "mi-693790a24546f976fe": {
+        "ai_technology": [
+          "mi-693790a24546f976fe-p002",
+          "mi-693790a24546f976fe-p004"
+        ]
+      },
+      "mi-5f320346020eccf5b8": {
+        "advertising_pricing": [
+          "mi-5f320346020eccf5b8-p047"
+        ]
+      },
+      "mi-80909bc46e109903db": {
+        "advertising_pricing": [
+          "mi-80909bc46e109903db-page4-p002"
+        ],
+        "ai_technology": [
+          "mi-80909bc46e109903db-page6-p003"
+        ]
+      }
+    }
+  },
+  "paid_model_calls": 0,
+  "live_deployment": {
+    "schema_version": 1,
+    "status": "passed",
+    "expected_version": "1.6.2",
+    "observed_version": "1.6.2",
+    "started_at": "2026-10-27T04:22:58.081662+00:00",
+    "finished_at": "2026-10-27T04:25:18.220432+00:00",
+    "attempts": 2,
+    "tests": {
+      "desktop_version": true,
+      "desktop_five_tabs": true,
+      "desktop_weekly_actions": true,
+      "desktop_library_director_filter": true,
+      "desktop_director_screen": true,
+      "desktop_api_cost_control": true,
+      "desktop_ott_magazine": true,
+      "desktop_ott_feature": true,
+      "desktop_no_exception": true,
+      "desktop_no_horizontal_overflow": true,
+      "desktop_lead_artwork": true,
+      "desktop_coupang_content": true,
+      "desktop_coupang_artwork": true,
+      "desktop_media_insights": true,
+      "desktop_media_evidence": true,
+      "desktop_media_no_overflow": true,
+      "desktop_media_magazine": true,
+      "desktop_media_domestic": true,
+      "desktop_media_korean": true,
+      "desktop_media_default_period": true,
+      "desktop_media_public_only": true,
+      "desktop_news_digest": true,
+      "desktop_ott_title_search": true,
+      "desktop_media_reader": true,
+      "desktop_media_topic_archive": true,
+      "mobile_version": true,
+      "mobile_five_tabs": true,
+      "mobile_weekly_actions": true,
+      "mobile_library_director_filter": true,
+      "mobile_director_screen": true,
+      "mobile_api_cost_control": true,
+      "mobile_ott_magazine": true,
+      "mobile_ott_feature": true,
+      "mobile_no_exception": true,
+      "mobile_no_horizontal_overflow": true,
+      "mobile_lead_artwork": true,
+      "mobile_coupang_content": true,
+      "mobile_coupang_artwork": true,
+      "mobile_media_insights": true,
+      "mobile_media_evidence": true,
+      "mobile_media_no_overflow": true,
+      "mobile_media_magazine": true,
+      "mobile_media_domestic": true,
+      "mobile_media_korean": true,
+      "mobile_media_default_period": true,
+      "mobile_media_public_only": true,
+      "mobile_news_digest": true,
+      "mobile_ott_title_search": true,
+      "mobile_media_reader": true,
+      "mobile_media_topic_archive": true
+    },
+    "errors": [],
+    "warnings": [],
+    "artwork": {
+      "desktop": {
+        "checked": 6,
+        "loaded": 6,
+        "unavailable": 0,
+        "lead_loaded": true
+      },
+      "mobile": {
+        "checked": 6,
+        "loaded": 6,
+        "unavailable": 0,
+        "lead_loaded": true
+      }
+    },
+    "source_commit": "946a472703fa3d57957453976cf6a69c362443a1",
+    "frame_state": "matched_release",
+    "news_digest": {
+      "desktop": {
+        "count": 4,
+        "maximum": 4
+      },
+      "mobile": {
+        "count": 4,
+        "maximum": 4
+      }
+    },
+    "ott_title_search": {
+      "desktop": {
+        "status": "available",
+        "providers": 9,
+        "original_link": true
+      },
+      "mobile": {
+        "status": "available",
+        "providers": 9,
+        "original_link": true
+      }
+    },
+    "media_artwork": {
+      "desktop": {
+        "checked": 6,
+        "loaded": 4
+      },
+      "mobile": {
+        "checked": 6,
+        "loaded": 4
+      }
+    },
+    "media_topic_archive": {
+      "desktop": {
+        "국내 이슈": 3,
+        "광고·요금제": 3,
+        "스포츠·콘텐츠": 4,
+        "AI·기술": 3
+      },
+      "mobile": {
+        "국내 이슈": 6,
+        "광고·요금제": 3,
+        "스포츠·콘텐츠": 4,
+        "AI·기술": 3
+      }
+    },
+    "media_reader": {
+      "desktop": {
+        "matching_note": true,
+        "scroll_drift_px": 0
+      },
+      "mobile": {
+        "matching_note": true,
+        "scroll_drift_px": 0
+      }
+    }
+  },
+  "tab_stability": {
+    "status": "passed",
+    "expected_version": "1.6.2",
+    "unstable_switches": 0
+  },
+  "poster_rail": {
+    "status": "passed",
+    "expected_version": "1.6.2"
+  },
+  "current_category_coverage": {
+    "국내 이슈": {
+      "count": 6,
+      "effective_days": 30,
+      "initial_count": 6
+    },
+    "광고·요금제": {
+      "count": 5,
+      "effective_days": 365,
+      "initial_count": 2
+    },
+    "스포츠·콘텐츠": {
+      "count": 6,
+      "effective_days": 30,
+      "initial_count": 6
+    },
+    "AI·기술": {
+      "count": 4,
+      "effective_days": 365,
+      "initial_count": 0
+    }
+  }
+}
