@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-10-27T02:47:43+00:00",
+  "collected_at": "2026-10-27T04:22:46+00:00",
   "sources": [
     {
       "id": "netflix_ir",
@@ -8,8 +8,8 @@
       "company": "Netflix",
       "url": "https://ir.netflix.net/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
-      "last_success_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
+      "last_success_at": "2026-10-27T04:22:46+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 4
@@ -20,8 +20,8 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/investor-relations/",
       "status": "partial",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
-      "last_success_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
+      "last_success_at": "2026-10-27T04:22:46+00:00",
       "error_code": "some_documents_unavailable",
       "item_count": 2,
       "retained_item_count": 2
@@ -32,8 +32,8 @@
       "company": "Amazon",
       "url": "https://ir.aboutamazon.com/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
-      "last_success_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
+      "last_success_at": "2026-10-27T04:22:46+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 4
@@ -44,7 +44,7 @@
       "company": "Comcast",
       "url": "https://www.cmcsa.com/financial-information/quarterly-results",
       "status": "unavailable",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "last_success_at": "",
       "error_code": "http_403",
       "item_count": 0,
@@ -56,11 +56,11 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/feed/",
       "status": "ok",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
-      "last_success_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
+      "last_success_at": "2026-10-27T04:22:46+00:00",
       "error_code": "",
       "item_count": 4,
-      "retained_item_count": 4
+      "retained_item_count": 5
     },
     {
       "id": "amazon_news",
@@ -68,8 +68,8 @@
       "company": "Amazon",
       "url": "https://www.aboutamazon.com/news/entertainment",
       "status": "ok",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
-      "last_success_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
+      "last_success_at": "2026-10-27T04:22:46+00:00",
       "error_code": "",
       "item_count": 1,
       "retained_item_count": 1
@@ -80,7 +80,7 @@
       "company": "SKT",
       "url": "https://news.sktelecom.com/feed",
       "status": "unavailable",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "last_success_at": "",
       "error_code": "no_business_documents",
       "item_count": 0,
@@ -92,11 +92,11 @@
       "company": "SK브로드밴드",
       "url": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
       "status": "ok",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
-      "last_success_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
+      "last_success_at": "2026-10-27T04:22:46+00:00",
       "error_code": "",
       "item_count": 4,
-      "retained_item_count": 4
+      "retained_item_count": 5
     },
     {
       "id": "kt_products",
@@ -104,9 +104,9 @@
       "company": "KT",
       "url": "https://corp.kt.com/html/promote/news/report_list.html",
       "status": "unavailable",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "last_success_at": "",
-      "error_code": "no_business_documents",
+      "error_code": "timeout",
       "item_count": 0,
       "retained_item_count": 0
     },
@@ -116,8 +116,8 @@
       "company": "LG유플러스",
       "url": "https://news.lguplus.com/category/%ED%94%84%EB%A0%88%EC%8A%A4%EC%84%BC%ED%84%B0/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C",
       "status": "partial",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
-      "last_success_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
+      "last_success_at": "2026-10-27T04:22:46+00:00",
       "error_code": "some_documents_unavailable",
       "item_count": 1,
       "retained_item_count": 1
@@ -128,7 +128,7 @@
       "company": "쿠팡플레이",
       "url": "https://news.coupang.com/feed/",
       "status": "unavailable",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "last_success_at": "",
       "error_code": "http_403",
       "item_count": 0,
@@ -140,14 +140,120 @@
       "company": "CJ ENM",
       "url": "https://www.cjenm.com/ko/news/",
       "status": "ok",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
-      "last_success_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
+      "last_success_at": "2026-10-27T04:22:46+00:00",
       "error_code": "",
       "item_count": 4,
-      "retained_item_count": 4
+      "retained_item_count": 5
     }
   ],
   "items": [
+    {
+      "id": "mi-4f4ea29e8202d0df6f",
+      "source_id": "cjenm_products",
+      "company": "CJ ENM",
+      "topic": "sports_content",
+      "title": "CJ ENM, 북미 LG채널 통해 ‘K-댄스 전용 FAST 채널’ 독점 론칭",
+      "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-27T04:22:46+00:00",
+      "country": "KR",
+      "period": "",
+      "source_name": "CJ ENM 공식 뉴스",
+      "source_type": "official_media_announcement",
+      "excerpt": "- 미국·캐나다 LG채널서 24시간 무료 시청 가능한 ‘CJ ENM K-Dance’ 선보여\n- ‘스트릿 우먼 파이터’, ‘스트릿 맨 파이터’ 등 K-댄스 콘텐츠 글로벌 시청자 접점 확대\n글로벌 IP 파워하우스 CJ ENM이 LG채널(LG Channels)을 통해 북미 시장에 K-댄스 전용 FAST 채널 ‘CJ ENM K-Dance’를 론칭 했다고 27일 밝혔다.\nLG채널은 LG전자의 글로벌 FAST(Free Ad-Supported Streaming TV) 서비스로, 현재 전 세계 37개국에서 5,000개 이상의 채널을 제공하며 다양한 프리미엄 콘텐츠를 선보이고 있다. CJ ENM이 LG채널에 전용 FAST 채널을 선보이는 것은 이번이 처음으로, 미국과 캐나다 시청자들은 별도의 구독료 없이 24시간 K-댄스 콘텐츠를 즐길 수 있게 됐다.\nFAS",
+      "body_text": "- 미국·캐나다 LG채널서 24시간 무료 시청 가능한 ‘CJ ENM K-Dance’ 선보여\n- ‘스트릿 우먼 파이터’, ‘스트릿 맨 파이터’ 등 K-댄스 콘텐츠 글로벌 시청자 접점 확대\n글로벌 IP 파워하우스 CJ ENM이 LG채널(LG Channels)을 통해 북미 시장에 K-댄스 전용 FAST 채널 ‘CJ ENM K-Dance’를 론칭 했다고 27일 밝혔다.\nLG채널은 LG전자의 글로벌 FAST(Free Ad-Supported Streaming TV) 서비스로, 현재 전 세계 37개국에서 5,000개 이상의 채널을 제공하며 다양한 프리미엄 콘텐츠를 선보이고 있다. CJ ENM이 LG채널에 전용 FAST 채널을 선보이는 것은 이번이 처음으로, 미국과 캐나다 시청자들은 별도의 구독료 없이 24시간 K-댄스 콘텐츠를 즐길 수 있게 됐다.\nFAST는 광고 기반 무료 스트리밍 TV 서비스로, 별도 구독료 부담 없이 다양한 콘텐츠를 시청할 수 있는 것이 특징이다. CJ ENM은 이번 LG채널 론칭을 통해 기존 유통 채널을 넘어 북미 시청자들과의 접점을 넓히고, K-댄스 콘텐츠의 글로벌 유통을 확대한다는 계획이다.\n‘CJ ENM K-Dance’는 CJ ENM의 대표 댄스·음악 콘텐츠를 엄선해 24시간 편성한다. 글로벌 팬덤을 형성한 Mnet의 댄스 경연 프로그램 <스트릿 우먼 파이터>와 <스트릿 맨 파이터>를 비롯해 댄스 리얼리티 프로그램 <썸바디>, <MPD 직캠(FanCam)>, <MAMA AWARDS>의 주요 무대 등을 만나볼 수 있다. 스트릿 댄스 경연부터 리얼리티 예능, K-POP 퍼포먼스까지 한국 댄스 문화의 다채로운 매력을 북미 시청자들에게 선보일 예정이다.\n특히 스트릿 댄스 문화가 깊이 뿌리내린 북미 시장에서 한국 댄스 콘텐츠의 매력을 더욱 폭넓게 알릴 수 있을 것으로 기대된다. 콘텐츠를 제작한 크리에이터와 출연 아티스트들에게도 새로운 시청자들과 만나는 기회가 될 전망이다.\n<스트릿 우먼 파이터> 시리즈를 제작한 최정남 CJ ENM PD는 “<스트릿 우먼 파이터> 시리즈와 독창적인 K-댄스 세계관을 처음 기획할 때부터 한국 댄스 문화의 아름다움과 ‘춤은 말보다 더 깊은 것을 표현할 수 있다’는 메시지를 전 세계 시청자들과 나누고 싶었다. 이번 론칭을 통해 K-댄스의 세계관을 더욱 확장해 나갈 새로운 동기부여가 됐다”고 전했다.\n안무가 백구영과 바다도 “우리의 움직임에 담긴 춤에 대한 열정을 시청자들도 함께 느끼고 프로그램 속 치열하면서도 따뜻한 순간들을 즐겨 주셨으면 좋겠다”고 소감을 밝혔다.\n이번 론칭은 CJ ENM이 보유한 콘텐츠 IP의 글로벌 유통을 다각화하고, 새로운 스트리밍 플랫폼을 통해 사업 기회를 확대한다는 전략의 일환이다. FAST와 AVOD(Advertising-Based Video on Demand, 광고 기반 주문형 비디오) 플랫폼은 기존 콘텐츠 IP의 시청자 접점을 넓히는 동시에 광고 기반 수익화 기회를 확보할 수 있다는 점에서 글로벌 콘텐츠 유통의 주요 채널로 주목받고 있다.\n박은혜 CJ ENM 콘텐츠유통 신사업추진팀장은 “앞으로도 독보적인 음악·엔터테인먼트 IP와 방대한 콘텐츠 라이브러리를 바탕으로 글로벌 주요 FAST·AVOD 플랫폼을 통한 유통을 지속 확대해 나갈 것”이라며, “시청자 접점을 넓히고 광고 수익화를 강화해 글로벌 콘텐츠 사업 경쟁력을 높이겠다”고 말했다.\n김도현 CJ ENM 콘텐츠유통BU장은 “FAST와 AVOD는 CJ ENM의 글로벌 K-콘텐츠 유통 경쟁력을 강화하는 데 중요한 허브 역할을 하고 있다”며, “LG채널과 같은 글로벌 플랫폼 파트너십을 확대해 더 많은 해외 시청자들이 한국 엔터테인먼트를 접하고 즐길 수 있도록 하고, 새로운 사업 기회도 지속적으로 발굴해 나가겠다”고 밝혔다.\n한편 CJ ENM은 다양한 FAST 채널을 통해 북미 시장 내 콘텐츠 유통을 확대하고 있다. 최근 미국 아마존 프라임 비디오에 ‘CJ ENM K-Pop’과 ‘CJ ENM K-Stories’ 등 2개 채널을 론칭 했으며, 글로벌 플랫폼과의 협력을 바탕으로 라이브러리 IP의 활용도를 높이고 현지 시청자와의 접점을 넓혀가고 있다.",
+      "image_url": "https://web2-cf-image.cjenm.com/public/share/metamng/boards/kr/newscjenmkdance.jpg?v=1793073766",
+      "evidence": [
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p001",
+          "text": "- 미국·캐나다 LG채널서 24시간 무료 시청 가능한 ‘CJ ENM K-Dance’ 선보여",
+          "locator": "p001",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p002",
+          "text": "- ‘스트릿 우먼 파이터’, ‘스트릿 맨 파이터’ 등 K-댄스 콘텐츠 글로벌 시청자 접점 확대",
+          "locator": "p002",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p003",
+          "text": "글로벌 IP 파워하우스 CJ ENM이 LG채널(LG Channels)을 통해 북미 시장에 K-댄스 전용 FAST 채널 ‘CJ ENM K-Dance’를 론칭 했다고 27일 밝혔다.",
+          "locator": "p003",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p004",
+          "text": "LG채널은 LG전자의 글로벌 FAST(Free Ad-Supported Streaming TV) 서비스로, 현재 전 세계 37개국에서 5,000개 이상의 채널을 제공하며 다양한 프리미엄 콘텐츠를 선보이고 있다. CJ ENM이 LG채널에 전용 FAST 채널을 선보이는 것은 이번이 처음으로, 미국과 캐나다 시청자들은 별도의 구독료 없이 24시간 K-댄스 콘텐츠를 즐길 수 있게 됐다.",
+          "locator": "p004",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p005",
+          "text": "FAST는 광고 기반 무료 스트리밍 TV 서비스로, 별도 구독료 부담 없이 다양한 콘텐츠를 시청할 수 있는 것이 특징이다. CJ ENM은 이번 LG채널 론칭을 통해 기존 유통 채널을 넘어 북미 시청자들과의 접점을 넓히고, K-댄스 콘텐츠의 글로벌 유통을 확대한다는 계획이다.",
+          "locator": "p005",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p006",
+          "text": "‘CJ ENM K-Dance’는 CJ ENM의 대표 댄스·음악 콘텐츠를 엄선해 24시간 편성한다. 글로벌 팬덤을 형성한 Mnet의 댄스 경연 프로그램 <스트릿 우먼 파이터>와 <스트릿 맨 파이터>를 비롯해 댄스 리얼리티 프로그램 <썸바디>, <MPD 직캠(FanCam)>, <MAMA AWARDS>의 주요 무대 등을 만나볼 수 있다. 스트릿 댄스 경연부터 리얼리티 예능, K-POP 퍼포먼스까지 한국 댄스 문화의 다채로운 매력을 북미 시청자들에게 선보일 예정이다.",
+          "locator": "p006",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p007",
+          "text": "특히 스트릿 댄스 문화가 깊이 뿌리내린 북미 시장에서 한국 댄스 콘텐츠의 매력을 더욱 폭넓게 알릴 수 있을 것으로 기대된다. 콘텐츠를 제작한 크리에이터와 출연 아티스트들에게도 새로운 시청자들과 만나는 기회가 될 전망이다.",
+          "locator": "p007",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p008",
+          "text": "<스트릿 우먼 파이터> 시리즈를 제작한 최정남 CJ ENM PD는 “<스트릿 우먼 파이터> 시리즈와 독창적인 K-댄스 세계관을 처음 기획할 때부터 한국 댄스 문화의 아름다움과 ‘춤은 말보다 더 깊은 것을 표현할 수 있다’는 메시지를 전 세계 시청자들과 나누고 싶었다. 이번 론칭을 통해 K-댄스의 세계관을 더욱 확장해 나갈 새로운 동기부여가 됐다”고 전했다.",
+          "locator": "p008",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p009",
+          "text": "안무가 백구영과 바다도 “우리의 움직임에 담긴 춤에 대한 열정을 시청자들도 함께 느끼고 프로그램 속 치열하면서도 따뜻한 순간들을 즐겨 주셨으면 좋겠다”고 소감을 밝혔다.",
+          "locator": "p009",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p010",
+          "text": "이번 론칭은 CJ ENM이 보유한 콘텐츠 IP의 글로벌 유통을 다각화하고, 새로운 스트리밍 플랫폼을 통해 사업 기회를 확대한다는 전략의 일환이다. FAST와 AVOD(Advertising-Based Video on Demand, 광고 기반 주문형 비디오) 플랫폼은 기존 콘텐츠 IP의 시청자 접점을 넓히는 동시에 광고 기반 수익화 기회를 확보할 수 있다는 점에서 글로벌 콘텐츠 유통의 주요 채널로 주목받고 있다.",
+          "locator": "p010",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p011",
+          "text": "박은혜 CJ ENM 콘텐츠유통 신사업추진팀장은 “앞으로도 독보적인 음악·엔터테인먼트 IP와 방대한 콘텐츠 라이브러리를 바탕으로 글로벌 주요 FAST·AVOD 플랫폼을 통한 유통을 지속 확대해 나갈 것”이라며, “시청자 접점을 넓히고 광고 수익화를 강화해 글로벌 콘텐츠 사업 경쟁력을 높이겠다”고 말했다.",
+          "locator": "p011",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p012",
+          "text": "김도현 CJ ENM 콘텐츠유통BU장은 “FAST와 AVOD는 CJ ENM의 글로벌 K-콘텐츠 유통 경쟁력을 강화하는 데 중요한 허브 역할을 하고 있다”며, “LG채널과 같은 글로벌 플랫폼 파트너십을 확대해 더 많은 해외 시청자들이 한국 엔터테인먼트를 접하고 즐길 수 있도록 하고, 새로운 사업 기회도 지속적으로 발굴해 나가겠다”고 밝혔다.",
+          "locator": "p012",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        },
+        {
+          "id": "mi-4f4ea29e8202d0df6f-p013",
+          "text": "한편 CJ ENM은 다양한 FAST 채널을 통해 북미 시장 내 콘텐츠 유통을 확대하고 있다. 최근 미국 아마존 프라임 비디오에 ‘CJ ENM K-Pop’과 ‘CJ ENM K-Stories’ 등 2개 채널을 론칭 했으며, 글로벌 플랫폼과의 협력을 바탕으로 라이브러리 IP의 활용도를 높이고 현지 시청자와의 접점을 넓혀가고 있다.",
+          "locator": "p013",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/"
+        }
+      ],
+      "content_hash": "623668584781e1d7ce9911d7d0f5772264fd0d16f336ecccefced418c8d881f8",
+      "market_scope": "domestic_media",
+      "image_alt": "",
+      "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/",
+      "image_attribution": "CJ ENM 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
+      "source_updated_at": "2026-10-27",
+      "last_checked_at": "2026-10-27T04:22:46+00:00"
+    },
     {
       "id": "mi-000cd0f9b36402b89f",
       "source_id": "cjenm_products",
@@ -163,7 +269,7 @@
       "source_type": "official_media_announcement",
       "excerpt": "- tvN ‘스트릿 레스토랑 파이터’, ‘리얼스크린 어워즈-라이프스타일 경쟁’ 부문 노미네이트\n- CJ ENM, 독창적 기획력과 완성도로 글로벌 무대에서 존재감 발휘!\n글로벌 IP 파워하우스 CJ ENM이 제작한 tvN ‘스트릿 레스토랑 파이터’가 글로벌 콘텐츠 전문 시상식 '리얼스크린 어워즈(Realscreen Awards)' 후보에 오르며 독보적 콘텐츠 경쟁력을 입증했다.\n지난 9월 종영한 ‘스트릿 레스토랑 파이터’(연출 이우형, 김만희/이하 ‘스레파’)는 계급장을 떼고 스트릿으로 소환된 20명의 요식업자가 오직 손님의 선택으로 생존과 탈락이 결정되는 전무후무 리얼 장사 서바이벌이다. 맛을 평가하는 요리 서바이벌과 달리 상권 분석부터 음식 비용 책정, 인테리어, 판매 전략 등 실제 장사의 모든 것을 보여줬다. 장사의 리얼한 현실과 참가자들",
       "body_text": "- tvN ‘스트릿 레스토랑 파이터’, ‘리얼스크린 어워즈-라이프스타일 경쟁’ 부문 노미네이트\n- CJ ENM, 독창적 기획력과 완성도로 글로벌 무대에서 존재감 발휘!\n글로벌 IP 파워하우스 CJ ENM이 제작한 tvN ‘스트릿 레스토랑 파이터’가 글로벌 콘텐츠 전문 시상식 '리얼스크린 어워즈(Realscreen Awards)' 후보에 오르며 독보적 콘텐츠 경쟁력을 입증했다.\n지난 9월 종영한 ‘스트릿 레스토랑 파이터’(연출 이우형, 김만희/이하 ‘스레파’)는 계급장을 떼고 스트릿으로 소환된 20명의 요식업자가 오직 손님의 선택으로 생존과 탈락이 결정되는 전무후무 리얼 장사 서바이벌이다. 맛을 평가하는 요리 서바이벌과 달리 상권 분석부터 음식 비용 책정, 인테리어, 판매 전략 등 실제 장사의 모든 것을 보여줬다. 장사의 리얼한 현실과 참가자들의 진정성, 반전을 거듭하는 흥미진진한 전개로 새로운 장르의 포문을 열었다.\n장사 서바이벌이라는 전무후무한 기획력에 글로벌 콘텐츠 전문가들도 반응했다. ‘스레파’가 ‘리얼스크린 어워즈'의 '라이프스타일 경쟁(Competition–Lifestyle)' 부문에 후보작으로 선정된 것. ‘리얼스크린 어워즈’는 글로벌 논스크립티드(Non-Scripted) 콘텐츠 전문 시상식으로, 글로벌 방송사와 제작사, 콘텐츠 유통사 등 업계 전문가들이 심사에 참여한다. ‘라이프스타일 경쟁’ 부문은 요리, 패션 등 라이프스타일을 소재로 한 경쟁 프로그램이 대상으로, ‘스레파’는 기존 요리 경연의 틀을 깨는 독창적인 포맷과 차별화된 재미로 글로벌 콘텐츠 시장에서 존재감을 드러냈다.\n이번 노미네이트로 CJ ENM은 지난해 미국 자회사 피프스시즌(Fifth Season)이 제작한 다큐멘터리 ‘키스 더 퓨처’(Kiss the Future)가 '논픽션 아트&컬처'(Non-Fiction Arts&Culture) 부문에서 수상한 것에 이어 두 번째로 ‘리얼스크린 어워즈’에 이름을 올리게 됐다. CJ ENM의 자체 제작 콘텐츠 중에서 ‘리얼스크린 어워즈’ 후보에 선정된 것은 ‘스레파’가 처음이다. CJ ENM의 참신한 기획과 탄탄한 제작 역량이 글로벌 무대에서도 경쟁력을 발휘하고 있다는 점을 입증한 것. 또한 한국식 장사 서바이벌이 국내를 넘어 해외 방송·콘텐츠 산업 전문가들의 평가를 통해 작품의 완성도를 인정받았다는 점에서 의미를 더한다.\n‘스레파’를 기획·제작한 CJ ENM의 이우형 EP는 “요리 실력으로만 평가받던 기존 요리 서바이벌에서 벗어나 대한민국 장사의 리얼한 현실을 담아내며 색다른 접근을 해봤는데, 국경을 넘어 글로벌 시청자들도 새로운 시도를 알아 봐주시고 함께 몰입해주신 것 같아 매우 기쁘다. CJ ENM에는 다양한 리얼리티 프로그램이 포진해 있는 만큼, 앞으로 더 많은 콘텐츠들이 알려지면 좋겠다”는 소감을 전했다.",
-      "image_url": "https://web2-cf-image.cjenm.com/public/share/metamng/boards/kr/newsStreetRestaurantFighterKO_1792631709018.jpg?v=1792631734",
+      "image_url": "https://web2-cf-image.cjenm.com/public/share/metamng/boards/kr/newsStreetRestaurantFighterKO_1792631709018.jpg?v=1793073794",
       "evidence": [
         {
           "id": "mi-000cd0f9b36402b89f-p001",
@@ -214,9 +320,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/tvn-스트릿-레스토랑-파이터-글로벌-콘텐츠-전문-시상식-리얼스크린-어워즈-후보-선정-cj-enm-k장사-예능으로-독보적-콘텐츠-경쟁력-입증/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "source_updated_at": "2026-10-22",
-      "last_checked_at": "2026-10-27T02:47:43+00:00"
+      "last_checked_at": "2026-10-27T04:22:46+00:00"
     },
     {
       "id": "mi-5dfc9e265e8ab2dd52",
@@ -302,9 +408,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-콘텐츠-韓美日-글로벌서-날았다-영화시리즈-잇단-성과/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "source_updated_at": "2026-10-21",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "analysis": {
         "headline": "CJ ENM, 글로벌 OTT 성과와 멀티 스튜디오 전략을 확대",
         "summary": "CJ ENM은 미국·한국·일본의 제작 역량을 결합한 콘텐츠로 넷플릭스와 디즈니플러스 등 글로벌 OTT에서 성과를 냈다고 발표했다. 올해 공개 작품 중 6편이 넷플릭스 글로벌 1위에 올랐고, 피프스시즌과 일본 파트너 간 공동 프로젝트·합작법인을 통해 글로벌 IP 확대를 추진하고 있다.",
@@ -493,9 +599,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/10/19/skb-fall-new-programs-2026/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-10-27T02:47:43+00:00"
+      "last_checked_at": "2026-10-27T04:22:46+00:00"
     },
     {
       "id": "mi-525e4bb84089078f44",
@@ -571,7 +677,7 @@
       ],
       "content_hash": "60d467a44a6681d8ea04718c3c902263342ae875d7de373d944293b956a16986",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "analysis": {
         "headline": "디즈니, Dude Perfect와 전사적 콘텐츠·유통 파트너십 발표",
         "summary": "디즈니는 Dude Perfect와 협력해 디즈니 프랜차이즈·이벤트를 활용한 오리지널 콘텐츠를 제작하고, 일부 콘텐츠를 Disney+에 선보일 계획이다. 또한 Dude Perfect의 기존 숏폼 라이브러리를 Disney+, ESPN 및 디즈니 소셜 플랫폼에 유통할 수 있게 됐다.",
@@ -660,7 +766,7 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/"
     },
     {
@@ -771,9 +877,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-피프스시즌-글로벌-ott-차트-석권-흥행작품성-동시-입증/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "source_updated_at": "2026-10-15",
-      "last_checked_at": "2026-10-27T02:47:43+00:00"
+      "last_checked_at": "2026-10-27T04:22:46+00:00"
     },
     {
       "id": "mi-a303133114790649d8",
@@ -1179,7 +1285,7 @@
       ],
       "content_hash": "fe5ff5da4381a11de5a7966d2e4ecae91e79baded2dfbc8c260fb74d700637df",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "analysis": {
         "headline": "Disney+, 2027년 슈퍼볼 LXI 스트리밍 예정",
         "summary": "Disney+는 2027년 2월 14일 슈퍼볼 LXI를 미국의 모든 Disney+ 가입자에게 스트리밍하고, 미국 외 55개국 이상에서도 ESPN의 슈퍼볼 중계를 제공할 예정입니다. 미국에서는 정규시즌 Monday Night Football 두 경기도 Disney+에서 시청할 수 있습니다.",
@@ -1315,7 +1421,7 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/"
     },
     {
@@ -1385,15 +1491,15 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/09/10/btv-plus-max-2026-kbo-postseason-ticket-event/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-10-27T02:47:43+00:00"
+      "last_checked_at": "2026-10-27T04:22:46+00:00"
     },
     {
       "id": "mi-255f40182398aa5f25",
       "source_id": "skb_products",
       "company": "SK브로드밴드",
-      "topic": "ai_technology",
+      "topic": "sports_content",
       "title": "SKB, 서울국제여성영화제 4년 연속 후원…독립·예술영화 접근성 넓힌다",
       "url": "https://blog.bworld.co.kr/2026/08/20/b-tv-womens-film-festival/",
       "published_at": "2026-08-20",
@@ -1456,9 +1562,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/08/20/b-tv-womens-film-festival/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-10-27T02:47:43+00:00"
+      "last_checked_at": "2026-10-27T04:22:46+00:00"
     },
     {
       "id": "mi-80a30a5f266d73b1a5",
@@ -1534,12 +1640,12 @@
       ],
       "content_hash": "497b1ab9073b544dc6a232378cab1f28d3f4075019d510c24c8a30b6df3e1dc1",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "image_alt": "",
       "image_source_url": "https://thewaltdisneycompany.com/news/ai-powered-search-espn-disney-plus/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
       "localization": {
         "title": "ESPN·Disney+, AI 기반 검색·콘텐츠 탐색 기능 베타 테스트",
@@ -1796,9 +1902,9 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "localization": {
         "title": "디즈니, 실적 설명에서 훌루 연동과 스포츠 전략 강조",
         "summary": "조시 다마로 CEO는 실적 설명에서 통합 전략을 제시했다. 훌루 단독·결합 구독자의 프로필 연결과 디즈니+ 내 구독 관리의 진전, ESPN을 통한 팬 참여 확대를 설명했다.",
@@ -2211,7 +2317,7 @@
         }
       ],
       "content_hash": "c2b345f02d73b7330cc03ae0d0a4a354a1091ce21eb936974e40a8821caffcf3",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "localization": {
         "title": "아마존 2분기 실적: 프라임 비디오 신작·NBA 시청 성과",
         "summary": "아마존은 회사 전체의 분기 실적과 함께 프라임 비디오의 미디어 성과를 발표했다. 신작 Off Campus의 초기 시청 반응과 NBA 중계 시청 성과를 소개했다.",
@@ -2389,9 +2495,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "source_updated_at": "2026-07-01",
-      "last_checked_at": "2026-10-27T02:47:43+00:00"
+      "last_checked_at": "2026-10-27T04:22:46+00:00"
     },
     {
       "id": "mi-e0f0c296689441b0ae",
@@ -2495,9 +2601,9 @@
       "image_source_url": "https://news.lguplus.com/22099",
       "image_attribution": "LG유플러스 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "source_updated_at": "2026-06-19",
-      "last_checked_at": "2026-10-27T02:47:43+00:00"
+      "last_checked_at": "2026-10-27T04:22:46+00:00"
     },
     {
       "id": "mi-660f6ebda3c280ab1b",
@@ -3044,7 +3150,7 @@
         }
       ],
       "content_hash": "10f11121079894d5e410635c297e2bd2fe9c2be36687347a7420dfee8c012654",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "localization": {
         "title": "아마존 1분기 실적: 넷플릭스 광고 타기팅·NBA 중계",
         "summary": "아마존은 회사 전체의 분기 실적을 발표하며 넷플릭스 광고 구매에 Amazon Audiences를 추가했다고 설명했다. 프라임 비디오의 NBA 플레이인 토너먼트 중계 시청 성과도 함께 소개했다.",
@@ -3457,7 +3563,7 @@
         }
       ],
       "content_hash": "4825da0b4b4b5cddabe6f859cf349400c3e17c6e26260ba335c2060c0cfb356f",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "published_at_source": "official_feed",
       "localization": {
         "title": "Amazon 2025년 주주 서한",
@@ -3560,7 +3666,7 @@
       ],
       "content_hash": "05ac069470d7041d12fa2cd31a7bf06eb3632ffdfb0be9b462915040cb192920",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "versions": [
         {
           "content_hash": "504d2b339cc29a608621f06a549fb39d53e851375fe0edcbe39bce7a1d79c630",
@@ -3647,7 +3753,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "localization": {
         "title": "Netflix, Warner Bros. 인수 제안 증액 거부",
         "summary": "Netflix가 Warner Bros.에 대한 제안 금액을 인상하지 않기로 결정했다. Warner Bros. Discovery 이사회가 Paramount Skydance의 최신 제안을 기존 Netflix 합병 계약상 ‘Superior Proposal’로 판단했다는 통지를 받은 데 따른 발표다.",
@@ -3887,7 +3993,7 @@
       ],
       "content_hash": "4a2b8c2217143371b92bc9097abe1eb31059fed756ba2f1ae36438389bc84fc3",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "versions": [
         {
           "content_hash": "8e3908e1efc308b6d1611c3112c14fe94bf0baaad0daad49fac8440701a5157d",
@@ -4112,7 +4218,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "localization": {
         "title": "WBD, Netflix 거래 최종 위임장 제출 및 2026년 3월 20일 특별 주주총회 예정",
         "summary": "Warner Bros. Discovery가 Netflix와의 거래 승인을 위한 최종 위임장 설명서를 제출하고 2026년 3월 20일 특별 주주총회를 예정했다. Netflix와 WBD는 미국 DOJ, 주 법무장관, 유럽연합 집행위원회, 영국 CMA 등 경쟁 당국과 규제 절차를 진행 중이라고 밝혔다.",
@@ -4525,7 +4631,7 @@
         }
       ],
       "content_hash": "7302c3f25e1f6eec6f270b3559d8d0f0f5c3ca50f8d5da94b178baa3718b7e24",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "localization": {
         "title": "아마존 4분기 실적: NBA 중계 확대·챔피언스리그 권리 연장",
         "summary": "아마존은 회사 전체 실적과 함께 NBA on Prime의 여러 국가 진출 및 시청 성과를 발표했다. 독일·아일랜드·이탈리아·영국의 UEFA 챔피언스리그 중계권 연장도 설명했다.",
@@ -4711,7 +4817,7 @@
       ],
       "content_hash": "317445884687100e21d6e4df531c49a79ce80af82bbd250ddf35e1c36f7091f9",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "versions": [
         {
           "content_hash": "5f3f1574ff6ed065c706ddfa634a9ac58e20dfd11ddd04306765dc007e72d50e",
@@ -4882,7 +4988,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "localization": {
         "title": "Netflix와 Warner Bros. Discovery, 거래를 전액 현금 방식으로 변경",
         "summary": "Netflix와 Warner Bros. Discovery가 Netflix의 Warner Bros. 인수에 관한 최종 계약을 전액 현금 거래로 수정했다. 변경된 계약은 거래 구조를 단순화하고 WBD 주주에게 가치의 확실성을 높이며 주주 투표 절차를 앞당긴다.",
@@ -5005,8 +5111,8 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "localization": {
         "title": "Netflix, Warner Bros. Discovery 이사회의 합병 계약 지지 표명",
         "summary": "Netflix가 Warner Bros. Discovery 이사회의 Netflix 계약 승인 권고를 지지한다고 밝혔다. 양사는 거래와 관련해 SEC 제출 서류와 WBD 주주 대상 위임장·투자설명서 절차를 진행할 예정이다.",
@@ -5420,12 +5526,12 @@
       ],
       "content_hash": "baa38c6950155ed542f0ab2a1c12a07707f1c370fa5bb38ae89fba1ea8c1d38c",
       "source_updated_at": "2026-10-14",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "image_alt": "",
       "image_source_url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
       "image_attribution": "아마존 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-27T02:47:43+00:00",
+      "image_recorded_at": "2026-10-27T04:22:46+00:00",
       "localization": {
         "title": "Prime Video에서 2026-27 NBA 시즌 시청 방법",
         "summary": "Prime Video는 정규 시즌 67경기를 중계하며 Emirates NBA Cup Championship도 포함한다. AI 기반 Prime 360 하이라이트, Yahoo! Sports와 연동한 맞춤형 판타지 농구 기능이 도입되고, NBA와 AWS는 실시간 통계 제공을 위한 파트너십을 발표했다.",
@@ -5838,7 +5944,7 @@
         }
       ],
       "content_hash": "d5eed575231d5cf16dae13543385bcbda71ba4d2178ed1d732d90858850e4d48",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "published_at_source": "pdf_publication_unconfirmed",
       "localization": {
         "title": "Disney Q3 2026 주주 서한",
@@ -6030,7 +6136,7 @@
         }
       ],
       "content_hash": "cc64576f1e9ad7812785a28bb7f37659fc937b2746c65ea702d9f6da13e1fcfb",
-      "last_checked_at": "2026-10-27T02:47:43+00:00",
+      "last_checked_at": "2026-10-27T04:22:46+00:00",
       "published_at_source": "pdf_publication_unconfirmed",
       "localization": {
         "title": "디즈니 분기 재무지표 조정 내역",
