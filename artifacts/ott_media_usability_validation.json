@@ -1,13 +1,14 @@
 {
   "version": "1.6.2",
-  "checked_at": "2026-10-27T04:28:17.941160+00:00",
+  "checked_at": "2026-10-27T04:50:02.777556+00:00",
   "status": "passed",
   "regression_tests": {
-    "passed": 849,
+    "passed": 852,
     "log": "ott-media-v162-final-tests.log"
   },
   "kinolights_public_client": {
     "status": "passed",
+    "checked_at": "2026-10-27T04:38:56+00:00",
     "evidence": "artifacts/kinolights_live_verification.json"
   },
   "local_media_ui": {
@@ -110,10 +111,11 @@
     "schema_version": 1,
     "status": "passed",
     "expected_version": "1.6.2",
+    "started_at": "2026-10-27T04:47:02.369051+00:00",
+    "finished_at": "2026-10-27T04:48:04.424514+00:00",
+    "attempts": 1,
+    "source_commit": "683835e1c18bd84c08ecb9681a0728c5f945e572",
     "observed_version": "1.6.2",
-    "started_at": "2026-10-27T04:22:58.081662+00:00",
-    "finished_at": "2026-10-27T04:25:18.220432+00:00",
-    "attempts": 2,
     "tests": {
       "desktop_version": true,
       "desktop_five_tabs": true,
@@ -182,7 +184,7 @@
         "lead_loaded": true
       }
     },
-    "source_commit": "946a472703fa3d57957453976cf6a69c362443a1",
+    "active_check": "complete",
     "frame_state": "matched_release",
     "news_digest": {
       "desktop": {
@@ -218,13 +220,13 @@
     },
     "media_topic_archive": {
       "desktop": {
-        "국내 이슈": 3,
+        "국내 이슈": 4,
         "광고·요금제": 3,
         "스포츠·콘텐츠": 4,
         "AI·기술": 3
       },
       "mobile": {
-        "국내 이슈": 6,
+        "국내 이슈": 4,
         "광고·요금제": 3,
         "스포츠·콘텐츠": 4,
         "AI·기술": 3
@@ -271,5 +273,13 @@
       "effective_days": 365,
       "initial_count": 0
     }
+  },
+  "verification_recovery": {
+    "report": "artifacts/recovered_deployment_validation.json",
+    "fixes": [
+      "Stage missing optional reports so rebase can record a failed run",
+      "Wait for completed Streamlit runs and stable target DOM before browser input",
+      "Reset prior attempt measurements and retain numeric stage diagnostics"
+    ]
   }
 }
