@@ -1,12 +1,56 @@
 {
   "schema_version": 1,
   "status": "passed",
-  "expected_version": "1.6.2",
-  "started_at": "2026-10-27T04:47:02.369051+00:00",
-  "finished_at": "2026-10-27T04:48:04.424514+00:00",
-  "attempts": 1,
-  "source_commit": "683835e1c18bd84c08ecb9681a0728c5f945e572",
-  "observed_version": "1.6.2",
+  "expected_version": "1.6.3",
+  "started_at": "2026-10-27T05:14:42.289354+00:00",
+  "finished_at": "2026-10-27T05:20:51.929869+00:00",
+  "attempts": 4,
+  "source_commit": "9632daf38147430b33d66b364d165c2e9b24c09d",
+  "attempt_failures": [
+    {
+      "attempt": 1,
+      "code": "ott_title_search_interaction_timeout",
+      "active_check": "desktop_ott_title_search_result",
+      "diagnostics": {
+        "roots": 1,
+        "nodes": 28,
+        "text_length": 13,
+        "stale": 0,
+        "inputs": 1,
+        "results": 0,
+        "cards": 0
+      }
+    },
+    {
+      "attempt": 2,
+      "code": "ott_title_search_interaction_timeout",
+      "active_check": "mobile_ott_title_search_result",
+      "diagnostics": {
+        "roots": 1,
+        "nodes": 28,
+        "text_length": 13,
+        "stale": 0,
+        "inputs": 1,
+        "results": 0,
+        "cards": 0
+      }
+    },
+    {
+      "attempt": 3,
+      "code": "ott_title_search_interaction_timeout",
+      "active_check": "desktop_ott_title_search_result",
+      "diagnostics": {
+        "roots": 1,
+        "nodes": 28,
+        "text_length": 13,
+        "stale": 0,
+        "inputs": 1,
+        "results": 0,
+        "cards": 0
+      }
+    }
+  ],
+  "observed_version": "1.6.3",
   "tests": {
     "desktop_version": true,
     "desktop_five_tabs": true,
@@ -126,10 +170,14 @@
   "media_reader": {
     "desktop": {
       "matching_note": true,
+      "no_automatic_popup": true,
+      "article_click_scroll_drift_px": 0,
       "scroll_drift_px": 0
     },
     "mobile": {
       "matching_note": true,
+      "no_automatic_popup": true,
+      "article_click_scroll_drift_px": 0,
       "scroll_drift_px": 0
     }
   }
