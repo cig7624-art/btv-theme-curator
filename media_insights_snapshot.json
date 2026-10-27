@@ -412,11 +412,11 @@
       "source_updated_at": "2026-10-21",
       "last_checked_at": "2026-10-27T04:22:46+00:00",
       "analysis": {
-        "headline": "CJ ENM, 글로벌 OTT 성과와 멀티 스튜디오 전략을 확대",
-        "summary": "CJ ENM은 미국·한국·일본의 제작 역량을 결합한 콘텐츠로 넷플릭스와 디즈니플러스 등 글로벌 OTT에서 성과를 냈다고 발표했다. 올해 공개 작품 중 6편이 넷플릭스 글로벌 1위에 올랐고, 피프스시즌과 일본 파트너 간 공동 프로젝트·합작법인을 통해 글로벌 IP 확대를 추진하고 있다.",
+        "headline": "CJ ENM, 멀티 스튜디오 기반 글로벌 콘텐츠 성과 확대",
+        "summary": "CJ ENM은 미국·한국·일본의 멀티 스튜디오와 공동제작 체제를 바탕으로 넷플릭스·디즈니플러스 등 글로벌 OTT에서 여러 작품의 차트 성과를 냈다고 발표했다. 올해 공개 작품 중 6편이 넷플릭스 글로벌 1위에 올랐으며, 10편 이상의 한·미 공동 프로젝트도 개발 중이다.",
         "facts": [
           {
-            "text": "CJ ENM은 올해 공개된 작품들 가운데 6편이 넷플릭스 글로벌 정상에 올랐다고 밝혔다.",
+            "text": "CJ ENM은 올해 공개된 작품 가운데 6편이 넷플릭스 글로벌 정상에 올랐다고 밝혔다.",
             "evidence_ids": [
               "mi-5dfc9e265e8ab2dd52-p001",
               "mi-5dfc9e265e8ab2dd52-p005"
@@ -429,13 +429,13 @@
             ]
           },
           {
-            "text": "스튜디오드래곤을 통해서도 ‘닥터X : 하얀 마피아의 시대’, ‘멋진 신세계’, ‘참교육’ 등 넷플릭스 글로벌 비영어 쇼 부문 주간 1위 작품 3편이 탄생했다.",
+            "text": "스튜디오드래곤을 통해서도 ‘닥터X : 하얀 마피아의 시대’, ‘멋진 신세계’, ‘참교육’ 등 넷플릭스 글로벌 비영어 쇼 부문 주간 1위 작품 3편이 나왔다.",
             "evidence_ids": [
               "mi-5dfc9e265e8ab2dd52-p006"
             ]
           },
           {
-            "text": "CJ ENM과 일본 NTV가 공동제작한 ‘메리 베리 러브’는 디즈니플러스 TV쇼 월드와이드 차트 2위에 올랐고, 전 세계 72개 국가 및 지역에서 TOP10에 진입했다.",
+            "text": "CJ ENM과 일본 NTV가 공동제작한 ‘메리 베리 러브’는 디즈니플러스 TV쇼 월드와이드 차트 2위에 올랐고, 72개 국가 및 지역에서 TOP10에 진입했다.",
             "evidence_ids": [
               "mi-5dfc9e265e8ab2dd52-p007"
             ]
@@ -447,18 +447,49 @@
             ]
           }
         ],
-        "interpretation": "확인된 자료는 CJ ENM의 글로벌 콘텐츠 제작·유통 성과와 국가별 제작 거점 및 공동제작 확대를 보여준다. 다만 차트 순위는 작품별·플랫폼별 지표이고, CJ ENM의 매출·가입자·수익성이나 B tv에서의 유통 성과를 직접 보여주는 자료는 아니다. B tv 연계 검토 시에는 국내 판권·편성 가능성, 제공 시점, 최소보장금 및 광고·구독 효과를 별도로 확인해야 한다.",
+        "interpretation": "확인된 자료는 CJ ENM이 단일 콘텐츠 흥행뿐 아니라 미국·한국·일본의 제작 거점과 공동제작을 결합해 글로벌 유통 및 IP 확장을 추진하고 있음을 보여준다. B tv 관점에서는 글로벌 콘텐츠 확보·공동제작·다국가 유통을 검토할 수 있으나, 국내 권리 범위, B tv 제공 가능 여부, 비용과 광고·가입자 효과는 원문에서 확인되지 않는다.",
         "btv_options": [
-          "CJ ENM의 글로벌 성과 작품 중 국내 B tv 제공 가능 콘텐츠를 선별해 VOD·특집관 편성 후보로 검토한다. 판권과 제공 기간은 별도 확인이 필요하다.",
-          "한·일 공동제작 사례를 활용해 B tv 내 ‘글로벌 공동제작 콘텐츠’ 큐레이션 또는 시청자 대상 특집 프로모션을 검토한다.",
-          "CJ ENM의 멀티 스튜디오 및 공동 프로젝트 확대 흐름을 고려해 향후 콘텐츠 선공개·독점 제공 협력 가능성을 문의한다."
+          "CJ ENM의 글로벌 공동제작·수출 콘텐츠 중 B tv 독점 또는 선공개 권리 확보 가능성 검토",
+          "국가·장르별 성과가 확인된 콘텐츠의 B tv 편성 및 VOD 큐레이션 협업 검토",
+          "글로벌 IP의 국내 팬덤을 활용한 콘텐츠·라이브·부가상품 연계 가능성 검토"
         ],
         "questions": [
-          "해당 작품들의 B tv 제공 여부, 국내 판권 보유 주체와 계약 가능 기간은 무엇인가?",
-          "작품별 국내 시청 데이터, B tv VOD 이용량 및 시청 완료율은 얼마인가?",
-          "10편 이상의 공동 프로젝트와 관련해 B tv가 협력 또는 선공개를 검토할 수 있는 콘텐츠와 조건은 무엇인가?"
+          "해당 작품들의 한국 내 B tv 제공 권리와 독점·선공개 조건은 무엇인가?",
+          "콘텐츠별 국내 시청 데이터, 최소보장금·라이선스 비용 및 광고 판매 조건은 어떻게 되는가?",
+          "10편 이상의 공동 프로젝트 중 B tv가 사전 기획 또는 유통에 참여할 수 있는 작품과 일정은 무엇인가?"
         ],
-        "comparison": [],
+        "comparison": [
+          {
+            "company": "CJ ENM",
+            "aspect": "글로벌 콘텐츠 제작·유통 성과",
+            "detail": "CJ ENM은 올해 공개 작품 중 6편의 넷플릭스 글로벌 1위와 디즈니플러스 월드와이드 차트 2위·72개 국가 및 지역 TOP10 진입 사례를 제시했다.",
+            "evidence_ids": [
+              "mi-5dfc9e265e8ab2dd52-p001",
+              "mi-5dfc9e265e8ab2dd52-p005",
+              "mi-5dfc9e265e8ab2dd52-p007"
+            ]
+          },
+          {
+            "company": "SK브로드밴드",
+            "aspect": "B tv 자체 프로그램 편성",
+            "detail": "SK브로드밴드는 ‘트립 인 코리아’ 시즌8을 2026년 10월 19일부터 2027년 1월 8일까지 B tv 케이블 채널 1번 등에서 방송하고, ‘미식의 조각, 한 끼’와 ‘청춘학교2026’도 B tv 케이블 채널 1번을 통해 방송한다고 밝혔다. 글로벌 차트 성과나 해외 유통 수치는 제시되지 않았다.",
+            "evidence_ids": [
+              "mi-8982b210542cc63721-p001",
+              "mi-8982b210542cc63721-p005",
+              "mi-8982b210542cc63721-p008",
+              "mi-8982b210542cc63721-p009"
+            ]
+          },
+          {
+            "company": "Disney",
+            "aspect": "스포츠 콘텐츠의 글로벌 스트리밍 배포",
+            "detail": "Disney+는 미국 내 모든 Disney+ 가입자에게 2027년 2월 14일 Super Bowl LXI를 스트리밍하고, 미국 외 55개 이상 국제 시장에서도 ESPN의 Super Bowl을 스트리밍할 예정이라고 발표했다. 이는 CJ ENM의 콘텐츠 차트 성과와 직접 같은 지표는 아니다.",
+            "evidence_ids": [
+              "mi-e5577dde5187375575-p002",
+              "mi-e5577dde5187375575-p003"
+            ]
+          }
+        ],
         "verification": {
           "facts_omitted": 0,
           "comparisons_omitted": 0,
@@ -468,12 +499,14 @@
           "btv_options_omitted": 0,
           "questions_omitted": 0
         },
-        "generated_at": "2026-10-25T14:07:02.950591+00:00",
+        "generated_at": "2026-10-27T05:10:15.379954+00:00",
         "model": "gpt-5.6-luna",
         "source_engine_revision": "1.3.4",
         "source_hash": "fc9afa08ca84267d883d8227cbaffe39333ae718b1337d3ad2ca600c709ed3a3",
         "context_hashes": {
-          "mi-5dfc9e265e8ab2dd52": "fc9afa08ca84267d883d8227cbaffe39333ae718b1337d3ad2ca600c709ed3a3"
+          "mi-5dfc9e265e8ab2dd52": "fc9afa08ca84267d883d8227cbaffe39333ae718b1337d3ad2ca600c709ed3a3",
+          "mi-8982b210542cc63721": "642ebea34b82774d999654de4c3a7c11efadc44b7d47bb7fc914c0d53e809669",
+          "mi-e5577dde5187375575": "fe5ff5da4381a11de5a7966d2e4ecae91e79baded2dfbc8c260fb74d700637df"
         },
         "evidence": [
           {
@@ -510,6 +543,48 @@
             "locator": "p009",
             "url": "https://www.cjenm.com/ko/news/cj-enm-콘텐츠-韓美日-글로벌서-날았다-영화시리즈-잇단-성과/",
             "title": "CJ ENM 콘텐츠, 韓·美·日 글로벌서 날았다… 영화·시리즈 잇단 성과"
+          },
+          {
+            "id": "mi-8982b210542cc63721-p001",
+            "text": "SK브로드밴드(대표이사 사장 김성수, http://www.skbroadband.com )는 가을 시즌을 맞아 로컬 여행 예능 ‘트립 인 코리아’ 시즌8을 필두로, 음식에 담긴 삶을 조명하는 ‘미식의 조각, 한 끼’, 시니어 예능 ‘청춘학교2026’ 등 신작 프로그램 3편을 순차적으로 선보인다고 19일 밝혔다.",
+            "locator": "p001",
+            "url": "https://blog.bworld.co.kr/2026/10/19/skb-fall-new-programs-2026/",
+            "title": "SKB, 여행·미식·세대 공감 담은 가을 시즌 신작 프로그램 3편 선보여"
+          },
+          {
+            "id": "mi-8982b210542cc63721-p005",
+            "text": "‘트립 인 코리아’ 시즌8은 회당 30분, 총 60회로 구성되며, 10월 19일부터 2027년 1월 8일까지 평일 오후 4시 30분 B tv 케이블 채널 1번 ‘ch B tv’와 리얼TV, NBS한국농업방송 채널을 통해 방송된다.",
+            "locator": "p005",
+            "url": "https://blog.bworld.co.kr/2026/10/19/skb-fall-new-programs-2026/",
+            "title": "SKB, 여행·미식·세대 공감 담은 가을 시즌 신작 프로그램 3편 선보여"
+          },
+          {
+            "id": "mi-8982b210542cc63721-p008",
+            "text": "단순한 맛집 소개를 넘어 음식이 불러일으키는 기억과 감정, 한 끼를 완성하기까지 쌓인 시간의 가치를 조명하는 것이 특징이다. 빠르고 자극적인 숏폼, 먹방 콘텐츠와는 다른 호흡으로 우리의 삶에서 한 끼가 지닌 의미를 돌아본다. 회당 30분, 총 20회로 구성되며, 10월 26일부터 12월 28일까지 매주 월요일 오후 5시 30분과 6시 30분 한 회씩, 주당 두 회를 방송한다. 프로그램은 B tv 케이블 채널 1번 ‘ch B tv’와 위라이크 채널을 통해 방송된다.",
+            "locator": "p008",
+            "url": "https://blog.bworld.co.kr/2026/10/19/skb-fall-new-programs-2026/",
+            "title": "SKB, 여행·미식·세대 공감 담은 가을 시즌 신작 프로그램 3편 선보여"
+          },
+          {
+            "id": "mi-8982b210542cc63721-p009",
+            "text": "대교 뉴이프Plus와 공동 제작하는 ‘청춘학교2026’은 개그맨 정승환과 시니어 출연자들이 함께하는 시청자 동반 참여형 두뇌 예능이다. 청춘수사대 편에서는 추리를 주제로 10명의 시니어가 청춘수사대가 돼 단서를 모아 문제를 해결하며, 추억의 시간여행 편에서는 회상을 주제로 또 다른 10명의 참가자가 자신의 추억을 나누는 여정을 펼친다. 회당 30분, 총 16회로, 11월 4일부터 12월 24일까지 매주 수·목요일 오후 9시 30분 B tv 케이블 채널 1번 ‘ch B tv’와 대교 뉴이프Plus 채널을 통해 방송된다.",
+            "locator": "p009",
+            "url": "https://blog.bworld.co.kr/2026/10/19/skb-fall-new-programs-2026/",
+            "title": "SKB, 여행·미식·세대 공감 담은 가을 시즌 신작 프로그램 3편 선보여"
+          },
+          {
+            "id": "mi-e5577dde5187375575-p002",
+            "text": "Disney+ and ESPN, in collaboration with the NFL, today announced that Disney+ will livestream Super Bowl LXI on Sunday, Feb. 14, 2027, providing another platform for fans to watch ESPN’s first-ever Super Bowl production. All Disney+ subscribers in the United States can stream the traditional game presentation airing on ESPN and ABC, with Joe Buck , Troy Aikman , Lisa Salters and Laura Rutledge on the call, as well as the Spanish-language telecast on ESPN Deportes.",
+            "locator": "p002",
+            "url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
+            "title": "Disney+ to Stream Super Bowl LXI, Joining ESPN and ABC to Give Fans More Ways to Watch"
+          },
+          {
+            "id": "mi-e5577dde5187375575-p003",
+            "text": "Outside of the U.S., Disney+ will stream ESPN’s Super Bowl in more than 55 international markets, including Spanish-speaking Latin America, Brazil, the Caribbean, South Africa and Australia/New Zealand. In conjunction, ESPN’s linear platforms will carry the Super Bowl in more than 130 countries and territories.",
+            "locator": "p003",
+            "url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
+            "title": "Disney+ to Stream Super Bowl LXI, Joining ESPN and ABC to Give Fans More Ways to Watch"
           }
         ]
       }
