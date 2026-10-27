@@ -1,0 +1,35 @@
+name: Capture public OTT provider logos
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/ott-watch-v162]
+    paths:
+      - scripts/fetch_ott_provider_logos.py
+      - .github/workflows/capture_ott_provider_logos.yml
+
+jobs:
+  capture-public-branding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install public image capture tools
+        run: python -m pip install requests beautifulsoup4 Pillow
+      - name: Capture only public provider identity images
+        run: python scripts/fetch_ott_provider_logos.py
+      - name: Record local images and public provenance on the development branch
+        if: ${{ github.ref == 'refs/heads/codex/ott-watch-v162' }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- assets/ott-providers
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Record public OTT provider identity images [skip ci]'
+          git pull --rebase origin codex/ott-watch-v162
+          git push origin HEAD:codex/ott-watch-v162
