@@ -199,7 +199,7 @@ def _check_media_usability(frame, report, label):
     heading = frame.locator('#media-insight-reading-detail')
     heading.wait_for(state='visible', timeout=30000)
     matched = heading.get_attribute('data-item-id') == article_id
-    frame.get_by_role('button', name='목록으로 돌아가기', exact=True).click()
+    frame.get_by_role('button', name='← 목록으로 돌아가기', exact=True).click()
     heading.wait_for(state='detached', timeout=30000)
     frame.wait_for_function('() => !document.querySelector("[data-stale=true]")', timeout=30000)
     after = frame.locator('[data-testid="stMain"]').evaluate('(el)=>el.scrollTop')
