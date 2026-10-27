@@ -184,7 +184,9 @@ def _check_media_usability(frame, report, label):
         frame.wait_for_function('''code => {
           if (document.querySelector('[data-stale=true]')) return false;
           const cards=Array.from(document.querySelectorAll('.st-key-media_insights_workspace [class*="st-key-media_story_"] .media-story-meta'));
-          return cards.length >= 3 && (!code || cards.every(el=>el.dataset.topics.split(' ').includes(code)));
+          return cards.length >= 3 && cards.every(el=>code
+            ? el.dataset.topics.split(' ').includes(code)
+            : el.textContent.includes('한국'));
         }''', arg=code, timeout=30000)
         cards = frame.locator('.st-key-media_insights_workspace [class*="st-key-media_story_"]')
         counts[topic] = cards.count()
