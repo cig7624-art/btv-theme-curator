@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-26T10:02:25+00:00",
+  "checked_at": "2026-10-27T04:38:56+00:00",
   "source": "https://gateway.kinolights.com/graphql",
   "credential_use": false,
   "lookups": [
@@ -13,14 +13,14 @@
         "id": "66957",
         "content_id": "66957",
         "title_en": "PARASITE",
-        "fetched_at": "2026-10-26T10:02:26+00:00"
+        "fetched_at": "2026-10-27T04:38:57+00:00"
       },
       "result": {
         "title": "기생충",
         "year": "2019",
         "content_type": "영화",
         "source_url": "https://m.kinolights.com/title/66957",
-        "fetched_at": "2026-10-26T10:02:27+00:00",
+        "fetched_at": "2026-10-27T04:38:57+00:00",
         "providers": [
           {
             "name": "왓챠",
@@ -96,14 +96,14 @@
         "id": "8374",
         "content_id": "8374",
         "title_en": "The Host",
-        "fetched_at": "2026-10-26T10:02:27+00:00"
+        "fetched_at": "2026-10-27T04:38:58+00:00"
       },
       "result": {
         "title": "괴물",
         "year": "2006",
         "content_type": "영화",
         "source_url": "https://m.kinolights.com/title/8374",
-        "fetched_at": "2026-10-26T10:02:28+00:00",
+        "fetched_at": "2026-10-27T04:38:59+00:00",
         "providers": [
           {
             "name": "넷플릭스",
@@ -171,14 +171,14 @@
         "id": "122296",
         "content_id": "122296",
         "title_en": "Monster",
-        "fetched_at": "2026-10-26T10:02:27+00:00"
+        "fetched_at": "2026-10-27T04:38:58+00:00"
       },
       "result": {
         "title": "괴물",
         "year": "2023",
         "content_type": "영화",
         "source_url": "https://m.kinolights.com/title/122296",
-        "fetched_at": "2026-10-26T10:02:28+00:00",
+        "fetched_at": "2026-10-27T04:38:59+00:00",
         "providers": [
           {
             "name": "웨이브",
