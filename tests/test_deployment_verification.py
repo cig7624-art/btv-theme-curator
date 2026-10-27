@@ -7,6 +7,7 @@ from unittest.mock import Mock, patch
 from scripts.verify_deployment import (
     VerificationIssue, _load_version, access_problem, exact_version, has_app_exception,
     no_horizontal_overflow, normalized_version, resolve_app_frame, valid_news_digest,
+    _reset_attempt, _wait_app_idle,
 )
 
 
@@ -26,6 +27,50 @@ def fake_frame(*, version=None, app=False, exception=False):
 
 
 class DeploymentVerificationTests(unittest.TestCase):
+    def test_retry_discards_previous_viewport_metadata_and_preserves_safe_failure_history(self):
+        report = {'schema_version': 1, 'status': 'failed', 'expected_version': '1.6.2',
+                  'attempts': 2, 'observed_version': 'old', 'frame_state': 'old',
+                  'media_reader': {'mobile': {'scroll_drift_px': 0}},
+                  'ott_title_search': {'mobile': {'providers': 9}},
+                  'diagnostics': {'roots': 1}, 'active_check': 'old',
+                  'attempt_failures': [{'code': 'app_target_idle_timeout'}]}
+        _reset_attempt(report)
+        for key in ('media_reader', 'ott_title_search', 'diagnostics', 'active_check', 'frame_state'):
+            self.assertNotIn(key, report)
+        self.assertEqual(report['attempts'], 2)
+        self.assertEqual(len(report['tests']), 50)
+        self.assertFalse(any(report['tests'].values()))
+        self.assertIsNone(report['observed_version'])
+        self.assertEqual(report['attempt_failures'], [{'code': 'app_target_idle_timeout'}])
+
+    def test_idle_wait_requires_completed_server_run_before_stable_dom_is_accepted(self):
+        page = Mock()
+        tracker = SimpleNamespace(runs=1, successes=1, finished_run=1,
+                                  running=True, compile_error=False, last_control=0,
+                                  decode_errors=0)
+        page._release_rerun_tracker = tracker
+        frame = Mock(page=page)
+        ticks = iter((0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1.0))
+        def settle(_):
+            if page.wait_for_timeout.call_count >= 3:
+                tracker.running = False
+        page.wait_for_timeout.side_effect = settle
+        with (patch('scripts.verify_deployment.time.monotonic', side_effect=lambda: next(ticks)),
+              patch('scripts.verify_deployment._numeric_state', return_value={'roots': 1, 'stale': 0, 'nodes': 5})):
+            _wait_app_idle(frame, {}, 'desktop', selector='.test', stage='ready')
+        self.assertGreaterEqual(page.wait_for_timeout.call_count, 4)
+
+    def test_idle_timeout_reports_only_numeric_state_without_source_or_dom_text(self):
+        page = Mock()
+        frame = Mock(page=page)
+        report = {}
+        with (patch('scripts.verify_deployment.time.monotonic', side_effect=[0, .1, .2, 2]),
+              patch('scripts.verify_deployment._numeric_state', return_value={'roots': 1, 'stale': 1})):
+            with self.assertRaisesRegex(VerificationIssue, '^app_target_idle_timeout$'):
+                _wait_app_idle(frame, report, 'mobile', selector='.test', stage='ready', timeout=1000)
+        self.assertEqual(report['active_check'], 'mobile_ready')
+        self.assertEqual(report['diagnostics'], {'roots': 1, 'stale': 1})
+
     def test_news_digest_requires_at_most_four_recent_publication_dates_in_order(self):
         now = datetime(2026, 10, 26, 1, tzinfo=timezone.utc)
         dates = ["2026-10-26T08:00:00+09:00", "2026-10-25T12:00:00+09:00",

@@ -79,6 +79,87 @@ class VerificationIssue(RuntimeError):
         super().__init__(code)
 
 
+def _attach_rerun_tracker(page):
+    # Import after this module has loaded: the benchmark imports our public
+    # helpers. A top-level import here would create a circular import.
+    if __package__:
+        from .benchmark_app_performance import RerunTracker
+    else:
+        from benchmark_app_performance import RerunTracker
+    page._release_rerun_tracker = RerunTracker(page)
+
+
+def _tracker(page):
+    # Avoid creating an attribute on lightweight test doubles.
+    return vars(page).get('_release_rerun_tracker')
+
+
+def _stage(report, label, stage):
+    report['active_check'] = f'{label}_{stage}'
+
+
+def _numeric_state(frame, selector):
+    """Keep numeric diagnostics only; never persist DOM text or widget values."""
+    state = frame.evaluate('''selector => {
+      const visible = el => !!el && el.getClientRects().length > 0
+        && getComputedStyle(el).visibility !== 'hidden';
+      const roots=Array.from(document.querySelectorAll(selector)).filter(visible);
+      const scope=roots[0];
+      return {roots: roots.length, nodes: scope ? scope.querySelectorAll('*').length : 0,
+        text_length: scope ? scope.textContent.length : 0,
+        stale: scope ? Number(!!scope.closest('[data-stale="true"]'))
+          + Array.from(scope.querySelectorAll('[data-stale="true"]')).filter(visible).length : 0,
+        inputs: scope ? scope.querySelectorAll('input').length : 0,
+        results: scope ? scope.querySelectorAll('.ott-title-result').length : 0,
+        cards: scope ? scope.querySelectorAll('.media-story-meta').length : 0};
+    }''', selector)
+    return {key: value for key, value in state.items()
+            if isinstance(value, int) and not isinstance(value, bool)}
+
+
+def _wait_app_idle(frame, report, label, *, selector, stage, timeout=30000):
+    """Wait for the real full rerun and a stable, nonstale target before input."""
+    _stage(report, label, stage)
+    tracker = _tracker(frame.page)
+    end = time.monotonic() + timeout / 1000
+    signature, stable_since, state = None, 0.0, {}
+    while time.monotonic() < end:
+        frame.page.wait_for_timeout(50)
+        if tracker and tracker.compile_error:
+            raise VerificationIssue('app_exception')
+        try:
+            state = _numeric_state(frame, selector)
+        except Exception:
+            state = {}
+        now = time.monotonic()
+        finished = (tracker is None or (tracker.runs > 0 and tracker.successes > 0
+                    and tracker.finished_run == tracker.runs and not tracker.running
+                    and now - tracker.last_control >= .25))
+        current = tuple(sorted(state.items())) if state.get('roots', 0) and not state.get('stale') and finished else None
+        if current and current == signature:
+            if now - stable_since >= .25:
+                return
+        else:
+            signature, stable_since = current, now
+    report['diagnostics'] = dict(state)
+    if tracker:
+        report['diagnostics'].update(runs=tracker.runs, successes=tracker.successes,
+                                     running=int(tracker.running), decode_errors=tracker.decode_errors)
+    raise VerificationIssue('app_target_idle_timeout', retry=True)
+
+
+def _reset_attempt(report):
+    """Discard every prior viewport measurement before another full attempt."""
+    retain = {'schema_version', 'status', 'expected_version', 'started_at', 'finished_at',
+              'attempts', 'source_commit', 'attempt_failures'}
+    for key in list(report):
+        if key not in retain:
+            del report[key]
+    report.update(observed_version=None, tests={f'{label}_{check}': False
+                  for label in ('desktop', 'mobile') for check in CHECKS},
+                  errors=[], warnings=[], artwork={})
+
+
 def resolve_app_frame(page):
     """Find the real app in a direct page or public Cloud wrapper's frames."""
     fallback = None
@@ -158,10 +239,21 @@ def _load_version(page, args, report, label):
 
 def _check_title_lookup(frame, report, label):
     lookup = frame.locator('.st-key-ott_title_search')
-    lookup.get_by_role('textbox', name='작품으로 OTT 찾기', exact=True).fill('기생충')
-    lookup.get_by_role('button', name='검색', exact=True).click()
-    result = lookup.locator('.ott-title-result[data-status]')
-    result.wait_for(state='visible', timeout=45000)
+    _wait_app_idle(frame, report, label, selector='.st-key-ott_title_search', stage='ott_title_search_idle')
+    try:
+        _stage(report, label, 'ott_title_search_fill')
+        lookup.get_by_role('textbox', name='작품으로 OTT 찾기', exact=True).fill('기생충', timeout=15000)
+        _stage(report, label, 'ott_title_search_submit')
+        lookup.get_by_role('button', name='검색', exact=True).click(timeout=15000)
+        _stage(report, label, 'ott_title_search_result')
+        result = lookup.locator('.ott-title-result[data-status]')
+        result.wait_for(state='visible', timeout=45000)
+    except Exception:
+        try:
+            report['diagnostics'] = _numeric_state(frame, '.st-key-ott_title_search')
+        except Exception:
+            report['diagnostics'] = {}
+        raise VerificationIssue('ott_title_search_interaction_timeout', retry=True)
     status = result.get_attribute('data-status')
     source = result.get_by_role('link', name='키노라이츠 원문 ↗', exact=True)
     source_url = urlsplit(source.get_attribute('href') or '') if source.count() else None
@@ -173,13 +265,30 @@ def _check_title_lookup(frame, report, label):
     report.setdefault('ott_title_search', {})[label] = {'status': status, 'providers': providers, 'original_link': source.count() == 1}
     if not valid:
         raise VerificationIssue('ott_title_service_lookup_failed', retry=True)
+    _wait_app_idle(frame, report, label, selector='.st-key-ott_title_search', stage='ott_title_search_complete_idle')
 
 
 def _check_media_usability(frame, report, label):
+    try:
+        _check_media_usability_steps(frame, report, label)
+    except VerificationIssue:
+        raise
+    except Exception:
+        try:
+            report['diagnostics'] = _numeric_state(frame, '.st-key-media_insights_workspace')
+        except Exception:
+            report['diagnostics'] = {}
+        raise VerificationIssue('media_usability_interaction_timeout', retry=True)
+
+
+def _check_media_usability_steps(frame, report, label):
     topic_control = frame.locator('.st-key-media_insight_topic')
     counts = {}
     for topic, code in (('국내 이슈', None), ('광고·요금제', 'advertising_pricing'),
                         ('스포츠·콘텐츠', 'sports_content'), ('AI·기술', 'ai_technology')):
+        _wait_app_idle(frame, report, label, selector='.st-key-media_insights_workspace',
+                       stage='media_topic_' + (code or 'domestic') + '_idle')
+        _stage(report, label, 'media_topic_' + (code or 'domestic'))
         topic_control.get_by_text(topic, exact=True).click()
         frame.wait_for_function('''code => {
           if (document.querySelector('[data-stale=true]')) return false;
@@ -192,15 +301,19 @@ def _check_media_usability(frame, report, label):
         counts[topic] = cards.count()
     report['tests'][f'{label}_media_topic_archive'] = all(value >= 3 for value in counts.values())
     report.setdefault('media_topic_archive', {})[label] = counts
+    _wait_app_idle(frame, report, label, selector='.st-key-media_insights_workspace', stage='media_reader_idle')
     card = cards.last
     article_id = card.locator('.media-story-meta').get_attribute('data-item-id')
     button = card.get_by_role('button').first
     button.scroll_into_view_if_needed()
     before = frame.locator('[data-testid="stMain"]').evaluate('(el)=>el.scrollTop')
+    _stage(report, label, 'media_reader_open')
     button.click()
     heading = frame.locator('#media-insight-reading-detail')
     heading.wait_for(state='visible', timeout=30000)
     matched = heading.get_attribute('data-item-id') == article_id
+    _wait_app_idle(frame, report, label, selector='#media-insight-reading-detail', stage='media_reader_close_idle')
+    _stage(report, label, 'media_reader_close')
     frame.get_by_role('button', name='← 목록으로 돌아가기', exact=True).click()
     heading.wait_for(state='detached', timeout=30000)
     frame.wait_for_function('() => !document.querySelector("[data-stale=true]")', timeout=30000)
@@ -210,12 +323,15 @@ def _check_media_usability(frame, report, label):
     report.setdefault('media_reader', {})[label] = {'matching_note': matched, 'scroll_drift_px': drift}
     if not report['tests'][f'{label}_media_reader']:
         raise VerificationIssue('media_reader_scroll_or_identity_failed')
+    _wait_app_idle(frame, report, label, selector='.st-key-media_insights_workspace', stage='media_topic_reset_idle')
     topic_control.get_by_text('전체', exact=True).click()
     frame.wait_for_function('() => !document.querySelector("[data-stale=true]")', timeout=30000)
+    _wait_app_idle(frame, report, label, selector='.st-key-media_insights_workspace', stage='media_topic_reset_complete_idle')
 
 
 def _check_editorial(frame, report, label, screenshots):
     page = frame.page
+    _stage(report, label, 'editorial_navigation')
     tab_names = frame.get_by_role("tab").all_text_contents()
     report["tests"][f"{label}_five_tabs"] = [name.strip() for name in tab_names] == ["지금 주목할 이야기", "추천 테마", "AI 디렉터", "OTT는 지금", "미디어 인사이트"]
     if not report["tests"][f"{label}_five_tabs"]:
@@ -353,6 +469,7 @@ def _check_editorial(frame, report, label, screenshots):
     frame.get_by_role('radio', name='주요 소식', exact=True).click()
     frame.locator('.ott-magazine').wait_for(state='visible')
     _check_title_lookup(frame, report, label)
+    _stage(report, label, 'media_navigation')
     frame.get_by_role('tab', name='미디어 인사이트', exact=True).click()
     frame.locator('.media-insights-heading').wait_for(state='visible', timeout=30000)
     frame.wait_for_function('''() => {
@@ -426,6 +543,7 @@ def _check_editorial(frame, report, label, screenshots):
     if not report['tests'][f'{label}_media_public_only']:
         raise VerificationIssue('private_research_controls_present')
     _check_media_usability(frame, report, label)
+    _stage(report, label, 'final_screenshots')
     if has_app_exception(page):
         raise VerificationIssue('media_insights_exception')
     screenshots.mkdir(parents=True, exist_ok=True)
@@ -458,10 +576,7 @@ def verify(args):
                     if report["attempts"] and time.monotonic() >= deadline:
                         break
                     report["attempts"] += 1
-                    report["tests"] = {f"{label}_{check}": False for label in ("desktop", "mobile") for check in CHECKS}
-                    report["errors"] = []
-                    report["warnings"] = []
-                    report["artwork"] = {}
+                    _reset_attempt(report)
                     issue = None
                     try:
                         for label, width, height in (("desktop", 1366, 1000), ("mobile", 390, 844)):
@@ -469,11 +584,14 @@ def verify(args):
                                                           is_mobile=label == "mobile", has_touch=label == "mobile")
                             try:
                                 page = context.new_page()
+                                _attach_rerun_tracker(page)
+                                _stage(report, label, 'load_version')
                                 frame = _load_version(page, args, report, label)
                                 _check_editorial(frame, report, label, args.screenshots_dir)
                             finally:
                                 context.close()
                         report["status"] = "passed"
+                        report['active_check'] = 'complete'
                         break
                     except VerificationIssue as error:
                         issue = error
@@ -486,6 +604,11 @@ def verify(args):
                         issue = VerificationIssue("network_access_blocked" if blocked else "browser_navigation_unavailable",
                                                   blocked=blocked, retry=not blocked)
                     report["errors"] = [issue.code]
+                    report.setdefault('attempt_failures', []).append({
+                        'attempt': report['attempts'], 'code': issue.code,
+                        'active_check': report.get('active_check', 'unknown'),
+                        'diagnostics': report.get('diagnostics', {}),
+                    })
                     if issue.blocked:
                         report["status"] = "blocked"
                         break
