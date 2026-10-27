@@ -1,0 +1,67 @@
+{
+  "version": "1.6.3",
+  "checked_at": "2026-10-27T05:23:13.025725+00:00",
+  "related_tests": {
+    "media": 180,
+    "deployment_verification": 14
+  },
+  "local_browser": {
+    "tests": {
+      "desktop_media_topic_archive": true,
+      "desktop_media_reader": true,
+      "mobile_media_topic_archive": true,
+      "mobile_media_reader": true
+    },
+    "active_check": "mobile_media_topic_reset_complete_idle",
+    "media_topic_archive": {
+      "desktop": {
+        "국내 이슈": 4,
+        "광고·요금제": 3,
+        "스포츠·콘텐츠": 4,
+        "AI·기술": 3
+      },
+      "mobile": {
+        "국내 이슈": 4,
+        "광고·요금제": 3,
+        "스포츠·콘텐츠": 4,
+        "AI·기술": 3
+      }
+    },
+    "media_reader": {
+      "desktop": {
+        "matching_note": true,
+        "no_automatic_popup": true,
+        "article_click_scroll_drift_px": 0,
+        "scroll_drift_px": 0
+      },
+      "mobile": {
+        "matching_note": true,
+        "no_automatic_popup": true,
+        "article_click_scroll_drift_px": 0,
+        "scroll_drift_px": 0
+      }
+    }
+  },
+  "behavior": "Article selection updates the side analysis note; the reader opens only via the explicit read button.",
+  "status": "passed",
+  "live_browser": {
+    "source_commit": "9632daf38147430b33d66b364d165c2e9b24c09d",
+    "checks_passed": 50,
+    "reader": {
+      "desktop": {
+        "matching_note": true,
+        "no_automatic_popup": true,
+        "article_click_scroll_drift_px": 0,
+        "scroll_drift_px": 0
+      },
+      "mobile": {
+        "matching_note": true,
+        "no_automatic_popup": true,
+        "article_click_scroll_drift_px": 0,
+        "scroll_drift_px": 0
+      }
+    }
+  },
+  "tab_stability": "passed",
+  "poster_rail": "passed"
+}
