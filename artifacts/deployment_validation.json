@@ -2,10 +2,11 @@
   "schema_version": 1,
   "status": "passed",
   "expected_version": "1.6.2",
+  "started_at": "2026-10-27T04:47:02.369051+00:00",
+  "finished_at": "2026-10-27T04:48:04.424514+00:00",
+  "attempts": 1,
+  "source_commit": "683835e1c18bd84c08ecb9681a0728c5f945e572",
   "observed_version": "1.6.2",
-  "started_at": "2026-10-27T04:22:58.081662+00:00",
-  "finished_at": "2026-10-27T04:25:18.220432+00:00",
-  "attempts": 2,
   "tests": {
     "desktop_version": true,
     "desktop_five_tabs": true,
@@ -74,7 +75,7 @@
       "lead_loaded": true
     }
   },
-  "source_commit": "946a472703fa3d57957453976cf6a69c362443a1",
+  "active_check": "complete",
   "frame_state": "matched_release",
   "news_digest": {
     "desktop": {
@@ -110,13 +111,13 @@
   },
   "media_topic_archive": {
     "desktop": {
-      "\uad6d\ub0b4 \uc774\uc288": 3,
+      "\uad6d\ub0b4 \uc774\uc288": 4,
       "\uad11\uace0\u00b7\uc694\uae08\uc81c": 3,
       "\uc2a4\ud3ec\uce20\u00b7\ucf58\ud150\uce20": 4,
       "AI\u00b7\uae30\uc220": 3
     },
     "mobile": {
-      "\uad6d\ub0b4 \uc774\uc288": 6,
+      "\uad6d\ub0b4 \uc774\uc288": 4,
       "\uad11\uace0\u00b7\uc694\uae08\uc81c": 3,
       "\uc2a4\ud3ec\uce20\u00b7\ucf58\ud150\uce20": 4,
       "AI\u00b7\uae30\uc220": 3
