@@ -21,6 +21,7 @@ from media_insights_editorial import select_major_insights
 from media_insights_localization import valid_localization, MediaLocalizationError
 from media_insights_topics import media_primary_topic, media_topic_ids
 from public_media_monitoring import public_documents, public_url, compare_public_document, comparison_focus
+from page_header import page_header_html, page_header_styles_html
 
 
 _SELECTED = "media_insight_selected_id"
@@ -683,13 +684,17 @@ def _render_collection_sources(snapshot):
 def render_media_insights_page(snapshot, *, on_refresh=None, on_analyze=None, on_localize=None):
     """Render real saved items; only explicit buttons call the supplied callbacks."""
     snapshot = snapshot if isinstance(snapshot, Mapping) else {}
-    st.markdown('<style>' + Path(__file__).with_name("media_insights_styles.css").read_text(encoding="utf-8") + '</style>',
-                unsafe_allow_html=True)
+    st.html('<style>' + Path(__file__).with_name("media_insights_styles.css").read_text(encoding="utf-8")
+            + '</style>' + page_header_styles_html())
     with st.container(key="media_insights_section"):
         with st.container(key="media_insights_header"):
             title, question_action, refresh_action = st.columns([4, 1.5, 1], gap="small", vertical_alignment="center")
             with title:
-                st.markdown('<header class="media-insights-heading"><h2>미디어 인사이트</h2><p>사업의 변화에서, 다음 선택의 근거까지.</p></header>', unsafe_allow_html=True)
+                st.markdown(page_header_html(
+                    'media', '미디어 인사이트',
+                    '사업의 변화에서, 다음 선택의 근거까지.',
+                    eyebrow='THE MEDIA BRIEF',
+                ), unsafe_allow_html=True)
             with question_action:
                 st.button("공개 자료 비교", key="media_insights_compare_toggle", on_click=_toggle_public_comparison,
                           disabled=not bool(public_documents(snapshot)), width="stretch")

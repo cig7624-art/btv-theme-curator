@@ -238,11 +238,27 @@ def _load_version(page, args, report, label):
 
 
 def _check_title_lookup(frame, report, label):
+    _wait_app_idle(frame, report, label, selector='.st-key-ott_platform_selector', stage='ott_title_search_navigation_idle')
+    trigger = frame.locator('.st-key-ott_title_search_trigger').get_by_role('button').first
+    trigger.scroll_into_view_if_needed()
+    trigger_width = trigger.bounding_box()['width']
+    refresh_width = frame.locator('.st-key-refresh_ott_public_homes').get_by_role('button').bounding_box()['width']
+    compact = max(trigger_width, refresh_width) <= min(trigger_width, refresh_width) * 1.15
+    navigation = frame.locator('.st-key-ott_platform_selector')
+    def navigation_top():
+        return navigation.evaluate('''el => el.getBoundingClientRect().top
+          + (document.querySelector('[data-testid="stMain"]')?.scrollTop || 0)''')
+    before = navigation_top()
+    trigger.click()
     lookup = frame.locator('.st-key-ott_title_search')
     _wait_app_idle(frame, report, label, selector='.st-key-ott_title_search', stage='ott_title_search_idle')
+    opened_drift = abs(navigation_top() - before)
     try:
         _stage(report, label, 'ott_title_search_fill')
-        lookup.get_by_role('textbox', name='작품으로 OTT 찾기', exact=True).fill('기생충', timeout=15000)
+        query = lookup.get_by_role('textbox', name='작품으로 OTT 찾기', exact=True)
+        query.fill('기생충', timeout=15000)
+        query.press('Tab')
+        _wait_app_idle(frame, report, label, selector='.st-key-ott_title_search', stage='ott_title_search_query_idle')
         _stage(report, label, 'ott_title_search_submit')
         lookup.get_by_role('button', name='검색', exact=True).click(timeout=15000)
         _stage(report, label, 'ott_title_search_result')
@@ -258,14 +274,40 @@ def _check_title_lookup(frame, report, label):
     source = result.get_by_role('link', name='키노라이츠 원문 ↗', exact=True)
     source_url = urlsplit(source.get_attribute('href') or '') if source.count() else None
     providers = int(result.get_attribute('data-provider-count') or 0)
+    logos = result.locator('.ott-title-service img[alt]').count()
+    frame.wait_for_function('''() => Array.from(document.querySelectorAll(
+      '.st-key-ott_title_search .ott-title-service img[alt]'))
+        .every(image => image.complete && image.naturalWidth > 0)''', timeout=5000)
     valid = (status in {'available', 'unavailable'} and source_url is not None
              and source_url.hostname in {'kinolights.com', 'm.kinolights.com'}
-             and '/title/' in source_url.path and (status != 'available' or providers > 0))
-    report['tests'][f'{label}_ott_title_search'] = valid
-    report.setdefault('ott_title_search', {})[label] = {'status': status, 'providers': providers, 'original_link': source.count() == 1}
+             and '/title/' in source_url.path and (status != 'available' or providers > 0)
+             and logos == providers and compact)
+    metadata = {'status': status, 'providers': providers, 'logos': logos,
+                'original_link': source.count() == 1,
+                'search_control_width_px': round(trigger_width, 2), 'refresh_control_width_px': round(refresh_width, 2)}
+    report.setdefault('ott_title_search', {})[label] = metadata
     if not valid:
         raise VerificationIssue('ott_title_service_lookup_failed', retry=True)
     _wait_app_idle(frame, report, label, selector='.st-key-ott_title_search', stage='ott_title_search_complete_idle')
+    result_drift = abs(navigation_top() - before)
+    _stage(report, label, 'ott_title_search_reset')
+    lookup.get_by_role('button', name='초기화', exact=True).click()
+    frame.wait_for_function('''() => {
+      const scope=document.querySelector('.st-key-ott_title_search');
+      return scope && scope.querySelector('input')?.value === ''
+        && !scope.querySelector('.ott-title-result');
+    }''', timeout=30000)
+    _wait_app_idle(frame, report, label, selector='.st-key-ott_title_search', stage='ott_title_search_reset_idle')
+    reset_drift = abs(navigation_top() - before)
+    reset = query.input_value() == '' and lookup.locator('.ott-title-result').count() == 0
+    frame.page.keyboard.press('Escape')
+    lookup.wait_for(state='hidden', timeout=15000)
+    closed_drift = abs(navigation_top() - before)
+    drift = max(opened_drift, result_drift, reset_drift, closed_drift)
+    metadata.update(reset_to_initial=reset, platform_tabs_drift_px=drift)
+    report['tests'][f'{label}_ott_title_search'] = valid and reset and drift <= 1
+    if not reset or drift > 1:
+        raise VerificationIssue('ott_title_search_reset_or_navigation_layout_failed')
 
 
 def _check_media_usability(frame, report, label):
@@ -345,6 +387,27 @@ def _check_media_usability_steps(frame, report, label):
     _wait_app_idle(frame, report, label, selector='.st-key-media_insights_workspace', stage='media_topic_reset_complete_idle')
 
 
+def _check_page_header(frame, report, label, page_id):
+    metrics = frame.locator(f'[data-page-header="{page_id}"]').evaluate('''el => {
+      const title=el.querySelector('h1.page-header-title'), copy=el.querySelector('.page-header-description');
+      const value=(node, property)=>node ? parseFloat(getComputedStyle(node)[property]) || 0 : 0;
+      return {h1_count:el.querySelectorAll('h1.page-header-title').length,
+        eyebrow_count:el.querySelectorAll('.page-header-eyebrow').length,
+        description_count:el.querySelectorAll('.page-header-description').length,
+        title_px:value(title,'fontSize'), title_weight:value(title,'fontWeight'),
+        title_line_px:value(title,'lineHeight'), description_px:value(copy,'fontSize'),
+        description_line_px:value(copy,'lineHeight'), height_px:el.getBoundingClientRect().height,
+        y_px:el.getBoundingClientRect().top+(document.querySelector('[data-testid="stMain"]')?.scrollTop || 0)};
+    }''')
+    headers = report.setdefault('shared_header_metrics', {}).setdefault(label, {})
+    headers[page_id] = metrics
+    if any(metrics[key] != 1 for key in ('h1_count', 'eyebrow_count', 'description_count')):
+        raise VerificationIssue('shared_page_header_structure_missing')
+    font_keys = ('title_px', 'title_weight', 'title_line_px', 'description_px', 'description_line_px')
+    if len({tuple(row[key] for key in font_keys) for row in headers.values()}) != 1:
+        raise VerificationIssue('shared_page_header_typography_mismatch')
+
+
 def _check_editorial(frame, report, label, screenshots):
     page = frame.page
     _stage(report, label, 'editorial_navigation')
@@ -360,8 +423,10 @@ def _check_editorial(frame, report, label, screenshots):
     if not report['tests'][f'{label}_news_digest']:
         raise VerificationIssue('news_digest_stale_or_invalid', retry=True)
     report.setdefault('news_digest', {})[label] = {'count': len(dates), 'maximum': 4}
+    _check_page_header(frame, report, label, 'story')
     frame.get_by_role("tab", name="추천 테마", exact=True).click()
     frame.locator(".st-key-curation_section").wait_for(state="visible", timeout=20000)
+    _check_page_header(frame, report, label, 'recommendation')
     report["tests"][f"{label}_weekly_actions"] = frame.get_by_role("button", name="테마 생성하기", exact=True).count() == 1 and frame.locator('.st-key-load_weekly_contents').count() == 1
     if not report["tests"][f"{label}_weekly_actions"]:
         raise VerificationIssue("weekly_actions_missing", retry=True)
@@ -394,6 +459,7 @@ def _check_editorial(frame, report, label, screenshots):
         raise VerificationIssue("director_screen_missing", retry=True)
     if not report["tests"][f"{label}_director_screen"]:
         raise VerificationIssue("director_composer_missing")
+    _check_page_header(frame, report, label, 'director')
     frame.get_by_role('button', name='AI 비용·잔액', exact=True).click()
     cost_details = frame.locator('[data-testid="stPopoverBody"]').filter(has_text='AI 사용과 비용')
     cost_details.wait_for(state='visible', timeout=30000)
@@ -414,6 +480,7 @@ def _check_editorial(frame, report, label, screenshots):
         report["tests"][f"{label}_ott_magazine"] = True
     except Exception:
         raise VerificationIssue("ott_magazine_missing")
+    _check_page_header(frame, report, label, 'ott')
     try:
         frame.locator(".ott-magazine .ott-feature").first.wait_for(state="visible", timeout=15000)
         report["tests"][f"{label}_ott_feature"] = True
@@ -488,6 +555,7 @@ def _check_editorial(frame, report, label, screenshots):
     _stage(report, label, 'media_navigation')
     frame.get_by_role('tab', name='미디어 인사이트', exact=True).click()
     frame.locator('.media-insights-heading').wait_for(state='visible', timeout=30000)
+    _check_page_header(frame, report, label, 'media')
     frame.wait_for_function('''() => {
       const control = document.querySelector('.st-key-media_insight_period');
       return control && [control.innerText, ...Array.from(control.querySelectorAll('input,select'))

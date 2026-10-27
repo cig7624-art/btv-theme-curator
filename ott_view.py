@@ -12,6 +12,7 @@ from zoneinfo import ZoneInfo
 
 from ott_editorial import EDITORIAL_CRITERIA, select_editorial_highlights
 from ott_title_search_view import render_ott_title_search
+from page_header import page_header_html, page_header_styles_html
 
 
 OTT_SERVICES = (
@@ -436,13 +437,20 @@ def render_ott_page(snapshot, *, on_refresh: Callable | None = None):
     import streamlit as st
 
     styles = Path(__file__).with_name("ott_styles.css").read_text(encoding="utf-8")
-    st.markdown('<style>' + styles + '</style>', unsafe_allow_html=True)
+    st.html('<style>' + styles + '</style>' + page_header_styles_html())
     with st.container(key="ott_now_section"):
-        heading, action = st.columns([5, 1.5], vertical_alignment="bottom")
+        heading, action = st.columns([5, 2.2], vertical_alignment="bottom")
         with heading:
-            st.markdown('<header class="ott-page-heading"><h2>OTT는 지금</h2><p>지금 앞세운 작품, 눈여겨볼 큐레이션. 주요 소식만 골라 한눈에.</p></header>', unsafe_allow_html=True)
+            st.markdown(page_header_html("ott", "OTT는 지금", "지금 앞세운 작품, 눈여겨볼 큐레이션. 주요 소식만 골라 한눈에.", eyebrow="THE OTT EDIT"), unsafe_allow_html=True)
         with action:
-            refresh = on_refresh is not None and st.button("소식 새로고침", key="refresh_ott_public_homes", help="공개 메인 홈을 확인합니다. 최근 확인 결과는 15분간 공유합니다.", width="stretch")
+            with st.container(key="ott_header_actions"):
+                search, refresh_action = st.columns(2, gap="small")
+                with search:
+                    with st.container(key="ott_title_search_trigger"):
+                        with st.popover("작품 검색", icon=":material/search:", width="stretch"):
+                            render_ott_title_search()
+                with refresh_action:
+                    refresh = on_refresh is not None and st.button("소식 새로고침", key="refresh_ott_public_homes", help="공개 메인 홈을 확인합니다. 최근 확인 결과는 15분간 공유합니다.", width="stretch")
         if refresh:
             try:
                 with st.spinner("공개 홈을 확인하고 있습니다…"):
@@ -452,7 +460,6 @@ def render_ott_page(snapshot, *, on_refresh: Callable | None = None):
             except Exception:
                 _LOGGER.exception("Public OTT homepage refresh failed")
                 st.warning("이번에는 홈 자료를 갱신하지 못했습니다. 저장된 확인 자료를 보여드립니다.")
-        render_ott_title_search()
         labels = {"all": "주요 소식", **{service_id: name for service_id, name, _ in OTT_SERVICES}}
         with st.container(key="ott_platform_selector"):
             selected = st.segmented_control("OTT 선택", options=list(labels), format_func=labels.get,

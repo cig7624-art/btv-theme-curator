@@ -28,6 +28,9 @@ on:
       - ott_editorial.py
       - ott_view.py
       - ott_title_search_view.py
+      - ott_provider_branding.py
+      - page_header.py
+      - assets/ott-providers/**
       - kinolights_availability.py
       - ott_styles.css
       - styles.css

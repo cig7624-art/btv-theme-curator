@@ -11,10 +11,12 @@ from datetime import datetime, timezone
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
+from ott_provider_branding import subscription_provider_cards, render_provider_logos_html
+
 
 _LOGGER = logging.getLogger(__name__)
 _STATE_KEY = "ott_title_search_state"
-_OFFER_LABELS = {"subscription": "구독", "rent": "대여", "buy": "구매"}
+_CHOICE_KEY = "ott_title_search_choice"
 
 
 def _text(value, limit=500):
@@ -79,38 +81,19 @@ def title_availability_html(result):
     result = result if isinstance(result, Mapping) else {}
     status = _text(result.get("status"))
     title = _candidate_label(result)
-    providers = result.get("providers") if isinstance(result.get("providers"), list) else []
-    chips, seen = [], set()
-    if status == "available":
-        for provider in providers[:40]:
-            if not isinstance(provider, Mapping):
-                continue
-            name = _text(provider.get("name"), 100)
-            if not name:
-                continue
-            url = _url(provider.get("url"))
-            offer = _OFFER_LABELS.get(_text(provider.get("offer_type")), "")
-            identity = (name, offer, url)
-            if identity in seen:
-                continue
-            seen.add(identity)
-            label = name + (" · " + offer if offer else "")
-            if url:
-                chips.append('<a class="ott-title-service" href="' + _escape(url)
-                             + '" target="_blank" rel="noopener noreferrer">' + _escape(label) + ' ↗</a>')
-            else:
-                chips.append('<span class="ott-title-service">' + _escape(label) + '</span>')
+    providers = subscription_provider_cards(result) if status == "available" else []
     heading = '<h3 class="ott-title-result-title">' + _escape(title) + '</h3>' if title else ""
-    if chips:
-        body = '<div class="ott-title-services" aria-label="시청 서비스">' + ''.join(chips) + '</div>'
+    if providers:
+        body = '<p class="ott-title-lookup-note">구독으로 볼 수 있는 곳</p><div class="ott-title-services" aria-label="구독 서비스">' + render_provider_logos_html(providers) + '</div>'
     else:
         message = {
+            "available": "확인된 구독 서비스가 없습니다.",
             "unavailable": "키노라이츠에 표시된 시청 서비스가 없습니다.",
             "fetch_error": "시청 정보를 불러오지 못했습니다. 잠시 후 다시 검색해 주세요.",
             "identity_mismatch": "선택한 작품과 원문 정보가 달라 시청 정보를 표시하지 않았습니다.",
         }.get(status, "시청 서비스 정보를 확인하지 못했습니다. 키노라이츠 원문에서 확인해 주세요.")
         body = '<p class="ott-title-lookup-note" role="status">' + _escape(message) + '</p>'
-    return '<div class="ott-title-result" data-status="' + _escape(status) + '" data-provider-count="' + str(len(chips)) + '">' + heading + body + _source_meta(result) + '</div>'
+    return '<div class="ott-title-result" data-status="' + _escape(status) + '" data-provider-count="' + str(len(providers)) + '">' + heading + body + _source_meta(result) + '</div>'
 
 
 def _search_titles(query):
@@ -134,22 +117,47 @@ def _lookup(candidate):
     return {**candidate, **result}
 
 
+def _reset_search():
+    import streamlit as st
+    st.session_state.pop(_STATE_KEY, None)
+    st.session_state.pop(_CHOICE_KEY, None)
+    st.session_state["ott_title_search_query"] = ""
+
+
+def _choose_title():
+    """A direct dropdown selection is an explicit source lookup."""
+    import streamlit as st
+    state = st.session_state.get(_STATE_KEY, {})
+    candidates = state.get("candidates", [])
+    choice = st.session_state.get(_CHOICE_KEY)
+    if isinstance(choice, int) and not isinstance(choice, bool) and 0 <= choice < len(candidates):
+        state["choice"] = choice
+        state["result"] = _lookup(candidates[choice])
+        state.pop("message", None)
+        st.session_state[_STATE_KEY] = state
+
+
 def render_ott_title_search():
-    """Only form submission may call a source; all other renders use session data."""
+    """Only submitted search and explicit dropdown selection query the source."""
     import streamlit as st
 
     state = st.session_state.get(_STATE_KEY, {})
+    if "ott_title_search_query" not in st.session_state:
+        st.session_state["ott_title_search_query"] = state.get("query", "")
     with st.container(key="ott_title_search"):
         with st.form("ott_title_search_form", border=False):
-            entry, action = st.columns([5, 1], vertical_alignment="bottom")
+            entry, action, reset = st.columns([4, 1, 1.2], gap="small", vertical_alignment="bottom")
             with entry:
                 query = st.text_input("작품으로 OTT 찾기", placeholder="영화·시리즈 제목을 입력하세요", max_chars=160,
-                                      key="ott_title_search_query")
+                                      key="ott_title_search_query", label_visibility="collapsed")
             with action:
                 submitted = st.form_submit_button("검색", key="ott_title_search_submit", width="stretch")
+            with reset:
+                st.form_submit_button("초기화", key="ott_title_search_reset", on_click=_reset_search, width="stretch")
         if submitted:
             query = query.strip()
             state = {"query": query}
+            st.session_state.pop(_CHOICE_KEY, None)
             if not query:
                 state["message"] = "검색할 작품 제목을 입력해 주세요."
             else:
@@ -173,22 +181,12 @@ def render_ott_title_search():
             st.session_state[_STATE_KEY] = state
         candidates = state.get("candidates", [])
         if len(candidates) > 1:
-            with st.form("ott_title_choice_form", border=False):
-                selection, action = st.columns([5, 1], vertical_alignment="bottom")
-                with selection:
-                    choice = st.selectbox("찾는 작품을 선택해 주세요", options=list(range(len(candidates))),
-                                          index=None, placeholder="제목과 제작 연도로 선택", format_func=lambda index: _candidate_label(candidates[index]),
-                                          key="ott_title_search_choice_" + state.get("query", ""))
-                with action:
-                    confirmed = st.form_submit_button("OTT 확인", key="ott_title_choice_submit", width="stretch")
-            if confirmed:
-                if choice is None:
-                    state["message"] = "제목과 제작 연도를 확인하고 작품을 선택해 주세요."
-                else:
-                    with st.spinner("시청 서비스를 확인하고 있습니다…"):
-                        state["result"] = _lookup(candidates[choice])
-                    state.pop("message", None)
-                st.session_state[_STATE_KEY] = state
+            if _CHOICE_KEY not in st.session_state and isinstance(state.get("choice"), int):
+                st.session_state[_CHOICE_KEY] = state["choice"]
+            st.selectbox("검색 결과", options=list(range(len(candidates))), index=None,
+                         placeholder=f"검색 결과 {len(candidates)}건 · 작품 선택",
+                         format_func=lambda index: _candidate_label(candidates[index]),
+                         key=_CHOICE_KEY, on_change=_choose_title, label_visibility="collapsed")
         if state.get("message"):
             st.markdown('<p class="ott-title-lookup-note" role="status">' + _escape(state["message"]) + '</p>', unsafe_allow_html=True)
         if state.get("result"):

@@ -47,6 +47,7 @@ from media_insights_runtime import render_media_insights_tab
 from app_data_cache import cached_csv, cached_prepared_issues, cached_core_issues
 from theme_search import rank_themes_by_ai_intent as _rank_theme_intent
 from issue_selection_copy import SOURCE_CONFIG, SOURCE_DETAIL_LOGIC, SELECTION_STEPS
+from page_header import page_header_html, page_header_styles_html
 
 from theme_content_manager import (
     ai_suggestions_to_recommendations,
@@ -72,6 +73,7 @@ st.markdown(
     "<style>" + Path(__file__).with_name("styles.css").read_text(encoding="utf-8") + "</style>",
     unsafe_allow_html=True,
 )
+st.html(page_header_styles_html())
 
 
 ISSUE_PATH = Path("issue_feed.csv")
@@ -1874,18 +1876,16 @@ else:
         if story_tab.open:
             core_story_issues = cached_core_issues(issues, release_version=APP_VERSION)
             st.markdown(
-                '<section class="magazine-hero">'
-                '<div class="hero-copy"><div class="eyebrow">THE WEEKLY EDIT</div>'
-                '<h1>이슈를 읽고, 취향을 큐레이션하다.</h1>'
-                '<p class="hero-description">이번 주의 이슈에서 새로운 테마를 발견하고, 어울리는 콘텐츠를 연결하세요.</p>'
-                '<div class="hero-meta">'
+                page_header_html(
+                    'story', '지금 주목할 이야기',
+                    '이슈를 읽고, 취향을 큐레이션하다. 이번 주의 이슈에서 새로운 테마를 발견하세요.',
+                    eyebrow='THE WEEKLY EDIT',
+                )
+                + '<div class="hero-meta">'
                 f'<span>선정 작품 <strong>{len(core_story_issues):,}</strong></span>'
                 f'<span>테마 컬렉션 <strong>{len(themes):,}</strong></span>'
                 f'<span>{html.escape(str(issue_start_date))} — {html.escape(str(issue_end_date))}</span>'
-                '</div></div>'
-                '<div class="hero-art" aria-hidden="true"><div class="orbit"></div>'
-                '<div class="orbit-inner"></div><span class="art-label">STORIES, CONNECTED.</span></div>'
-                '</section>',
+                '</div>',
                 unsafe_allow_html=True,
             )
             with st.container(key="spotlight_section"):
@@ -1916,6 +1916,11 @@ else:
 
     with recommendation_tab:
         if recommendation_tab.open:
+            st.markdown(page_header_html(
+                'recommendation', '추천 테마',
+                '최근 이슈에서 발견한 테마와 어울리는 작품을 한눈에 살펴보세요.',
+                eyebrow='THE CURATION EDIT',
+            ), unsafe_allow_html=True)
             with st.container(key="curation_section"):
                 openai_api_key = get_runtime_secret("OPENAI_API_KEY")
                 openai_model = get_runtime_secret("OPENAI_MODEL", "gpt-5.6-luna")

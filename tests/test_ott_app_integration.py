@@ -43,7 +43,7 @@ class OttAppIntegrationTests(unittest.TestCase):
             app.text_input(key='ott_title_search_query').set_value('기생충')
             app.button(key='ott_title_search_submit').click().run()
             self.assertFalse(app.exception)
-            self.assertIn('TVING · 구독',' '.join(m.value for m in app.markdown))
+            self.assertIn('data-provider-id="tving"',' '.join(m.value for m in app.markdown))
             app.session_state['ott_selected_platform']='tving'
             app.run()
             self.assertFalse(app.exception)
@@ -52,8 +52,9 @@ class OttAppIntegrationTests(unittest.TestCase):
             app.session_state['home_sections']='OTT는 지금'
             app.run()
             self.assertFalse(app.exception)
-            self.assertIn('TVING · 구독',' '.join(m.value for m in app.markdown))
+            self.assertIn('data-provider-id="tving"',' '.join(m.value for m in app.markdown))
             self.assertEqual(app.session_state['ott_selected_platform'],'tving')
+            self.assertEqual(app.text_input(key='ott_title_search_query').value,'기생충')
             search.assert_called_once_with('기생충')
             lookup.assert_called_once_with(candidate)
             collect.assert_not_called()

@@ -16,6 +16,7 @@ from ai_director_storage import (
 )
 from llm_theme_generator import ThemeGenerationError, github_writeback_configured
 from theme_editorial import _candidate, _poster_html
+from page_header import page_header_html, page_header_styles_html
 
 SESSION_KEY = "ai_director_session"
 _SCOPE_LABELS = {
@@ -151,7 +152,7 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
                             existing_candidates=None, find_saved_themes=None):
     """Draft-only chat. The adoption button is the sole persistence action."""
     styles = Path(__file__).with_name('ai_director_styles.css').read_text(encoding='utf-8')
-    st.markdown('<style>' + styles + '</style>', unsafe_allow_html=True)
+    st.html('<style>' + styles + '</style>' + page_header_styles_html())
     if SESSION_KEY not in st.session_state:
         st.session_state[SESSION_KEY] = new_director_session()
     session = st.session_state[SESSION_KEY]
@@ -162,8 +163,11 @@ def render_ai_director_page(*, themes, contents, issue_records, api_key, model,
     adopted = st.session_state.setdefault('director_adopted', {})
 
     with st.container(key='ai_director_section'):
-        st.markdown('<header class="director-heading"><span>AI CREATIVE DIRECTOR</span><h2>AI 디렉터</h2>'
-                    '<p>주제를 말하면 테마와 작품을 제안하고, 대화로 고쳐갑니다.</p></header>', unsafe_allow_html=True)
+        st.markdown(page_header_html(
+            'director', 'AI 디렉터',
+            '주제를 말하면 테마와 작품을 제안하고, 대화로 고쳐갑니다.',
+            eyebrow='AI CREATIVE DIRECTOR',
+        ), unsafe_allow_html=True)
         if not configured:
             st.info('AI 디렉터를 사용하려면 OpenAI 연결 설정이 필요합니다. 설정 후 자유롭게 테마를 요청할 수 있어요.')
         if drafts:
