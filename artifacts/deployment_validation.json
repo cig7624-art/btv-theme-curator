@@ -1,56 +1,20 @@
 {
   "schema_version": 1,
   "status": "passed",
-  "expected_version": "1.6.3",
-  "started_at": "2026-10-27T05:14:42.289354+00:00",
-  "finished_at": "2026-10-27T05:20:51.929869+00:00",
-  "attempts": 4,
-  "source_commit": "9632daf38147430b33d66b364d165c2e9b24c09d",
+  "expected_version": "1.6.4",
+  "started_at": "2026-10-27T09:31:46.290713+00:00",
+  "finished_at": "2026-10-27T09:33:54.821810+00:00",
+  "attempts": 2,
+  "source_commit": "6ee2b80377c253aaea78fa182c7c0c93139e0699",
   "attempt_failures": [
     {
       "attempt": 1,
-      "code": "ott_title_search_interaction_timeout",
-      "active_check": "desktop_ott_title_search_result",
-      "diagnostics": {
-        "roots": 1,
-        "nodes": 28,
-        "text_length": 13,
-        "stale": 0,
-        "inputs": 1,
-        "results": 0,
-        "cards": 0
-      }
-    },
-    {
-      "attempt": 2,
-      "code": "ott_title_search_interaction_timeout",
-      "active_check": "mobile_ott_title_search_result",
-      "diagnostics": {
-        "roots": 1,
-        "nodes": 28,
-        "text_length": 13,
-        "stale": 0,
-        "inputs": 1,
-        "results": 0,
-        "cards": 0
-      }
-    },
-    {
-      "attempt": 3,
-      "code": "ott_title_search_interaction_timeout",
-      "active_check": "desktop_ott_title_search_result",
-      "diagnostics": {
-        "roots": 1,
-        "nodes": 28,
-        "text_length": 13,
-        "stale": 0,
-        "inputs": 1,
-        "results": 0,
-        "cards": 0
-      }
+      "code": "release_marker_not_ready",
+      "active_check": "desktop_load_version",
+      "diagnostics": {}
     }
   ],
-  "observed_version": "1.6.3",
+  "observed_version": "1.6.4",
   "tests": {
     "desktop_version": true,
     "desktop_five_tabs": true,
@@ -131,16 +95,152 @@
       "maximum": 4
     }
   },
+  "shared_header_metrics": {
+    "desktop": {
+      "story": {
+        "h1_count": 1,
+        "eyebrow_count": 1,
+        "description_count": 1,
+        "title_px": 28,
+        "title_weight": 600,
+        "title_line_px": 35,
+        "description_px": 12,
+        "description_line_px": 19.8,
+        "height_px": 94.296875,
+        "y_px": 163.59375
+      },
+      "recommendation": {
+        "h1_count": 1,
+        "eyebrow_count": 1,
+        "description_count": 1,
+        "title_px": 28,
+        "title_weight": 600,
+        "title_line_px": 35,
+        "description_px": 12,
+        "description_line_px": 19.8,
+        "height_px": 94.296875,
+        "y_px": 163.59375
+      },
+      "director": {
+        "h1_count": 1,
+        "eyebrow_count": 1,
+        "description_count": 1,
+        "title_px": 28,
+        "title_weight": 600,
+        "title_line_px": 35,
+        "description_px": 12,
+        "description_line_px": 19.8,
+        "height_px": 94.296875,
+        "y_px": 163.59375
+      },
+      "ott": {
+        "h1_count": 1,
+        "eyebrow_count": 1,
+        "description_count": 1,
+        "title_px": 28,
+        "title_weight": 600,
+        "title_line_px": 35,
+        "description_px": 12,
+        "description_line_px": 19.8,
+        "height_px": 94.296875,
+        "y_px": 163.59375
+      },
+      "media": {
+        "h1_count": 1,
+        "eyebrow_count": 1,
+        "description_count": 1,
+        "title_px": 28,
+        "title_weight": 600,
+        "title_line_px": 35,
+        "description_px": 12,
+        "description_line_px": 19.8,
+        "height_px": 94.296875,
+        "y_px": 163.59375
+      }
+    },
+    "mobile": {
+      "story": {
+        "h1_count": 1,
+        "eyebrow_count": 1,
+        "description_count": 1,
+        "title_px": 23,
+        "title_weight": 600,
+        "title_line_px": 29.9,
+        "description_px": 12,
+        "description_line_px": 19.8,
+        "height_px": 106,
+        "y_px": 167.59375
+      },
+      "recommendation": {
+        "h1_count": 1,
+        "eyebrow_count": 1,
+        "description_count": 1,
+        "title_px": 23,
+        "title_weight": 600,
+        "title_line_px": 29.9,
+        "description_px": 12,
+        "description_line_px": 19.8,
+        "height_px": 106,
+        "y_px": 167.59375
+      },
+      "director": {
+        "h1_count": 1,
+        "eyebrow_count": 1,
+        "description_count": 1,
+        "title_px": 23,
+        "title_weight": 600,
+        "title_line_px": 29.9,
+        "description_px": 12,
+        "description_line_px": 19.8,
+        "height_px": 106,
+        "y_px": 167.59375
+      },
+      "ott": {
+        "h1_count": 1,
+        "eyebrow_count": 1,
+        "description_count": 1,
+        "title_px": 23,
+        "title_weight": 600,
+        "title_line_px": 29.9,
+        "description_px": 12,
+        "description_line_px": 19.8,
+        "height_px": 106,
+        "y_px": 167.59375
+      },
+      "media": {
+        "h1_count": 1,
+        "eyebrow_count": 1,
+        "description_count": 1,
+        "title_px": 23,
+        "title_weight": 600,
+        "title_line_px": 29.9,
+        "description_px": 12,
+        "description_line_px": 19.8,
+        "height_px": 106,
+        "y_px": 167.59375
+      }
+    }
+  },
   "ott_title_search": {
     "desktop": {
       "status": "available",
-      "providers": 9,
-      "original_link": true
+      "providers": 4,
+      "logos": 4,
+      "original_link": true,
+      "search_control_width_px": 165.56,
+      "refresh_control_width_px": 165.56,
+      "reset_to_initial": true,
+      "platform_tabs_drift_px": 0.0
     },
     "mobile": {
       "status": "available",
-      "providers": 9,
-      "original_link": true
+      "providers": 4,
+      "logos": 4,
+      "original_link": true,
+      "search_control_width_px": 175,
+      "refresh_control_width_px": 175,
+      "reset_to_initial": true,
+      "platform_tabs_drift_px": 0.0
     }
   },
   "media_artwork": {
