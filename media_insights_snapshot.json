@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-10-28T02:55:53+00:00",
+  "collected_at": "2026-10-29T03:21:06+00:00",
   "sources": [
     {
       "id": "netflix_ir",
@@ -8,8 +8,8 @@
       "company": "Netflix",
       "url": "https://ir.netflix.net/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
-      "last_success_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_success_at": "2026-10-29T03:21:06+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 4
@@ -20,8 +20,8 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/investor-relations/",
       "status": "partial",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
-      "last_success_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_success_at": "2026-10-29T03:21:06+00:00",
       "error_code": "some_documents_unavailable",
       "item_count": 2,
       "retained_item_count": 2
@@ -32,8 +32,8 @@
       "company": "Amazon",
       "url": "https://ir.aboutamazon.com/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
-      "last_success_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_success_at": "2026-10-29T03:21:06+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 4
@@ -44,7 +44,7 @@
       "company": "Comcast",
       "url": "https://www.cmcsa.com/financial-information/quarterly-results",
       "status": "unavailable",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "last_success_at": "",
       "error_code": "http_403",
       "item_count": 0,
@@ -56,8 +56,8 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/feed/",
       "status": "ok",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
-      "last_success_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_success_at": "2026-10-29T03:21:06+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 5
@@ -68,8 +68,8 @@
       "company": "Amazon",
       "url": "https://www.aboutamazon.com/news/entertainment",
       "status": "ok",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
-      "last_success_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_success_at": "2026-10-29T03:21:06+00:00",
       "error_code": "",
       "item_count": 1,
       "retained_item_count": 1
@@ -80,7 +80,7 @@
       "company": "SKT",
       "url": "https://news.sktelecom.com/feed",
       "status": "unavailable",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "last_success_at": "",
       "error_code": "no_business_documents",
       "item_count": 0,
@@ -92,8 +92,8 @@
       "company": "SK브로드밴드",
       "url": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
       "status": "ok",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
-      "last_success_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_success_at": "2026-10-29T03:21:06+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 5
@@ -104,7 +104,7 @@
       "company": "KT",
       "url": "https://corp.kt.com/html/promote/news/report_list.html",
       "status": "unavailable",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "last_success_at": "",
       "error_code": "no_business_documents",
       "item_count": 0,
@@ -116,11 +116,11 @@
       "company": "LG유플러스",
       "url": "https://news.lguplus.com/category/%ED%94%84%EB%A0%88%EC%8A%A4%EC%84%BC%ED%84%B0/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C",
       "status": "partial",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
-      "last_success_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_success_at": "2026-10-29T03:21:06+00:00",
       "error_code": "some_documents_unavailable",
-      "item_count": 1,
-      "retained_item_count": 1
+      "item_count": 2,
+      "retained_item_count": 2
     },
     {
       "id": "coupang_products",
@@ -128,7 +128,7 @@
       "company": "쿠팡플레이",
       "url": "https://news.coupang.com/feed/",
       "status": "unavailable",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "last_success_at": "",
       "error_code": "http_403",
       "item_count": 0,
@@ -140,14 +140,220 @@
       "company": "CJ ENM",
       "url": "https://www.cjenm.com/ko/news/",
       "status": "ok",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
-      "last_success_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_success_at": "2026-10-29T03:21:06+00:00",
       "error_code": "",
       "item_count": 4,
-      "retained_item_count": 5
+      "retained_item_count": 6
     }
   ],
   "items": [
+    {
+      "id": "mi-08a1522356f1b70ca4",
+      "source_id": "lgu_products",
+      "company": "LG유플러스",
+      "topic": "sports_content",
+      "title": "LG유플러스, 2026 AX 품질만족지수 IPTV 부문서 1위 수상",
+      "url": "https://news.lguplus.com/23190",
+      "published_at": "2026-10-28",
+      "collected_at": "2026-10-29T03:21:06+00:00",
+      "country": "KR",
+      "period": "",
+      "source_name": "LG유플러스 뉴스룸",
+      "source_type": "official_media_announcement",
+      "excerpt": "█ U+tv에 AI 적용해 탐색·시청 경험 개선, 선제 조치 시스템으로 이용 편의성 높여 █ 올해 NCSI· KS-CQI 등 주요 평가서 11개 부문 1위 달성…“고객 경험 전반을 개선하기 위한 노력을 인정받은 결과”\nLG유플러스는 한국표준협회가 주관하는 ‘2026 AX 품질만족지수(이하 AX-QEI)’ IPTV 부문에서 1위를 차지했다고 28일 밝혔다.\nLG유플러스는 올해 국가고객만족도조사(NCSI), 콜센터품질지수(KS-CQI) 등 주요 고객만족도 및 서비스 품질 평가에서 총 11개 부문 1위를 기록하며 고객 경험 혁신 성과를 인정받았다. 이는 ‘일상을 심플하게(Simply. U+)’라는 브랜드 철학 아래 추진해 온 AI 기반 고객 경험 혁신과 디지털 전환 노력이 서비스 전반의 경쟁력 향상으로 이어진 결과다.\n■ 2024 년 공개한 AIP",
+      "body_text": "█ U+tv에 AI 적용해 탐색·시청 경험 개선, 선제 조치 시스템으로 이용 편의성 높여 █ 올해 NCSI· KS-CQI 등 주요 평가서 11개 부문 1위 달성…“고객 경험 전반을 개선하기 위한 노력을 인정받은 결과”\nLG유플러스는 한국표준협회가 주관하는 ‘2026 AX 품질만족지수(이하 AX-QEI)’ IPTV 부문에서 1위를 차지했다고 28일 밝혔다.\nLG유플러스는 올해 국가고객만족도조사(NCSI), 콜센터품질지수(KS-CQI) 등 주요 고객만족도 및 서비스 품질 평가에서 총 11개 부문 1위를 기록하며 고객 경험 혁신 성과를 인정받았다. 이는 ‘일상을 심플하게(Simply. U+)’라는 브랜드 철학 아래 추진해 온 AI 기반 고객 경험 혁신과 디지털 전환 노력이 서비스 전반의 경쟁력 향상으로 이어진 결과다.\n■ 2024 년 공개한 AIPTV 전략 실제 고객 경험 혁신 성과로 이어져…AX-QEI 1위 수상\n이번에 LG유플러스가 IPTV 분야에서 1위를 차지한 ‘AX-QEI’는 AI가 적용된 제품·서비스의 품질을 고객이 직접 체감한 AI경험(AX, AI eXperience) 관점에서 평가하는 지표다. 제품과 서비스에 대한 AI 경험의 평가 기준을 체계화한 세계 최초의 품질 평가 모델로, AI 기술이 고객 경험 개선에 미친 영향을 종합적으로 측정해 우수 기업을 선정한다.\nLG유플러스는 IPTV 서비스인 U+tv에 AI 기술을 적용해 콘텐츠 탐색과 시청 경험을 개선하고, 불편 예측 및 선제 조치 시스템을 통해 이용 편의성을 높인 점을 인정받아 1위에 올랐다.\n구체적으로 U+tv는 ▲AI와 대화하듯 원하는 콘텐츠를 찾고 음성으로 재생·배속·자막 설정 등을 제어 가능한 ‘익시 음성검색’ ▲리모컨 음성 명령만으로 TV 이용 방법과 요금제를 24시간 문의할 수 있는 ‘익시 음성챗봇’ ▲콘텐츠 음성을 분석해 자막을 자동 생성하고 화면 속 문구와 겹치지 않도록 위치까지 자동 조정하는 ‘AI 자막’ 등이 좋은 평가를 받았다.\n앞서 LG유플러스는 지난 2024년 공개한 AIPTV 전략을 바탕으로 IPTV 서비스 전반에 AI 기능을 확대 적용해 왔다. 이번 수상은 LG유플러스가 추진해 온 AIPTV 전략이 실제 고객 경험 혁신 성과로 이어지고 있음을 보여주는 결과라는 평가다.\n■ 모바일·홈·고객센터 경쟁력 강화 결실 … NCSI, KS-CQI 등 수상 이어져\nLG유플러스의 고객 경험 혁신은 모바일과 고객센터 영역에서도 이어졌다. 올해 한국생산성본부가 주관하는 국가고객만족도조사(NCSI)에서는 이동전화서비스 부문 첫 1위와 IPTV 부문 5년 연속 1위를 동시에 달성했다.\n이동전화서비스 부문에서는 AI 통화 에이전트 ‘익시오(ixi-O)’를 비롯한 AI 기반 고객 경험 혁신 노력이 긍정적인 평가를 받았다. 익시오는 통화 녹음 및 요약 기능과 함께 보이스피싱·스팸 탐지 기능을 제공하며 통화 전후 고객 경험을 개선하고 있다. 특히 MWC26에서는 초개인화 기능을 강화한 ‘익시오 프로’를 공개하며 AI 기반 통화 서비스의 발전 방향도 제시했다.\nLG유플러스는 IPTV 부문에서도 고객 경험 여정 전반을 재검토해 경쟁력을 강화했다. AI 기능 도입으로 편의성을 높이고, 철저하게 고객의 관점에서 ‘끊김 없이, 답답하지 않게 보는’ TV 시청 경험을 만들기 위한 노력을 이어왔다.\n통신 서비스의 기본 경쟁력인 고객 상담 품질 향상을 위한 활동도 인정받았다. LG유플러스 콜센터는 한국표준협회가 주관하는 콜센터품질지수(KS-CQI)에서 이동통신 및 초고속인터넷·IPTV 등 통신부문 2년 연속 2관왕을 달성했다.\nLG유플러스는 고객센터 운영 전반에 AI를 도입하며 상담 품질을 고도화했다. 상담사가 고객 문의 이력과 상담 내용을 보다 신속하게 파악할 수 있도록 지원하고, 반복 문의와 주요 불만 사항은 데이터로 분석해 서비스 개선 과제로 연계하는 체계를 구축했다. 이를 통해 고객 응대의 정확도와 일관성을 높이는 한편 고객 상담 경험 향상에도 힘쓰고 있다.\n이외에도 LG유플러스는 ▲한국산업의 서비스품질지수(KSQI) 콜센터 부문 이동통신 및 초고속인터넷 영역 ‘고객 감동 콜센터’ 선정 ▲한국산업의 서비스품질지수(KSQI) 고객접점(MOT) 부문 전문 A/S 서비스 및 이동통신 영역 평가 1위 ▲디지털고객경험지수(DCXI) 이동통신부문 3년 연속 1위 ▲AX 컨택센터 혁신상 수상 등을 통해 고객 경험 혁신 노력을 인정받았다.\n정혜윤 LG유플러스 CX센터장(상무)은 “올해 주요 서비스·품질 평가 총 11개 부문에서 1위를 기록한 것은 특정 서비스나 기능을 넘어 고객 경험 전반을 개선하기 위한 노력을 인정받은 결과”라며 “앞으로도 AI와 디지털 기술을 바탕으로 고객이 체감할 수 있는 편리함과 가치를 높여 나가겠다”고 말했다.",
+      "image_url": "https://news.lguplus.com/wp-content/uploads/2026/10/image-39.png",
+      "evidence": [
+        {
+          "id": "mi-08a1522356f1b70ca4-p001",
+          "text": "█ U+tv에 AI 적용해 탐색·시청 경험 개선, 선제 조치 시스템으로 이용 편의성 높여 █ 올해 NCSI· KS-CQI 등 주요 평가서 11개 부문 1위 달성…“고객 경험 전반을 개선하기 위한 노력을 인정받은 결과”",
+          "locator": "p001",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p002",
+          "text": "LG유플러스는 한국표준협회가 주관하는 ‘2026 AX 품질만족지수(이하 AX-QEI)’ IPTV 부문에서 1위를 차지했다고 28일 밝혔다.",
+          "locator": "p002",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p003",
+          "text": "LG유플러스는 올해 국가고객만족도조사(NCSI), 콜센터품질지수(KS-CQI) 등 주요 고객만족도 및 서비스 품질 평가에서 총 11개 부문 1위를 기록하며 고객 경험 혁신 성과를 인정받았다. 이는 ‘일상을 심플하게(Simply. U+)’라는 브랜드 철학 아래 추진해 온 AI 기반 고객 경험 혁신과 디지털 전환 노력이 서비스 전반의 경쟁력 향상으로 이어진 결과다.",
+          "locator": "p003",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p004",
+          "text": "■ 2024 년 공개한 AIPTV 전략 실제 고객 경험 혁신 성과로 이어져…AX-QEI 1위 수상",
+          "locator": "p004",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p005",
+          "text": "이번에 LG유플러스가 IPTV 분야에서 1위를 차지한 ‘AX-QEI’는 AI가 적용된 제품·서비스의 품질을 고객이 직접 체감한 AI경험(AX, AI eXperience) 관점에서 평가하는 지표다. 제품과 서비스에 대한 AI 경험의 평가 기준을 체계화한 세계 최초의 품질 평가 모델로, AI 기술이 고객 경험 개선에 미친 영향을 종합적으로 측정해 우수 기업을 선정한다.",
+          "locator": "p005",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p006",
+          "text": "LG유플러스는 IPTV 서비스인 U+tv에 AI 기술을 적용해 콘텐츠 탐색과 시청 경험을 개선하고, 불편 예측 및 선제 조치 시스템을 통해 이용 편의성을 높인 점을 인정받아 1위에 올랐다.",
+          "locator": "p006",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p007",
+          "text": "구체적으로 U+tv는 ▲AI와 대화하듯 원하는 콘텐츠를 찾고 음성으로 재생·배속·자막 설정 등을 제어 가능한 ‘익시 음성검색’ ▲리모컨 음성 명령만으로 TV 이용 방법과 요금제를 24시간 문의할 수 있는 ‘익시 음성챗봇’ ▲콘텐츠 음성을 분석해 자막을 자동 생성하고 화면 속 문구와 겹치지 않도록 위치까지 자동 조정하는 ‘AI 자막’ 등이 좋은 평가를 받았다.",
+          "locator": "p007",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p008",
+          "text": "앞서 LG유플러스는 지난 2024년 공개한 AIPTV 전략을 바탕으로 IPTV 서비스 전반에 AI 기능을 확대 적용해 왔다. 이번 수상은 LG유플러스가 추진해 온 AIPTV 전략이 실제 고객 경험 혁신 성과로 이어지고 있음을 보여주는 결과라는 평가다.",
+          "locator": "p008",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p009",
+          "text": "■ 모바일·홈·고객센터 경쟁력 강화 결실 … NCSI, KS-CQI 등 수상 이어져",
+          "locator": "p009",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p010",
+          "text": "LG유플러스의 고객 경험 혁신은 모바일과 고객센터 영역에서도 이어졌다. 올해 한국생산성본부가 주관하는 국가고객만족도조사(NCSI)에서는 이동전화서비스 부문 첫 1위와 IPTV 부문 5년 연속 1위를 동시에 달성했다.",
+          "locator": "p010",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p011",
+          "text": "이동전화서비스 부문에서는 AI 통화 에이전트 ‘익시오(ixi-O)’를 비롯한 AI 기반 고객 경험 혁신 노력이 긍정적인 평가를 받았다. 익시오는 통화 녹음 및 요약 기능과 함께 보이스피싱·스팸 탐지 기능을 제공하며 통화 전후 고객 경험을 개선하고 있다. 특히 MWC26에서는 초개인화 기능을 강화한 ‘익시오 프로’를 공개하며 AI 기반 통화 서비스의 발전 방향도 제시했다.",
+          "locator": "p011",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p012",
+          "text": "LG유플러스는 IPTV 부문에서도 고객 경험 여정 전반을 재검토해 경쟁력을 강화했다. AI 기능 도입으로 편의성을 높이고, 철저하게 고객의 관점에서 ‘끊김 없이, 답답하지 않게 보는’ TV 시청 경험을 만들기 위한 노력을 이어왔다.",
+          "locator": "p012",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p013",
+          "text": "통신 서비스의 기본 경쟁력인 고객 상담 품질 향상을 위한 활동도 인정받았다. LG유플러스 콜센터는 한국표준협회가 주관하는 콜센터품질지수(KS-CQI)에서 이동통신 및 초고속인터넷·IPTV 등 통신부문 2년 연속 2관왕을 달성했다.",
+          "locator": "p013",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p014",
+          "text": "LG유플러스는 고객센터 운영 전반에 AI를 도입하며 상담 품질을 고도화했다. 상담사가 고객 문의 이력과 상담 내용을 보다 신속하게 파악할 수 있도록 지원하고, 반복 문의와 주요 불만 사항은 데이터로 분석해 서비스 개선 과제로 연계하는 체계를 구축했다. 이를 통해 고객 응대의 정확도와 일관성을 높이는 한편 고객 상담 경험 향상에도 힘쓰고 있다.",
+          "locator": "p014",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p015",
+          "text": "이외에도 LG유플러스는 ▲한국산업의 서비스품질지수(KSQI) 콜센터 부문 이동통신 및 초고속인터넷 영역 ‘고객 감동 콜센터’ 선정 ▲한국산업의 서비스품질지수(KSQI) 고객접점(MOT) 부문 전문 A/S 서비스 및 이동통신 영역 평가 1위 ▲디지털고객경험지수(DCXI) 이동통신부문 3년 연속 1위 ▲AX 컨택센터 혁신상 수상 등을 통해 고객 경험 혁신 노력을 인정받았다.",
+          "locator": "p015",
+          "url": "https://news.lguplus.com/23190"
+        },
+        {
+          "id": "mi-08a1522356f1b70ca4-p016",
+          "text": "정혜윤 LG유플러스 CX센터장(상무)은 “올해 주요 서비스·품질 평가 총 11개 부문에서 1위를 기록한 것은 특정 서비스나 기능을 넘어 고객 경험 전반을 개선하기 위한 노력을 인정받은 결과”라며 “앞으로도 AI와 디지털 기술을 바탕으로 고객이 체감할 수 있는 편리함과 가치를 높여 나가겠다”고 말했다.",
+          "locator": "p016",
+          "url": "https://news.lguplus.com/23190"
+        }
+      ],
+      "content_hash": "c931c04e1e30a317391e8b5de339688d9bdf18d43b716660fc6e91cf63f66793",
+      "market_scope": "domestic_media",
+      "image_alt": "",
+      "image_source_url": "https://news.lguplus.com/23190",
+      "image_attribution": "LG유플러스 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "source_updated_at": "2026-10-28",
+      "last_checked_at": "2026-10-29T03:21:06+00:00"
+    },
+    {
+      "id": "mi-54163fda91f6421796",
+      "source_id": "cjenm_products",
+      "company": "CJ ENM",
+      "topic": "sports_content",
+      "title": "CJ ENM, 데이터 관리 플랫폼 ‘CJ DMP’ 공개… “업계 최초 데이터 기반 TV광고 시대 연다”",
+      "url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/",
+      "published_at": "2026-10-28",
+      "collected_at": "2026-10-29T03:21:06+00:00",
+      "country": "KR",
+      "period": "",
+      "source_name": "CJ ENM 공식 뉴스",
+      "source_type": "official_media_announcement",
+      "excerpt": "- 미디어·커머스 등 비식별 데이터 통합한 ‘CJ DMP’ 공개… 광고사업 경쟁력 강화\n- 업계 최초 TV광고에 DMP 접목… 광고주에 최적화된 잠재고객 발굴부터 성과 측정까지 제공\n- CJ ENM, 광고 넘어 콘텐츠와 커머스 및 마케팅 영역까지 CJ DMP 활용 확대 예정\nCJ ENM(대표이사 윤상현)이 데이터 관리 플랫폼(Data Management Platform, DMP) ‘CJ DMP’를 새롭게 선보이고, 엔터테인먼트·미디어 업계 최초로 TV광고에 이를 접목해 데이터 기반 광고 혁신과 광고사업 경쟁력 강화에 나선다고 28일 밝혔다.\nCJ DMP는 CJ ENM 및 주요 계열사의 미디어, 커머스, 광고, 멤버십 서비스에서 확보한 비식별 오디언스 데이터를 통합 및 분석해 광고주의 마케팅 목적에 맞는 잠재고객을 세분화하는 플랫폼이다. 콘텐츠",
+      "body_text": "- 미디어·커머스 등 비식별 데이터 통합한 ‘CJ DMP’ 공개… 광고사업 경쟁력 강화\n- 업계 최초 TV광고에 DMP 접목… 광고주에 최적화된 잠재고객 발굴부터 성과 측정까지 제공\n- CJ ENM, 광고 넘어 콘텐츠와 커머스 및 마케팅 영역까지 CJ DMP 활용 확대 예정\nCJ ENM(대표이사 윤상현)이 데이터 관리 플랫폼(Data Management Platform, DMP) ‘CJ DMP’를 새롭게 선보이고, 엔터테인먼트·미디어 업계 최초로 TV광고에 이를 접목해 데이터 기반 광고 혁신과 광고사업 경쟁력 강화에 나선다고 28일 밝혔다.\nCJ DMP는 CJ ENM 및 주요 계열사의 미디어, 커머스, 광고, 멤버십 서비스에서 확보한 비식별 오디언스 데이터를 통합 및 분석해 광고주의 마케팅 목적에 맞는 잠재고객을 세분화하는 플랫폼이다. 콘텐츠 시청부터 상품 검색 및 구매, 광고 반응까지 일상 라이프스타일 전반을 아우르는 데이터를 통해 소비자의 다양한 관심사와 소비 성향을 입체적으로 파악할 수 있다는 점이 특징이다. CJ ENM은 이를 TV와 디지털 등 다양한 광고 영역에 활용해 광고주별 맞춤형 미디어 전략 수립을 지원하고, 차별화된 광고 서비스를 제공할 예정이다.\n특히 TV광고 영역에서 새로운 패러다임을 제시하며 업계를 선도한다는 계획이다. 기존에는 광고주의 잠재고객을 성·연령으로 구분하고, 이들의 시청률을 기준으로 TV광고를 운영해왔다. 앞으로는 CJ DMP를 활용해 파악한 소비자 행동 패턴과 시청률 데이터를 결합해 광고주의 상품과 브랜드에 관심이 높은 잠재고객을 보다 정교하게 발굴할 수 있다. 나아가 시청량이 많은 주말이나 프라임 시간대뿐 아니라 잠재고객의 시청 비중이 두드러지는 광고 구좌까지 고려해 고객과의 접점을 넓힐 수 있다. 광고 집행 이후에는 캠페인 노출 데이터를 바탕으로 해당 고객군에 대한 도달·노출 성과를 분석하고, 후속 캠페인 전략도 제안할 예정이다.\nCJ ENM은 CJ DMP의 활용 범위를 콘텐츠와 커머스 및 마케팅 영역으로 확대해 데이터 기반 의사결정과 사업 경쟁력 제고를 지원할 계획이다. 콘텐츠 분야에서는 특정 프로그램과 채널에 대한 시청자 선호도를 분석해 수요에 맞는 기획·제작 방향을 수립하고, 채널별 타깃 특성을 반영한 방송 편성 전략을 고도화할 방침이다. 커머스 및 마케팅 영역에서는 시청 및 구매 데이터 연계 및 분석하여 특정 상품 구매 가능성 높은 타겟에게만 광고를 노출한다는 구상이다.\nCJ ENM 관계자는 “미디어 시장이 급변하면서 기업의 경쟁력은 결국 데이터를 얼마나 정교하게 활용하고, 광고주와 고객에게 차별화된 광고 경험을 제공하느냐에 달려 있다”며 “CJ ENM은 그간 축적한 광고사업의 경험과 노하우에 CJ DMP의 데이터 분석 역량을 결합해 광고주의 비즈니스 성장에 기여하고 CJ ENM만의 차별화된 광고 경쟁력을 지속 확보해 나가겠다”고 밝혔다.\n한편, CJ ENM은 AI·데이터 기반 애드테크 고도화에 지속적으로 투자해 오고 있다. 국내 최초로 AI 기반 ‘가상 간접광고(VPPL)’를 도입한 데 이어, 콘텐츠 분석을 통해 광고 노출 효과를 높이는 ‘모델·맥락 타겟팅 솔루션’을 선보였다. 또, 주요 드라마·예능·영화는 물론 팝업스토어·공연 등의 일정을 한눈에 확인할 수 있는 연간 마케팅 달력 ‘캘박CJ’와 방송·OTT·DOOH 등 CJ의 주요 광고 재원을 통합해 하나의 캠페인으로 운영하고 성과 분석까지 제공하는 ‘통합 플랫폼 솔루션’도 출시하며 광고주 만족도를 제고하고 있다.",
+      "image_url": "https://web2-cf-image.cjenm.com/public/share/metamng/boards/kr/newsCJDMP.jpg?v=1793162165",
+      "evidence": [
+        {
+          "id": "mi-54163fda91f6421796-p001",
+          "text": "- 미디어·커머스 등 비식별 데이터 통합한 ‘CJ DMP’ 공개… 광고사업 경쟁력 강화",
+          "locator": "p001",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/"
+        },
+        {
+          "id": "mi-54163fda91f6421796-p002",
+          "text": "- 업계 최초 TV광고에 DMP 접목… 광고주에 최적화된 잠재고객 발굴부터 성과 측정까지 제공",
+          "locator": "p002",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/"
+        },
+        {
+          "id": "mi-54163fda91f6421796-p003",
+          "text": "- CJ ENM, 광고 넘어 콘텐츠와 커머스 및 마케팅 영역까지 CJ DMP 활용 확대 예정",
+          "locator": "p003",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/"
+        },
+        {
+          "id": "mi-54163fda91f6421796-p004",
+          "text": "CJ ENM(대표이사 윤상현)이 데이터 관리 플랫폼(Data Management Platform, DMP) ‘CJ DMP’를 새롭게 선보이고, 엔터테인먼트·미디어 업계 최초로 TV광고에 이를 접목해 데이터 기반 광고 혁신과 광고사업 경쟁력 강화에 나선다고 28일 밝혔다.",
+          "locator": "p004",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/"
+        },
+        {
+          "id": "mi-54163fda91f6421796-p005",
+          "text": "CJ DMP는 CJ ENM 및 주요 계열사의 미디어, 커머스, 광고, 멤버십 서비스에서 확보한 비식별 오디언스 데이터를 통합 및 분석해 광고주의 마케팅 목적에 맞는 잠재고객을 세분화하는 플랫폼이다. 콘텐츠 시청부터 상품 검색 및 구매, 광고 반응까지 일상 라이프스타일 전반을 아우르는 데이터를 통해 소비자의 다양한 관심사와 소비 성향을 입체적으로 파악할 수 있다는 점이 특징이다. CJ ENM은 이를 TV와 디지털 등 다양한 광고 영역에 활용해 광고주별 맞춤형 미디어 전략 수립을 지원하고, 차별화된 광고 서비스를 제공할 예정이다.",
+          "locator": "p005",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/"
+        },
+        {
+          "id": "mi-54163fda91f6421796-p006",
+          "text": "특히 TV광고 영역에서 새로운 패러다임을 제시하며 업계를 선도한다는 계획이다. 기존에는 광고주의 잠재고객을 성·연령으로 구분하고, 이들의 시청률을 기준으로 TV광고를 운영해왔다. 앞으로는 CJ DMP를 활용해 파악한 소비자 행동 패턴과 시청률 데이터를 결합해 광고주의 상품과 브랜드에 관심이 높은 잠재고객을 보다 정교하게 발굴할 수 있다. 나아가 시청량이 많은 주말이나 프라임 시간대뿐 아니라 잠재고객의 시청 비중이 두드러지는 광고 구좌까지 고려해 고객과의 접점을 넓힐 수 있다. 광고 집행 이후에는 캠페인 노출 데이터를 바탕으로 해당 고객군에 대한 도달·노출 성과를 분석하고, 후속 캠페인 전략도 제안할 예정이다.",
+          "locator": "p006",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/"
+        },
+        {
+          "id": "mi-54163fda91f6421796-p007",
+          "text": "CJ ENM은 CJ DMP의 활용 범위를 콘텐츠와 커머스 및 마케팅 영역으로 확대해 데이터 기반 의사결정과 사업 경쟁력 제고를 지원할 계획이다. 콘텐츠 분야에서는 특정 프로그램과 채널에 대한 시청자 선호도를 분석해 수요에 맞는 기획·제작 방향을 수립하고, 채널별 타깃 특성을 반영한 방송 편성 전략을 고도화할 방침이다. 커머스 및 마케팅 영역에서는 시청 및 구매 데이터 연계 및 분석하여 특정 상품 구매 가능성 높은 타겟에게만 광고를 노출한다는 구상이다.",
+          "locator": "p007",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/"
+        },
+        {
+          "id": "mi-54163fda91f6421796-p008",
+          "text": "CJ ENM 관계자는 “미디어 시장이 급변하면서 기업의 경쟁력은 결국 데이터를 얼마나 정교하게 활용하고, 광고주와 고객에게 차별화된 광고 경험을 제공하느냐에 달려 있다”며 “CJ ENM은 그간 축적한 광고사업의 경험과 노하우에 CJ DMP의 데이터 분석 역량을 결합해 광고주의 비즈니스 성장에 기여하고 CJ ENM만의 차별화된 광고 경쟁력을 지속 확보해 나가겠다”고 밝혔다.",
+          "locator": "p008",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/"
+        },
+        {
+          "id": "mi-54163fda91f6421796-p009",
+          "text": "한편, CJ ENM은 AI·데이터 기반 애드테크 고도화에 지속적으로 투자해 오고 있다. 국내 최초로 AI 기반 ‘가상 간접광고(VPPL)’를 도입한 데 이어, 콘텐츠 분석을 통해 광고 노출 효과를 높이는 ‘모델·맥락 타겟팅 솔루션’을 선보였다. 또, 주요 드라마·예능·영화는 물론 팝업스토어·공연 등의 일정을 한눈에 확인할 수 있는 연간 마케팅 달력 ‘캘박CJ’와 방송·OTT·DOOH 등 CJ의 주요 광고 재원을 통합해 하나의 캠페인으로 운영하고 성과 분석까지 제공하는 ‘통합 플랫폼 솔루션’도 출시하며 광고주 만족도를 제고하고 있다.",
+          "locator": "p009",
+          "url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/"
+        }
+      ],
+      "content_hash": "aa2468cdb6c1354bb131656b8e520ab5179ea8fc42bf06305511ea74ece0e5f5",
+      "market_scope": "domestic_media",
+      "image_alt": "",
+      "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/",
+      "image_attribution": "CJ ENM 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "source_updated_at": "2026-10-28",
+      "last_checked_at": "2026-10-29T03:21:06+00:00"
+    },
     {
       "id": "mi-4f4ea29e8202d0df6f",
       "source_id": "cjenm_products",
@@ -250,9 +456,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "source_updated_at": "2026-10-27",
-      "last_checked_at": "2026-10-28T02:55:53+00:00"
+      "last_checked_at": "2026-10-29T03:21:06+00:00"
     },
     {
       "id": "mi-000cd0f9b36402b89f",
@@ -320,9 +526,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/tvn-스트릿-레스토랑-파이터-글로벌-콘텐츠-전문-시상식-리얼스크린-어워즈-후보-선정-cj-enm-k장사-예능으로-독보적-콘텐츠-경쟁력-입증/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "source_updated_at": "2026-10-22",
-      "last_checked_at": "2026-10-28T02:55:53+00:00"
+      "last_checked_at": "2026-10-29T03:21:06+00:00"
     },
     {
       "id": "mi-5dfc9e265e8ab2dd52",
@@ -408,9 +614,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-콘텐츠-韓美日-글로벌서-날았다-영화시리즈-잇단-성과/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "source_updated_at": "2026-10-21",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "analysis": {
         "headline": "CJ ENM, 멀티 스튜디오 기반 글로벌 콘텐츠 성과 확대",
         "summary": "CJ ENM은 미국·한국·일본의 멀티 스튜디오와 공동제작 체제를 바탕으로 넷플릭스·디즈니플러스 등 글로벌 OTT에서 여러 작품의 차트 성과를 냈다고 발표했다. 올해 공개 작품 중 6편이 넷플릭스 글로벌 1위에 올랐으며, 10편 이상의 한·미 공동 프로젝트도 개발 중이다.",
@@ -674,9 +880,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/10/19/skb-fall-new-programs-2026/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-10-28T02:55:53+00:00"
+      "last_checked_at": "2026-10-29T03:21:06+00:00"
     },
     {
       "id": "mi-525e4bb84089078f44",
@@ -752,7 +958,7 @@
       ],
       "content_hash": "60d467a44a6681d8ea04718c3c902263342ae875d7de373d944293b956a16986",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "analysis": {
         "headline": "디즈니, Dude Perfect와 전사적 콘텐츠·유통 파트너십 발표",
         "summary": "디즈니는 Dude Perfect와 협력해 디즈니 프랜차이즈·이벤트를 활용한 오리지널 콘텐츠를 제작하고, 일부 콘텐츠를 Disney+에 선보일 계획이다. 또한 Dude Perfect의 기존 숏폼 라이브러리를 Disney+, ESPN 및 디즈니 소셜 플랫폼에 유통할 수 있게 됐다.",
@@ -841,7 +1047,7 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/"
     },
     {
@@ -1478,7 +1684,7 @@
       ],
       "content_hash": "fe5ff5da4381a11de5a7966d2e4ecae91e79baded2dfbc8c260fb74d700637df",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "analysis": {
         "headline": "Disney+, 2027년 슈퍼볼 LXI 스트리밍 예정",
         "summary": "Disney+는 2027년 2월 14일 슈퍼볼 LXI를 미국의 모든 Disney+ 가입자에게 스트리밍하고, 미국 외 55개국 이상에서도 ESPN의 슈퍼볼 중계를 제공할 예정입니다. 미국에서는 정규시즌 Monday Night Football 두 경기도 Disney+에서 시청할 수 있습니다.",
@@ -1614,7 +1820,7 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/"
     },
     {
@@ -1684,9 +1890,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/09/10/btv-plus-max-2026-kbo-postseason-ticket-event/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-10-28T02:55:53+00:00"
+      "last_checked_at": "2026-10-29T03:21:06+00:00"
     },
     {
       "id": "mi-255f40182398aa5f25",
@@ -1755,9 +1961,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/08/20/b-tv-womens-film-festival/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-10-28T02:55:53+00:00"
+      "last_checked_at": "2026-10-29T03:21:06+00:00"
     },
     {
       "id": "mi-80a30a5f266d73b1a5",
@@ -1833,12 +2039,12 @@
       ],
       "content_hash": "497b1ab9073b544dc6a232378cab1f28d3f4075019d510c24c8a30b6df3e1dc1",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "image_alt": "",
       "image_source_url": "https://thewaltdisneycompany.com/news/ai-powered-search-espn-disney-plus/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
       "localization": {
         "title": "ESPN·Disney+, AI 기반 검색·콘텐츠 탐색 기능 베타 테스트",
@@ -2095,9 +2301,9 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/disney-q3-earnings-2026/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "localization": {
         "title": "디즈니, 실적 설명에서 훌루 연동과 스포츠 전략 강조",
         "summary": "조시 다마로 CEO는 실적 설명에서 통합 전략을 제시했다. 훌루 단독·결합 구독자의 프로필 연결과 디즈니+ 내 구독 관리의 진전, ESPN을 통한 팬 참여 확대를 설명했다.",
@@ -2510,7 +2716,7 @@
         }
       ],
       "content_hash": "c2b345f02d73b7330cc03ae0d0a4a354a1091ce21eb936974e40a8821caffcf3",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "localization": {
         "title": "아마존 2분기 실적: 프라임 비디오 신작·NBA 시청 성과",
         "summary": "아마존은 회사 전체의 분기 실적과 함께 프라임 비디오의 미디어 성과를 발표했다. 신작 Off Campus의 초기 시청 반응과 NBA 중계 시청 성과를 소개했다.",
@@ -2688,9 +2894,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "source_updated_at": "2026-07-01",
-      "last_checked_at": "2026-10-28T02:55:53+00:00"
+      "last_checked_at": "2026-10-29T03:21:06+00:00"
     },
     {
       "id": "mi-e0f0c296689441b0ae",
@@ -2794,9 +3000,9 @@
       "image_source_url": "https://news.lguplus.com/22099",
       "image_attribution": "LG유플러스 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "source_updated_at": "2026-06-19",
-      "last_checked_at": "2026-10-28T02:55:53+00:00"
+      "last_checked_at": "2026-10-29T03:21:06+00:00"
     },
     {
       "id": "mi-660f6ebda3c280ab1b",
@@ -3343,7 +3549,7 @@
         }
       ],
       "content_hash": "10f11121079894d5e410635c297e2bd2fe9c2be36687347a7420dfee8c012654",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "localization": {
         "title": "아마존 1분기 실적: 넷플릭스 광고 타기팅·NBA 중계",
         "summary": "아마존은 회사 전체의 분기 실적을 발표하며 넷플릭스 광고 구매에 Amazon Audiences를 추가했다고 설명했다. 프라임 비디오의 NBA 플레이인 토너먼트 중계 시청 성과도 함께 소개했다.",
@@ -3756,7 +3962,7 @@
         }
       ],
       "content_hash": "4825da0b4b4b5cddabe6f859cf349400c3e17c6e26260ba335c2060c0cfb356f",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "published_at_source": "official_feed",
       "localization": {
         "title": "Amazon 2025년 주주 서한",
@@ -3859,7 +4065,7 @@
       ],
       "content_hash": "05ac069470d7041d12fa2cd31a7bf06eb3632ffdfb0be9b462915040cb192920",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "versions": [
         {
           "content_hash": "504d2b339cc29a608621f06a549fb39d53e851375fe0edcbe39bce7a1d79c630",
@@ -3946,7 +4152,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "localization": {
         "title": "Netflix, Warner Bros. 인수 제안 증액 거부",
         "summary": "Netflix가 Warner Bros.에 대한 제안 금액을 인상하지 않기로 결정했다. Warner Bros. Discovery 이사회가 Paramount Skydance의 최신 제안을 기존 Netflix 합병 계약상 ‘Superior Proposal’로 판단했다는 통지를 받은 데 따른 발표다.",
@@ -4186,7 +4392,7 @@
       ],
       "content_hash": "4a2b8c2217143371b92bc9097abe1eb31059fed756ba2f1ae36438389bc84fc3",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "versions": [
         {
           "content_hash": "8e3908e1efc308b6d1611c3112c14fe94bf0baaad0daad49fac8440701a5157d",
@@ -4411,7 +4617,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "localization": {
         "title": "WBD, Netflix 거래 최종 위임장 제출 및 2026년 3월 20일 특별 주주총회 예정",
         "summary": "Warner Bros. Discovery가 Netflix와의 거래 승인을 위한 최종 위임장 설명서를 제출하고 2026년 3월 20일 특별 주주총회를 예정했다. Netflix와 WBD는 미국 DOJ, 주 법무장관, 유럽연합 집행위원회, 영국 CMA 등 경쟁 당국과 규제 절차를 진행 중이라고 밝혔다.",
@@ -4824,7 +5030,7 @@
         }
       ],
       "content_hash": "7302c3f25e1f6eec6f270b3559d8d0f0f5c3ca50f8d5da94b178baa3718b7e24",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "localization": {
         "title": "아마존 4분기 실적: NBA 중계 확대·챔피언스리그 권리 연장",
         "summary": "아마존은 회사 전체 실적과 함께 NBA on Prime의 여러 국가 진출 및 시청 성과를 발표했다. 독일·아일랜드·이탈리아·영국의 UEFA 챔피언스리그 중계권 연장도 설명했다.",
@@ -5010,7 +5216,7 @@
       ],
       "content_hash": "317445884687100e21d6e4df531c49a79ce80af82bbd250ddf35e1c36f7091f9",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "versions": [
         {
           "content_hash": "5f3f1574ff6ed065c706ddfa634a9ac58e20dfd11ddd04306765dc007e72d50e",
@@ -5181,7 +5387,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "localization": {
         "title": "Netflix와 Warner Bros. Discovery, 거래를 전액 현금 방식으로 변경",
         "summary": "Netflix와 Warner Bros. Discovery가 Netflix의 Warner Bros. 인수에 관한 최종 계약을 전액 현금 거래로 수정했다. 변경된 계약은 거래 구조를 단순화하고 WBD 주주에게 가치의 확실성을 높이며 주주 투표 절차를 앞당긴다.",
@@ -5304,8 +5510,8 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "localization": {
         "title": "Netflix, Warner Bros. Discovery 이사회의 합병 계약 지지 표명",
         "summary": "Netflix가 Warner Bros. Discovery 이사회의 Netflix 계약 승인 권고를 지지한다고 밝혔다. 양사는 거래와 관련해 SEC 제출 서류와 WBD 주주 대상 위임장·투자설명서 절차를 진행할 예정이다.",
@@ -5719,12 +5925,12 @@
       ],
       "content_hash": "baa38c6950155ed542f0ab2a1c12a07707f1c370fa5bb38ae89fba1ea8c1d38c",
       "source_updated_at": "2026-10-14",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "image_alt": "",
       "image_source_url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
       "image_attribution": "아마존 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-28T02:55:53+00:00",
+      "image_recorded_at": "2026-10-29T03:21:06+00:00",
       "localization": {
         "title": "Prime Video에서 2026-27 NBA 시즌 시청 방법",
         "summary": "Prime Video는 정규 시즌 67경기를 중계하며 Emirates NBA Cup Championship도 포함한다. AI 기반 Prime 360 하이라이트, Yahoo! Sports와 연동한 맞춤형 판타지 농구 기능이 도입되고, NBA와 AWS는 실시간 통계 제공을 위한 파트너십을 발표했다.",
@@ -6137,7 +6343,7 @@
         }
       ],
       "content_hash": "d5eed575231d5cf16dae13543385bcbda71ba4d2178ed1d732d90858850e4d48",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "published_at_source": "pdf_publication_unconfirmed",
       "localization": {
         "title": "Disney Q3 2026 주주 서한",
@@ -6329,7 +6535,7 @@
         }
       ],
       "content_hash": "cc64576f1e9ad7812785a28bb7f37659fc937b2746c65ea702d9f6da13e1fcfb",
-      "last_checked_at": "2026-10-28T02:55:53+00:00",
+      "last_checked_at": "2026-10-29T03:21:06+00:00",
       "published_at_source": "pdf_publication_unconfirmed",
       "localization": {
         "title": "디즈니 분기 재무지표 조정 내역",
