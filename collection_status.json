@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-10-30T02:26:37+00:00",
+  "collected_at": "2026-10-30T11:16:44+00:00",
   "sources": {
     "kobis": {
       "last_success_at": "2026-10-30T02:26:52+00:00",
@@ -62,22 +62,19 @@
     "news": {
       "state": "partial",
       "count": 90,
-      "collected_at": "2026-10-30T02:26:50+00:00",
+      "collected_at": "2026-10-30T11:17:00+00:00",
       "reference_date": "2026-10-30",
       "reference_period": "2026-10-24/2026-10-30",
       "error": "원문 URL 미해석 90건: RSS의 발행일·매체·기사 제목 기준",
-      "rejected_count": 530,
+      "rejected_count": 682,
       "missing_publication_date_count": 0,
       "unresolved_original_count": 90,
-      "retained_count": 421
+      "retained_count": 438
     }
   },
-  "collection_scope": "full",
+  "collection_scope": "news_only",
   "updated_sources": [
-    "news",
-    "kobis",
-    "netflix",
-    "youtube"
+    "news"
   ],
   "overall_state": "partial"
 }
