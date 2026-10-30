@@ -1,13 +1,20 @@
 {
-  "status": "already_cached",
+  "status": "completed",
   "tests": {
     "localization_version": true
   },
   "expected_version": "1.6.4",
-  "button_submitted": false,
-  "stage": "media_open",
-  "checked_at": "2026-10-29T03:21:40.283437+00:00",
+  "button_submitted": true,
+  "stage": "submitted",
+  "checked_at": "2026-10-30T03:23:40.194156+00:00",
   "observed_version": "1.6.4",
   "frame_state": "matched_release",
-  "translation_control_count": 0
+  "translation_control_count": 1,
+  "control_visible": true,
+  "batches": [
+    {
+      "pending_before": 2,
+      "pending_after": 0
+    }
+  ]
 }
