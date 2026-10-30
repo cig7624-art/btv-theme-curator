@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-10-29T03:21:06+00:00",
+  "collected_at": "2026-10-30T03:23:06+00:00",
   "sources": [
     {
       "id": "netflix_ir",
@@ -8,8 +8,8 @@
       "company": "Netflix",
       "url": "https://ir.netflix.net/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
-      "last_success_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
+      "last_success_at": "2026-10-30T03:23:06+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 4
@@ -20,8 +20,8 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/investor-relations/",
       "status": "partial",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
-      "last_success_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
+      "last_success_at": "2026-10-30T03:23:06+00:00",
       "error_code": "some_documents_unavailable",
       "item_count": 2,
       "retained_item_count": 2
@@ -32,11 +32,11 @@
       "company": "Amazon",
       "url": "https://ir.aboutamazon.com/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
-      "last_success_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
+      "last_success_at": "2026-10-30T03:23:06+00:00",
       "error_code": "",
       "item_count": 4,
-      "retained_item_count": 4
+      "retained_item_count": 5
     },
     {
       "id": "comcast_ir",
@@ -44,7 +44,7 @@
       "company": "Comcast",
       "url": "https://www.cmcsa.com/financial-information/quarterly-results",
       "status": "unavailable",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "last_success_at": "",
       "error_code": "http_403",
       "item_count": 0,
@@ -56,11 +56,11 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/feed/",
       "status": "ok",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
-      "last_success_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
+      "last_success_at": "2026-10-30T03:23:06+00:00",
       "error_code": "",
       "item_count": 4,
-      "retained_item_count": 5
+      "retained_item_count": 6
     },
     {
       "id": "amazon_news",
@@ -68,8 +68,8 @@
       "company": "Amazon",
       "url": "https://www.aboutamazon.com/news/entertainment",
       "status": "ok",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
-      "last_success_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
+      "last_success_at": "2026-10-30T03:23:06+00:00",
       "error_code": "",
       "item_count": 1,
       "retained_item_count": 1
@@ -80,7 +80,7 @@
       "company": "SKT",
       "url": "https://news.sktelecom.com/feed",
       "status": "unavailable",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "last_success_at": "",
       "error_code": "no_business_documents",
       "item_count": 0,
@@ -92,8 +92,8 @@
       "company": "SK브로드밴드",
       "url": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
       "status": "ok",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
-      "last_success_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
+      "last_success_at": "2026-10-30T03:23:06+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 5
@@ -104,9 +104,9 @@
       "company": "KT",
       "url": "https://corp.kt.com/html/promote/news/report_list.html",
       "status": "unavailable",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "last_success_at": "",
-      "error_code": "no_business_documents",
+      "error_code": "timeout",
       "item_count": 0,
       "retained_item_count": 0
     },
@@ -116,8 +116,8 @@
       "company": "LG유플러스",
       "url": "https://news.lguplus.com/category/%ED%94%84%EB%A0%88%EC%8A%A4%EC%84%BC%ED%84%B0/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C",
       "status": "partial",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
-      "last_success_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
+      "last_success_at": "2026-10-30T03:23:06+00:00",
       "error_code": "some_documents_unavailable",
       "item_count": 2,
       "retained_item_count": 2
@@ -128,7 +128,7 @@
       "company": "쿠팡플레이",
       "url": "https://news.coupang.com/feed/",
       "status": "unavailable",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "last_success_at": "",
       "error_code": "http_403",
       "item_count": 0,
@@ -140,14 +140,495 @@
       "company": "CJ ENM",
       "url": "https://www.cjenm.com/ko/news/",
       "status": "ok",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
-      "last_success_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
+      "last_success_at": "2026-10-30T03:23:06+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 6
     }
   ],
   "items": [
+    {
+      "id": "mi-f2633f0010ba329c90",
+      "source_id": "amazon_ir",
+      "company": "Amazon",
+      "topic": "earnings_strategy",
+      "title": "Amazon.com Announces Third Quarter Results",
+      "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-10-30T03:23:06+00:00",
+      "country": "global",
+      "period": "",
+      "source_name": "Amazon Investor Relations",
+      "source_type": "earnings",
+      "excerpt": "Operating income was $28.1 billion and operating margin was 13.9%—Amazon’s highest operating margin ever\nAWS net sales increased 39.3%—its fastest growth in nearly five years—to a $184 billion annualized revenue run rate\nSEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its third quarter ended September 30, 2026.\nNet sales increased 12% to $201.9 billion in the third qua",
+      "body_text": "Operating income was $28.1 billion and operating margin was 13.9%—Amazon’s highest operating margin ever\nAWS net sales increased 39.3%—its fastest growth in nearly five years—to a $184 billion annualized revenue run rate\nSEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its third quarter ended September 30, 2026.\nNet sales increased 12% to $201.9 billion in the third quarter, compared with $180.2 billion in third quarter 2025. Excluding the $0.9 billion unfavorable impact from year-over-year changes in foreign exchange rates throughout the quarter, net sales increased 13% compared with third quarter 2025. As a reminder, Prime Day timing shifted this year, with the event occurring in Q2 for most large countries. In 2025, Prime Day occurred entirely in Q3. Excluding this shift, third quarter year-over-year growth would have been approximately 400 basis points higher. North America segment sales increased 6% year-over-year to $112.9 billion. International segment sales increased 5% year-over-year to $43.1 billion, or increased 8% excluding changes in foreign exchange rates. AWS segment sales increased 39% year-over-year to $46.0 billion.\nNorth America segment sales increased 6% year-over-year to $112.9 billion.\nInternational segment sales increased 5% year-over-year to $43.1 billion, or increased 8% excluding changes in foreign exchange rates.\nAWS segment sales increased 39% year-over-year to $46.0 billion.\nOperating income increased to $28.1 billion in the third quarter, compared with $17.4 billion in third quarter 2025. North America segment operating income was $8.7 billion, compared with $4.8 billion in third quarter 2025. International segment operating income was $1.6 billion, compared with $1.2 billion in third quarter 2025. AWS segment operating income was $17.8 billion, compared with $11.4 billion in third quarter 2025.\nNorth America segment operating income was $8.7 billion, compared with $4.8 billion in third quarter 2025.\nInternational segment operating income was $1.6 billion, compared with $1.2 billion in third quarter 2025.\nAWS segment operating income was $17.8 billion, compared with $11.4 billion in third quarter 2025.\nNet income decreased to $20.7 billion in the third quarter, or $1.89 per diluted share, compared with $21.2 billion, or $1.95 per diluted share, in third quarter 2025. This decrease is driven primarily by pre-tax gains of $9.5 billion in third quarter 2025 included in non-operating income (expense) from our investments in Anthropic.\nOperating cash flow increased 29% to $168.3 billion for the trailing twelve months, compared with $130.7 billion for the trailing twelve months ended September 30, 2025.\nFree cash flow decreased to an outflow of $42.4 billion for the trailing twelve months, driven primarily by a year-over-year increase of $94.8 billion in purchases of property and equipment, net of proceeds from sales and incentives. This increase primarily reflects investments in artificial intelligence. This compares to free cash flow inflow of $14.8 billion for the trailing twelve months ended September 30, 2025.\n“Our AWS investment in functionality and infrastructure is working, with over 39% year-over-year revenue growth in Q3 ($184 billion revenue run rate) and projected revenue growth rates of over 40% both in 2027 and in 2028,” said Andy Jassy, President and CEO, Amazon. “Our broader selection and speedier delivery are helping us capture more retail market segment share with improving margins, and our newer businesses, ranging from Grocery to Pharmacy to Amazon Leo to Zoox are progressing encouragingly. There has never been a trillion dollar revenue business, and we may have two of them in the next 5-10 years.”\nSome other highlights since the company’s last earnings announcement include that Amazon:\nSigned new AWS agreements with Meta, NVIDIA, OpenAI, Salesforce, Oracle, Qualcomm, Verizon, ADP, Stripe, Accenture Edge, Novo, Fanatics, Zoom, Raymond James, Prometheus AI, AppFolio, Instructure, Cognition, Sigma, Lila Sciences, The Biological Computing Co., NATO, Columbia University Irving Medical Center, and more.\nDrove continued rapid growth for Amazon Bedrock, AWS’s inference service, with Fortune 500 companies spending nearly 7x more year-over-year and total Bedrock token volume growing nearly 17x year-over-year.\nExpanded Bedrock’s leading selection of frontier and open weight models, adding OpenAI’s GPT-6 Astra, GPT-6 Sol, GPT-6 Luna, and GPT-6.1 Sol; Anthropic’s Claude Fable 5.1, Opus 5.5, Sonnet 5.5, and Haiku 5.5; Moonshot AI’s Kimi K3; SpaceXAI’s Grok 4.7; Z.ai’s GLM 5.3; and two purpose-built cybersecurity models from OpenAI.\nLaunched built-in web search for OpenAI models on Bedrock so customers can ground responses in current information—while keeping data secure and answers accurate for time-sensitive questions without building and maintaining their own web-retrieval pipelines.\nLaunched public preview of Bedrock Managed Agents, which is a managed service powered by OpenAI that makes it faster for enterprises to build and deploy production-ready AI agents.\nAdded to AWS’s leadership position in open source agent-building: Released Strands harness, a fully assembled, state-of-the-art agent harness that developers can get working with a single line of code and build custom agents that can run locally, on Bedrock AgentCore, or on a provider of their choice. Strands harness lowers the cost of agent tasks by 32% through greater token efficiency than other harnesses when using the same frontier models, while achieving equal or better accuracy. Previewed Strands Box, an open source sandbox that gives developers the ability to define rules for agent behavior and access, helping to prevent autonomous agents from causing unintended harm. Strands Box is designed to enforce rules, no matter where your agent runs, whether that’s on your desktop, in agents built using AgentCore on AWS, or elsewhere.\nReleased Strands harness, a fully assembled, state-of-the-art agent harness that developers can get working with a single line of code and build custom agents that can run locally, on Bedrock AgentCore, or on a provider of their choice. Strands harness lowers the cost of agent tasks by 32% through greater token efficiency than other harnesses when using the same frontier models, while achieving equal or better accuracy.\nPreviewed Strands Box, an open source sandbox that gives developers the ability to define rules for agent behavior and access, helping to prevent autonomous agents from causing unintended harm. Strands Box is designed to enforce rules, no matter where your agent runs, whether that’s on your desktop, in agents built using AgentCore on AWS, or elsewhere.\nDrove continued rapid adoption of Amazon Bedrock AgentCore, AWS’s fully managed service for building, connecting, and optimizing agents securely at scale using any model and open source framework, including Strands. AgentCore is built for developers and enterprises that need the robust infrastructure, controls, and tools necessary to run agents at production scale. Tens of thousands of customers currently use AgentCore, and they deployed 2x more agents in Q3 than the prior three quarters combined.\nRecently topped a $1 billion annualized revenue run rate for Lambda, AWS’s flagship serverless offering, which is used by enterprises like Samsung, Volkswagen, United Airlines, Mercedes-Benz, and Booking.com.\nLaunched Lambda Web Functions to allow developers to run scalable, responsive web applications that serve global audiences on Lambda. Web Functions gives developers the flexibility to use a variety of popular web frameworks and iterate quickly, while Lambda handles scaling, multi-region distribution, and active CPU billing.\nMade AWS Continuum—an AI-powered security service that automatically discovers, prioritizes, validates, and remediates software vulnerabilities at machine speed—generally available. Also announced that it’s bringing Continuum into Anthropic’s Claude Code, OpenAI’s Codex, and AWS’s Kiro. Continuum is already being used by companies like Capital One, IBM, Infor, Luminate, and Robinhood.\nExpanded Amazon Quick, an intelligent AI work companion, into Outlook, Word, PowerPoint, and Excel. It can also now keep running when your laptop is closed. Companies like Principal Financial Group, GoDaddy, Autodesk, BMW, Mondelēz, 3M, Southwest Airlines, EchoStar, and DXC are choosing Quick because it’s built for work, connects to their company data, and keeps that data secure.\nOpen-sourced Kiro Crew, a persistent workspace that remembers a developer’s context, learns how they work, and coordinates multiple agents to work in parallel and run scheduled and long-running tasks unattended.\nAcquired DuckLabs, the company behind the open source data analysis tool DuckDB. With DuckDB, AWS customers will be able to write their SQL analytics query once and then execute using any AWS analytics service, so for the first time in analytics, customers will have zero migration or portability costs between query engines.\nMade it even easier to adopt its custom AI accelerator, Trainium, with TorchNeuron. TorchNeuron lets developers run existing PyTorch code (which most already use) on Trainium without rewriting a thing.\nIncreased selection from notable brands like Banana Republic, Jean Paul Gaultier fragrances, Carolina Herrera fragrances, La-Z-Boy, The Farmer’s Dog, and FAO Schwarz by more than 20% year-over-year.\nAnnounced that Amazon helped U.S. customers save billions—averaging over $1,000 per customer each year for 100 million+ customers—through everyday low prices, deals, free delivery, fuel savings, and prescription savings.\nDelivered its fastest Q3 speeds ever for Prime members, with more than 1.5 billion items arriving same-day or overnight in the quarter.\nContinued expanding its ultra-fast delivery service, Amazon Now, which is now available in over 450 towns and cities around the world. The number of items ordered through Amazon Now is up 10x year-over-year.\nContinued growing its global Grocery business, with fresh groceries and everyday essentials growing about 3x faster than the rest of the store and representing about half of all units sold in Q3.\nMade it even easier for independent sellers to grow their businesses with new tools like Seller Assistant workflows (handles routine tasks like restocking and pricing around the clock), a plugin that integrates Seller Assistant into Amazon Quick and Anthropic’s Claude, and the ability to manage listings, orders, and profitability across multiple channels directly from Seller Central.\nContinued to drive rapid adoption of Alexa for Shopping, its agentic shopping assistant, which was used by 400 million+ customers in the last 12 months, with customer interactions up 570% year-over-year.\nAdded 100+ new capabilities to Alexa for Shopping so tasks that used to require multiple clicks—like building gift lists, adjusting Subscribe & Save deliveries, managing payments and memberships, and adding new delivery addresses—can now be completed with simple conversations.\nMade Amazon Pharmacy even faster with 3-hour prescription delivery now available in more than 350 cities. The number of customers using Amazon Pharmacy is up over 60% year-over-year, and repeat customers are up more than 50% year-over-year.\nIntroduced Amazon Ads Agent for advertisers, bringing together Amazon’s full offering under a single, AI-first platform. Backed by trillions of shopping, browsing, and streaming signals, Amazon Ads Agent supports advertisers at every step with insights, answers, and the ability to take action on their behalf.\nLaunched Full-Funnel Campaigns in Amazon Ads Agent for all U.S. advertisers, bringing sponsored ads, display, video, and streaming TV into a single campaign. Advertisers provide initial inputs, then Amazon’s AI plans, executes, and continuously optimizes the rest.\nKicked off the fifth season of Thursday Night Football on Prime Video, averaging 17.7 million viewers through six games according to Nielsen, its best start ever and a 16% increase over last year’s full-season average.\nDebuted the second season of NBA on Prime in more than 200 countries, attracting more than two million viewers in the U.S. during its season-opening doubleheader, more than doubling last year’s full-season average, according to Nielsen.\nDrew 66 million viewers globally for Season Four of Reacher on Prime Video in its first 28 days.\nExceeded $1.2 billion in global box office so far in 2026 for Amazon MGM Studios, as audiences flocked to movies like Project Hail Mary and Verity .\nDrove strong early demand for the launch of its most powerful devices lineup yet, with 34 new products across Echo, Kindle, Amazon Alexa Tablets, Fire TV, Ring, Blink, and Bee.\nExpanded Alexa+ to Australia, India, and Japan, and made Alexa+ available for free to U.S. customers with compatible Fire TV devices.\nRemains on track to begin initial service of its Amazon Leo low Earth orbit satellite service later this year, and signed a strategic agreement with AT&T, which will be the first major U.S. telecom provider to offer Leo connectivity to enterprise and public-sector customers.\nBegan offering paid rides to customers in Zoox autonomous robotaxis in Las Vegas and started testing in San Diego and Houston. Zoox is now operating in 12 U.S. cities.\nIntroduced Built Together, a new $1 billion community investment in U.S. data center communities to provide increased support for priorities communities value most, including free community college and trades training, energy and water efficiency upgrades for schools, community buildings and homes, and flexible annual funding for local priorities like roads, fire equipment, affordable housing, and food security.\nUsed its logistics network to donate and deliver 450,000+ emergency supplies to recovery efforts from flash floods in Nepal, wildfires in Washington, and a magnitude 7.4 earthquake in Colombia through its Disaster Relief Program.\nAnnounced plans to hire more than 300,000 seasonal, part-time, and full-time employees across its U.S. operations this holiday season.\nAnnounced $1.5 billion+ investment to raise minimum starting pay for U.S. full-time operations employees to $20 an hour, and added a new grocery discount and lifetime banking benefit for its teammates.\nFinancial Guidance The following forward-looking statements reflect Amazon.com’s expectations as of October 29, 2026, and are subject to substantial uncertainty. Our results are inherently unpredictable and may be materially affected by many factors, such as fluctuations in foreign exchange rates and energy prices, changes in global economic and geopolitical conditions, tariff and trade policies, resource and supply volatility, including for memory chips, and customer demand and spending (including the impact of recessionary fears), inflation, interest rates, regional labor market constraints, world events, the rate of growth of the internet, online commerce, cloud services, and new and emerging technologies, and the various factors detailed below.\nNet sales are expected to be between $240.0 billion and $247.0 billion, or to grow between 12% and 16% compared with fourth quarter 2025. This guidance anticipates an unfavorable impact of approximately 60 basis points from foreign exchange rates. Advertising revenue grew 12% year-over-year excluding changes in foreign exchange rates in the third quarter 2026 impacted by timing anomalies primarily related to Prime Day (and a couple other timing factors). We expect year-over-year advertising revenue to grow in the high teens in fourth quarter 2026.\nOperating income is expected to be between $28.5 billion and $33.5 billion, compared with $25.0 billion in fourth quarter 2025.\nWe continue to expect 2026 cash capital expenditures to be approximately $220 billion.\nThis guidance assumes, among other things, no impact from energy derivative contract remeasurements, and that no additional business acquisitions, restructurings, or legal settlements are concluded.\nConference Call Information A conference call will be webcast live today at 2:00 p.m. PT/5:00 p.m. ET, and will be available for at least three months at amazon.com/ir. This call will contain forward-looking statements and other material information regarding the Company’s financial and operating results.\nForward-Looking Statements These forward-looking statements are inherently difficult to predict. Actual results and outcomes could differ materially for a variety of reasons, including, in addition to the factors discussed above, the amount that Amazon.com invests in new business opportunities and the timing of those investments, the mix of products and services sold to customers, the mix of net sales derived from products as compared with services, the extent to which we owe income or other taxes, competition, management of growth, potential fluctuations in operating results, international growth and expansion, the outcomes of claims, litigation, government investigations, and other proceedings, fulfillment, sortation, delivery, and data center optimization, risks of inventory management, variability in demand, the degree to which the Company enters into, maintains, and develops commercial agreements, proposed and completed acquisitions and strategic transactions, payments risks, and risks of fulfillment throughput and productivity. Other risks and uncertainties include, among others, risks related to new products, services, and technologies, security incidents, system interruptions, government regulation and taxation, and fraud. In addition, global economic and geopolitical conditions and additional or unforeseen circumstances, developments, or events may give rise to or amplify many of these risks. More information about factors that potentially could affect Amazon.com’s f\nAdditional Information Our investor relations website is amazon.com/ir and we encourage investors to use it as a way of easily finding information about us. We promptly make available on this website, free of charge, the reports that we file or furnish with the SEC, corporate governance information (including our Code of Business Conduct and Ethics), and select press releases, which may contain material information about us, and you may subscribe to be notified of new information posted to this site.\nAbout Amazon Amazon is guided by four principles: customer obsession rather than competitor focus, passion for invention, commitment to operational excellence, and long-term thinking. Amazon strives to be Earth’s Most Customer-Centric Company, Earth’s Best Employer, and Earth’s Safest Place to Work. Customer reviews, 1-Click shopping, personalized recommendations, Prime, Fulfillment by Amazon, AWS, Kindle Direct Publishing, Kindle, Career Choice, Fire tablets, Fire TV, Amazon Echo, Alexa, Just Walk Out technology, Amazon Studios, and The Climate Pledge are some of the things pioneered by Amazon. For more information, visit amazon.com/about and follow @AmazonNews.",
+      "image_url": "",
+      "evidence": [
+        {
+          "id": "mi-f2633f0010ba329c90-p001",
+          "text": "Operating income was $28.1 billion and operating margin was 13.9%—Amazon’s highest operating margin ever",
+          "locator": "p001",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p002",
+          "text": "AWS net sales increased 39.3%—its fastest growth in nearly five years—to a $184 billion annualized revenue run rate",
+          "locator": "p002",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p003",
+          "text": "SEATTLE--(BUSINESS WIRE)-- Amazon.com, Inc. (NASDAQ: AMZN) today announced financial results for its third quarter ended September 30, 2026.",
+          "locator": "p003",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p004",
+          "text": "Net sales increased 12% to $201.9 billion in the third quarter, compared with $180.2 billion in third quarter 2025. Excluding the $0.9 billion unfavorable impact from year-over-year changes in foreign exchange rates throughout the quarter, net sales increased 13% compared with third quarter 2025. As a reminder, Prime Day timing shifted this year, with the event occurring in Q2 for most large countries. In 2025, Prime Day occurred entirely in Q3. Excluding this shift, third quarter year-over-year growth would have been approximately 400 basis points higher. North America segment sales increased 6% year-over-year to $112.9 billion. International segment sales increased 5% year-over-year to $43.1 billion, or increased 8% excluding changes in foreign exchange rates. AWS segment sales increased 39% year-over-year to $46.0 billion.",
+          "locator": "p004",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p005",
+          "text": "North America segment sales increased 6% year-over-year to $112.9 billion.",
+          "locator": "p005",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p006",
+          "text": "International segment sales increased 5% year-over-year to $43.1 billion, or increased 8% excluding changes in foreign exchange rates.",
+          "locator": "p006",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p007",
+          "text": "AWS segment sales increased 39% year-over-year to $46.0 billion.",
+          "locator": "p007",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p008",
+          "text": "Operating income increased to $28.1 billion in the third quarter, compared with $17.4 billion in third quarter 2025. North America segment operating income was $8.7 billion, compared with $4.8 billion in third quarter 2025. International segment operating income was $1.6 billion, compared with $1.2 billion in third quarter 2025. AWS segment operating income was $17.8 billion, compared with $11.4 billion in third quarter 2025.",
+          "locator": "p008",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p009",
+          "text": "North America segment operating income was $8.7 billion, compared with $4.8 billion in third quarter 2025.",
+          "locator": "p009",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p010",
+          "text": "International segment operating income was $1.6 billion, compared with $1.2 billion in third quarter 2025.",
+          "locator": "p010",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p011",
+          "text": "AWS segment operating income was $17.8 billion, compared with $11.4 billion in third quarter 2025.",
+          "locator": "p011",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p012",
+          "text": "Net income decreased to $20.7 billion in the third quarter, or $1.89 per diluted share, compared with $21.2 billion, or $1.95 per diluted share, in third quarter 2025. This decrease is driven primarily by pre-tax gains of $9.5 billion in third quarter 2025 included in non-operating income (expense) from our investments in Anthropic.",
+          "locator": "p012",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p013",
+          "text": "Operating cash flow increased 29% to $168.3 billion for the trailing twelve months, compared with $130.7 billion for the trailing twelve months ended September 30, 2025.",
+          "locator": "p013",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p014",
+          "text": "Free cash flow decreased to an outflow of $42.4 billion for the trailing twelve months, driven primarily by a year-over-year increase of $94.8 billion in purchases of property and equipment, net of proceeds from sales and incentives. This increase primarily reflects investments in artificial intelligence. This compares to free cash flow inflow of $14.8 billion for the trailing twelve months ended September 30, 2025.",
+          "locator": "p014",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p015",
+          "text": "“Our AWS investment in functionality and infrastructure is working, with over 39% year-over-year revenue growth in Q3 ($184 billion revenue run rate) and projected revenue growth rates of over 40% both in 2027 and in 2028,” said Andy Jassy, President and CEO, Amazon. “Our broader selection and speedier delivery are helping us capture more retail market segment share with improving margins, and our newer businesses, ranging from Grocery to Pharmacy to Amazon Leo to Zoox are progressing encouragingly. There has never been a trillion dollar revenue business, and we may have two of them in the next 5-10 years.”",
+          "locator": "p015",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p016",
+          "text": "Some other highlights since the company’s last earnings announcement include that Amazon:",
+          "locator": "p016",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p017",
+          "text": "Signed new AWS agreements with Meta, NVIDIA, OpenAI, Salesforce, Oracle, Qualcomm, Verizon, ADP, Stripe, Accenture Edge, Novo, Fanatics, Zoom, Raymond James, Prometheus AI, AppFolio, Instructure, Cognition, Sigma, Lila Sciences, The Biological Computing Co., NATO, Columbia University Irving Medical Center, and more.",
+          "locator": "p017",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p018",
+          "text": "Drove continued rapid growth for Amazon Bedrock, AWS’s inference service, with Fortune 500 companies spending nearly 7x more year-over-year and total Bedrock token volume growing nearly 17x year-over-year.",
+          "locator": "p018",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p019",
+          "text": "Expanded Bedrock’s leading selection of frontier and open weight models, adding OpenAI’s GPT-6 Astra, GPT-6 Sol, GPT-6 Luna, and GPT-6.1 Sol; Anthropic’s Claude Fable 5.1, Opus 5.5, Sonnet 5.5, and Haiku 5.5; Moonshot AI’s Kimi K3; SpaceXAI’s Grok 4.7; Z.ai’s GLM 5.3; and two purpose-built cybersecurity models from OpenAI.",
+          "locator": "p019",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p020",
+          "text": "Launched built-in web search for OpenAI models on Bedrock so customers can ground responses in current information—while keeping data secure and answers accurate for time-sensitive questions without building and maintaining their own web-retrieval pipelines.",
+          "locator": "p020",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p021",
+          "text": "Launched public preview of Bedrock Managed Agents, which is a managed service powered by OpenAI that makes it faster for enterprises to build and deploy production-ready AI agents.",
+          "locator": "p021",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p022",
+          "text": "Added to AWS’s leadership position in open source agent-building: Released Strands harness, a fully assembled, state-of-the-art agent harness that developers can get working with a single line of code and build custom agents that can run locally, on Bedrock AgentCore, or on a provider of their choice. Strands harness lowers the cost of agent tasks by 32% through greater token efficiency than other harnesses when using the same frontier models, while achieving equal or better accuracy. Previewed Strands Box, an open source sandbox that gives developers the ability to define rules for agent behavior and access, helping to prevent autonomous agents from causing unintended harm. Strands Box is designed to enforce rules, no matter where your agent runs, whether that’s on your desktop, in agents built using AgentCore on AWS, or elsewhere.",
+          "locator": "p022",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p023",
+          "text": "Released Strands harness, a fully assembled, state-of-the-art agent harness that developers can get working with a single line of code and build custom agents that can run locally, on Bedrock AgentCore, or on a provider of their choice. Strands harness lowers the cost of agent tasks by 32% through greater token efficiency than other harnesses when using the same frontier models, while achieving equal or better accuracy.",
+          "locator": "p023",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p024",
+          "text": "Previewed Strands Box, an open source sandbox that gives developers the ability to define rules for agent behavior and access, helping to prevent autonomous agents from causing unintended harm. Strands Box is designed to enforce rules, no matter where your agent runs, whether that’s on your desktop, in agents built using AgentCore on AWS, or elsewhere.",
+          "locator": "p024",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p025",
+          "text": "Drove continued rapid adoption of Amazon Bedrock AgentCore, AWS’s fully managed service for building, connecting, and optimizing agents securely at scale using any model and open source framework, including Strands. AgentCore is built for developers and enterprises that need the robust infrastructure, controls, and tools necessary to run agents at production scale. Tens of thousands of customers currently use AgentCore, and they deployed 2x more agents in Q3 than the prior three quarters combined.",
+          "locator": "p025",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p026",
+          "text": "Recently topped a $1 billion annualized revenue run rate for Lambda, AWS’s flagship serverless offering, which is used by enterprises like Samsung, Volkswagen, United Airlines, Mercedes-Benz, and Booking.com.",
+          "locator": "p026",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p027",
+          "text": "Launched Lambda Web Functions to allow developers to run scalable, responsive web applications that serve global audiences on Lambda. Web Functions gives developers the flexibility to use a variety of popular web frameworks and iterate quickly, while Lambda handles scaling, multi-region distribution, and active CPU billing.",
+          "locator": "p027",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p028",
+          "text": "Made AWS Continuum—an AI-powered security service that automatically discovers, prioritizes, validates, and remediates software vulnerabilities at machine speed—generally available. Also announced that it’s bringing Continuum into Anthropic’s Claude Code, OpenAI’s Codex, and AWS’s Kiro. Continuum is already being used by companies like Capital One, IBM, Infor, Luminate, and Robinhood.",
+          "locator": "p028",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p029",
+          "text": "Expanded Amazon Quick, an intelligent AI work companion, into Outlook, Word, PowerPoint, and Excel. It can also now keep running when your laptop is closed. Companies like Principal Financial Group, GoDaddy, Autodesk, BMW, Mondelēz, 3M, Southwest Airlines, EchoStar, and DXC are choosing Quick because it’s built for work, connects to their company data, and keeps that data secure.",
+          "locator": "p029",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p030",
+          "text": "Open-sourced Kiro Crew, a persistent workspace that remembers a developer’s context, learns how they work, and coordinates multiple agents to work in parallel and run scheduled and long-running tasks unattended.",
+          "locator": "p030",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p031",
+          "text": "Acquired DuckLabs, the company behind the open source data analysis tool DuckDB. With DuckDB, AWS customers will be able to write their SQL analytics query once and then execute using any AWS analytics service, so for the first time in analytics, customers will have zero migration or portability costs between query engines.",
+          "locator": "p031",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p032",
+          "text": "Made it even easier to adopt its custom AI accelerator, Trainium, with TorchNeuron. TorchNeuron lets developers run existing PyTorch code (which most already use) on Trainium without rewriting a thing.",
+          "locator": "p032",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p033",
+          "text": "Increased selection from notable brands like Banana Republic, Jean Paul Gaultier fragrances, Carolina Herrera fragrances, La-Z-Boy, The Farmer’s Dog, and FAO Schwarz by more than 20% year-over-year.",
+          "locator": "p033",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p034",
+          "text": "Announced that Amazon helped U.S. customers save billions—averaging over $1,000 per customer each year for 100 million+ customers—through everyday low prices, deals, free delivery, fuel savings, and prescription savings.",
+          "locator": "p034",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p035",
+          "text": "Delivered its fastest Q3 speeds ever for Prime members, with more than 1.5 billion items arriving same-day or overnight in the quarter.",
+          "locator": "p035",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p036",
+          "text": "Continued expanding its ultra-fast delivery service, Amazon Now, which is now available in over 450 towns and cities around the world. The number of items ordered through Amazon Now is up 10x year-over-year.",
+          "locator": "p036",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p037",
+          "text": "Continued growing its global Grocery business, with fresh groceries and everyday essentials growing about 3x faster than the rest of the store and representing about half of all units sold in Q3.",
+          "locator": "p037",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p038",
+          "text": "Made it even easier for independent sellers to grow their businesses with new tools like Seller Assistant workflows (handles routine tasks like restocking and pricing around the clock), a plugin that integrates Seller Assistant into Amazon Quick and Anthropic’s Claude, and the ability to manage listings, orders, and profitability across multiple channels directly from Seller Central.",
+          "locator": "p038",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p039",
+          "text": "Continued to drive rapid adoption of Alexa for Shopping, its agentic shopping assistant, which was used by 400 million+ customers in the last 12 months, with customer interactions up 570% year-over-year.",
+          "locator": "p039",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p040",
+          "text": "Added 100+ new capabilities to Alexa for Shopping so tasks that used to require multiple clicks—like building gift lists, adjusting Subscribe & Save deliveries, managing payments and memberships, and adding new delivery addresses—can now be completed with simple conversations.",
+          "locator": "p040",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p041",
+          "text": "Made Amazon Pharmacy even faster with 3-hour prescription delivery now available in more than 350 cities. The number of customers using Amazon Pharmacy is up over 60% year-over-year, and repeat customers are up more than 50% year-over-year.",
+          "locator": "p041",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p042",
+          "text": "Introduced Amazon Ads Agent for advertisers, bringing together Amazon’s full offering under a single, AI-first platform. Backed by trillions of shopping, browsing, and streaming signals, Amazon Ads Agent supports advertisers at every step with insights, answers, and the ability to take action on their behalf.",
+          "locator": "p042",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p043",
+          "text": "Launched Full-Funnel Campaigns in Amazon Ads Agent for all U.S. advertisers, bringing sponsored ads, display, video, and streaming TV into a single campaign. Advertisers provide initial inputs, then Amazon’s AI plans, executes, and continuously optimizes the rest.",
+          "locator": "p043",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p044",
+          "text": "Kicked off the fifth season of Thursday Night Football on Prime Video, averaging 17.7 million viewers through six games according to Nielsen, its best start ever and a 16% increase over last year’s full-season average.",
+          "locator": "p044",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p045",
+          "text": "Debuted the second season of NBA on Prime in more than 200 countries, attracting more than two million viewers in the U.S. during its season-opening doubleheader, more than doubling last year’s full-season average, according to Nielsen.",
+          "locator": "p045",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p046",
+          "text": "Drew 66 million viewers globally for Season Four of Reacher on Prime Video in its first 28 days.",
+          "locator": "p046",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p047",
+          "text": "Exceeded $1.2 billion in global box office so far in 2026 for Amazon MGM Studios, as audiences flocked to movies like Project Hail Mary and Verity .",
+          "locator": "p047",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p048",
+          "text": "Drove strong early demand for the launch of its most powerful devices lineup yet, with 34 new products across Echo, Kindle, Amazon Alexa Tablets, Fire TV, Ring, Blink, and Bee.",
+          "locator": "p048",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p049",
+          "text": "Expanded Alexa+ to Australia, India, and Japan, and made Alexa+ available for free to U.S. customers with compatible Fire TV devices.",
+          "locator": "p049",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p050",
+          "text": "Remains on track to begin initial service of its Amazon Leo low Earth orbit satellite service later this year, and signed a strategic agreement with AT&T, which will be the first major U.S. telecom provider to offer Leo connectivity to enterprise and public-sector customers.",
+          "locator": "p050",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p051",
+          "text": "Began offering paid rides to customers in Zoox autonomous robotaxis in Las Vegas and started testing in San Diego and Houston. Zoox is now operating in 12 U.S. cities.",
+          "locator": "p051",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p052",
+          "text": "Introduced Built Together, a new $1 billion community investment in U.S. data center communities to provide increased support for priorities communities value most, including free community college and trades training, energy and water efficiency upgrades for schools, community buildings and homes, and flexible annual funding for local priorities like roads, fire equipment, affordable housing, and food security.",
+          "locator": "p052",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p053",
+          "text": "Used its logistics network to donate and deliver 450,000+ emergency supplies to recovery efforts from flash floods in Nepal, wildfires in Washington, and a magnitude 7.4 earthquake in Colombia through its Disaster Relief Program.",
+          "locator": "p053",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p054",
+          "text": "Announced plans to hire more than 300,000 seasonal, part-time, and full-time employees across its U.S. operations this holiday season.",
+          "locator": "p054",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p055",
+          "text": "Announced $1.5 billion+ investment to raise minimum starting pay for U.S. full-time operations employees to $20 an hour, and added a new grocery discount and lifetime banking benefit for its teammates.",
+          "locator": "p055",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p056",
+          "text": "Financial Guidance The following forward-looking statements reflect Amazon.com’s expectations as of October 29, 2026, and are subject to substantial uncertainty. Our results are inherently unpredictable and may be materially affected by many factors, such as fluctuations in foreign exchange rates and energy prices, changes in global economic and geopolitical conditions, tariff and trade policies, resource and supply volatility, including for memory chips, and customer demand and spending (including the impact of recessionary fears), inflation, interest rates, regional labor market constraints, world events, the rate of growth of the internet, online commerce, cloud services, and new and emerging technologies, and the various factors detailed below.",
+          "locator": "p056",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p058",
+          "text": "Net sales are expected to be between $240.0 billion and $247.0 billion, or to grow between 12% and 16% compared with fourth quarter 2025. This guidance anticipates an unfavorable impact of approximately 60 basis points from foreign exchange rates. Advertising revenue grew 12% year-over-year excluding changes in foreign exchange rates in the third quarter 2026 impacted by timing anomalies primarily related to Prime Day (and a couple other timing factors). We expect year-over-year advertising revenue to grow in the high teens in fourth quarter 2026.",
+          "locator": "p058",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p059",
+          "text": "Operating income is expected to be between $28.5 billion and $33.5 billion, compared with $25.0 billion in fourth quarter 2025.",
+          "locator": "p059",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p060",
+          "text": "We continue to expect 2026 cash capital expenditures to be approximately $220 billion.",
+          "locator": "p060",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p061",
+          "text": "This guidance assumes, among other things, no impact from energy derivative contract remeasurements, and that no additional business acquisitions, restructurings, or legal settlements are concluded.",
+          "locator": "p061",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p062",
+          "text": "Conference Call Information A conference call will be webcast live today at 2:00 p.m. PT/5:00 p.m. ET, and will be available for at least three months at amazon.com/ir. This call will contain forward-looking statements and other material information regarding the Company’s financial and operating results.",
+          "locator": "p062",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p063",
+          "text": "Forward-Looking Statements These forward-looking statements are inherently difficult to predict. Actual results and outcomes could differ materially for a variety of reasons, including, in addition to the factors discussed above, the amount that Amazon.com invests in new business opportunities and the timing of those investments, the mix of products and services sold to customers, the mix of net sales derived from products as compared with services, the extent to which we owe income or other taxes, competition, management of growth, potential fluctuations in operating results, international growth and expansion, the outcomes of claims, litigation, government investigations, and other proceedings, fulfillment, sortation, delivery, and data center optimization, risks of inventory management, variability in demand, the degree to which the Company enters into, maintains, and develops commercial agreements, proposed and completed acquisitions and strategic transactions, payments risks, and risks of fulfillment throughput and productivity. Other risks and uncertainties include, among others, risks related to new products, services, and technologies, security incidents, system interruptions, government regulation and taxation, and fraud. In addition, global economic and geopolitical conditions and additional or unforeseen circumstances, developments, or events may give rise to or amplify many of these risks. More information about factors that potentially could affect Amazon.com’s f",
+          "locator": "p063",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p064",
+          "text": "Additional Information Our investor relations website is amazon.com/ir and we encourage investors to use it as a way of easily finding information about us. We promptly make available on this website, free of charge, the reports that we file or furnish with the SEC, corporate governance information (including our Code of Business Conduct and Ethics), and select press releases, which may contain material information about us, and you may subscribe to be notified of new information posted to this site.",
+          "locator": "p064",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        },
+        {
+          "id": "mi-f2633f0010ba329c90-p065",
+          "text": "About Amazon Amazon is guided by four principles: customer obsession rather than competitor focus, passion for invention, commitment to operational excellence, and long-term thinking. Amazon strives to be Earth’s Most Customer-Centric Company, Earth’s Best Employer, and Earth’s Safest Place to Work. Customer reviews, 1-Click shopping, personalized recommendations, Prime, Fulfillment by Amazon, AWS, Kindle Direct Publishing, Kindle, Career Choice, Fire tablets, Fire TV, Amazon Echo, Alexa, Just Walk Out technology, Amazon Studios, and The Climate Pledge are some of the things pioneered by Amazon. For more information, visit amazon.com/about and follow @AmazonNews.",
+          "locator": "p065",
+          "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx"
+        }
+      ],
+      "content_hash": "f38fda16db5561ae1fec80ef2e28415b18bd6a654b26e6868dadfe57def36c13",
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
+    },
+    {
+      "id": "mi-16b4e6c1d6a2854dde",
+      "source_id": "disney_news",
+      "company": "Disney",
+      "topic": "sports_content",
+      "title": "Disney’s Mickey & Friends Show Their NFL Team Spirit with New Apparel, Collectibles, and Fan Gear",
+      "url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-10-30T03:23:06+00:00",
+      "country": "",
+      "period": "",
+      "source_name": "The Walt Disney Company News",
+      "source_type": "official_announcement",
+      "excerpt": "As Disney and ESPN celebrate “ We’re Going to the Super Bowl LXI ,” Mickey & Friends are teaming up with the NFL to kick off a season-long lineup of new products that give fans more ways to show their fandom. Whether gearing up for Super Bowl LXI in Los Angeles or celebrating a favorite NFL team, fans can look forward to new apparel, collectibles, accessories, and fan gear. The collections will roll out throughout th",
+      "body_text": "As Disney and ESPN celebrate “ We’re Going to the Super Bowl LXI ,” Mickey & Friends are teaming up with the NFL to kick off a season-long lineup of new products that give fans more ways to show their fandom. Whether gearing up for Super Bowl LXI in Los Angeles or celebrating a favorite NFL team, fans can look forward to new apparel, collectibles, accessories, and fan gear. The collections will roll out throughout the season with select products available across NFLShop.com , Fanatics.com , DisneyStore.com , and select retailers nationwide.\n“Sports is a growing area for Disney Consumer Products, reaching highly engaged audiences and sitting at the center of culture,” said Paul Gitter , executive vice president of global licensing at Disney Consumer Products. “As ESPN brings fans along the road to Super Bowl LXI, these products give them another way to connect with the teams, athletes and stories they love, while Mickey & Friends bring a uniquely Disney expression to the heart of NFL culture.”\n“The NFL and Disney are embarking on one of the most exciting chapters in our shared history,” said Casey Collins , senior vice president of consumer products and licensing at the NFL. “With new products already in the market and more to come in the lead up to Super Bowl LXI on Disney’s networks and platforms, there is no better time to be a fan of these two iconic brands.”\nStarting today, fans can shop new products from leading NFL licensees with offerings including apparel, collectibles, accessories, and fan gear designed for game day and beyond.\nThe lineup will continue to grow throughout the season, with additional Disney x NFL product drops inspired by Mickey & Friends from Crocs , Just Play , New Era , WinCraft , and more from Champion , giving fans even more ways to celebrate their favorite teams and the road to Super Bowl LXI.\nThrough the iconic “ Disney’s Super Bowl What’s Next ’’ campaign, celebrating its 40th anniversary this season, Disney has long been part of football’s biggest moments. This year marks another milestone, as the Super Bowl airs on ESPN and ABC and streams on Disney+ for the first time, followed by the traditional championship celebration at Disneyland Resort.\nNow, Mickey & Friends are bringing that connection to fans all season long with new looks in the official team colors of all 32 NFL teams, plus Super Bowl LXI. Whether cheering from the stands, gathering with family and friends on gameday or celebrating a favorite team, fans can share in the excitement with Mickey & Friends and the NFL throughout the season.\nThe post Disney’s Mickey & Friends Show Their NFL Team Spirit with New Apparel, Collectibles, and Fan Gear appeared first on The Walt Disney Company .",
+      "image_url": "https://thewaltdisneycompany.com/app/uploads/2026/10/MG_8242-1024x683.jpg",
+      "evidence": [
+        {
+          "id": "mi-16b4e6c1d6a2854dde-p002",
+          "text": "As Disney and ESPN celebrate “ We’re Going to the Super Bowl LXI ,” Mickey & Friends are teaming up with the NFL to kick off a season-long lineup of new products that give fans more ways to show their fandom. Whether gearing up for Super Bowl LXI in Los Angeles or celebrating a favorite NFL team, fans can look forward to new apparel, collectibles, accessories, and fan gear. The collections will roll out throughout the season with select products available across NFLShop.com , Fanatics.com , DisneyStore.com , and select retailers nationwide.",
+          "locator": "p002",
+          "url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/"
+        },
+        {
+          "id": "mi-16b4e6c1d6a2854dde-p003",
+          "text": "“Sports is a growing area for Disney Consumer Products, reaching highly engaged audiences and sitting at the center of culture,” said Paul Gitter , executive vice president of global licensing at Disney Consumer Products. “As ESPN brings fans along the road to Super Bowl LXI, these products give them another way to connect with the teams, athletes and stories they love, while Mickey & Friends bring a uniquely Disney expression to the heart of NFL culture.”",
+          "locator": "p003",
+          "url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/"
+        },
+        {
+          "id": "mi-16b4e6c1d6a2854dde-p004",
+          "text": "“The NFL and Disney are embarking on one of the most exciting chapters in our shared history,” said Casey Collins , senior vice president of consumer products and licensing at the NFL. “With new products already in the market and more to come in the lead up to Super Bowl LXI on Disney’s networks and platforms, there is no better time to be a fan of these two iconic brands.”",
+          "locator": "p004",
+          "url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/"
+        },
+        {
+          "id": "mi-16b4e6c1d6a2854dde-p005",
+          "text": "Starting today, fans can shop new products from leading NFL licensees with offerings including apparel, collectibles, accessories, and fan gear designed for game day and beyond.",
+          "locator": "p005",
+          "url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/"
+        },
+        {
+          "id": "mi-16b4e6c1d6a2854dde-p006",
+          "text": "The lineup will continue to grow throughout the season, with additional Disney x NFL product drops inspired by Mickey & Friends from Crocs , Just Play , New Era , WinCraft , and more from Champion , giving fans even more ways to celebrate their favorite teams and the road to Super Bowl LXI.",
+          "locator": "p006",
+          "url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/"
+        },
+        {
+          "id": "mi-16b4e6c1d6a2854dde-p007",
+          "text": "Through the iconic “ Disney’s Super Bowl What’s Next ’’ campaign, celebrating its 40th anniversary this season, Disney has long been part of football’s biggest moments. This year marks another milestone, as the Super Bowl airs on ESPN and ABC and streams on Disney+ for the first time, followed by the traditional championship celebration at Disneyland Resort.",
+          "locator": "p007",
+          "url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/"
+        },
+        {
+          "id": "mi-16b4e6c1d6a2854dde-p008",
+          "text": "Now, Mickey & Friends are bringing that connection to fans all season long with new looks in the official team colors of all 32 NFL teams, plus Super Bowl LXI. Whether cheering from the stands, gathering with family and friends on gameday or celebrating a favorite team, fans can share in the excitement with Mickey & Friends and the NFL throughout the season.",
+          "locator": "p008",
+          "url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/"
+        },
+        {
+          "id": "mi-16b4e6c1d6a2854dde-p009",
+          "text": "The post Disney’s Mickey & Friends Show Their NFL Team Spirit with New Apparel, Collectibles, and Fan Gear appeared first on The Walt Disney Company .",
+          "locator": "p009",
+          "url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/"
+        }
+      ],
+      "content_hash": "8e7986a81a0544127e78b2f860a2d814663a7922721e0b417b945620c630f0c0",
+      "fetched_from": "https://thewaltdisneycompany.com/feed/",
+      "image_alt": "",
+      "image_source_url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/",
+      "image_attribution": "디즈니 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
+      "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
+    },
     {
       "id": "mi-08a1522356f1b70ca4",
       "source_id": "lgu_products",
@@ -268,9 +749,9 @@
       "image_source_url": "https://news.lguplus.com/23190",
       "image_attribution": "LG유플러스 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "source_updated_at": "2026-10-28",
-      "last_checked_at": "2026-10-29T03:21:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
     },
     {
       "id": "mi-54163fda91f6421796",
@@ -350,9 +831,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "source_updated_at": "2026-10-28",
-      "last_checked_at": "2026-10-29T03:21:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
     },
     {
       "id": "mi-4f4ea29e8202d0df6f",
@@ -456,9 +937,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "source_updated_at": "2026-10-27",
-      "last_checked_at": "2026-10-29T03:21:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
     },
     {
       "id": "mi-000cd0f9b36402b89f",
@@ -526,9 +1007,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/tvn-스트릿-레스토랑-파이터-글로벌-콘텐츠-전문-시상식-리얼스크린-어워즈-후보-선정-cj-enm-k장사-예능으로-독보적-콘텐츠-경쟁력-입증/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "source_updated_at": "2026-10-22",
-      "last_checked_at": "2026-10-29T03:21:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
     },
     {
       "id": "mi-5dfc9e265e8ab2dd52",
@@ -614,9 +1095,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-콘텐츠-韓美日-글로벌서-날았다-영화시리즈-잇단-성과/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "source_updated_at": "2026-10-21",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "analysis": {
         "headline": "CJ ENM, 멀티 스튜디오 기반 글로벌 콘텐츠 성과 확대",
         "summary": "CJ ENM은 미국·한국·일본의 멀티 스튜디오와 공동제작 체제를 바탕으로 넷플릭스·디즈니플러스 등 글로벌 OTT에서 여러 작품의 차트 성과를 냈다고 발표했다. 올해 공개 작품 중 6편이 넷플릭스 글로벌 1위에 올랐으며, 10편 이상의 한·미 공동 프로젝트도 개발 중이다.",
@@ -880,9 +1361,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/10/19/skb-fall-new-programs-2026/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-10-29T03:21:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
     },
     {
       "id": "mi-525e4bb84089078f44",
@@ -958,7 +1439,7 @@
       ],
       "content_hash": "60d467a44a6681d8ea04718c3c902263342ae875d7de373d944293b956a16986",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "analysis": {
         "headline": "디즈니, Dude Perfect와 전사적 콘텐츠·유통 파트너십 발표",
         "summary": "디즈니는 Dude Perfect와 협력해 디즈니 프랜차이즈·이벤트를 활용한 오리지널 콘텐츠를 제작하고, 일부 콘텐츠를 Disney+에 선보일 계획이다. 또한 Dude Perfect의 기존 숏폼 라이브러리를 Disney+, ESPN 및 디즈니 소셜 플랫폼에 유통할 수 있게 됐다.",
@@ -1047,7 +1528,7 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/dude-perfect-creative-partnership/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/"
     },
     {
@@ -1684,7 +2165,7 @@
       ],
       "content_hash": "fe5ff5da4381a11de5a7966d2e4ecae91e79baded2dfbc8c260fb74d700637df",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "analysis": {
         "headline": "Disney+, 2027년 슈퍼볼 LXI 스트리밍 예정",
         "summary": "Disney+는 2027년 2월 14일 슈퍼볼 LXI를 미국의 모든 Disney+ 가입자에게 스트리밍하고, 미국 외 55개국 이상에서도 ESPN의 슈퍼볼 중계를 제공할 예정입니다. 미국에서는 정규시즌 Monday Night Football 두 경기도 Disney+에서 시청할 수 있습니다.",
@@ -1820,7 +2301,7 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/super-bowl-disney-plus/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/"
     },
     {
@@ -1890,9 +2371,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/09/10/btv-plus-max-2026-kbo-postseason-ticket-event/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-10-29T03:21:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
     },
     {
       "id": "mi-255f40182398aa5f25",
@@ -1961,9 +2442,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/08/20/b-tv-womens-film-festival/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-10-29T03:21:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
     },
     {
       "id": "mi-80a30a5f266d73b1a5",
@@ -2039,12 +2520,12 @@
       ],
       "content_hash": "497b1ab9073b544dc6a232378cab1f28d3f4075019d510c24c8a30b6df3e1dc1",
       "fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "image_alt": "",
       "image_source_url": "https://thewaltdisneycompany.com/news/ai-powered-search-espn-disney-plus/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
       "localization": {
         "title": "ESPN·Disney+, AI 기반 검색·콘텐츠 탐색 기능 베타 테스트",
@@ -2716,7 +3197,7 @@
         }
       ],
       "content_hash": "c2b345f02d73b7330cc03ae0d0a4a354a1091ce21eb936974e40a8821caffcf3",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "localization": {
         "title": "아마존 2분기 실적: 프라임 비디오 신작·NBA 시청 성과",
         "summary": "아마존은 회사 전체의 분기 실적과 함께 프라임 비디오의 미디어 성과를 발표했다. 신작 Off Campus의 초기 시청 반응과 NBA 중계 시청 성과를 소개했다.",
@@ -2894,9 +3375,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "source_updated_at": "2026-07-01",
-      "last_checked_at": "2026-10-29T03:21:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
     },
     {
       "id": "mi-e0f0c296689441b0ae",
@@ -3000,9 +3481,9 @@
       "image_source_url": "https://news.lguplus.com/22099",
       "image_attribution": "LG유플러스 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "source_updated_at": "2026-06-19",
-      "last_checked_at": "2026-10-29T03:21:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00"
     },
     {
       "id": "mi-660f6ebda3c280ab1b",
@@ -3549,7 +4030,7 @@
         }
       ],
       "content_hash": "10f11121079894d5e410635c297e2bd2fe9c2be36687347a7420dfee8c012654",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "localization": {
         "title": "아마존 1분기 실적: 넷플릭스 광고 타기팅·NBA 중계",
         "summary": "아마존은 회사 전체의 분기 실적을 발표하며 넷플릭스 광고 구매에 Amazon Audiences를 추가했다고 설명했다. 프라임 비디오의 NBA 플레이인 토너먼트 중계 시청 성과도 함께 소개했다.",
@@ -3962,7 +4443,7 @@
         }
       ],
       "content_hash": "4825da0b4b4b5cddabe6f859cf349400c3e17c6e26260ba335c2060c0cfb356f",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "published_at_source": "official_feed",
       "localization": {
         "title": "Amazon 2025년 주주 서한",
@@ -4065,7 +4546,7 @@
       ],
       "content_hash": "05ac069470d7041d12fa2cd31a7bf06eb3632ffdfb0be9b462915040cb192920",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "versions": [
         {
           "content_hash": "504d2b339cc29a608621f06a549fb39d53e851375fe0edcbe39bce7a1d79c630",
@@ -4152,7 +4633,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "localization": {
         "title": "Netflix, Warner Bros. 인수 제안 증액 거부",
         "summary": "Netflix가 Warner Bros.에 대한 제안 금액을 인상하지 않기로 결정했다. Warner Bros. Discovery 이사회가 Paramount Skydance의 최신 제안을 기존 Netflix 합병 계약상 ‘Superior Proposal’로 판단했다는 통지를 받은 데 따른 발표다.",
@@ -4392,7 +4873,7 @@
       ],
       "content_hash": "4a2b8c2217143371b92bc9097abe1eb31059fed756ba2f1ae36438389bc84fc3",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "versions": [
         {
           "content_hash": "8e3908e1efc308b6d1611c3112c14fe94bf0baaad0daad49fac8440701a5157d",
@@ -4617,7 +5098,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "localization": {
         "title": "WBD, Netflix 거래 최종 위임장 제출 및 2026년 3월 20일 특별 주주총회 예정",
         "summary": "Warner Bros. Discovery가 Netflix와의 거래 승인을 위한 최종 위임장 설명서를 제출하고 2026년 3월 20일 특별 주주총회를 예정했다. Netflix와 WBD는 미국 DOJ, 주 법무장관, 유럽연합 집행위원회, 영국 CMA 등 경쟁 당국과 규제 절차를 진행 중이라고 밝혔다.",
@@ -5216,7 +5697,7 @@
       ],
       "content_hash": "317445884687100e21d6e4df531c49a79ce80af82bbd250ddf35e1c36f7091f9",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "versions": [
         {
           "content_hash": "5f3f1574ff6ed065c706ddfa634a9ac58e20dfd11ddd04306765dc007e72d50e",
@@ -5387,7 +5868,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "localization": {
         "title": "Netflix와 Warner Bros. Discovery, 거래를 전액 현금 방식으로 변경",
         "summary": "Netflix와 Warner Bros. Discovery가 Netflix의 Warner Bros. 인수에 관한 최종 계약을 전액 현금 거래로 수정했다. 변경된 계약은 거래 구조를 단순화하고 WBD 주주에게 가치의 확실성을 높이며 주주 투표 절차를 앞당긴다.",
@@ -5510,8 +5991,8 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "localization": {
         "title": "Netflix, Warner Bros. Discovery 이사회의 합병 계약 지지 표명",
         "summary": "Netflix가 Warner Bros. Discovery 이사회의 Netflix 계약 승인 권고를 지지한다고 밝혔다. 양사는 거래와 관련해 SEC 제출 서류와 WBD 주주 대상 위임장·투자설명서 절차를 진행할 예정이다.",
@@ -5925,12 +6406,12 @@
       ],
       "content_hash": "baa38c6950155ed542f0ab2a1c12a07707f1c370fa5bb38ae89fba1ea8c1d38c",
       "source_updated_at": "2026-10-14",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "image_alt": "",
       "image_source_url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
       "image_attribution": "아마존 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-10-29T03:21:06+00:00",
+      "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "localization": {
         "title": "Prime Video에서 2026-27 NBA 시즌 시청 방법",
         "summary": "Prime Video는 정규 시즌 67경기를 중계하며 Emirates NBA Cup Championship도 포함한다. AI 기반 Prime 360 하이라이트, Yahoo! Sports와 연동한 맞춤형 판타지 농구 기능이 도입되고, NBA와 AWS는 실시간 통계 제공을 위한 파트너십을 발표했다.",
@@ -6343,7 +6824,7 @@
         }
       ],
       "content_hash": "d5eed575231d5cf16dae13543385bcbda71ba4d2178ed1d732d90858850e4d48",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "published_at_source": "pdf_publication_unconfirmed",
       "localization": {
         "title": "Disney Q3 2026 주주 서한",
@@ -6535,7 +7016,7 @@
         }
       ],
       "content_hash": "cc64576f1e9ad7812785a28bb7f37659fc937b2746c65ea702d9f6da13e1fcfb",
-      "last_checked_at": "2026-10-29T03:21:06+00:00",
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
       "published_at_source": "pdf_publication_unconfirmed",
       "localization": {
         "title": "디즈니 분기 재무지표 조정 내역",
