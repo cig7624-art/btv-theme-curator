@@ -551,7 +551,15 @@
         }
       ],
       "content_hash": "f38fda16db5561ae1fec80ef2e28415b18bd6a654b26e6868dadfe57def36c13",
-      "last_checked_at": "2026-10-30T03:23:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
+      "localization": {
+        "title": "Amazon, 역대 최고 영업이익률과 AWS 성장 발표",
+        "summary": "Amazon은 영업이익 $28.1 billion과 영업이익률 13.9%를 기록했으며, 이는 역대 최고 영업이익률이라고 밝혔다. 또한 Amazon Ads Agent와 미국 내 광고주를 위한 Full-Funnel Campaigns를 출시했다.",
+        "source_hash": "f38fda16db5561ae1fec80ef2e28415b18bd6a654b26e6868dadfe57def36c13",
+        "generated_at": "2026-10-30T03:24:26+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-16b4e6c1d6a2854dde",
@@ -627,7 +635,15 @@
       "image_kind": "article_image",
       "image_recorded_at": "2026-10-30T03:23:06+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-10-30T03:23:06+00:00"
+      "last_checked_at": "2026-10-30T03:23:06+00:00",
+      "localization": {
+        "title": "Disney, NFL 테마 Mickey & Friends 상품 출시",
+        "summary": "Disney와 ESPN은 NFL과 협력해 Super Bowl LXI와 시즌 내내 선보일 Mickey & Friends 의류, 수집품, 액세서리 및 팬 상품을 발표했다. 일부 상품은 NFLShop.com, Fanatics.com, DisneyStore.com과 전국 일부 소매점에서 판매된다.",
+        "source_hash": "8e7986a81a0544127e78b2f860a2d814663a7922721e0b417b945620c630f0c0",
+        "generated_at": "2026-10-30T03:24:26+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-08a1522356f1b70ca4",
