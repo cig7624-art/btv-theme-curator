@@ -6,9 +6,9 @@
   "expected_version": "1.6.4",
   "button_submitted": true,
   "stage": "submitted",
-  "checked_at": "2026-10-31T03:08:06.023968+00:00",
-  "observed_version": "1.6.4",
+  "checked_at": "2026-11-01T03:02:48.512030+00:00",
   "frame_state": "matched_release",
+  "observed_version": "1.6.4",
   "translation_control_count": 1,
   "control_visible": true,
   "batches": [
