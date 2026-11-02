@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-11-02T00:48:49.589800+00:00",
-  "status": "local_checks_passed",
+  "status": "recovered",
   "app_ui_version": "1.6.4",
   "mail_sender_confirmed": false,
   "google_oauth_in_application": false,
@@ -24,5 +24,62 @@
     "pending_localizations_after": 0
   },
   "ai_requests_during_repair": 0,
-  "provider_health_checked": false
+  "provider_health_checked": false,
+  "verified_at": "2026-11-02T00:55:15.171308+00:00",
+  "recovery_runs": {
+    "read_only_inspection": "41369173720",
+    "daily_collection": "41369235708"
+  },
+  "collection": {
+    "collected_at": "2026-11-02T00:51:12+00:00",
+    "scope": "full",
+    "overall_state": "partial",
+    "sources": {
+      "kobis": {
+        "state": "ok",
+        "count": 10,
+        "last_success_at": "2026-11-02T00:51:24+00:00"
+      },
+      "netflix": {
+        "state": "stale",
+        "count": 0,
+        "last_success_at": "2026-10-30T02:27:22+00:00"
+      },
+      "youtube": {
+        "state": "partial",
+        "count": 46,
+        "last_success_at": "2026-11-02T00:52:18+00:00",
+        "popular_list_state": "ok",
+        "popular_candidate_count": 40,
+        "tracking_observed_count": 491
+      },
+      "news": {
+        "state": "partial",
+        "count": 86
+      }
+    }
+  },
+  "public_news_verification": {
+    "status": "passed",
+    "checked_at": "2026-11-02T00:52:43.271378+00:00",
+    "expected_count": 4
+  },
+  "korean_presentation_check": {
+    "status": "already_cached",
+    "tests": {
+      "localization_version": true
+    },
+    "expected_version": "1.6.4",
+    "button_submitted": false,
+    "stage": "inspection_complete",
+    "checked_at": "2026-11-02T00:49:23.416344+00:00",
+    "check_only": true,
+    "provider_health_checked": false,
+    "observed_version": "1.6.4",
+    "frame_state": "matched_release",
+    "active_check": "localization_inspection_ready",
+    "translation_control_count": 0,
+    "pending_count": 0,
+    "translation_control_enabled": false
+  }
 }
