@@ -30,6 +30,8 @@ def recommendation(theme_id="TEST-1"):
 def app_fixture(*, with_history=True, home_tab="추천 테마"):
     """Use only temporary inputs; every remote call and writeback is mocked."""
     with TemporaryDirectory() as temporary, ExitStack() as stack:
+        from test_media_insights_view import media_ui_clock
+        stack.enter_context(media_ui_clock())
         directory = Path(temporary)
         day = pd.Timestamp.now(tz="Asia/Seoul").strftime("%Y-%m-%d")
         yesterday = (pd.Timestamp.now(tz="Asia/Seoul") - pd.Timedelta(days=1)).strftime("%Y-%m-%d")

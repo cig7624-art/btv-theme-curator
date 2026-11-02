@@ -107,7 +107,7 @@ class CategoryArchiveTests(unittest.TestCase):
 
 class ArticleReadingTests(unittest.TestCase):
     def data(self):
-        current = datetime.now(timezone.utc)
+        current = NOW
         rows = []
         for index, days in enumerate((5, 40, 80)):
             item = document("reading-" + str(index), country="KR",

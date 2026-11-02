@@ -1,5 +1,6 @@
 """Source/version guards and explicit-only paid actions for media research."""
 from copy import deepcopy
+from contextlib import contextmanager
 from datetime import datetime, timezone
 import hashlib
 import unittest
@@ -9,6 +10,22 @@ from streamlit.testing.v1 import AppTest
 
 from media_insights_view import (analysis_markdown, comparison_csv, filter_insight_items,
                                  insight_items, validated_analysis, validated_answer, _url, _locator_label, display_copy, artwork_html)
+
+
+UI_NOW = datetime(2026, 10, 26, 12, tzinfo=timezone.utc)
+
+
+@contextmanager
+def media_ui_clock(now=UI_NOW):
+    """Keep dated UI samples stable without weakening production date filters."""
+    class FixedDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return now.astimezone(tz) if tz is not None else now.replace(tzinfo=None)
+
+    with (patch("media_insights_view.datetime", FixedDateTime),
+          patch("media_insights_editorial.datetime", FixedDateTime)):
+        yield
 
 
 def document(identifier="one", *, topic="advertising_pricing", country="US", published="2026-10-01"):
@@ -37,10 +54,11 @@ def snapshot():
                          "last_success_at": "2026-10-20T09:00:00Z", "last_checked_at": "2026-10-23T09:00:00Z"}]}
 
 
-def app_fixture(data=None, note=None, answer=None, *, period=None):
-    def run_app(data, note, answer):
+def app_fixture(data=None, note=None, answer=None, *, period=None, now=UI_NOW):
+    def run_app(data, note, answer, now):
         import streamlit as st
         from media_insights_view import render_media_insights_page
+        from test_media_insights_view import media_ui_clock
         st.session_state.setdefault("test_callbacks", {"refresh": 0, "analyze": 0, "ask": 0})
         def refresh():
             st.session_state["test_callbacks"]["refresh"] += 1
@@ -55,8 +73,9 @@ def app_fixture(data=None, note=None, answer=None, *, period=None):
             st.session_state["test_callbacks"]["ask"] += 1
             st.session_state["test_asked"] = (question, identifier)
             return answer
-        render_media_insights_page(data, on_refresh=refresh, on_analyze=analyze)
-    app = AppTest.from_function(run_app, args=(data or snapshot(), note or analysis(), answer))
+        with media_ui_clock(now):
+            render_media_insights_page(data, on_refresh=refresh, on_analyze=analyze)
+    app = AppTest.from_function(run_app, args=(data or snapshot(), note or analysis(), answer, now))
     if period is not None:
         app.session_state["media_insight_period"] = period
     return app.run()
@@ -180,7 +199,9 @@ class MagazinePresentationTests(unittest.TestCase):
         def render(data):
             import streamlit as st
             from media_insights_view import render_media_insights_page
-            render_media_insights_page(st.session_state.get("current_data", data))
+            from test_media_insights_view import media_ui_clock
+            with media_ui_clock():
+                render_media_insights_page(st.session_state.get("current_data", data))
 
         data = snapshot()
         item = data["items"][0]
@@ -262,7 +283,7 @@ class MagazinePresentationTests(unittest.TestCase):
         def render():
             import streamlit as st
             from media_insights_view import render_media_insights_page
-            from test_media_insights_view import snapshot
+            from test_media_insights_view import snapshot, media_ui_clock
             data = snapshot()
             st.session_state.setdefault("translate_calls", 0)
             def translate():
@@ -274,7 +295,8 @@ class MagazinePresentationTests(unittest.TestCase):
                         "model": "test", "language": "ko"}
                 st.session_state["translated_data"] = data
                 return data
-            render_media_insights_page(st.session_state.get("translated_data", data), on_localize=translate)
+            with media_ui_clock():
+                render_media_insights_page(st.session_state.get("translated_data", data), on_localize=translate)
         app = AppTest.from_function(render).run()
         self.assertFalse(app.exception)
         app.run()
@@ -290,6 +312,29 @@ class MagazinePresentationTests(unittest.TestCase):
 
 
 class MediaInsightsAppTests(unittest.TestCase):
+    def test_default_ui_sample_survives_future_wall_clocks_and_rerenders(self):
+        for future in (datetime(2026, 11, 2, tzinfo=timezone.utc),
+                       datetime(2027, 2, 1, tzinfo=timezone.utc)):
+            with self.subTest(wall_clock=future), media_ui_clock(future):
+                app = app_fixture()
+                app.run()
+                self.assertFalse(app.exception)
+                self.assertEqual(app.selectbox(key="media_insight_period").value, "최근 30일")
+                self.assertEqual(app.session_state["media_insight_selected_id"], "one")
+                self.assertEqual(app.button(key="media_insights_analyze").label, "분석 노트 만들기")
+                self.assertEqual(app.session_state["test_callbacks"], {"refresh": 0, "analyze": 0, "ask": 0})
+
+    def test_advancing_the_controlled_clock_still_applies_the_real_thirty_day_filter(self):
+        for future in (datetime(2026, 11, 2, tzinfo=timezone.utc),
+                       datetime(2027, 2, 1, tzinfo=timezone.utc)):
+            with self.subTest(reference_date=future):
+                app = app_fixture(now=future)
+                self.assertFalse(app.exception)
+                self.assertEqual(app.selectbox(key="media_insight_period").value, "최근 30일")
+                self.assertFalse(any(button.key == "media_insights_analyze" for button in app.button))
+                self.assertTrue(any("선택한 조건에 맞는 발표가 없습니다" in element.value for element in app.info))
+                self.assertEqual(app.session_state["test_callbacks"], {"refresh": 0, "analyze": 0, "ask": 0})
+
     def test_render_filter_and_selection_never_trigger_callbacks(self):
         app = app_fixture(period="전체 기간")
         self.assertFalse(app.exception)

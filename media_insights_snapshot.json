@@ -6343,7 +6343,16 @@
       "image_kind": "article_image",
       "image_recorded_at": "2026-11-01T03:02:16+00:00",
       "source_updated_at": "2026-10-30",
-      "last_checked_at": "2026-11-01T03:02:16+00:00"
+      "last_checked_at": "2026-11-01T03:02:16+00:00",
+      "localization": {
+        "language": "ko",
+        "title": "프라임 비디오, NBA G 리그 중계 일정과 시청 방법 안내",
+        "summary": "아마존이 프라임 비디오의 NBA G 리그 경기 중계 일정과 시청 방법을 안내했다. NBA G 리그는 NBA의 공식 마이너·선수 육성 리그로 소개됐다.",
+        "source_hash": "e5ed9e5384c46acfd88448410465669637fa96ec8a35b69d874119038f44dc3a",
+        "generated_at": "2026-11-02T00:43:47.889562+00:00",
+        "model": "editorial_source_review",
+        "method": "editorial_source_review"
+      }
     },
     {
       "id": "mi-5b80871e69b160f1a3",

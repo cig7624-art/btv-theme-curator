@@ -1,0 +1,28 @@
+{
+  "checked_at": "2026-11-02T00:48:49.589800+00:00",
+  "status": "local_checks_passed",
+  "app_ui_version": "1.6.4",
+  "mail_sender_confirmed": false,
+  "google_oauth_in_application": false,
+  "failing_issue_runs": [
+    "41349879355",
+    "41303246831",
+    "41263030921"
+  ],
+  "issue_failure_reproduced": {
+    "tests_run": 862,
+    "failures": 3,
+    "errors": 2,
+    "cause": "Dated media UI fixtures fell outside the real-clock 30-day window before collection began."
+  },
+  "fixed_suite_tests_passed": 871,
+  "future_clock_regression": "2027-02 whole-app UI checks passed; real app time filters unchanged",
+  "media_editorial_review": {
+    "id": "mi-cf549a308491ed203f",
+    "method": "editorial_source_review",
+    "documents_preserved": 32,
+    "pending_localizations_after": 0
+  },
+  "ai_requests_during_repair": 0,
+  "provider_health_checked": false
+}
