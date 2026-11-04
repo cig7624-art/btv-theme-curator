@@ -1,15 +1,26 @@
 {
-  "status": "already_cached",
+  "status": "review_needed",
   "tests": {
     "localization_version": true
   },
   "expected_version": "1.6.4",
-  "button_submitted": false,
-  "stage": "media_open",
-  "checked_at": "2026-11-03T04:28:29.378893+00:00",
+  "button_submitted": true,
+  "stage": "submitted",
+  "checked_at": "2026-11-04T03:47:50.397453+00:00",
   "check_only": false,
   "observed_version": "1.6.4",
   "frame_state": "matched_release",
-  "translation_control_count": 0,
-  "pending_count": 0
+  "translation_control_count": 1,
+  "pending_count": 2,
+  "control_visible": true,
+  "batches": [
+    {
+      "pending_before": 2,
+      "pending_after": 2
+    }
+  ],
+  "warning_codes": [
+    "translation_validation_held"
+  ],
+  "error_code": "translation_validation_held"
 }
