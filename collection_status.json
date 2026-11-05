@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-11-05T13:00:48+00:00",
+  "collected_at": "2026-11-05T22:38:42+00:00",
   "sources": {
     "kobis": {
       "last_success_at": "2026-11-05T03:16:08+00:00",
@@ -61,15 +61,15 @@
     },
     "news": {
       "state": "partial",
-      "count": 92,
-      "collected_at": "2026-11-05T13:00:59+00:00",
-      "reference_date": "2026-11-05",
-      "reference_period": "2026-10-30/2026-11-05",
-      "error": "원문 URL 미해석 92건: RSS의 발행일·매체·기사 제목 기준",
-      "rejected_count": 448,
+      "count": 83,
+      "collected_at": "2026-11-05T22:38:53+00:00",
+      "reference_date": "2026-11-06",
+      "reference_period": "2026-10-31/2026-11-06",
+      "error": "원문 URL 미해석 83건: RSS의 발행일·매체·기사 제목 기준",
+      "rejected_count": 424,
       "missing_publication_date_count": 0,
-      "unresolved_original_count": 92,
-      "retained_count": 656
+      "unresolved_original_count": 83,
+      "retained_count": 660
     }
   },
   "collection_scope": "news_only",
