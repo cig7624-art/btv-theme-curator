@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-11-06T12:48:55+00:00",
+  "collected_at": "2026-11-06T22:00:07+00:00",
   "sources": {
     "kobis": {
       "last_success_at": "2026-11-06T03:15:48+00:00",
@@ -62,14 +62,14 @@
     "news": {
       "state": "partial",
       "count": 94,
-      "collected_at": "2026-11-06T12:49:11+00:00",
-      "reference_date": "2026-11-06",
-      "reference_period": "2026-10-31/2026-11-06",
+      "collected_at": "2026-11-06T22:00:18+00:00",
+      "reference_date": "2026-11-07",
+      "reference_period": "2026-11-01/2026-11-07",
       "error": "원문 URL 미해석 94건: RSS의 발행일·매체·기사 제목 기준",
-      "rejected_count": 437,
+      "rejected_count": 434,
       "missing_publication_date_count": 0,
       "unresolved_original_count": 94,
-      "retained_count": 699
+      "retained_count": 706
     }
   },
   "collection_scope": "news_only",
