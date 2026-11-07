@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-11-07T02:34:18+00:00",
+  "collected_at": "2026-11-07T11:38:02+00:00",
   "sources": {
     "kobis": {
       "last_success_at": "2026-11-07T02:34:32+00:00",
@@ -61,23 +61,20 @@
     },
     "news": {
       "state": "partial",
-      "count": 96,
-      "collected_at": "2026-11-07T02:34:30+00:00",
+      "count": 94,
+      "collected_at": "2026-11-07T11:38:14+00:00",
       "reference_date": "2026-11-07",
       "reference_period": "2026-11-01/2026-11-07",
-      "error": "원문 URL 미해석 96건: RSS의 발행일·매체·기사 제목 기준",
-      "rejected_count": 448,
+      "error": "원문 URL 미해석 94건: RSS의 발행일·매체·기사 제목 기준",
+      "rejected_count": 470,
       "missing_publication_date_count": 0,
-      "unresolved_original_count": 96,
-      "retained_count": 713
+      "unresolved_original_count": 94,
+      "retained_count": 720
     }
   },
-  "collection_scope": "full",
+  "collection_scope": "news_only",
   "updated_sources": [
-    "news",
-    "kobis",
-    "netflix",
-    "youtube"
+    "news"
   ],
   "overall_state": "partial"
 }
