@@ -6,7 +6,7 @@
   "expected_version": "1.6.4",
   "button_submitted": true,
   "stage": "submitted",
-  "checked_at": "2026-11-07T03:38:53.193992+00:00",
+  "checked_at": "2026-11-08T03:11:14.678925+00:00",
   "check_only": false,
   "observed_version": "1.6.4",
   "frame_state": "matched_release",
@@ -19,6 +19,8 @@
       "pending_after": 2
     }
   ],
-  "warning_codes": [],
-  "error_code": "translation_pending_unchanged"
+  "warning_codes": [
+    "translation_validation_held"
+  ],
+  "error_code": "translation_validation_held"
 }
