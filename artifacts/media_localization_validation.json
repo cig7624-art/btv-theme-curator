@@ -6,19 +6,21 @@
   "expected_version": "1.6.4",
   "button_submitted": true,
   "stage": "submitted",
-  "checked_at": "2026-11-11T03:39:50.197118+00:00",
+  "checked_at": "2026-11-12T04:47:59.917008+00:00",
   "check_only": false,
   "observed_version": "1.6.4",
   "frame_state": "matched_release",
   "translation_control_count": 1,
-  "pending_count": 2,
+  "pending_count": 3,
   "control_visible": true,
   "batches": [
     {
-      "pending_before": 2,
-      "pending_after": 2
+      "pending_before": 3,
+      "pending_after": 3
     }
   ],
-  "warning_codes": [],
-  "error_code": "translation_pending_unchanged"
+  "warning_codes": [
+    "translation_validation_held"
+  ],
+  "error_code": "translation_validation_held"
 }
