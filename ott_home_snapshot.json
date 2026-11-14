@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-13T07:39:19+00:00",
+  "updated_at": "2026-11-14T07:26:15+00:00",
   "observed_environment": "github_actions_global",
   "country_verified": false,
   "locale_requested": "ko-KR",
@@ -17,8 +17,8 @@
       "locale_requested": "ko-KR",
       "last_success_status": "promotion_only",
       "freshness": "current",
-      "checked_at": "2026-11-13T07:39:19+00:00",
-      "last_success_at": "2026-11-13T07:39:19+00:00",
+      "checked_at": "2026-11-14T07:26:15+00:00",
+      "last_success_at": "2026-11-14T07:26:15+00:00",
       "complete": false,
       "capture_scope": "공개 홍보 화면의 목록 · 확인한 항목 최대 8개",
       "promotions": [],
@@ -35,42 +35,42 @@
             {
               "title": "데블스 플랜",
               "url": "",
-              "image_url": "https://occ-0-3012-2433.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABS66PFkcjZuW_0nIB_X_5To5tvqrPE9vy1Hp8tAVcvlJzCDjPY7oHbr7WSCnQ06r_e6LPuibv7SGcHj71a88ZlBWARjhVvdBQxU6c67lxj7aENe2OSZV-6ViPL0NGhC4u59x.webp?r=a27"
+              "image_url": "https://occ-0-3012-116.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABS66PFkcjZuW_0nIB_X_5To5tvqrPE9vy1Hp8tAVcvlJzCDjPY7oHbr7WSCnQ06r_e6LPuibv7SGcHj71a88ZlBWARjhVvdBQxU6c67lxj7aENe2OSZV-6ViPL0NGhC4u59x.webp?r=a27"
             },
             {
               "title": "꿀알바",
               "url": "",
-              "image_url": "https://occ-0-3012-2433.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABa1qm4cvwXCTiEaz69hLwxOaQ_lu5_J11MENTs9utlxNLw3CN9MCZ3n6qjnkPqIBJY8-11mf_gM81VlzZ9xcGWCVG2ZfMR5WC5YA2cYsQ5545tfMC2OrBXQuq3LAOebx4QsQ.webp?r=fc2"
+              "image_url": "https://occ-0-3012-116.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABa1qm4cvwXCTiEaz69hLwxOaQ_lu5_J11MENTs9utlxNLw3CN9MCZ3n6qjnkPqIBJY8-11mf_gM81VlzZ9xcGWCVG2ZfMR5WC5YA2cYsQ5545tfMC2OrBXQuq3LAOebx4QsQ.webp?r=fc2"
             },
             {
               "title": "닥터X: 하얀 마피아의 시대",
               "url": "",
-              "image_url": "https://occ-0-3012-2433.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABR4elxIcnkFV8t5VUwKrmL3d3-a2PI5PLsIdVtnNIiujudmNvRgLcTPP8UuM2ENui41XMyL0W9-azmMIV2ekE2pwXBMyBF6SiGY.webp?r=4a9"
+              "image_url": "https://occ-0-3012-116.1.nflxso.net/dnm/api/v6/U6_eu_lw5TPOkLCYXBHQsUANDp0/AAAABY_2vlFkOZjB6cWOBSwik4svPpxWmx6pq0YKH8Snbu5IXGZoIzDOldzYFwigCC6S4bWWX9I.webp"
             },
             {
               "title": "가능한 사랑",
               "url": "",
-              "image_url": "https://occ-0-3012-2433.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABTdDEmsQZmFrVytQNkHORRIy2TAlSd1mFkFGqwJV-aNYt1aXQQOEJVaemB4WYKNKzXCyzyyGzv4ORLTw1BOJLi28sGzYyjIGUcQDmKz0bZ_aDxMmWDJXS1ywfqOlygx6AQIi.webp?r=eb8"
+              "image_url": "https://occ-0-3012-116.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABTdDEmsQZmFrVytQNkHORRIy2TAlSd1mFkFGqwJV-aNYt1aXQQOEJVaemB4WYKNKzXCyzyyGzv4ORLTw1BOJLi28sGzYyjIGUcQDmKz0bZ_aDxMmWDJXS1ywfqOlygx6AQIi.webp?r=eb8"
             },
             {
               "title": "100일의 거짓말",
               "url": "",
-              "image_url": "https://occ-0-3012-2433.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABd95W4KYb2y21RArYVuO74S9Ds9JTkqC6kg9ZSzXIodZfANFWikSPTfWys76dlfa4V3TqJzAIbkwMv0aOjMqA48YppLdcid3Omc.webp?r=0da"
-            },
-            {
-              "title": "네버 서렌더",
-              "url": "",
-              "image_url": "https://occ-0-3012-2433.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABVDTlcfE-s4oNOG7dr0kmRWcfbKdBRJyVf4PmqcZ68SY84q0bhTJbuUUYmVVFIKn0EITG3OSuBw1qL6QXYOg3b3S4MwWrey-ihFeXft7l14ILlqLKePOWVpONIK2z0UWLczV.webp?r=735"
+              "image_url": "https://occ-0-3012-116.1.nflxso.net/dnm/api/v6/U6_eu_lw5TPOkLCYXBHQsUANDp0/AAAABY_2vlFkOZjB6cWOBSwik4svPpxWmx6pq0YKH8Snbu5IXGZoIzDOldzYFwigCC6S4bWWX9I.webp"
             },
             {
               "title": "먼가 작고 귀여운 녀석",
               "url": "",
-              "image_url": "https://occ-0-3012-2433.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABXlUigTVblf5wD6J2d6qCVphFKFbFrXzCxsnYEznyT5l0skN4y_uHuKp-fyag3XTbudbNmsw6AHCRCImmR7T7axy3TVS-VxVtnc.webp?r=5b6"
+              "image_url": "https://occ-0-3012-116.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABXlUigTVblf5wD6J2d6qCVphFKFbFrXzCxsnYEznyT5l0skN4y_uHuKp-fyag3XTbudbNmsw6AHCRCImmR7T7axy3TVS-VxVtnc.webp?r=5b6"
             },
             {
               "title": "나는 솔로",
               "url": "",
-              "image_url": "https://occ-0-3012-2433.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABTEOkdNW5E60_Em2jzii-YBOVmB8P39JGtZlLlXHtp5kdjlpEeq7bfeTrTbyPYzYdpoyEekV60oJ49mMnDodgOWgLvWc8vhCGEQ.webp?r=f9d"
+              "image_url": "https://occ-0-3012-116.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABTEOkdNW5E60_Em2jzii-YBOVmB8P39JGtZlLlXHtp5kdjlpEeq7bfeTrTbyPYzYdpoyEekV60oJ49mMnDodgOWgLvWc8vhCGEQ.webp?r=f9d"
+            },
+            {
+              "title": "참교육",
+              "url": "",
+              "image_url": "https://occ-0-3012-116.1.nflxso.net/dnm/api/v6/_YyUT33Ze3kFXjMydIZFIm6ajHk/AAAABZZj1w8oSytuBzK1kalil-kxj78Wd_QJsJuZ4XZShrNYeIdfsS3M5BTI72d1UqRO707S2fEC86phdtQp40IEzCVLxwZ_wi0nKBPUm2NkjDogyAfC9YNl1UgeEOimrEtv71r2.webp?r=e54"
             }
           ],
           "works_complete": false,
@@ -96,8 +96,8 @@
       "locale_requested": "ko-KR",
       "last_success_status": "ok",
       "freshness": "current",
-      "checked_at": "2026-11-13T07:39:19+00:00",
-      "last_success_at": "2026-11-13T07:39:19+00:00",
+      "checked_at": "2026-11-14T07:26:15+00:00",
+      "last_success_at": "2026-11-14T07:26:15+00:00",
       "complete": false,
       "capture_scope": "공개 홈에서 확인한 콘텐츠 영역 최대 10개 · 영역별 작품 최대 8편",
       "promotions": [
@@ -109,30 +109,30 @@
           "placement": "메인 배너"
         },
         {
-          "title": "뜨거운 안녕",
-          "url": "https://www.tving.com/contents/P001793179",
-          "image_url": "https://image.tving.com/ntgs/operation/banner/2026/11/04/1793769620_1.jpg",
+          "title": "나 혼자 산다",
+          "url": "https://www.tving.com/contents/P001782817",
+          "image_url": "https://image.tving.com/ntgs/operation/banner/2026/04/23/1776950709_1.jpg",
           "position": 2,
+          "placement": "메인 배너"
+        },
+        {
+          "title": "맛따라 길따라 대명이따라",
+          "url": "https://www.tving.com/contents/P001792810",
+          "image_url": "https://image.tving.com/ntgs/operation/banner/2026/10/23/1792728940_1.jpg",
+          "position": 3,
+          "placement": "메인 배너"
+        },
+        {
+          "title": "100일의 거짓말",
+          "url": "https://www.tving.com/contents/P001791340",
+          "image_url": "https://image.tving.com/ntgs/operation/banner/2026/10/10/1791606160_1.jpg",
+          "position": 4,
           "placement": "메인 배너"
         },
         {
           "title": "냉장고를 부탁해 since 2014",
           "url": "https://www.tving.com/contents/P001765388",
-          "image_url": "https://image.tving.com/ntgs/operation/banner/2026/01/19/1768783845_1.jpg",
-          "position": 3,
-          "placement": "메인 배너"
-        },
-        {
-          "title": "신인감독 김연경2",
-          "url": "https://www.tving.com/contents/P001792268",
-          "image_url": "https://image.tving.com/ntgs/operation/banner/2026/10/11/1791681265_1.jpg",
-          "position": 4,
-          "placement": "메인 배너"
-        },
-        {
-          "title": "놀면 뭐하니?",
-          "url": "https://www.tving.com/contents/P001781972",
-          "image_url": "https://image.tving.com/ntgs/operation/banner/2026/04/23/1776952492_1.jpg",
+          "image_url": "https://image.tving.com/ntgs/operation/banner/2024/12/21/1734742340_1.jpg",
           "position": 5,
           "placement": "메인 배너"
         }
@@ -159,7 +159,7 @@
             {
               "title": "그놈은 흑염룡",
               "url": "https://www.tving.com/contents/P001767211",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1110/ko/20250305/0213/P001767211.jpg"
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1130/ko/20250305/0213/P001767211.jpg"
             },
             {
               "title": "맛따라 길따라 대명이따라",
@@ -191,6 +191,16 @@
           "url": "",
           "works": [
             {
+              "title": "MBC",
+              "url": "https://www.tving.com/live/C00711",
+              "image_url": "https://stillshot.tving.com/thumbnail_current/C00711_640x360.jpg"
+            },
+            {
+              "title": "2026-2027 KCC 프로농구",
+              "url": "https://www.tving.com/live/C52207",
+              "image_url": "https://stillshot.tving.com/thumbnail_current/C52207_640x360.jpg"
+            },
+            {
               "title": "YTN",
               "url": "https://www.tving.com/live/C00593",
               "image_url": "https://stillshot.tving.com/thumbnail_current/C00593_640x360.jpg"
@@ -206,9 +216,9 @@
               "image_url": "https://stillshot.tving.com/thumbnail_current/C52420_640x360.jpg"
             },
             {
-              "title": "연합뉴스TV",
-              "url": "https://www.tving.com/live/C01723",
-              "image_url": "https://stillshot.tving.com/thumbnail_current/C01723_640x360.jpg"
+              "title": "KBS 1박 2일",
+              "url": "https://www.tving.com/live/C52381",
+              "image_url": "https://stillshot.tving.com/thumbnail_current/C52381_640x360.jpg"
             },
             {
               "title": "tvN",
@@ -216,19 +226,9 @@
               "image_url": "https://stillshot.tving.com/thumbnail_current/C00551_640x360.jpg"
             },
             {
-              "title": "MBN",
-              "url": "https://www.tving.com/live/C00708",
-              "image_url": "https://stillshot.tving.com/thumbnail_current/C00708_640x360.jpg"
-            },
-            {
-              "title": "KBS 1박 2일",
-              "url": "https://www.tving.com/live/C52381",
-              "image_url": "https://stillshot.tving.com/thumbnail_current/C52381_640x360.jpg"
-            },
-            {
-              "title": "OCN",
-              "url": "https://www.tving.com/live/C07381",
-              "image_url": "https://stillshot.tving.com/thumbnail_current/C07381_640x360.jpg"
+              "title": "연합뉴스TV",
+              "url": "https://www.tving.com/live/C01723",
+              "image_url": "https://stillshot.tving.com/thumbnail_current/C01723_640x360.jpg"
             }
           ],
           "works_complete": false,
@@ -299,14 +299,19 @@
           "url": "",
           "works": [
             {
+              "title": "언더커버 셰프 : 멀리서 찾아온 벗",
+              "url": "https://www.tving.com/contents/P001793131",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261015/0823/P001793131.jpg"
+            },
+            {
               "title": "나의 유죄인간",
               "url": "https://www.tving.com/contents/P001792187",
               "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260922/2112/P001792187.jpg"
             },
             {
-              "title": "언더커버 셰프 : 멀리서 찾아온 벗",
-              "url": "https://www.tving.com/contents/P001793131",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261015/0823/P001793131.jpg"
+              "title": "이혼숙려캠프",
+              "url": "https://www.tving.com/contents/P001760343",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240814/1707/P001760343.jpg"
             },
             {
               "title": "내 새끼의 연애 3",
@@ -324,19 +329,14 @@
               "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261023/1000/P001791920.jpg"
             },
             {
-              "title": "이혼숙려캠프",
-              "url": "https://www.tving.com/contents/P001760343",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240814/1707/P001760343.jpg"
+              "title": "나 혼자 산다",
+              "url": "https://www.tving.com/contents/P001782817",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260212/0321/P001782817.jpg"
             },
             {
-              "title": "신인감독 김연경2",
-              "url": "https://www.tving.com/contents/P001792268",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260922/2152/P001792268.jpg"
-            },
-            {
-              "title": "유 퀴즈 온 더 블럭",
-              "url": "https://www.tving.com/contents/P000643144",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260106/1356/P000643144.jpg"
+              "title": "티처스3: 재수전쟁",
+              "url": "https://www.tving.com/contents/P001793101",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261019/0829/P001793101.jpg"
             }
           ],
           "works_complete": false,
@@ -353,44 +353,44 @@
           "url": "",
           "works": [
             {
-              "title": "200일 걸어 완주하는 코리안 둘레길",
-              "url": "https://www.tving.com/shorts/VT0000312405?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111307076&",
-              "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000312405/20261109081451/71349aa287004e47af67c5f51fcd9f02.webp"
+              "title": "참고로 여기 초등학생 없습니다🚸",
+              "url": "https://www.tving.com/shorts/VT0000316854?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111406013&",
+              "image_url": "https://image.tving.com/ntgs/clip/shorts/highlight/202611/VT0000316854/20261113173106/319fc2aac01347caaca105964f71618a.webp"
             },
             {
-              "title": "MZ 업무 스타일 = 마이웨이",
-              "url": "https://www.tving.com/shorts/VT0000312403?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111307058&",
-              "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000312403/20261109081451/467f7e41c8e448b9916d6ea6ad08e66c.webp"
+              "title": "뒷목 잡은 할아버지 벌떡 일으키는 한마디",
+              "url": "https://www.tving.com/shorts/VT0000312358?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111406071&",
+              "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000312358/20261109075807/6b55a5dc330643e29abc66d8d38f6fc3.webp"
             },
             {
-              "title": "과거 상처 담담하게 털어놓는 재희💧 #나의유죄인간",
-              "url": "https://www.tving.com/shorts/VT0000312762?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111307070&",
-              "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000312762/20261109140034/2e9edb66588a4caa88b264e3c11abeaa.webp"
-            },
-            {
-              "title": "🕵‍♂논란이 되었던 유아 살인 유기 사건의 형량?",
-              "url": "https://www.tving.com/shorts/VT0000311840?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111307097&",
-              "image_url": "https://image.tving.com/ntgs/clip/shorts/highlight/202611/VT0000311840/20261109101821/f8776ece527642b1930894322ac2aa41.webp"
-            },
-            {
-              "title": "관계의 중요성",
-              "url": "https://www.tving.com/shorts/VT0000312359?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111307068&",
-              "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000312359/20261109075807/944ee5a25a7148f2af58b4c3ace90812.webp"
+              "title": "총독부 2인자지만 빠른 눈치로는 1위 #100일의거짓말",
+              "url": "https://www.tving.com/shorts/VT0000316643?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111406009&",
+              "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000316643/20261113060633/7d664aaf73e14daea4ffa47a886489d5.webp"
             },
             {
               "title": "랠리하다 스파이크성공하면",
-              "url": "https://www.tving.com/shorts/VT0000312373?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111307073&",
+              "url": "https://www.tving.com/shorts/VT0000312373?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111406097&",
               "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000312373/20261109080218/551716c049404c14bbac259d5b33a358.webp"
             },
             {
-              "title": "동동동대문을 열어라🚪",
-              "url": "https://www.tving.com/shorts/VT0000313608?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111307022&",
-              "image_url": "https://image.tving.com/ntgs/clip/shorts/highlight/202611/VT0000313608/20261110162405/14cb0d5b180e47789fadb741f7ba0943.webp"
+              "title": "💥김태웅 제대로 사고 침💥 #100일의거짓말",
+              "url": "https://www.tving.com/shorts/VT0000316619?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111406028&",
+              "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000316619/20261113055642/19f59242dfdf4483b95add311b1f1330.webp"
             },
             {
-              "title": "이러는데 어떻게 안 반해",
-              "url": "https://www.tving.com/shorts/VT0000312391?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111307055&",
-              "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000312391/20261109081451/6f3a92d647aa460b89b83856fcce22a9.webp"
+              "title": "질투 나고 귀여워 보인다..?(예 사랑에 빠지셨습니다)",
+              "url": "https://www.tving.com/shorts/VT0000312398?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111406087&",
+              "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000312398/20261109081451/d0fbb78ae9a846eabade7a6679d2c2ac.webp"
+            },
+            {
+              "title": "한마디 한마디가 덫ㄷㄷ #100일의거짓말",
+              "url": "https://www.tving.com/shorts/VT0000316621?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111406029&",
+              "image_url": "https://image.tving.com/ntgs/clip/prod/common/202611/VT0000316621/20261113055650/002be8e4a7cb49ab8eaf7f2bcdd16803.webp"
+            },
+            {
+              "title": "네가 오면 걸리적거... 집에 있어",
+              "url": "https://www.tving.com/shorts/VT0000312981?threadId=THR%23AI_REC_SHT_BAND_MAIN%23kr_c02%232026111406063&",
+              "image_url": "https://image.tving.com/ntgs/clip/shorts/AI/202611/VT0000312981/20261110111701/315c2d4ad45440598e2af0d121317028.webp"
             }
           ],
           "works_complete": false,
@@ -461,24 +461,24 @@
           "url": "",
           "works": [
             {
-              "title": "명탐정 코난 24기 (더빙)",
-              "url": "https://www.tving.com/contents/P001784913",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260410/1640/P001784913.jpg"
-            },
-            {
               "title": "짱구는못말려 26",
               "url": "https://www.tving.com/contents/P001791455",
               "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260904/0529/P001791455.jpg"
             },
             {
-              "title": "먼작귀 몰아보기",
-              "url": "https://www.tving.com/contents/P001780494",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20251219/0831/P001780494.jpg"
-            },
-            {
               "title": "반딧불이의 혼례(자막)",
               "url": "https://www.tving.com/contents/P001792812",
               "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261103/0739/P001792812.jpg"
+            },
+            {
+              "title": "명탐정 코난 24기 (더빙)",
+              "url": "https://www.tving.com/contents/P001784913",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260410/1640/P001784913.jpg"
+            },
+            {
+              "title": "먼작귀 몰아보기",
+              "url": "https://www.tving.com/contents/P001780494",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20251219/0831/P001780494.jpg"
             },
             {
               "title": "먼작귀 몰아보기 2기",
@@ -515,9 +515,14 @@
           "url": "",
           "works": [
             {
+              "title": "문무",
+              "url": "https://www.tving.com/contents/P001791650",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261019/0229/P001791650.jpg"
+            },
+            {
               "title": "대리수능",
               "url": "https://www.tving.com/contents/P001793411",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1110/ko/20261102/0414/P001793411.jpg"
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261102/0225/P001793411.jpg"
             },
             {
               "title": "대탈출 : 도시괴담",
@@ -525,9 +530,9 @@
               "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261113/0722/P001793986.jpg"
             },
             {
-              "title": "문무",
-              "url": "https://www.tving.com/contents/P001791650",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261019/0229/P001791650.jpg"
+              "title": "가금채",
+              "url": "https://www.tving.com/contents/P001794057",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261113/2303/P001794057.jpg"
             },
             {
               "title": "2026 MAMA AWARDS CHAPTER 1",
@@ -548,11 +553,6 @@
               "title": "그냥사람친구",
               "url": "https://www.tving.com/contents/P001794074",
               "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261105/0751/P001794074.jpg"
-            },
-            {
-              "title": "보검매직컬 시즌2",
-              "url": "https://www.tving.com/contents/P001793657",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261103/1245/P001793657.jpg"
             }
           ],
           "works_complete": false,
@@ -561,52 +561,52 @@
           "works_status": ""
         },
         {
-          "id": "021ca656588ba218",
-          "title": "외쳐 갓동민!",
+          "id": "88750295ee218b1e",
+          "title": "화제의 듀 가나디 닮은꼴 손현듀",
           "description": "",
           "position": 9,
           "kind": "theme",
           "url": "",
           "works": [
             {
-              "title": "더 지니어스 : 그랜드 파이널",
-              "url": "https://www.tving.com/contents/P000170199",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231218/1124/P000170199.png"
+              "title": "손현주의 간이역",
+              "url": "https://www.tving.com/contents/P001448545",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260420/0105/P001448545.jpg"
             },
             {
-              "title": "피의게임 시즌3",
-              "url": "https://www.tving.com/contents/P001785237",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260409/0516/P001785237.jpg"
+              "title": "신입사원 강회장",
+              "url": "https://www.tving.com/contents/P001786154",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260506/0125/P001786154.jpg"
             },
             {
-              "title": "크라임씬 리턴즈",
-              "url": "https://www.tving.com/contents/P001751684",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1110/ko/20240216/0952/P001751684.jpg"
+              "title": "모범형사",
+              "url": "https://www.tving.com/contents/P001273466",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231218/2212/P001273466.jpg"
             },
             {
-              "title": "씬의 퀴즈",
-              "url": "https://www.tving.com/contents/P000940242",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231218/1038/P000940242.jpg"
+              "title": "모범형사 2",
+              "url": "https://www.tving.com/contents/P001624993",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1120/ko/20220723/P001624993.jpg"
             },
             {
-              "title": "피의게임 시즌1",
-              "url": "https://www.tving.com/contents/P001785228",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260409/0236/P001785228.jpg"
+              "title": "세작, 매혹된 자들",
+              "url": "https://www.tving.com/contents/P001750279",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1190/ko/20240202/0925/P001750279.jpg"
             },
             {
-              "title": "소사이어티 게임 시즌 2",
-              "url": "https://www.tving.com/contents/P000395031",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261106/0630/P000395031.jpg"
+              "title": "보통사람",
+              "url": "https://www.tving.com/contents/M000147363",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caim/CAIM1150/ko/20260114/0820/M000147363.jpg"
             },
             {
-              "title": "최우수산",
-              "url": "https://www.tving.com/contents/P001786471",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260502/1155/P001786471.jpg"
+              "title": "악의 연대기",
+              "url": "https://www.tving.com/contents/M000367258",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caim/CAIM1150/ko/20260121/1016/M000367258.jpg"
             },
             {
-              "title": "니가 내라 독박투어",
-              "url": "https://www.tving.com/contents/P001793860",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20261030/0459/P001793860.jpg"
+              "title": "은밀하게 위대하게",
+              "url": "https://www.tving.com/contents/M000279135",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caim/CAIM1120/ko/20231214/0742/M000279135.jpg"
             }
           ],
           "works_complete": false,
@@ -615,52 +615,52 @@
           "works_status": ""
         },
         {
-          "id": "0067298bf7670784",
-          "title": "스포츠 예능",
+          "id": "ec7c5bcfda9f7ced",
+          "title": "예능 몰아보기",
           "description": "",
           "position": 10,
           "kind": "theme",
           "url": "",
           "works": [
             {
-              "title": "신인감독 김연경2",
-              "url": "https://www.tving.com/contents/P001792268",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260922/2152/P001792268.jpg"
+              "title": "스트릿 월드 파이터 : 디렉터스 워",
+              "url": "https://www.tving.com/contents/P001789206",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260817/2359/P001789206.jpg"
             },
             {
-              "title": "야구여왕2",
-              "url": "https://www.tving.com/contents/P001788997",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260707/1805/P001788997.jpg"
+              "title": "벌거벗은 세계사",
+              "url": "https://www.tving.com/contents/P001392765",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231030/0130/P001392765.jpg"
             },
             {
-              "title": "최강야구",
-              "url": "https://www.tving.com/contents/P001609758",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20251015/1025/P001609758.jpg"
+              "title": "개와 늑대의 시간 2",
+              "url": "https://www.tving.com/contents/P001781384",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20260106/1350/P001781384.jpg"
             },
             {
-              "title": "도시어부 2",
-              "url": "https://www.tving.com/contents/P001102940",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240821/0829/P001102940.jpg"
+              "title": "신인감독 김연경",
+              "url": "https://www.tving.com/contents/P001780220",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20251216/0815/P001780220.jpg"
             },
             {
-              "title": "김성근의 겨울방학",
-              "url": "https://www.tving.com/contents/P001767554",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250131/0700/P001767554.jpg"
+              "title": "탐정들의 영업비밀",
+              "url": "https://www.tving.com/contents/P001752507",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240129/0200/P001752507.jpg"
             },
             {
-              "title": "야구대표자 : 덕후들의 리그 시즌2",
-              "url": "https://www.tving.com/contents/P001769492",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1110/ko/20250331/0100/P001769492.jpg"
+              "title": "대탈출 3",
+              "url": "https://www.tving.com/contents/P001164763",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231218/1045/P001164763.jpg"
             },
             {
-              "title": "뭉쳐야 찬다 4",
-              "url": "https://www.tving.com/contents/P001769763",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20251113/0950/P001769763.jpg"
+              "title": "야구여왕",
+              "url": "https://www.tving.com/contents/P001779358",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20251120/0751/P001779358.jpg"
             },
             {
-              "title": "골신강림",
-              "url": "https://www.tving.com/contents/P001503499",
-              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231214/1700/P001503499.jpg"
+              "title": "크라임씬 리턴즈",
+              "url": "https://www.tving.com/contents/P001751684",
+              "image_url": "https://image.tving.com/ntgs/contents/CTC/caip/CAIP1130/ko/20240216/0952/P001751684.jpg"
             }
           ],
           "works_complete": false,
@@ -687,7 +687,7 @@
       "status": "unavailable",
       "last_success_status": "",
       "freshness": "none",
-      "checked_at": "2026-11-13T07:39:19+00:00",
+      "checked_at": "2026-11-14T07:26:15+00:00",
       "last_success_at": "",
       "complete": false,
       "promotions": [],
@@ -745,8 +745,8 @@
       "official_updates_scope": "official_channel",
       "official_updates_source_url": "https://www.youtube.com/channel/UCjn-VbcIkAeXQKCmLJV8YwQ",
       "official_updates_source_method": "youtube_api",
-      "official_updates_checked_at": "2026-11-13T07:39:19+00:00",
-      "official_updates_last_success_at": "2026-11-13T07:39:19+00:00",
+      "official_updates_checked_at": "2026-11-14T07:26:15+00:00",
+      "official_updates_last_success_at": "2026-11-14T07:26:15+00:00",
       "official_updates_freshness": "current",
       "capture_scope": "",
       "page_title": "",
@@ -764,8 +764,8 @@
       "locale_requested": "ko-KR",
       "last_success_status": "promotion_only",
       "freshness": "current",
-      "checked_at": "2026-11-13T07:39:19+00:00",
-      "last_success_at": "2026-11-13T07:39:19+00:00",
+      "checked_at": "2026-11-14T07:26:15+00:00",
+      "last_success_at": "2026-11-14T07:26:15+00:00",
       "complete": false,
       "capture_scope": "공개 홍보 화면의 목록 · 확인한 항목 최대 8개",
       "promotions": [
@@ -826,24 +826,24 @@
               "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a0e6d4-11b2-7840-acb3-e3dc05921cc8/compose?format=webp&width=467&label=top_ranked_2_067"
             },
             {
-              "title": "연애박사",
-              "url": "https://www.disneyplus.com/ko-kr/browse/entity-994e7dec-fcbd-416e-ab2e-b4de8cc6d154",
-              "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a0c769-3eb1-7d1d-8a04-f4819fdf8084/compose?format=webp&width=467&label=top_ranked_3_067"
-            },
-            {
               "title": "라이어",
               "url": "https://www.disneyplus.com/ko-kr/browse/entity-0facd8bd-5d72-40a3-bdf9-de81110d6462",
-              "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a13e98-510e-7166-8aaf-834f86c0e10e/compose?format=webp&width=467&label=top_ranked_4_067"
+              "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a13e98-510e-7166-8aaf-834f86c0e10e/compose?format=webp&width=467&label=top_ranked_3_067"
+            },
+            {
+              "title": "어벤져스: 엔드게임 앙코르",
+              "url": "https://www.disneyplus.com/ko-kr/browse/entity-28e07482-7213-4ce6-94ca-bd195963ca81",
+              "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a1c760-e718-7af9-b591-9a46577cf2e1/compose?format=webp&width=467&label=top_ranked_4_067"
+            },
+            {
+              "title": "연애박사",
+              "url": "https://www.disneyplus.com/ko-kr/browse/entity-994e7dec-fcbd-416e-ab2e-b4de8cc6d154",
+              "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a0c769-3eb1-7d1d-8a04-f4819fdf8084/compose?format=webp&width=467&label=top_ranked_5_067"
             },
             {
               "title": "스타일 워즈",
               "url": "https://www.disneyplus.com/ko-kr/browse/entity-48718a21-c9c9-487a-a655-d81a9f44c7de",
-              "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a1c673-3d52-7bf4-9129-c896248acc4b/compose?format=webp&width=467&label=top_ranked_5_hulu-original-series_067"
-            },
-            {
-              "title": "메리 베리 러브",
-              "url": "https://www.disneyplus.com/ko-kr/browse/entity-dfa34bdf-143d-4053-aec9-ab38496249de",
-              "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a0a419-579f-7e4e-b6a0-b71d0f92e19d/compose?format=webp&width=467&label=top_ranked_6_hulu-original-series_067"
+              "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a1c673-3d52-7bf4-9129-c896248acc4b/compose?format=webp&width=467&label=top_ranked_6_hulu-original-series_067"
             },
             {
               "title": "비전퀘스트",
@@ -851,9 +851,9 @@
               "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a1c7f0-c08e-7921-8aeb-3da0aa9696e9/compose?format=webp&width=467&label=top_ranked_7_disney-original_067"
             },
             {
-              "title": "파이널 테이블",
-              "url": "https://www.disneyplus.com/ko-kr/browse/entity-1efc1cb4-7be2-4092-b4b8-7ff713414698",
-              "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a15c45-bbeb-7fcf-b378-541f7a97a155/compose?format=webp&width=467&label=top_ranked_8_067"
+              "title": "메리 베리 러브",
+              "url": "https://www.disneyplus.com/ko-kr/browse/entity-dfa34bdf-143d-4053-aec9-ab38496249de",
+              "image_url": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/01a0a419-579f-7e4e-b6a0-b71d0f92e19d/compose?format=webp&width=467&label=top_ranked_8_hulu-original-series_067"
             }
           ],
           "works_complete": false,
@@ -933,30 +933,44 @@
       "locale_requested": "ko-KR",
       "last_success_status": "ok",
       "freshness": "current",
-      "checked_at": "2026-11-13T07:39:19+00:00",
-      "last_success_at": "2026-11-13T07:39:19+00:00",
+      "checked_at": "2026-11-14T07:26:15+00:00",
+      "last_success_at": "2026-11-14T07:26:15+00:00",
       "complete": false,
       "capture_scope": "공개 홈에서 확인한 콘텐츠 영역 최대 10개 · 영역별 작품 최대 8편",
       "promotions": [
         {
-          "title": "OG_옆자리 프란체스카 (프란체스카)",
-          "url": "http://www.wavve.com/player/vod?programid=C9901_C99000000202&landing=season",
-          "image_url": "https://image.wavve.com/operation/image/banner/202611/1793595064515808233.jpg",
+          "title": "방송_원경",
+          "url": "http://www.wavve.com/player/vod?programid=B120241079&landing=season",
+          "image_url": "https://image.wavve.com/operation/image/banner/202611/1794199102611364383.jpg",
           "position": 1,
           "placement": "공개 메인 배너"
         },
         {
-          "title": "Only_각설탕 소리",
-          "url": "http://www.wavve.com/player/vod?programid=H04_VOD000003513&landing=season",
-          "image_url": "https://image.wavve.com/operation/image/banner/202610/1792394731767555481.jpg",
+          "title": "영플_타짜: 벨제붑의 노래",
+          "url": "http://www.wavve.com/player/movie?movieid=MV_EN01_EN000001274&landing=season",
+          "image_url": "https://image.wavve.com/operation/image/banner/202611/1794212520999749415.jpg",
           "position": 2,
           "placement": "공개 메인 배너"
         },
         {
-          "title": "중드_현서2: 천하제일 거상",
-          "url": "http://www.wavve.com/player/vod?programid=C8401_C84000000227&landing=season",
-          "image_url": "https://image.wavve.com/operation/image/banner/202611/1794472638820397011.jpg",
+          "title": "방송_내 새끼의 연애3 (tvN STORY)",
+          "url": "http://www.wavve.com/player/vod?programid=B120266610&landing=season",
+          "image_url": "https://image.wavve.com/operation/image/banner/202611/1794185006386316381.jpg",
           "position": 3,
+          "placement": "공개 메인 배너"
+        },
+        {
+          "title": "중드_일구춘 : 칼끝에 피어난 봄",
+          "url": "http://www.wavve.com/player/vod?programid=H04_VOD000003520&landing=season",
+          "image_url": "https://image.wavve.com/operation/image/banner/202610/1792486558037630929.jpg",
+          "position": 4,
+          "placement": "공개 메인 배너"
+        },
+        {
+          "title": "영플_인시디어스: 그들이 넘어왔다",
+          "url": "http://www.wavve.com/player/movie?movieid=MV_CF01_SY0000011887&landing=season",
+          "image_url": "https://image.wavve.com/operation/image/banner/202610/1790845148697966018.jpg",
+          "position": 5,
           "placement": "공개 메인 배너"
         }
       ],
@@ -969,16 +983,6 @@
           "kind": "theme",
           "url": "",
           "works": [
-            {
-              "title": "타짜: 벨제붑의 노래",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202611/1794278092218429387.jpg"
-            },
-            {
-              "title": "2026 멜론뮤직어워드",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202610/1792646972852785126.jpg"
-            },
             {
               "title": "전지적 집착 시점",
               "url": "",
@@ -995,9 +999,14 @@
               "image_url": "https://image.wavve.com/meta/image/202611/1793527972391554640.jpg"
             },
             {
-              "title": "라이어",
+              "title": "타짜: 벨제붑의 노래",
               "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202610/1792479563706977812.jpg"
+              "image_url": "https://image.wavve.com/meta/image/202611/1794278092218429387.jpg"
+            },
+            {
+              "title": "2026 멜론뮤직어워드",
+              "url": "",
+              "image_url": "https://image.wavve.com/meta/image/202610/1792646972852785126.jpg"
             },
             {
               "title": "옆자리, 프란체스카",
@@ -1005,9 +1014,14 @@
               "image_url": "https://image.wavve.com/meta/image/202610/1793066442967704987.jpg"
             },
             {
-              "title": "선덕여왕 (4K)",
+              "title": "라이어",
               "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202609/1789647542340321227.jpg"
+              "image_url": "https://image.wavve.com/meta/image/202610/1792479563706977812.jpg"
+            },
+            {
+              "title": "신인감독 김연경2",
+              "url": "",
+              "image_url": "https://image.wavve.com/meta/image/202609/1790043838213320101.jpg"
             }
           ],
           "works_complete": false,
@@ -1024,34 +1038,9 @@
           "url": "",
           "works": [
             {
-              "title": "이혼숙려캠프",
+              "title": "나 혼자 산다",
               "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202506/1749708108917771347.jpg"
-            },
-            {
-              "title": "내 새끼의 연애",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202611/1793864891441562733.jpg"
-            },
-            {
-              "title": "실화탐사대",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202412/1734403800797043028.jpg"
-            },
-            {
-              "title": "미스트롯 포유",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202605/1778647705427704539.jpg"
-            },
-            {
-              "title": "옆자리, 프란체스카",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202610/1793066505729329191.jpg"
-            },
-            {
-              "title": "욕망의 덫",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202608/1786002728123067862.jpg"
+              "image_url": "https://image.wavve.com/meta/image/202512/1765516375305815397.jpg"
             },
             {
               "title": "라이어",
@@ -1059,9 +1048,34 @@
               "image_url": "https://image.wavve.com/meta/image/202610/1792479563706977812.jpg"
             },
             {
-              "title": "나 혼자 산다",
+              "title": "용감한 형사들",
               "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202512/1765516375305815397.jpg"
+              "image_url": "https://image.wavve.com/meta/image/202609/1789636841125698344.jpg"
+            },
+            {
+              "title": "이혼숙려캠프",
+              "url": "",
+              "image_url": "https://image.wavve.com/meta/image/202506/1749708108917771347.jpg"
+            },
+            {
+              "title": "금타는 금요일",
+              "url": "",
+              "image_url": "https://image.wavve.com/meta/image/202604/1777254985456494768.jpg"
+            },
+            {
+              "title": "내 새끼의 연애",
+              "url": "",
+              "image_url": "https://image.wavve.com/meta/image/202611/1793864891441562733.jpg"
+            },
+            {
+              "title": "신랑수업",
+              "url": "",
+              "image_url": "https://image.wavve.com/meta/image/202603/1773909375466082135.jpg"
+            },
+            {
+              "title": "욕망의 덫",
+              "url": "",
+              "image_url": "https://image.wavve.com/meta/image/202608/1786002728123067862.jpg"
             }
           ],
           "works_complete": false,
@@ -1072,56 +1086,15 @@
         {
           "id": "96f80337cbbe6106",
           "title": "오직 웨이브에서",
-          "description": "모든것은 다.웨이브다. 오리지널도 역시 웨이브다.",
+          "description": "",
           "position": 3,
           "kind": "originals",
           "url": "",
-          "works": [
-            {
-              "title": "지옥의 짬밥",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202611/1793755287040555569.jpg"
-            },
-            {
-              "title": "옆자리, 프란체스카",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202610/1793066442967704987.jpg"
-            },
-            {
-              "title": "각설탕 소리",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202610/1791856497142223502.jpg"
-            },
-            {
-              "title": "여름방학",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202610/1790907520476584005.jpg"
-            },
-            {
-              "title": "안녕, 프란체스카 (4K)",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202611/1793601962317148193.jpg"
-            },
-            {
-              "title": "연애남매2",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202611/1793970937928087026.jpg"
-            },
-            {
-              "title": "하절기",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202608/1787213985100105336.jpg"
-            },
-            {
-              "title": "전설의 수사",
-              "url": "",
-              "image_url": "https://image.wavve.com/meta/image/202609/1789034237550952905.jpg"
-            }
-          ],
+          "works": [],
           "works_complete": false,
           "items_kind": "works",
           "placement": "",
-          "works_status": "observed"
+          "works_status": "not_loaded"
         },
         {
           "id": "419d5a1a07dcb818",
