@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-11-13T22:27:29+00:00",
+  "collected_at": "2026-11-14T02:56:05+00:00",
   "sources": {
     "kobis": {
-      "last_success_at": "2026-11-13T03:12:52+00:00",
+      "last_success_at": "2026-11-14T02:56:19+00:00",
       "state": "ok",
       "count": 10,
-      "collected_at": "2026-11-13T03:12:52+00:00",
-      "reference_date": "2026-11-12",
-      "reference_period": "2026-11-12",
+      "collected_at": "2026-11-14T02:56:19+00:00",
+      "reference_date": "2026-11-13",
+      "reference_period": "2026-11-13",
       "error": "",
       "received_count": 10,
       "valid_count": 10,
-      "retained_count": 209
+      "retained_count": 219
     },
     "netflix": {
-      "last_success_at": "2026-11-13T03:13:17+00:00",
+      "last_success_at": "2026-11-14T02:56:39+00:00",
       "state": "ok",
       "count": 20,
-      "collected_at": "2026-11-13T03:13:17+00:00",
+      "collected_at": "2026-11-14T02:56:39+00:00",
       "reference_date": "2026-11-08",
       "reference_period": "2026-11-02/2026-11-08",
       "error": "",
@@ -29,12 +29,12 @@
       "retained_count": 104
     },
     "youtube": {
-      "last_success_at": "2026-11-13T03:13:54+00:00",
+      "last_success_at": "2026-11-14T02:57:06+00:00",
       "state": "partial",
-      "count": 49,
-      "collected_at": "2026-11-13T03:13:58+00:00",
-      "reference_date": "2026-11-13",
-      "reference_period": "2026-11-13",
+      "count": 66,
+      "collected_at": "2026-11-14T02:57:10+00:00",
+      "reference_date": "2026-11-14",
+      "reference_period": "2026-11-14",
       "error": "선택 대상 500개 중 12개 통계 미수신",
       "popular_list_state": "ok",
       "popular_successful_lists": [
@@ -42,39 +42,42 @@
         "1",
         "24"
       ],
-      "popular_candidate_count": 44,
+      "popular_candidate_count": 50,
       "popular_snapshots": {
-        "all": "2026-11-13T03:13:22+00:00",
-        "1": "2026-11-13T03:13:23+00:00",
-        "24": "2026-11-13T03:13:23+00:00"
+        "all": "2026-11-14T02:56:44+00:00",
+        "1": "2026-11-14T02:56:44+00:00",
+        "24": "2026-11-14T02:56:45+00:00"
       },
       "popular_failed_lists": [],
-      "popular_checked_at": "2026-11-13T03:13:23+00:00",
+      "popular_checked_at": "2026-11-14T02:56:45+00:00",
       "tracking_strategy": "current-popular/observed-impact/recent-upload",
-      "tracking_eligible_count": 2011,
+      "tracking_eligible_count": 2038,
       "tracking_selected_count": 500,
-      "tracking_omitted_count": 1511,
+      "tracking_omitted_count": 1538,
       "observation_missing_count": 12,
       "tracking_observed_count": 488,
-      "tracking_unobserved_count": 1523,
-      "retained_count": 482
+      "tracking_unobserved_count": 1550,
+      "retained_count": 500
     },
     "news": {
       "state": "partial",
       "count": 96,
-      "collected_at": "2026-11-13T22:27:44+00:00",
+      "collected_at": "2026-11-14T02:56:17+00:00",
       "reference_date": "2026-11-14",
       "reference_period": "2026-11-08/2026-11-14",
       "error": "원문 URL 미해석 96건: RSS의 발행일·매체·기사 제목 기준",
-      "rejected_count": 434,
+      "rejected_count": 435,
       "missing_publication_date_count": 0,
       "unresolved_original_count": 96,
-      "retained_count": 954
+      "retained_count": 959
     }
   },
-  "collection_scope": "news_only",
+  "collection_scope": "full",
   "updated_sources": [
-    "news"
+    "news",
+    "kobis",
+    "netflix",
+    "youtube"
   ],
   "overall_state": "partial"
 }
