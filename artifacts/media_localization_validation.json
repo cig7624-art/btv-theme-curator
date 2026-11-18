@@ -6,17 +6,17 @@
   "expected_version": "1.6.4",
   "button_submitted": true,
   "stage": "submitted",
-  "checked_at": "2026-11-17T05:37:46.766823+00:00",
+  "checked_at": "2026-11-18T05:00:41.705085+00:00",
   "check_only": false,
   "observed_version": "1.6.4",
   "frame_state": "matched_release",
   "translation_control_count": 1,
-  "pending_count": 3,
+  "pending_count": 7,
   "control_visible": true,
   "batches": [
     {
-      "pending_before": 3,
-      "pending_after": 3
+      "pending_before": 7,
+      "pending_after": 7
     }
   ],
   "warning_codes": [
