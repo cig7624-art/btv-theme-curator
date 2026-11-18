@@ -384,7 +384,15 @@
       "image_kind": "article_image",
       "image_recorded_at": "2026-11-18T05:00:13+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "localization": {
+        "title": "디즈니, 스트리밍과 파크 성장에 힘입어 회계연도 2026년 마무리",
+        "summary": "디즈니는 블록버스터 프랜차이즈, 스트리밍 모멘텀, 파크 사업의 지속적인 성장에 힘입어 회계연도 2026년 4분기를 마쳤다고 밝혔다. Disney+ 참여도는 유럽, 라틴아메리카, 아시아·태평양에서 두드러졌으며, 회사는 스트리밍과 Experiences 사업의 성장 및 사업 간 연결성을 강조했다.",
+        "source_hash": "5478f2589686844210755d8e4a70f0874197bdcb0a408ac37a9d11dd83398c21",
+        "generated_at": "2026-11-18T05:01:07+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-2843612706ba844d03",
@@ -9048,7 +9056,15 @@
       ],
       "content_hash": "4b8f634f3a8f84ff59b6e503774fbc2c3237ebd7ad5e0d3dd710bfb98476c22e",
       "published_at_source": "pdf_publication_unconfirmed",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "localization": {
+        "title": "디즈니 주주서한, 스트리밍 참여도와 Experiences 방문객 증가 강조",
+        "summary": "디즈니는 회계연도 2026년 4분기에 전 세계 Experiences 방문객이 4% 늘고 스트리밍 플랫폼과 ESPN 네트워크 참여도가 증가했다고 밝혔다. 회사는 어려운 거시경제 환경에서도 이러한 흐름이 매출 성장과 사업 목표를 뒷받침한다고 설명했다.",
+        "source_hash": "4b8f634f3a8f84ff59b6e503774fbc2c3237ebd7ad5e0d3dd710bfb98476c22e",
+        "generated_at": "2026-11-18T05:01:07+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-2b0cf5170598bc1aa4",
@@ -9274,7 +9290,15 @@
       ],
       "content_hash": "862037af3c5b663c00c917c2f9663eb92af4fe4cc3a19df52306bc28ee8d7064",
       "published_at_source": "pdf_publication_unconfirmed",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "localization": {
+        "title": "디즈니 회계연도 2026년 4분기 재무조정표",
+        "summary": "이 문서는 GAAP 기준 재무지표와 대응하는 비GAAP 재무지표의 조정 내용을 제시한다. 조정 대상에는 조정 EPS, 총 부문 영업이익, 잉여현금흐름, Entertainment SVOD 영업이익 및 영업이익률 등이 포함된다.",
+        "source_hash": "862037af3c5b663c00c917c2f9663eb92af4fe4cc3a19df52306bc28ee8d7064",
+        "generated_at": "2026-11-18T05:01:07+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-45c04075b0cbc2de19",
@@ -9446,7 +9470,15 @@
       ],
       "content_hash": "986ff62a20903e8a961b8fef318249bc8fd0fc111aad679240649467d79b7f46",
       "published_at_source": "pdf_publication_unconfirmed",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "localization": {
+        "title": "디즈니 회계연도 2026년 4분기 재편 부문 재무정보",
+        "summary": "디즈니가 미국 증권거래위원회에 제출한 Form 8-K 문서로, 재편된 부문별 재무정보와 사업별 수익·비용 항목을 설명한다. Entertainment 수익에는 극장 배급, 상품 라이선싱, 음악·공연·출판물 등 기타 수익이 포함된다.",
+        "source_hash": "986ff62a20903e8a961b8fef318249bc8fd0fc111aad679240649467d79b7f46",
+        "generated_at": "2026-11-18T05:01:07+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-80909bc46e109903db",
