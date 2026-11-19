@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-11-18T05:00:13+00:00",
+  "collected_at": "2026-11-19T04:55:28+00:00",
   "sources": [
     {
       "id": "netflix_ir",
@@ -8,8 +8,8 @@
       "company": "Netflix",
       "url": "https://ir.netflix.net/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
-      "last_success_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
+      "last_success_at": "2026-11-19T04:55:28+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 4
@@ -20,8 +20,8 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/investor-relations/",
       "status": "partial",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
-      "last_success_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
+      "last_success_at": "2026-11-19T04:55:28+00:00",
       "error_code": "some_documents_unavailable",
       "item_count": 3,
       "retained_item_count": 5
@@ -32,8 +32,8 @@
       "company": "Amazon",
       "url": "https://ir.aboutamazon.com/rss/pressrelease.aspx",
       "status": "ok",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
-      "last_success_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
+      "last_success_at": "2026-11-19T04:55:28+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 5
@@ -43,12 +43,12 @@
       "name": "Comcast Investor Relations",
       "company": "Comcast",
       "url": "https://www.cmcsa.com/financial-information/quarterly-results",
-      "status": "unavailable",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
-      "last_success_at": "",
-      "error_code": "http_403",
-      "item_count": 0,
-      "retained_item_count": 0
+      "status": "partial",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
+      "last_success_at": "2026-11-19T04:55:28+00:00",
+      "error_code": "some_documents_unavailable",
+      "item_count": 4,
+      "retained_item_count": 4
     },
     {
       "id": "disney_news",
@@ -56,11 +56,11 @@
       "company": "Disney",
       "url": "https://thewaltdisneycompany.com/feed/",
       "status": "ok",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
-      "last_success_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
+      "last_success_at": "2026-11-19T04:55:28+00:00",
       "error_code": "",
       "item_count": 4,
-      "retained_item_count": 8
+      "retained_item_count": 9
     },
     {
       "id": "amazon_news",
@@ -68,10 +68,10 @@
       "company": "Amazon",
       "url": "https://www.aboutamazon.com/news/entertainment",
       "status": "ok",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
-      "last_success_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
+      "last_success_at": "2026-11-19T04:55:28+00:00",
       "error_code": "",
-      "item_count": 2,
+      "item_count": 1,
       "retained_item_count": 3
     },
     {
@@ -80,7 +80,7 @@
       "company": "SKT",
       "url": "https://news.sktelecom.com/feed",
       "status": "unavailable",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "last_success_at": "",
       "error_code": "document_not_extractable",
       "item_count": 0,
@@ -92,8 +92,8 @@
       "company": "SK브로드밴드",
       "url": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
       "status": "ok",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
-      "last_success_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
+      "last_success_at": "2026-11-19T04:55:28+00:00",
       "error_code": "",
       "item_count": 4,
       "retained_item_count": 5
@@ -104,7 +104,7 @@
       "company": "KT",
       "url": "https://corp.kt.com/html/promote/news/report_list.html",
       "status": "unavailable",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "last_success_at": "",
       "error_code": "no_business_documents",
       "item_count": 0,
@@ -116,11 +116,11 @@
       "company": "LG유플러스",
       "url": "https://news.lguplus.com/category/%ED%94%84%EB%A0%88%EC%8A%A4%EC%84%BC%ED%84%B0/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C",
       "status": "partial",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
-      "last_success_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
+      "last_success_at": "2026-11-19T04:55:28+00:00",
       "error_code": "some_documents_unavailable",
-      "item_count": 1,
-      "retained_item_count": 2
+      "item_count": 2,
+      "retained_item_count": 3
     },
     {
       "id": "coupang_products",
@@ -128,7 +128,7 @@
       "company": "쿠팡플레이",
       "url": "https://news.coupang.com/feed/",
       "status": "unavailable",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "last_success_at": "",
       "error_code": "http_403",
       "item_count": 0,
@@ -140,14 +140,172 @@
       "company": "CJ ENM",
       "url": "https://www.cjenm.com/ko/news/",
       "status": "partial",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
-      "last_success_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
+      "last_success_at": "2026-11-19T04:55:28+00:00",
       "error_code": "some_documents_unavailable",
       "item_count": 4,
       "retained_item_count": 8
     }
   ],
   "items": [
+    {
+      "id": "mi-842fea7429638b92cd",
+      "source_id": "disney_news",
+      "company": "Disney",
+      "topic": "partnership_distribution",
+      "title": "Zach King to Create Original Content in New Partnership with The Walt Disney Company",
+      "url": "https://thewaltdisneycompany.com/news/zach-king-original-content-partnership/",
+      "published_at": "2026-11-18",
+      "collected_at": "2026-11-19T04:55:28+00:00",
+      "country": "",
+      "period": "",
+      "source_name": "The Walt Disney Company News",
+      "source_type": "official_announcement",
+      "excerpt": "Collaboration Also Brings King’s Signature Illusions to Disney’s Hexed , Star Wars, and Disney Experiences, plus the Disney+ Debut of King’s Cardboard Wars\nThe Walt Disney Company and filmmaker and creator Zach King today announced a creative partnership that includes 10 original Illusion Shorts that King will create exclusively for Disney to distribute, including on Disney +. The collaboration will also bring his si",
+      "body_text": "Collaboration Also Brings King’s Signature Illusions to Disney’s Hexed , Star Wars, and Disney Experiences, plus the Disney+ Debut of King’s Cardboard Wars\nThe Walt Disney Company and filmmaker and creator Zach King today announced a creative partnership that includes 10 original Illusion Shorts that King will create exclusively for Disney to distribute, including on Disney +. The collaboration will also bring his signature illusions to new content for Disney+ and his own channels inspired by Disney’s Hexed , Star Wars , and other Disney films and experiences. In addition, he will create behind-the-scenes content for Disney’s social platforms, giving fans a look at the filmmaking and visual effects that make his illusions possible. The agreement builds on Disney’s ongoing relationship with King and marks their most extensive collaboration to date.\nThe deal also includes a Disney+ debut for Cardboard Wars , King’s 2026 hour-long tribute to the original 1977 Star Wars movie , featuring cardboard sets, props and costumes.\n“Zach makes the impossible look real, bringing the kind of imagination and originality that has always defined Disney,” said Asad Ayaz , Chief Marketing and Brand Officer, The Walt Disney Company. “He brings both a filmmaker’s ingenuity and a fan’s passion to our stories, along with a unique connection with audiences. We want to build lasting relationships with creators like Zach, giving their ideas room to grow across Disney. That’s what makes this next chapter of our work together so full of possibility.”\n“I fell in love with filmmaking and storytelling as a young kid, grabbing my parents’ home video camera and teaching myself to edit,” said King. “A lot of my early films were inspired by Disney movies and the behind-the-scenes footage they would show in the DVD featurettes. There was always a sense of magic I would see on the screen, and so I’m thrilled to be working with Disney to continue that magic of filmmaking for the next generation of storytellers.”\nKing, CEO of King Studio , has built a global audience of more than 185 million followers across platforms. A pioneer in short-form storytelling, he combines innovative visual effects with family-friendly storytelling in award-winning videos that have generated billions of views worldwide.\nThe post Zach King to Create Original Content in New Partnership with The Walt Disney Company appeared first on The Walt Disney Company .",
+      "image_url": "https://thewaltdisneycompany.com/app/uploads/2026/11/Disney-x-Zach-King-16x9-1-1024x576.jpg",
+      "evidence": [
+        {
+          "id": "mi-842fea7429638b92cd-p002",
+          "text": "Collaboration Also Brings King’s Signature Illusions to Disney’s Hexed , Star Wars, and Disney Experiences, plus the Disney+ Debut of King’s Cardboard Wars",
+          "locator": "p002",
+          "url": "https://thewaltdisneycompany.com/news/zach-king-original-content-partnership/"
+        },
+        {
+          "id": "mi-842fea7429638b92cd-p003",
+          "text": "The Walt Disney Company and filmmaker and creator Zach King today announced a creative partnership that includes 10 original Illusion Shorts that King will create exclusively for Disney to distribute, including on Disney +. The collaboration will also bring his signature illusions to new content for Disney+ and his own channels inspired by Disney’s Hexed , Star Wars , and other Disney films and experiences. In addition, he will create behind-the-scenes content for Disney’s social platforms, giving fans a look at the filmmaking and visual effects that make his illusions possible. The agreement builds on Disney’s ongoing relationship with King and marks their most extensive collaboration to date.",
+          "locator": "p003",
+          "url": "https://thewaltdisneycompany.com/news/zach-king-original-content-partnership/"
+        },
+        {
+          "id": "mi-842fea7429638b92cd-p004",
+          "text": "The deal also includes a Disney+ debut for Cardboard Wars , King’s 2026 hour-long tribute to the original 1977 Star Wars movie , featuring cardboard sets, props and costumes.",
+          "locator": "p004",
+          "url": "https://thewaltdisneycompany.com/news/zach-king-original-content-partnership/"
+        },
+        {
+          "id": "mi-842fea7429638b92cd-p005",
+          "text": "“Zach makes the impossible look real, bringing the kind of imagination and originality that has always defined Disney,” said Asad Ayaz , Chief Marketing and Brand Officer, The Walt Disney Company. “He brings both a filmmaker’s ingenuity and a fan’s passion to our stories, along with a unique connection with audiences. We want to build lasting relationships with creators like Zach, giving their ideas room to grow across Disney. That’s what makes this next chapter of our work together so full of possibility.”",
+          "locator": "p005",
+          "url": "https://thewaltdisneycompany.com/news/zach-king-original-content-partnership/"
+        },
+        {
+          "id": "mi-842fea7429638b92cd-p006",
+          "text": "“I fell in love with filmmaking and storytelling as a young kid, grabbing my parents’ home video camera and teaching myself to edit,” said King. “A lot of my early films were inspired by Disney movies and the behind-the-scenes footage they would show in the DVD featurettes. There was always a sense of magic I would see on the screen, and so I’m thrilled to be working with Disney to continue that magic of filmmaking for the next generation of storytellers.”",
+          "locator": "p006",
+          "url": "https://thewaltdisneycompany.com/news/zach-king-original-content-partnership/"
+        },
+        {
+          "id": "mi-842fea7429638b92cd-p007",
+          "text": "King, CEO of King Studio , has built a global audience of more than 185 million followers across platforms. A pioneer in short-form storytelling, he combines innovative visual effects with family-friendly storytelling in award-winning videos that have generated billions of views worldwide.",
+          "locator": "p007",
+          "url": "https://thewaltdisneycompany.com/news/zach-king-original-content-partnership/"
+        },
+        {
+          "id": "mi-842fea7429638b92cd-p008",
+          "text": "The post Zach King to Create Original Content in New Partnership with The Walt Disney Company appeared first on The Walt Disney Company .",
+          "locator": "p008",
+          "url": "https://thewaltdisneycompany.com/news/zach-king-original-content-partnership/"
+        }
+      ],
+      "content_hash": "eb9e6bb92294382bdeeaa7138e17b19f09eb0394eb9ff330b194c7231b0395a9",
+      "fetched_from": "https://thewaltdisneycompany.com/feed/",
+      "image_alt": "",
+      "image_source_url": "https://thewaltdisneycompany.com/news/zach-king-original-content-partnership/",
+      "image_attribution": "디즈니 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
+      "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
+    },
+    {
+      "id": "mi-91a4f0aef1fb61c661",
+      "source_id": "lgu_products",
+      "company": "LG유플러스",
+      "topic": "ai_technology",
+      "title": "LG유플러스, AI 기반 품질관리 IPTV 420만대에 적용",
+      "url": "https://news.lguplus.com/23359",
+      "published_at": "2026-11-18",
+      "collected_at": "2026-11-19T04:55:28+00:00",
+      "country": "KR",
+      "period": "",
+      "source_name": "LG유플러스 뉴스룸",
+      "source_type": "official_media_announcement",
+      "excerpt": "█ AI 선제조치 시스템 IPTV 셋톱에 적용…사전 예방형 품질관리 체계로 개편 █ AI 학습 데이터 5배 확대, 연간 4000만건 이상 사전 품질 점검하고 조치 예상 █ 인터넷 무선공유기까지 시스템 순차 적용, 사후 지원까지 연결되는 ‘통합 고객 케어 체계’로 발전\nLG유플러스는 IPTV 셋톱박스 420만대에 ‘AI 선제조치 시스템’을 적용하고, 고객이 장애를 인지하기 전에 이상 징후를 찾아 해결하는 사전 예방형 품질관리 체계를 본격 운영한다고 18일 밝혔다.\nAI 선제조치 시스템은 IPTV 단말과 홈 네트워크에서 발생하는 품질 데이터를 분석해 화면 끊김·화질 저하 등 이상 징후를 고객보다 먼저 탐지하고, 자체적으로 해결하는 체계다. AI는 과거 장애 이력과 정상 이용 패턴을 학습해 품질 저하 가능성을 예측하며 필요 시 재연결·설정 최적화·",
+      "body_text": "█ AI 선제조치 시스템 IPTV 셋톱에 적용…사전 예방형 품질관리 체계로 개편 █ AI 학습 데이터 5배 확대, 연간 4000만건 이상 사전 품질 점검하고 조치 예상 █ 인터넷 무선공유기까지 시스템 순차 적용, 사후 지원까지 연결되는 ‘통합 고객 케어 체계’로 발전\nLG유플러스는 IPTV 셋톱박스 420만대에 ‘AI 선제조치 시스템’을 적용하고, 고객이 장애를 인지하기 전에 이상 징후를 찾아 해결하는 사전 예방형 품질관리 체계를 본격 운영한다고 18일 밝혔다.\nAI 선제조치 시스템은 IPTV 단말과 홈 네트워크에서 발생하는 품질 데이터를 분석해 화면 끊김·화질 저하 등 이상 징후를 고객보다 먼저 탐지하고, 자체적으로 해결하는 체계다. AI는 과거 장애 이력과 정상 이용 패턴을 학습해 품질 저하 가능성을 예측하며 필요 시 재연결·설정 최적화·원격 점검 등을 자동 수행해 고객은 장애가 발생할 수 있었던 상황조차 인지하지 못한 채 서비스를 지속 이용할 수 있다.\nLG유플러스는 기존 품질관리 방식의 한계를 극복하고 고객 체감품질을 높이기 위해 AI 선제조치 시스템을 개발했다. AI가 잠재적인 품질 리스크를 사전에 탐지하고 조치하는 체계를 구축해 품질관리의 중심을 ‘사후 대응’에서 ‘사전 예방’으로 전환한다는 전략이다.\n앞서 LG유플러스는 지난해 UHD4 셋톱박스 약 90만대를 대상으로 AI 선제조치 시스템을 시범 적용하며 효과를 검증했다. 사전 운영 결과 고객 불만 접수 건수는 약 10% 감소했으며, 데이터 분석 시간은 약 7만 시간에서 6시간 수준으로 단축됐다. 문제 원인 분석부터 조치까지 걸리는 시간도 기존 최대 3일에서 즉시 대응이 가능한 수준으로 개선됐다.\nLG유플러스는 이 같은 성과를 바탕으로 지난 9월 시스템 적용 범위를 IPTV 셋톱박스 420만대로 확대했다. 적용이 불가능한 이동형 IPTV와 일부 구형 단말을 제외하고 전체 확대한 것으로, 지난해 제시한 ‘2026년 말 전체 단말 확대 계획’을 예정 시점보다 3개월 앞당겨 완료했다.\n현재 AI가 학습하는 품질 데이터는 월 5조건으로 지난해 대비 5배 증가했으며, 월 평균 370만건 이상의 품질 상태를 점검하고 있다. 이를 통해 LG유플러스는 향후 연간 4000만건 이상의 사전 품질 점검과 선제조치를 수행할 수 있을 것으로 예상했다.\n나아가 LG유플러스는 선제조치 운영 현황과 성과를 실시간으로 확인할 수 있는 ‘이상관리 선제조치 대시보드’도 구축했다. 대시보드를 통해 전체 운영 수량, 이상 탐지 단말, 조치 성공률, 주요 에러코드 개선 현황 등을 한눈에 확인할 수 있다. 데이터 기반 품질 개선 활동도 보다 체계적으로 수행할 수 있게 됐다.\n향후 LG유플러스는 인터넷 무선공유기(AP)에도 AI 선제조치 기능을 순차 적용해 IPTV와 인터넷 서비스를 아우르는 통합 품질관리 체계를 구축할 계획이다. 또한 AI 모델을 지속 고도화해 탐지 정확도를 높이고 예방부터 상담, 사후 지원까지 연결되는 통합 고객 케어 체계로 발전시켜 나갈 방침이다.\n강봉수 LG유플러스 품질혁신센터장(상무)은 “당초 계획보다 3개월 앞서 AI 선제조치 시스템 확대 적용을 완료하며 고객과의 약속을 충실히 이행할 수 있었다”며 “앞으로도 AI 기술을 활용해 고객이 불편을 겪기 전에 먼저 대응하고, 고객이 체감하는 서비스 품질을 지속 높여 나가겠다”고 말했다.",
+      "image_url": "https://news.lguplus.com/wp-content/uploads/2026/11/image-26.png",
+      "evidence": [
+        {
+          "id": "mi-91a4f0aef1fb61c661-p001",
+          "text": "█ AI 선제조치 시스템 IPTV 셋톱에 적용…사전 예방형 품질관리 체계로 개편 █ AI 학습 데이터 5배 확대, 연간 4000만건 이상 사전 품질 점검하고 조치 예상 █ 인터넷 무선공유기까지 시스템 순차 적용, 사후 지원까지 연결되는 ‘통합 고객 케어 체계’로 발전",
+          "locator": "p001",
+          "url": "https://news.lguplus.com/23359"
+        },
+        {
+          "id": "mi-91a4f0aef1fb61c661-p002",
+          "text": "LG유플러스는 IPTV 셋톱박스 420만대에 ‘AI 선제조치 시스템’을 적용하고, 고객이 장애를 인지하기 전에 이상 징후를 찾아 해결하는 사전 예방형 품질관리 체계를 본격 운영한다고 18일 밝혔다.",
+          "locator": "p002",
+          "url": "https://news.lguplus.com/23359"
+        },
+        {
+          "id": "mi-91a4f0aef1fb61c661-p003",
+          "text": "AI 선제조치 시스템은 IPTV 단말과 홈 네트워크에서 발생하는 품질 데이터를 분석해 화면 끊김·화질 저하 등 이상 징후를 고객보다 먼저 탐지하고, 자체적으로 해결하는 체계다. AI는 과거 장애 이력과 정상 이용 패턴을 학습해 품질 저하 가능성을 예측하며 필요 시 재연결·설정 최적화·원격 점검 등을 자동 수행해 고객은 장애가 발생할 수 있었던 상황조차 인지하지 못한 채 서비스를 지속 이용할 수 있다.",
+          "locator": "p003",
+          "url": "https://news.lguplus.com/23359"
+        },
+        {
+          "id": "mi-91a4f0aef1fb61c661-p004",
+          "text": "LG유플러스는 기존 품질관리 방식의 한계를 극복하고 고객 체감품질을 높이기 위해 AI 선제조치 시스템을 개발했다. AI가 잠재적인 품질 리스크를 사전에 탐지하고 조치하는 체계를 구축해 품질관리의 중심을 ‘사후 대응’에서 ‘사전 예방’으로 전환한다는 전략이다.",
+          "locator": "p004",
+          "url": "https://news.lguplus.com/23359"
+        },
+        {
+          "id": "mi-91a4f0aef1fb61c661-p005",
+          "text": "앞서 LG유플러스는 지난해 UHD4 셋톱박스 약 90만대를 대상으로 AI 선제조치 시스템을 시범 적용하며 효과를 검증했다. 사전 운영 결과 고객 불만 접수 건수는 약 10% 감소했으며, 데이터 분석 시간은 약 7만 시간에서 6시간 수준으로 단축됐다. 문제 원인 분석부터 조치까지 걸리는 시간도 기존 최대 3일에서 즉시 대응이 가능한 수준으로 개선됐다.",
+          "locator": "p005",
+          "url": "https://news.lguplus.com/23359"
+        },
+        {
+          "id": "mi-91a4f0aef1fb61c661-p006",
+          "text": "LG유플러스는 이 같은 성과를 바탕으로 지난 9월 시스템 적용 범위를 IPTV 셋톱박스 420만대로 확대했다. 적용이 불가능한 이동형 IPTV와 일부 구형 단말을 제외하고 전체 확대한 것으로, 지난해 제시한 ‘2026년 말 전체 단말 확대 계획’을 예정 시점보다 3개월 앞당겨 완료했다.",
+          "locator": "p006",
+          "url": "https://news.lguplus.com/23359"
+        },
+        {
+          "id": "mi-91a4f0aef1fb61c661-p007",
+          "text": "현재 AI가 학습하는 품질 데이터는 월 5조건으로 지난해 대비 5배 증가했으며, 월 평균 370만건 이상의 품질 상태를 점검하고 있다. 이를 통해 LG유플러스는 향후 연간 4000만건 이상의 사전 품질 점검과 선제조치를 수행할 수 있을 것으로 예상했다.",
+          "locator": "p007",
+          "url": "https://news.lguplus.com/23359"
+        },
+        {
+          "id": "mi-91a4f0aef1fb61c661-p008",
+          "text": "나아가 LG유플러스는 선제조치 운영 현황과 성과를 실시간으로 확인할 수 있는 ‘이상관리 선제조치 대시보드’도 구축했다. 대시보드를 통해 전체 운영 수량, 이상 탐지 단말, 조치 성공률, 주요 에러코드 개선 현황 등을 한눈에 확인할 수 있다. 데이터 기반 품질 개선 활동도 보다 체계적으로 수행할 수 있게 됐다.",
+          "locator": "p008",
+          "url": "https://news.lguplus.com/23359"
+        },
+        {
+          "id": "mi-91a4f0aef1fb61c661-p009",
+          "text": "향후 LG유플러스는 인터넷 무선공유기(AP)에도 AI 선제조치 기능을 순차 적용해 IPTV와 인터넷 서비스를 아우르는 통합 품질관리 체계를 구축할 계획이다. 또한 AI 모델을 지속 고도화해 탐지 정확도를 높이고 예방부터 상담, 사후 지원까지 연결되는 통합 고객 케어 체계로 발전시켜 나갈 방침이다.",
+          "locator": "p009",
+          "url": "https://news.lguplus.com/23359"
+        },
+        {
+          "id": "mi-91a4f0aef1fb61c661-p010",
+          "text": "강봉수 LG유플러스 품질혁신센터장(상무)은 “당초 계획보다 3개월 앞서 AI 선제조치 시스템 확대 적용을 완료하며 고객과의 약속을 충실히 이행할 수 있었다”며 “앞으로도 AI 기술을 활용해 고객이 불편을 겪기 전에 먼저 대응하고, 고객이 체감하는 서비스 품질을 지속 높여 나가겠다”고 말했다.",
+          "locator": "p010",
+          "url": "https://news.lguplus.com/23359"
+        }
+      ],
+      "content_hash": "77ca34ce47a76aff03ab5953fde5b32ccac722daee72898badaeb3bbd0b1840c",
+      "market_scope": "domestic_media",
+      "image_alt": "",
+      "image_source_url": "https://news.lguplus.com/23359",
+      "image_attribution": "LG유플러스 공식 자료",
+      "image_kind": "article_image",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
+      "source_updated_at": "2026-11-18",
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
+    },
     {
       "id": "mi-846d38851b26ebe766",
       "source_id": "disney_news",
@@ -382,9 +540,9 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/disney-q4-earnings-2026/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "디즈니, 스트리밍과 파크 성장에 힘입어 회계연도 2026년 마무리",
         "summary": "디즈니는 블록버스터 프랜차이즈, 스트리밍 모멘텀, 파크 사업의 지속적인 성장에 힘입어 회계연도 2026년 4분기를 마쳤다고 밝혔다. Disney+ 참여도는 유럽, 라틴아메리카, 아시아·태평양에서 두드러졌으며, 회사는 스트리밍과 Experiences 사업의 성장 및 사업 간 연결성을 강조했다.",
@@ -502,9 +660,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-통합-광고글로벌-유통-확대-성장-전략-가속/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "source_updated_at": "2026-11-06",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-93e1fd93e5cef3f6b2",
@@ -590,9 +748,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-3분기-매출-1조-1904억원-영업이익-221억원-콘텐츠플랫폼-경쟁력-바탕-수익성-기반-강화-글로벌-성장동력-확대/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "source_updated_at": "2026-11-05",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-271985748b0b771975",
@@ -684,9 +842,9 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/wwe-espn-wide-world-sports-takeover/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-f2633f0010ba329c90",
@@ -1091,7 +1249,7 @@
         }
       ],
       "content_hash": "f38fda16db5561ae1fec80ef2e28415b18bd6a654b26e6868dadfe57def36c13",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "Amazon, 역대 최고 영업이익률과 AWS 성장 발표",
         "summary": "Amazon은 영업이익 $28.1 billion과 영업이익률 13.9%를 기록했으며, 이는 역대 최고 영업이익률이라고 밝혔다. 또한 Amazon Ads Agent와 미국 내 광고주를 위한 Full-Funnel Campaigns를 출시했다.",
@@ -1173,9 +1331,9 @@
       "image_source_url": "https://thewaltdisneycompany.com/news/mickey-friends-nfl-apparel-collectibles-gear/",
       "image_attribution": "디즈니 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "Disney, NFL 테마 Mickey & Friends 상품 출시",
         "summary": "Disney와 ESPN은 NFL과 협력해 Super Bowl LXI와 시즌 내내 선보일 Mickey & Friends 의류, 수집품, 액세서리 및 팬 상품을 발표했다. 일부 상품은 NFLShop.com, Fanatics.com, DisneyStore.com과 전국 일부 소매점에서 판매된다.",
@@ -1263,9 +1421,9 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-데이터-관리-플랫폼-cj-dmp-공개-업계-최초-데이터-기반-tv광고-시대-연다/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "source_updated_at": "2026-10-28",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-08a1522356f1b70ca4",
@@ -1493,9 +1651,415 @@
       "image_source_url": "https://www.cjenm.com/ko/news/cj-enm-북미-lg채널-통해-k댄스-전용-fast-채널-독점-론칭/",
       "image_attribution": "CJ ENM 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "source_updated_at": "2026-10-27",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
+    },
+    {
+      "id": "mi-2d99a2d6ea32f46b09",
+      "source_id": "comcast_ir",
+      "company": "Comcast",
+      "topic": "earnings_strategy",
+      "title": "Earnings Release",
+      "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695",
+      "published_at": "2026-10-22",
+      "collected_at": "2026-11-19T04:55:28+00:00",
+      "country": "global",
+      "period": "",
+      "source_name": "Comcast Investor Relations",
+      "source_type": "earnings",
+      "excerpt": "COMCAST REPORTS 3rd QUARTER 2026 RESULTS PHILADELPHIA - October 22, 2026 … Comcast Corporation (NASDAQ: CMCSA) today reported results for the quarter ended September 30, 2026.\n“We are taking decisive steps to strengthen our businesses and unlock the full potential of their structural advantages,\" said Brian L. Roberts and Mike Cavanagh, co-CEOs of Comcast Corporation. \" In Connectivity & Platforms, our near-term fina",
+      "body_text": "COMCAST REPORTS 3rd QUARTER 2026 RESULTS PHILADELPHIA - October 22, 2026 … Comcast Corporation (NASDAQ: CMCSA) today reported results for the quarter ended September 30, 2026.\n“We are taking decisive steps to strengthen our businesses and unlock the full potential of their structural advantages,\" said Brian L. Roberts and Mike Cavanagh, co-CEOs of Comcast Corporation. \" In Connectivity & Platforms, our near-term financial results reflect the investments we're making to navigate an increasingly dynamic environment. We're encouraged by improving customer satisfaction, strong conversion of free wireless lines to paid relationships, growing adoption of premium wireless plans across our 10.6 million total wireless lines and healthy growth in Business Services, led by Enterprise, where there is substantial opportunity ahead. At the same time, we're transforming our operations to move faster, improve efficiency and fully capitalize on the strength of our businesses. In Content & Experiences, Peacock delivered its second consecutive profitable quarter, generating $261 million in Adjusted EBITDA on $1.8 billion in revenue, driven by strong growth in distribution, while Universal surpassed $5 billion at the global box office, led by the record-breaking success of The Odyssey, now Universal's highest-grossing film of all time. Despite near-term cyclical headwinds in Theme Parks, we remain confident in the business's long-term growth potential. We generated $4.2 billion in free cash flow and are making meaningful progress on the separation of NBCUniversal and Sky, which remains on track to create two independent companies with the financial strength and flexib\n3rd Quarter 2026 Highlights: • Generated Consolidated Adjusted EBITDA of $9.1 Billion, Adjusted EPS of $1.07 and Free Cash Flow of $4.2 Billion • Paid $1.2 Billion in Dividend Payments to Shareholders • Domestic Wireless Customer Line Net Additions Were 368,000 and 1.6 Million Over the Last 12 Months; Total Wireless Lines Increased to 10.6 Million, Reaching Nearly 18% Penetration of Our Domestic Residential Broadband Customers and 7% of Total Addressable Wireless Lines in Our Footprint • Continued to Drive Adoption of Higher-Value Products; Nearly 45% of Our Broadband Customers Are Now on Gig-Plus Speed Tiers, Up Nearly 10 Percentage Points Year-over-Year, and Premium Unlimited Plans Represented Approximately 40% of Postpaid Phone Connects • Launched Xfinity Shield, a First-of-its-Kind Platform That Transforms Xfinity Wi-Fi into an Always-On Layer of Cybersecurity, Home and Family Protection • Business Services Connectivity Revenue Increased 2.7% to $2.6 Billion, EBITDA Increased 1.7% to $1.5 Billion and EBITDA Margin Was 55.9% • Peacock Delivered EBITDA of $261 Million, Increasing $478 Million Year-over-Year; Paid Subscribers Increased 17% Year-over-Year to 48 Million\n• The Odyssey Premiered in July and Became Universal's Highest Grossing Film of All Time with Nearly $1.8 Billion in Worldwide Box Office Year-to-Date; Universal Became the First Studio to Reach $5 Billion at the Global Box Office in 2026; Studios EBITDA Increased 18.6% to $402 Million • Opened Fast & Furious: Hollywood Drift at Universal Studios Hollywood, the Park's First-Ever High- Speed Outdoor Roller Coaster and the Fastest Roller Coaster in the Universal Destinations & Experiences Portfolio 3rd Quarter Consolidated Financial Results \\ Revenue decreased 6.1% compared to the prior year period. Net Income Attributable to Comcast increased 3.5%. Adjusted Net Income decreased 7.3%. Adjusted EBITDA decreased 5.8%. On a pro forma basis to reflect the Versant separation, which was completed on January 2, 2026, and the sale of our Sky operations in Germany, which was completed on May 31, 2026, revenue and Adjusted EBITDA were consistent with the prior year period.\nEarnings per Share (EPS) increased 7.2% to $0.97. Adjusted EPS decreased 4.0% to $1.07.\nCapital Expenditures were consistent at $3.1 billion. Connectivity & Platforms’ capital expenditures increased 3.6% to $2.4 billion, primarily reflecting higher spending on customer premise equipment.\nContent & Experiences' capital expenditures decreased 10.6% to $639 million.\nNet Cash Provided by Operating Activities was $7.9 billion. Free Cash Flow was $4.2 billion.\nDividends. Comcast paid dividends totaling $1.2 billion. As previously announced, Comcast suspended its share repurchase program beginning in the third quarter and expects the pause to remain in place through the proposed separation of its businesses into two independent publicly traded companies.\nConnectivity & Platforms ($ in millions) Constant Currency Change7 3rd Quarter 2026 20256 Change Connectivity & Platforms Revenue Residential Connectivity & Platforms $17,018 $17,636 (3.5%) (3.4%) Business Services Connectivity 2,645 2,576 2.7% 2.7% Total Connectivity & Platforms Revenue $19,663 $20,212 (2.7%) (2.6%) Connectivity & Platforms Adjusted EBITDA Residential Connectivity & Platforms $6,110 $6,484 (5.8%) (5.8%) Business Services Connectivity 1,478 1,454 1.7% 1.7% Total Connectivity & Platforms Adjusted EBITDA $7,588 $7,938 (4.4%) (4.4%) Connectivity & Platforms Adjusted EBITDA Margin Residential Connectivity & Platforms 35.9% 36.8% (90) bps (90) bps Business Services Connectivity 55.9% 56.4% (50) bps (50) bps Total Connectivity & Platforms Adjusted EBITDA Margin 38.6% 39.3% (70) bps (70) bps Change percentages represent year/year growth rates. The changes in Adjusted EBITDA margins are presented as year/year basis point changes in the rounded Adjusted EBITDA margins.\nRevenue for Connectivity & Platforms decreased compared to the prior year period. Adjusted EBITDA decreased due to a decline in Residential Connectivity & Platforms, partially offset by growth in Business Services Connectivity. Residential Connectivity & Platforms revenue and Adjusted EBITDA performance reflect the investment in our go-to-market strategy. Adjusted EBITDA margin was 38.6%.\n(in thousands) Net Additions / (Losses) 3rd Quarter 3Q26 3Q25 2026 2025 Residential Connectivity & Platforms Customer Relationships Domestic Residential Connectivity & Platforms Customer Relationships 30,040 30,642 (139) (103) International Residential Connectivity & Platforms Customer Relationships8 17,712 17,477 173 (95) Total Residential Connectivity & Platforms Customer Relationships8 47,751 48,120 33 (199) Total Domestic Broadband Residential Customers 28,343 28,897 (144) (91) Total Domestic Wireless Lines 10,555 8,941 368 414 Total Domestic Video Customers 10,394 11,515 (274) (257) Total Customer Relationships for Residential Connectivity & Platforms increased by 33,000 to 47.8 million, reflecting an increase in international residential customer relationships, partially offset by a decrease in domestic residential customer relationships. Total domestic broadband residential customer net losses were 144,000, total domestic wireless line net additions were 368,000 and total domestic video customer net losses were 274,000.\nResidential Connectivity & Platforms ($ in millions) Constant Currency Change7 3rd Quarter 2026 20256, 9 Change Revenue Domestic Broadband $6,241 $6,550 (4.7%) (4.7%) Domestic Wireless Service 1,050 915 14.7% 14.7% Domestic Convergence Revenue 7,292 7,466 (2.3%) (2.3%) Domestic Wireless Equipment 475 331 43.6% 43.6% International Connectivity 1,314 1,275 3.1% 3.5% Total Residential Connectivity 9,081 9,071 0.1% 0.2% Video 5,910 6,475 (8.7%) (8.5%) Advertising 918 893 2.9% 3.1% Other 1,109 1,197 (7.3%) (7.2%) Total Revenue $17,018 $17,636 (3.5%) (3.4%) Operating Expenses Programming $3,624 $3,952 (8.3%) (8.1%) Non-Programming 7,284 7,200 1.2% 1.4% Total Operating Expenses $10,908 $11,152 (2.2%) (2.0%) Adjusted EBITDA $6,110 $6,484 (5.8%) (5.8%) Adjusted EBITDA Margin 35.9% 36.8% (90) bps (90) bps Change percentages represent year/year growth rates. The changes in Adjusted EBITDA margins are presented as year/year basis point changes in the rounded Adjusted EBITDA margins.\nRevenue for Residential Connectivity & Platforms decreased compared to the prior year period, primarily reflecting lower video and domestic broadband revenue, partially offset by higher domestic wireless equipment, domestic wireless service, international connectivity and advertising revenue. Domestic broadband revenue decreased due to lower average rates and a decline in the number of domestic broadband customers. Domestic wireless service revenue increased, reflecting growth in the customer base and the conversion of promotional free lines to paid service. Domestic wireless equipment revenue increased, driven by higher device sales. International connectivity revenue increased due to higher wireless revenue, primarily reflecting higher equipment revenue. Video revenue decreased primarily due to a decline in the number of video customers. Advertising revenue increased primarily due to higher domestic political advertising and higher revenue from our advanced advertising business, partially offset by lower international advertising and lower domestic nonpolitical advertising. Other revenue decreased primarily due to lower residential wireline voice revenue, driven by a decline in the number of customers.\nAdjusted EBITDA for Residential Connectivity & Platforms decreased due to lower revenue, partially offset by lower operating expenses. Programming expenses decreased primarily due to a decline in the number of domestic video customers. Non-programming expenses increased primarily reflecting an increase in direct product costs, mainly due to growth in our domestic wireless business, partially offset by lower technical and support costs. Adjusted EBITDA margin was 35.9%.\nBusiness Services Connectivity ($ in millions) Constant Currency Change7 3rd Quarter 2026 2025 Change Revenue $2,645 $2,576 2.7% 2.7% Operating Expenses 1,167 1,122 4.0% 4.0% Adjusted EBITDA $1,478 $1,454 1.7% 1.7% Adjusted EBITDA Margin 55.9% 56.4% (50) bps (50) bps Change percentages represent year/year growth rates. The changes in Adjusted EBITDA margins are presented as year/year basis point changes in the rounded Adjusted EBITDA margins.\nRevenue for Business Services Connectivity increased primarily due to an increase in revenue from enterprise solutions offerings.\nAdjusted EBITDA for Business Services Connectivity increased due to higher revenue, partially offset by higher operating expenses. The increase in operating expenses was primarily due to increases in direct product costs and marketing and promotion expenses. Adjusted EBITDA margin was 55.9%.\nContent & Experiences ($ in millions) 3rd Quarter 2026 20256 Change Content & Experiences Revenue Media $5,359 $4,744 13.0% Excluding FIFA World Cup10 5,136 4,744 8.3% Studios 2,967 3,000 (1.1%) Theme Parks 2,597 2,717 (4.4%) Headquarters & Other 14 15 (8.8%) Eliminations (400) (579) 30.9% Total Content & Experiences Revenue $10,537 $9,898 6.5% Content & Experiences Adjusted EBITDA Media $769 $247 NM Studios 402 339 18.6% Theme Parks 780 940 (17.1%) Headquarters & Other (191) (204) 6.2% Eliminations 40 69 42.2% Total Content & Experiences Adjusted EBITDA $1,800 $1,392 29.3% NM=comparison not meaningful.\nRevenue for Content & Experiences increased compared to the prior year period primarily driven by Media, which included $224 million of incremental revenue from the FIFA World Cup. Adjusted EBITDA for Content & Experiences increased primarily due to growth in Media and Studios, partially offset by a decline in Theme Parks.\nMedia ($ in millions) 3rd Quarter 2026 20256 Change Revenue Domestic Advertising $1,783 $1,556 14.6% Excluding FIFA World Cup10 1,560 1,556 0.3% Domestic Distribution 2,069 1,690 22.4% International Networks 1,270 1,239 2.5% Other 236 259 (8.9%) Total Revenue $5,359 $4,744 13.0% Excluding FIFA World Cup10 5,136 4,744 8.3% Operating Expenses 4,590 4,497 2.1% Adjusted EBITDA $769 $247 NM NM=comparison not meaningful.\nRevenue for Media increased primarily due to higher domestic distribution and domestic advertising revenue. Excluding $224 million of incremental revenue from the FIFA World Cup, Media revenue increased 8.3%. Domestic advertising revenue increased primarily due to the impact of the FIFA World Cup. Excluding the incremental revenue associated with this event, domestic advertising revenue was consistent primarily reflecting higher revenue at Peacock, offset by lower revenue at our networks.\nDomestic distribution revenue increased primarily due to higher revenue at Peacock, driven by higher average rates and an increase in paid subscribers compared to the prior year period.\nAdjusted EBITDA for Media increased due to higher revenue partially offset by higher operating expenses. The increase in operating expenses was primarily driven by higher other expenses, partially offset by lower programming and production costs. Other expenses increased primarily due to costs related to Peacock. Programming and production costs decreased primarily due to lower programming costs at Peacock and our international networks, partially offset by costs associated with the FIFA World Cup. Media results include $1.8 billion of revenue and Adjusted EBITDA 11 of $261 million related to Peacock, which includes amounts attributable to the FIFA World Cup, compared to $1.4 billion of revenue and an Adjusted EBITDA11 loss of $217 million in the prior year period.\nStudios ($ in millions) 3rd Quarter 2026 20256 Change Revenue Content Licensing $1,553 $2,035 (23.7%) Theatrical 1,129 639 76.6% Other 285 326 (12.7%) Total Revenue $2,967 $3,000 (1.1%) Operating Expenses 2,565 2,661 (3.6%) Adjusted EBITDA $402 $339 18.6% Revenue for Studios decreased primarily due to lower content licensing revenue, partially offset by higher theatrical revenue. Content licensing revenue decreased primarily due to the timing of when content was made available by our television studios. Theatrical revenue increased primarily due to the successful performance of recent releases, including The Odyssey and Minions & Monsters, as well as the carryover benefit of Obsession.\nAdjusted EBITDA for Studios increased due to lower operating expenses, which more than offset lower revenue. The decrease in operating expenses was primarily driven by lower programming and production expenses, mainly due to lower content licensing sales at our television studios, partially offset by higher film costs, as well as lower marketing and promotion expenses due to the timing of spending on recent and upcoming theatrical film releases.\nTheme Parks ($ in millions) 3rd Quarter 2026 20256 Change Revenue $2,597 $2,717 (4.4%) Operating Expenses 1,817 1,777 2.3% Adjusted EBITDA $780 $940 (17.1%) Revenue for Theme Parks decreased primarily due to lower revenue from park admissions, including from the impact of increased promotional activity.\nAdjusted EBITDA for Theme Parks decreased reflecting lower revenue and higher operating expenses.\nThe increase in operating expenses was primarily due to operating costs associated with our domestic parks, partially offset by a decrease in operating costs at our international parks.\nHeadquarters & Other Content & Experiences Headquarters & Other includes overhead, personnel costs and costs associated with corporate initiatives. Headquarters & Other Adjusted EBITDA loss in the third quarter was $191 million, compared to a loss of $204 million in the prior year period.\nEliminations Amounts represent eliminations of transactions between our Content & Experiences segments, the most significant being content licensing between the Studios and Media segments, which are affected by the timing of recognition of content licenses. Revenue eliminations were $400 million, compared to $579 6\nmillion in the prior year period, and Adjusted EBITDA eliminations were a benefit of $40 million, compared to a benefit of $69 million in the prior year period.\nCorporate, Other and Eliminations ($ in millions) 3rd Quarter 2026 20256 Change Corporate & Other Revenue $341 $315 8.2% Operating Expenses 640 587 8.9% Adjusted EBITDA ($299) ($272) (9.7%) Eliminations Revenue ($1,242) ($1,273) (2.5%) Operating Expenses (1,260) (1,254) 0.5% Adjusted EBITDA $18 ($19) NM NM=comparison not meaningful.\nAmounts for 2025 exclude the impacts of Versant and our Sky operations in Germany. Amounts for 2026 exclude the impacts of our Sky operations in Germany through the date of sale. See Table 8 for the reconciliation to consolidated results.\nCorporate & Other Corporate & Other primarily includes overhead and personnel costs; our regional sports networks; and Comcast Spectacor, which owns the Philadelphia Flyers and the Xfinity Mobile Arena in Philadelphia, Pennsylvania. Corporate & Other Adjusted EBITDA decreased primarily reflecting lower revenue associated with our regional sports networks.\nEliminations Amounts represent eliminations of transactions between Connectivity & Platforms, Content & Experiences and other businesses, the most significant being distribution of television network programming between the Media and Residential Connectivity & Platforms segments. Revenue eliminations were $1.2 billion, compared to $1.3 billion in the prior year period, and Adjusted EBITDA eliminations were a benefit of $18 million compared to a loss of $19 million in the prior year period.\nNotes: 1 Certain financial information is presented on a pro forma basis in connection with the separation of Versant, which was completed on January 2, 2026 (the “Versant Separation”), and the sale of our Sky operations in Germany, which was completed on May 31, 2026 (the \"Sale\"). The pro forma financial measures are non-GAAP financial measures and are presented as if the Versant Separation and the Sale had both occurred on January 1, 2024. The pro forma information is primarily based on historical results of operations and includes pro forma adjustments in accordance with Article 11 of Regulation S- X that are directly attributable to the Versant Separation and the Sale. For the Versant Separation, this includes adjustments related to the commercial services agreement for the sale and use of Versant’s advertising and promotional inventory. This pro forma information is not necessarily indicative of future results. See Table 8 for reconciliations of non-GAAP financial measures.\n2 We define Adjusted Net Income and Adjusted EPS as net income attributable to Comcast Corporation and diluted earnings per common share attributable to Comcast Corporation shareholders, respectively, adjusted to exclude the effects of the amortization of acquisition-related intangible assets, investments that investors may want to evaluate separately (such as based on fair value) and the impact of certain events, gains, losses or other charges that affect period-over-period comparisons. See Table 5 for reconciliations of non-GAAP financial measures.\n3 We define Adjusted EBITDA as net income attributable to Comcast Corporation before net income (loss) attributable to noncontrolling interests, income tax expense, investment and other income (loss), net, interest expense, depreciation and amortization expense, and other operating gains and losses (such as impairment charges related to fixed and intangible assets and gains or losses on the sale of long-lived assets), if any. From time to time, we may exclude from Adjusted EBITDA the impact of certain events, gains, losses or other charges (such as significant legal settlements) that affect the period-to-period comparability of our operating performance. See Table 4 for reconciliation of non- GAAP financial measure.\n4 All earnings per share amounts are presented on a diluted basis.\n5 We define Free Cash Flow as net cash provided by operating activities (as stated in our Consolidated Statement of Cash Flows) reduced by capital expenditures and cash paid for intangible assets. From time to time, we may exclude from Free Cash Flow the impact of certain cash receipts or payments (such as significant legal settlements) that affect period-to-period comparability. Cash payments related to certain capital or intangible assets, such as the construction of Universal Beijing Resort, are presented separately in our Consolidated Statement of Cash Flows and are therefore excluded from capital expenditures and cash paid for intangible assets for Free Cash Flow. See Table 4 for reconciliation of non-GAAP financial measure.\n6 Beginning in the first quarter of 2026, we updated the composition of our segments to align with the segment-level information that is regularly provided to our chief operating decision maker, including (1) adjusting the Media segment to exclude the historical results of Versant; (2) reclassifying the results of our regional sports networks to Corporate and other from the Media segment; (3) reclassifying the results of Xumo, our streaming platform joint venture with Charter Communications, to the Residential Connectivity & Platforms segment from Corporate and other; (4) reclassifying certain shared expenses into the related Media, Studios and Theme Parks segments from Content & Experiences Headquarters & Other; and (5) adjusting the Media segment and Versant for the effects of our commercial services agreement. Prior periods have been reclassified to reflect the current year presentation.\n7 Constant currency growth rates are calculated by comparing the results for each comparable prior year period adjusted to reflect the average exchange rates from each current year period presented rather than the actual exchange rates that were in effect during the respective periods. See Table 6 for reconciliations of non-GAAP financial measures.\n8 Residential Connectivity & Platforms customer relationships and International Residential Connectivity & Platforms customer relationships were updated in the first quarter of 2026 due to a conforming change in methodology, resulting in a decrease of 125,000 customers. There was no impact to net additions and information for all periods have been recast on a comparable basis.\n9 Beginning in the first quarter of 2026, commission revenue from the sale of certain direct to consumer (“DTC”) streaming services is presented in domestic broadband revenue or video revenue based on whether a customer is entitled to receive the DTC streaming service through a broadband or video service offering. Domestic broadband revenue also includes revenue from streaming devices available 8\nto our broadband customers. Previously, all of these amounts were in video revenue. Prior periods have been reclassified to reflect the current year presentation.\n10 From time to time, we may present adjusted information (e.g., Adjusted Revenues) to exclude the impact of certain events, gains, losses or other charges affecting period-to-period comparability of our operating performance. See Table 7 for reconciliations of non-GAAP financial measures.\n11 Adjusted EBITDA is the measure of profit or loss for our segments. From time to time, we may present Adjusted EBITDA for components of our reportable segments, such as Peacock. We believe these measures are useful to evaluate our financial results and provide a basis of comparison to others, although our definition of Adjusted EBITDA may not be directly comparable to similar measures used by other companies. Adjusted EBITDA for components are presented on a consistent basis with the respective segments and disaggregated in accordance with GAAP.\nNumerical information is presented on a rounded basis using actual amounts, unless otherwise noted.\nThe change in Peacock paid subscribers is calculated using rounded paid subscriber amounts. Minor differences in totals and percentage calculations may exist due to rounding.\nConference Call and Other Information Comcast Corporation will host a conference call with the financial community today, October 22, 2026 , at 8:30 a.m.\nEastern Time (ET). The conference call and related materials will be broadcast live and posted on our Investor Relations website at www.cmcsa.com. A replay of the call will be available today, October 22, 2026, starting at 11:30 a.m. ET on the Investor Relations website.\nFrom time to time, we post information that may be of interest to investors on our website at www.cmcsa.com and on our corporate website, www.comcastcorporation.com. To automatically receive Comcast financial news by email, please visit www.cmcsa.com and subscribe to email alerts.\n### Investor Contacts: Press Contacts: Marci Ryvicker Marci_Ryvicker@Comcast.com Jennifer Khoury Jennifer_Khoury@Comcast.com (215) 531-3296 Jane Kearns Jane_Kearns@Comcast.com John Demming John_Demming@Comcast.com (215) 429-4744 ### Caution Concerning Forward-Looking Statements This press release includes statements that may constitute forward-looking statements. In evaluating these statements, readers should consider various factors, including the risks and uncertainties we describe in the “Risk Factors” sections of our most recent Annual Report on Form 10-K, our most recent Quarterly Report on Form 10-Q and other reports filed with the Securities and Exchange Commission (SEC). Factors that could cause our actual results to differ materially from these forward-looking statements include changes in and/or risks associated with: the competitive environment; consumer behavior; the advertising market; consumer acceptance of our content; programming costs; key distribution and/or licensing agreements; use and protection of our intellectual property; our reliance on third-party hardware, software and operational support; keeping pace with technological developments; cyber attacks, security breaches or technology disruptions; weak economic conditions; acquisitions and strategic initiatives; operating businesses internationally; natural disasters, severe weather-related and other uncontrollable events; loss of key personnel; labor disputes; significant tax liability if the separatio\n### Non-GAAP Financial Measures In this discussion, we sometimes refer to financial measures that are not presented according to generally accepted accounting principles in the U.S. (GAAP). Certain of these measures are considered “non-GAAP financial measures” under the SEC regulations; those rules require the supplemental explanations and reconciliations that are in Comcast’s Form 8-K (Quarterly Earnings Release) furnished to the SEC.\n### About Comcast Corporation Comcast Corporation (Nasdaq: CMCSA) is a global media and technology company. From the connectivity and platforms we provide, to the content and experiences we create, our businesses reach hundreds of millions of customers, viewers, and guests worldwide. We deliver world-class broadband, wireless, and video through Xfinity, Comcast Business, and Sky; produce, distribute, and stream leading entertainment, sports, and news through brands including NBC, Telemundo, Universal, Peacock, and Sky; and bring incredible theme parks and attractions to life through Universal Destinations & Experiences. Visit www.comcastcorporation.com for more information.\nTABLE 1 Condensed Consolidated Statements of Income (Unaudited) Three Months Ended Nine Months Ended (in millions, except per share data) September 30, September 30, 2026 2025 2026 2025 Revenue $29,298 $31,198 $90,695 $91,397 Costs and expenses Programming and production 7,515 8,655 26,789 24,646 Marketing and promotion 2,119 2,196 6,540 6,435 Other operating and administrative 10,645 10,795 31,498 31,109 Depreciation 2,385 2,353 7,108 6,934 Amortization 1,314 1,666 4,144 5,089 23,978 25,665 76,079 74,213 Operating income 5,320 5,534 14,616 17,184 Interest expense (962) (1,128) (3,108) (3,283) Investment and other income (loss), net Equity in net income (losses) of investees, net 129 (90) 23 (312) Realized and unrealized gains (losses) on equity securities, net (46) (60) (65) 52 Other income (loss), net 6 212 325 9,966 88 61 283 9,705 Income before income taxes 4,446 4,468 11,791 23,607 Income tax (expense) benefit (1,084) (1,218) (2,983) (6,017) Net income 3,362 3,249 8,807 17,590 Less: Net income (loss) attributable to noncontrolling interests (87) (83) (341) (241) Net income attributable to Comcast Corporation $3,448 $3,332 $9,148 $17,830 Diluted earnings per common share attributable to Comcast Corporation shareholders $0.97 $0.90 $2.55 $4.78 Diluted weighted-average number of common shares 3,562 3,689 3,583 3,733 11\nTABLE 2 Consolidated Statements of Cash Flows (Unaudited) Nine Months Ended (in millions) September 30, 2026 2025 OPERATING ACTIVITIES Net income $8,807 $17,590 Adjustments to reconcile net income to net cash provided by operating activities: Depreciation and amortization 11,252 12,023 Share-based compensation 1,134 1,014 Noncash interest expense (income), net 314 359 Net (gain) loss on investment activity and other (7) (9,282) Deferred income taxes 1,523 3,250 Changes in operating assets and liabilities, net of effects of acquisitions and divestitures: Current and noncurrent receivables, net (1,000) 716 Film and television costs, net 251 (168) Accounts payable and accrued expenses related to trade creditors 890 (135) Other operating assets and liabilities (278) (566) Net cash provided by operating activities 22,886 24,802 INVESTING ACTIVITIES Capital expenditures (8,311) (8,001) Cash paid for intangible assets (1,859) (1,934) Construction of Universal Beijing Resort — (3) Acquisitions, net of cash acquired — (1,279) Proceeds from sales of businesses and investments 128 644 Purchases of investments (668) (1,226) Other 461 80 Net cash (used in) investing activities (10,249) (11,720) FINANCING ACTIVITIES Proceeds from borrowings 1,990 2,494 Repurchases and repayments of debt (10,405) (4,366) Repurchases of common stock under repurchase program and employee plans (2,517) (5,618) Dividends paid (3,606) (3,685) Cash transferred to Versant, net (750) — Other (236) 51 Net cash (used\nTABLE 3 Condensed Consolidated Balance Sheets (Unaudited) (in millions) September 30, December 31, 2026 2025 ASSETS Current Assets Cash and cash equivalents $7,596 $9,481 Receivables, net 13,542 13,869 Other current assets 4,085 6,217 Total current assets 25,223 29,567 Film and television costs 11,095 12,214 Investments 7,860 7,952 Property and equipment, net 66,957 65,680 Goodwill 53,239 61,502 Franchise rights 59,365 59,365 Other intangible assets, net 19,073 22,474 Other noncurrent assets, net 14,956 13,877 $257,769 $272,631 LIABILITIES AND EQUITY Current Liabilities Accounts payable and accrued expenses related to trade creditors $11,932 $11,058 Deferred revenue 3,958 4,097 Accrued expenses and other current liabilities 11,269 12,410 Current portion of debt 3,560 5,958 Total current liabilities 30,719 33,524 Noncurrent portion of debt 83,806 92,979 Deferred income taxes 29,022 27,788 Other noncurrent liabilities 21,554 20,965 Redeemable noncontrolling interests 171 224 Equity Comcast Corporation shareholders' equity 92,529 96,903 Noncontrolling interests (33) 249 Total equity 92,497 97,151 $257,769 $272,631 13\nTABLE 4 Reconciliation from Net Income Attributable to Comcast Corporation to Adjusted EBITDA (Unaudited) Three Months Ended September 30, Nine Months Ended September 30, (in millions) 2026 2025 2026 2025 Net income attributable to Comcast Corporation $3,448 $3,332 $9,148 $17,830 Net income (loss) attributable to noncontrolling interests (87) (83) (341) (241) Income tax expense (benefit) 1,084 1,218 2,983 6,017 Interest expense 962 1,128 3,108 3,283 Investment and other (income) loss, net (88) (61) (283) (9,705) Depreciation 2,385 2,353 7,108 6,934 Amortization 1,314 1,666 4,144 5,089 Transaction costs(1) 22 26 73 82 Transaction-related costs(2) 4 90 4 166 Other adjustments (3) 61 — (7) 29 Adjusted EBITDA $9,106 $9,669 $25,938 $29,484 Reconciliation from Net Cash Provided by Operating Activities to Free Cash Flow (Unaudited) Three Months Ended September 30, Nine Months Ended September 30, (in millions) 2026 2025 2026 2025 Net cash provided by operating activities $7,902 $8,693 $22,886 $24,802 Capital expenditures (3,058) (3,071) (8,311) (8,001) Cash paid for capitalized software and other intangible assets (633) (677) (1,859) (1,934) Free Cash Flow $4,211 $4,945 $12,716 $14,866 (1) Transaction costs are incremental costs directly related to effectuating the Versant Separation and the proposed NBCUniversal Spin-off and primarily include advisory, legal and audit fees, as well as legal entity separation costs. The three and nine months ended September 30, 2026 include $22 milli\n(2) Transaction-related costs are incremental costs incurred related to the Versant Separation and the proposed NBCUniversal Spin-off, including costs that reflect strategic decisions about how the related stand-alone businesses will be structured or operated, which may be different than if they remained part of Comcast. Transaction-related costs primarily include certain separation-related employee compensation, severance and retention bonuses; IT separation and implementation costs; and other one-time costs. The three and nine months ended September 30, 2026 include $4 million of transaction-related costs related to the proposed NBCUniversal Spin-off. The three and nine months ended September 30, 2025 include $90 million and $166 million, respectively, of transaction-related costs related to the Versant Separation.\n(3) Amounts represent the impact of certain other events, gains, losses or other charges that are excluded from Adjusted EBITDA. The three and nine months ended September 30, 2026 include certain share-based compensation expenses and costs related to our investment portfolio. The nine months ended September 30, 2026 also include a gain related to a legal settlement. The three and nine months ended September 30, 2025 include costs related to our investment portfolio.\nTABLE 5 Reconciliations of Adjusted Net Income and Adjusted EPS (Unaudited) Three Months Ended September 30, Nine Months Ended September 30, 2026 2025 2026 2025 (in millions, except per share data) $ EPS $ EPS $ EPS $ EPS Net income attributable to Comcast Corporation and diluted earnings per share attributable to Comcast Corporation shareholders $3,448 $0.97 $3,332 $0.90 $9,148 $2.55 $17,830 $4.78 Change 3.5% 7.2% (48.7%) (46.5%) Amortization of acquisition-related intangible assets(1) 402 0.11 633 0.17 1,211 0.34 1,861 0.50 Investments(2) (95) (0.03) 43 0.01 (88) (0.02) 79 0.02 Items affecting period-over-period comparability: Long-lived asset impairments(3) — — — — 130 0.04 155 0.04 Transaction costs(4) 19 0.01 23 0.01 64 0.02 72 0.02 Transaction-related costs(5) 4 — 79 0.02 4 — 146 0.04 Sale of Sky operations in Germany(6) — — — — (68) (0.02) — — Gain related to investment(7) — — 15 — — — (7,057) (1.89) Tax benefit from internal corporate reorganization(8) — — — — — — (177) (0.05) Other adjustments(9) 46 0.01 — — (2) — — — Adjusted Net income and Adjusted EPS $3,824 $1.07 $4,125 $1.12 $10,398 $2.90 $12,909 $3.46 Change (7.3%) (4.0%) (19.5%) (16.1%) (1) Acquisition-related intangible assets are recognized as a result of the application of Accounting Standards Codification Topic 805, Business Combinations (such as customer relationships), and their amortization is significantly affected by the size and timing of our acquisitions. Amortization of intangible assets not result\nThree Months Ended September 30, Nine Months Ended September 30, 2026 2025 2026 2025 Amortization of acquisition-related intangible assets before income taxes $524 $824 $1,576 $2,424 Amortization of acquisition-related intangible assets, net of tax $402 $633 $1,211 $1,861 (2) Adjustments for investments include realized and unrealized (gains) losses on equity securities, net (as stated in Table 1), as well as the equity in net (income) losses of investees, net, for certain equity method investments, including Atairos and Hulu and costs related to our investment portfolio.",
+      "image_url": "",
+      "evidence": [
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page1-p001",
+          "text": "COMCAST REPORTS 3rd QUARTER 2026 RESULTS PHILADELPHIA - October 22, 2026 … Comcast Corporation (NASDAQ: CMCSA) today reported results for the quarter ended September 30, 2026.",
+          "locator": "page1-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=1"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page1-p002",
+          "text": "“We are taking decisive steps to strengthen our businesses and unlock the full potential of their structural advantages,\" said Brian L. Roberts and Mike Cavanagh, co-CEOs of Comcast Corporation. \" In Connectivity & Platforms, our near-term financial results reflect the investments we're making to navigate an increasingly dynamic environment. We're encouraged by improving customer satisfaction, strong conversion of free wireless lines to paid relationships, growing adoption of premium wireless plans across our 10.6 million total wireless lines and healthy growth in Business Services, led by Enterprise, where there is substantial opportunity ahead. At the same time, we're transforming our operations to move faster, improve efficiency and fully capitalize on the strength of our businesses. In Content & Experiences, Peacock delivered its second consecutive profitable quarter, generating $261 million in Adjusted EBITDA on $1.8 billion in revenue, driven by strong growth in distribution, while Universal surpassed $5 billion at the global box office, led by the record-breaking success of The Odyssey, now Universal's highest-grossing film of all time. Despite near-term cyclical headwinds in Theme Parks, we remain confident in the business's long-term growth potential. We generated $4.2 billion in free cash flow and are making meaningful progress on the separation of NBCUniversal and Sky, which remains on track to create two independent companies with the financial strength and flexib",
+          "locator": "page1-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=1"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page1-p003",
+          "text": "3rd Quarter 2026 Highlights: • Generated Consolidated Adjusted EBITDA of $9.1 Billion, Adjusted EPS of $1.07 and Free Cash Flow of $4.2 Billion • Paid $1.2 Billion in Dividend Payments to Shareholders • Domestic Wireless Customer Line Net Additions Were 368,000 and 1.6 Million Over the Last 12 Months; Total Wireless Lines Increased to 10.6 Million, Reaching Nearly 18% Penetration of Our Domestic Residential Broadband Customers and 7% of Total Addressable Wireless Lines in Our Footprint • Continued to Drive Adoption of Higher-Value Products; Nearly 45% of Our Broadband Customers Are Now on Gig-Plus Speed Tiers, Up Nearly 10 Percentage Points Year-over-Year, and Premium Unlimited Plans Represented Approximately 40% of Postpaid Phone Connects • Launched Xfinity Shield, a First-of-its-Kind Platform That Transforms Xfinity Wi-Fi into an Always-On Layer of Cybersecurity, Home and Family Protection • Business Services Connectivity Revenue Increased 2.7% to $2.6 Billion, EBITDA Increased 1.7% to $1.5 Billion and EBITDA Margin Was 55.9% • Peacock Delivered EBITDA of $261 Million, Increasing $478 Million Year-over-Year; Paid Subscribers Increased 17% Year-over-Year to 48 Million",
+          "locator": "page1-p003",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=1"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page2-p001",
+          "text": "• The Odyssey Premiered in July and Became Universal's Highest Grossing Film of All Time with Nearly $1.8 Billion in Worldwide Box Office Year-to-Date; Universal Became the First Studio to Reach $5 Billion at the Global Box Office in 2026; Studios EBITDA Increased 18.6% to $402 Million • Opened Fast & Furious: Hollywood Drift at Universal Studios Hollywood, the Park's First-Ever High- Speed Outdoor Roller Coaster and the Fastest Roller Coaster in the Universal Destinations & Experiences Portfolio 3rd Quarter Consolidated Financial Results \\ Revenue decreased 6.1% compared to the prior year period. Net Income Attributable to Comcast increased 3.5%. Adjusted Net Income decreased 7.3%. Adjusted EBITDA decreased 5.8%. On a pro forma basis to reflect the Versant separation, which was completed on January 2, 2026, and the sale of our Sky operations in Germany, which was completed on May 31, 2026, revenue and Adjusted EBITDA were consistent with the prior year period.",
+          "locator": "page2-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=2"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page2-p002",
+          "text": "Earnings per Share (EPS) increased 7.2% to $0.97. Adjusted EPS decreased 4.0% to $1.07.",
+          "locator": "page2-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=2"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page2-p003",
+          "text": "Capital Expenditures were consistent at $3.1 billion. Connectivity & Platforms’ capital expenditures increased 3.6% to $2.4 billion, primarily reflecting higher spending on customer premise equipment.",
+          "locator": "page2-p003",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=2"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page2-p004",
+          "text": "Content & Experiences' capital expenditures decreased 10.6% to $639 million.",
+          "locator": "page2-p004",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=2"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page2-p005",
+          "text": "Net Cash Provided by Operating Activities was $7.9 billion. Free Cash Flow was $4.2 billion.",
+          "locator": "page2-p005",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=2"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page2-p006",
+          "text": "Dividends. Comcast paid dividends totaling $1.2 billion. As previously announced, Comcast suspended its share repurchase program beginning in the third quarter and expects the pause to remain in place through the proposed separation of its businesses into two independent publicly traded companies.",
+          "locator": "page2-p006",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=2"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page2-p007",
+          "text": "Connectivity & Platforms ($ in millions) Constant Currency Change7 3rd Quarter 2026 20256 Change Connectivity & Platforms Revenue Residential Connectivity & Platforms $17,018 $17,636 (3.5%) (3.4%) Business Services Connectivity 2,645 2,576 2.7% 2.7% Total Connectivity & Platforms Revenue $19,663 $20,212 (2.7%) (2.6%) Connectivity & Platforms Adjusted EBITDA Residential Connectivity & Platforms $6,110 $6,484 (5.8%) (5.8%) Business Services Connectivity 1,478 1,454 1.7% 1.7% Total Connectivity & Platforms Adjusted EBITDA $7,588 $7,938 (4.4%) (4.4%) Connectivity & Platforms Adjusted EBITDA Margin Residential Connectivity & Platforms 35.9% 36.8% (90) bps (90) bps Business Services Connectivity 55.9% 56.4% (50) bps (50) bps Total Connectivity & Platforms Adjusted EBITDA Margin 38.6% 39.3% (70) bps (70) bps Change percentages represent year/year growth rates. The changes in Adjusted EBITDA margins are presented as year/year basis point changes in the rounded Adjusted EBITDA margins.",
+          "locator": "page2-p007",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=2"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page2-p008",
+          "text": "Revenue for Connectivity & Platforms decreased compared to the prior year period. Adjusted EBITDA decreased due to a decline in Residential Connectivity & Platforms, partially offset by growth in Business Services Connectivity. Residential Connectivity & Platforms revenue and Adjusted EBITDA performance reflect the investment in our go-to-market strategy. Adjusted EBITDA margin was 38.6%.",
+          "locator": "page2-p008",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=2"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page3-p001",
+          "text": "(in thousands) Net Additions / (Losses) 3rd Quarter 3Q26 3Q25 2026 2025 Residential Connectivity & Platforms Customer Relationships Domestic Residential Connectivity & Platforms Customer Relationships 30,040 30,642 (139) (103) International Residential Connectivity & Platforms Customer Relationships8 17,712 17,477 173 (95) Total Residential Connectivity & Platforms Customer Relationships8 47,751 48,120 33 (199) Total Domestic Broadband Residential Customers 28,343 28,897 (144) (91) Total Domestic Wireless Lines 10,555 8,941 368 414 Total Domestic Video Customers 10,394 11,515 (274) (257) Total Customer Relationships for Residential Connectivity & Platforms increased by 33,000 to 47.8 million, reflecting an increase in international residential customer relationships, partially offset by a decrease in domestic residential customer relationships. Total domestic broadband residential customer net losses were 144,000, total domestic wireless line net additions were 368,000 and total domestic video customer net losses were 274,000.",
+          "locator": "page3-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=3"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page3-p002",
+          "text": "Residential Connectivity & Platforms ($ in millions) Constant Currency Change7 3rd Quarter 2026 20256, 9 Change Revenue Domestic Broadband $6,241 $6,550 (4.7%) (4.7%) Domestic Wireless Service 1,050 915 14.7% 14.7% Domestic Convergence Revenue 7,292 7,466 (2.3%) (2.3%) Domestic Wireless Equipment 475 331 43.6% 43.6% International Connectivity 1,314 1,275 3.1% 3.5% Total Residential Connectivity 9,081 9,071 0.1% 0.2% Video 5,910 6,475 (8.7%) (8.5%) Advertising 918 893 2.9% 3.1% Other 1,109 1,197 (7.3%) (7.2%) Total Revenue $17,018 $17,636 (3.5%) (3.4%) Operating Expenses Programming $3,624 $3,952 (8.3%) (8.1%) Non-Programming 7,284 7,200 1.2% 1.4% Total Operating Expenses $10,908 $11,152 (2.2%) (2.0%) Adjusted EBITDA $6,110 $6,484 (5.8%) (5.8%) Adjusted EBITDA Margin 35.9% 36.8% (90) bps (90) bps Change percentages represent year/year growth rates. The changes in Adjusted EBITDA margins are presented as year/year basis point changes in the rounded Adjusted EBITDA margins.",
+          "locator": "page3-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=3"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page3-p003",
+          "text": "Revenue for Residential Connectivity & Platforms decreased compared to the prior year period, primarily reflecting lower video and domestic broadband revenue, partially offset by higher domestic wireless equipment, domestic wireless service, international connectivity and advertising revenue. Domestic broadband revenue decreased due to lower average rates and a decline in the number of domestic broadband customers. Domestic wireless service revenue increased, reflecting growth in the customer base and the conversion of promotional free lines to paid service. Domestic wireless equipment revenue increased, driven by higher device sales. International connectivity revenue increased due to higher wireless revenue, primarily reflecting higher equipment revenue. Video revenue decreased primarily due to a decline in the number of video customers. Advertising revenue increased primarily due to higher domestic political advertising and higher revenue from our advanced advertising business, partially offset by lower international advertising and lower domestic nonpolitical advertising. Other revenue decreased primarily due to lower residential wireline voice revenue, driven by a decline in the number of customers.",
+          "locator": "page3-p003",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=3"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page4-p001",
+          "text": "Adjusted EBITDA for Residential Connectivity & Platforms decreased due to lower revenue, partially offset by lower operating expenses. Programming expenses decreased primarily due to a decline in the number of domestic video customers. Non-programming expenses increased primarily reflecting an increase in direct product costs, mainly due to growth in our domestic wireless business, partially offset by lower technical and support costs. Adjusted EBITDA margin was 35.9%.",
+          "locator": "page4-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=4"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page4-p002",
+          "text": "Business Services Connectivity ($ in millions) Constant Currency Change7 3rd Quarter 2026 2025 Change Revenue $2,645 $2,576 2.7% 2.7% Operating Expenses 1,167 1,122 4.0% 4.0% Adjusted EBITDA $1,478 $1,454 1.7% 1.7% Adjusted EBITDA Margin 55.9% 56.4% (50) bps (50) bps Change percentages represent year/year growth rates. The changes in Adjusted EBITDA margins are presented as year/year basis point changes in the rounded Adjusted EBITDA margins.",
+          "locator": "page4-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=4"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page4-p003",
+          "text": "Revenue for Business Services Connectivity increased primarily due to an increase in revenue from enterprise solutions offerings.",
+          "locator": "page4-p003",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=4"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page4-p004",
+          "text": "Adjusted EBITDA for Business Services Connectivity increased due to higher revenue, partially offset by higher operating expenses. The increase in operating expenses was primarily due to increases in direct product costs and marketing and promotion expenses. Adjusted EBITDA margin was 55.9%.",
+          "locator": "page4-p004",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=4"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page5-p001",
+          "text": "Content & Experiences ($ in millions) 3rd Quarter 2026 20256 Change Content & Experiences Revenue Media $5,359 $4,744 13.0% Excluding FIFA World Cup10 5,136 4,744 8.3% Studios 2,967 3,000 (1.1%) Theme Parks 2,597 2,717 (4.4%) Headquarters & Other 14 15 (8.8%) Eliminations (400) (579) 30.9% Total Content & Experiences Revenue $10,537 $9,898 6.5% Content & Experiences Adjusted EBITDA Media $769 $247 NM Studios 402 339 18.6% Theme Parks 780 940 (17.1%) Headquarters & Other (191) (204) 6.2% Eliminations 40 69 42.2% Total Content & Experiences Adjusted EBITDA $1,800 $1,392 29.3% NM=comparison not meaningful.",
+          "locator": "page5-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=5"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page5-p002",
+          "text": "Revenue for Content & Experiences increased compared to the prior year period primarily driven by Media, which included $224 million of incremental revenue from the FIFA World Cup. Adjusted EBITDA for Content & Experiences increased primarily due to growth in Media and Studios, partially offset by a decline in Theme Parks.",
+          "locator": "page5-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=5"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page5-p003",
+          "text": "Media ($ in millions) 3rd Quarter 2026 20256 Change Revenue Domestic Advertising $1,783 $1,556 14.6% Excluding FIFA World Cup10 1,560 1,556 0.3% Domestic Distribution 2,069 1,690 22.4% International Networks 1,270 1,239 2.5% Other 236 259 (8.9%) Total Revenue $5,359 $4,744 13.0% Excluding FIFA World Cup10 5,136 4,744 8.3% Operating Expenses 4,590 4,497 2.1% Adjusted EBITDA $769 $247 NM NM=comparison not meaningful.",
+          "locator": "page5-p003",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=5"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page5-p004",
+          "text": "Revenue for Media increased primarily due to higher domestic distribution and domestic advertising revenue. Excluding $224 million of incremental revenue from the FIFA World Cup, Media revenue increased 8.3%. Domestic advertising revenue increased primarily due to the impact of the FIFA World Cup. Excluding the incremental revenue associated with this event, domestic advertising revenue was consistent primarily reflecting higher revenue at Peacock, offset by lower revenue at our networks.",
+          "locator": "page5-p004",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=5"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page5-p005",
+          "text": "Domestic distribution revenue increased primarily due to higher revenue at Peacock, driven by higher average rates and an increase in paid subscribers compared to the prior year period.",
+          "locator": "page5-p005",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=5"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page6-p001",
+          "text": "Adjusted EBITDA for Media increased due to higher revenue partially offset by higher operating expenses. The increase in operating expenses was primarily driven by higher other expenses, partially offset by lower programming and production costs. Other expenses increased primarily due to costs related to Peacock. Programming and production costs decreased primarily due to lower programming costs at Peacock and our international networks, partially offset by costs associated with the FIFA World Cup. Media results include $1.8 billion of revenue and Adjusted EBITDA 11 of $261 million related to Peacock, which includes amounts attributable to the FIFA World Cup, compared to $1.4 billion of revenue and an Adjusted EBITDA11 loss of $217 million in the prior year period.",
+          "locator": "page6-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=6"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page6-p002",
+          "text": "Studios ($ in millions) 3rd Quarter 2026 20256 Change Revenue Content Licensing $1,553 $2,035 (23.7%) Theatrical 1,129 639 76.6% Other 285 326 (12.7%) Total Revenue $2,967 $3,000 (1.1%) Operating Expenses 2,565 2,661 (3.6%) Adjusted EBITDA $402 $339 18.6% Revenue for Studios decreased primarily due to lower content licensing revenue, partially offset by higher theatrical revenue. Content licensing revenue decreased primarily due to the timing of when content was made available by our television studios. Theatrical revenue increased primarily due to the successful performance of recent releases, including The Odyssey and Minions & Monsters, as well as the carryover benefit of Obsession.",
+          "locator": "page6-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=6"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page6-p003",
+          "text": "Adjusted EBITDA for Studios increased due to lower operating expenses, which more than offset lower revenue. The decrease in operating expenses was primarily driven by lower programming and production expenses, mainly due to lower content licensing sales at our television studios, partially offset by higher film costs, as well as lower marketing and promotion expenses due to the timing of spending on recent and upcoming theatrical film releases.",
+          "locator": "page6-p003",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=6"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page6-p004",
+          "text": "Theme Parks ($ in millions) 3rd Quarter 2026 20256 Change Revenue $2,597 $2,717 (4.4%) Operating Expenses 1,817 1,777 2.3% Adjusted EBITDA $780 $940 (17.1%) Revenue for Theme Parks decreased primarily due to lower revenue from park admissions, including from the impact of increased promotional activity.",
+          "locator": "page6-p004",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=6"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page6-p005",
+          "text": "Adjusted EBITDA for Theme Parks decreased reflecting lower revenue and higher operating expenses.",
+          "locator": "page6-p005",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=6"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page6-p006",
+          "text": "The increase in operating expenses was primarily due to operating costs associated with our domestic parks, partially offset by a decrease in operating costs at our international parks.",
+          "locator": "page6-p006",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=6"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page6-p007",
+          "text": "Headquarters & Other Content & Experiences Headquarters & Other includes overhead, personnel costs and costs associated with corporate initiatives. Headquarters & Other Adjusted EBITDA loss in the third quarter was $191 million, compared to a loss of $204 million in the prior year period.",
+          "locator": "page6-p007",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=6"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page6-p008",
+          "text": "Eliminations Amounts represent eliminations of transactions between our Content & Experiences segments, the most significant being content licensing between the Studios and Media segments, which are affected by the timing of recognition of content licenses. Revenue eliminations were $400 million, compared to $579 6",
+          "locator": "page6-p008",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=6"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page7-p001",
+          "text": "million in the prior year period, and Adjusted EBITDA eliminations were a benefit of $40 million, compared to a benefit of $69 million in the prior year period.",
+          "locator": "page7-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=7"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page7-p002",
+          "text": "Corporate, Other and Eliminations ($ in millions) 3rd Quarter 2026 20256 Change Corporate & Other Revenue $341 $315 8.2% Operating Expenses 640 587 8.9% Adjusted EBITDA ($299) ($272) (9.7%) Eliminations Revenue ($1,242) ($1,273) (2.5%) Operating Expenses (1,260) (1,254) 0.5% Adjusted EBITDA $18 ($19) NM NM=comparison not meaningful.",
+          "locator": "page7-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=7"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page7-p003",
+          "text": "Amounts for 2025 exclude the impacts of Versant and our Sky operations in Germany. Amounts for 2026 exclude the impacts of our Sky operations in Germany through the date of sale. See Table 8 for the reconciliation to consolidated results.",
+          "locator": "page7-p003",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=7"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page7-p004",
+          "text": "Corporate & Other Corporate & Other primarily includes overhead and personnel costs; our regional sports networks; and Comcast Spectacor, which owns the Philadelphia Flyers and the Xfinity Mobile Arena in Philadelphia, Pennsylvania. Corporate & Other Adjusted EBITDA decreased primarily reflecting lower revenue associated with our regional sports networks.",
+          "locator": "page7-p004",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=7"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page7-p005",
+          "text": "Eliminations Amounts represent eliminations of transactions between Connectivity & Platforms, Content & Experiences and other businesses, the most significant being distribution of television network programming between the Media and Residential Connectivity & Platforms segments. Revenue eliminations were $1.2 billion, compared to $1.3 billion in the prior year period, and Adjusted EBITDA eliminations were a benefit of $18 million compared to a loss of $19 million in the prior year period.",
+          "locator": "page7-p005",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=7"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page8-p001",
+          "text": "Notes: 1 Certain financial information is presented on a pro forma basis in connection with the separation of Versant, which was completed on January 2, 2026 (the “Versant Separation”), and the sale of our Sky operations in Germany, which was completed on May 31, 2026 (the \"Sale\"). The pro forma financial measures are non-GAAP financial measures and are presented as if the Versant Separation and the Sale had both occurred on January 1, 2024. The pro forma information is primarily based on historical results of operations and includes pro forma adjustments in accordance with Article 11 of Regulation S- X that are directly attributable to the Versant Separation and the Sale. For the Versant Separation, this includes adjustments related to the commercial services agreement for the sale and use of Versant’s advertising and promotional inventory. This pro forma information is not necessarily indicative of future results. See Table 8 for reconciliations of non-GAAP financial measures.",
+          "locator": "page8-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=8"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page8-p002",
+          "text": "2 We define Adjusted Net Income and Adjusted EPS as net income attributable to Comcast Corporation and diluted earnings per common share attributable to Comcast Corporation shareholders, respectively, adjusted to exclude the effects of the amortization of acquisition-related intangible assets, investments that investors may want to evaluate separately (such as based on fair value) and the impact of certain events, gains, losses or other charges that affect period-over-period comparisons. See Table 5 for reconciliations of non-GAAP financial measures.",
+          "locator": "page8-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=8"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page8-p003",
+          "text": "3 We define Adjusted EBITDA as net income attributable to Comcast Corporation before net income (loss) attributable to noncontrolling interests, income tax expense, investment and other income (loss), net, interest expense, depreciation and amortization expense, and other operating gains and losses (such as impairment charges related to fixed and intangible assets and gains or losses on the sale of long-lived assets), if any. From time to time, we may exclude from Adjusted EBITDA the impact of certain events, gains, losses or other charges (such as significant legal settlements) that affect the period-to-period comparability of our operating performance. See Table 4 for reconciliation of non- GAAP financial measure.",
+          "locator": "page8-p003",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=8"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page8-p004",
+          "text": "4 All earnings per share amounts are presented on a diluted basis.",
+          "locator": "page8-p004",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=8"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page8-p005",
+          "text": "5 We define Free Cash Flow as net cash provided by operating activities (as stated in our Consolidated Statement of Cash Flows) reduced by capital expenditures and cash paid for intangible assets. From time to time, we may exclude from Free Cash Flow the impact of certain cash receipts or payments (such as significant legal settlements) that affect period-to-period comparability. Cash payments related to certain capital or intangible assets, such as the construction of Universal Beijing Resort, are presented separately in our Consolidated Statement of Cash Flows and are therefore excluded from capital expenditures and cash paid for intangible assets for Free Cash Flow. See Table 4 for reconciliation of non-GAAP financial measure.",
+          "locator": "page8-p005",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=8"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page8-p006",
+          "text": "6 Beginning in the first quarter of 2026, we updated the composition of our segments to align with the segment-level information that is regularly provided to our chief operating decision maker, including (1) adjusting the Media segment to exclude the historical results of Versant; (2) reclassifying the results of our regional sports networks to Corporate and other from the Media segment; (3) reclassifying the results of Xumo, our streaming platform joint venture with Charter Communications, to the Residential Connectivity & Platforms segment from Corporate and other; (4) reclassifying certain shared expenses into the related Media, Studios and Theme Parks segments from Content & Experiences Headquarters & Other; and (5) adjusting the Media segment and Versant for the effects of our commercial services agreement. Prior periods have been reclassified to reflect the current year presentation.",
+          "locator": "page8-p006",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=8"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page8-p007",
+          "text": "7 Constant currency growth rates are calculated by comparing the results for each comparable prior year period adjusted to reflect the average exchange rates from each current year period presented rather than the actual exchange rates that were in effect during the respective periods. See Table 6 for reconciliations of non-GAAP financial measures.",
+          "locator": "page8-p007",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=8"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page8-p008",
+          "text": "8 Residential Connectivity & Platforms customer relationships and International Residential Connectivity & Platforms customer relationships were updated in the first quarter of 2026 due to a conforming change in methodology, resulting in a decrease of 125,000 customers. There was no impact to net additions and information for all periods have been recast on a comparable basis.",
+          "locator": "page8-p008",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=8"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page8-p009",
+          "text": "9 Beginning in the first quarter of 2026, commission revenue from the sale of certain direct to consumer (“DTC”) streaming services is presented in domestic broadband revenue or video revenue based on whether a customer is entitled to receive the DTC streaming service through a broadband or video service offering. Domestic broadband revenue also includes revenue from streaming devices available 8",
+          "locator": "page8-p009",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=8"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page9-p001",
+          "text": "to our broadband customers. Previously, all of these amounts were in video revenue. Prior periods have been reclassified to reflect the current year presentation.",
+          "locator": "page9-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=9"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page9-p002",
+          "text": "10 From time to time, we may present adjusted information (e.g., Adjusted Revenues) to exclude the impact of certain events, gains, losses or other charges affecting period-to-period comparability of our operating performance. See Table 7 for reconciliations of non-GAAP financial measures.",
+          "locator": "page9-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=9"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page9-p003",
+          "text": "11 Adjusted EBITDA is the measure of profit or loss for our segments. From time to time, we may present Adjusted EBITDA for components of our reportable segments, such as Peacock. We believe these measures are useful to evaluate our financial results and provide a basis of comparison to others, although our definition of Adjusted EBITDA may not be directly comparable to similar measures used by other companies. Adjusted EBITDA for components are presented on a consistent basis with the respective segments and disaggregated in accordance with GAAP.",
+          "locator": "page9-p003",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=9"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page9-p004",
+          "text": "Numerical information is presented on a rounded basis using actual amounts, unless otherwise noted.",
+          "locator": "page9-p004",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=9"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page9-p005",
+          "text": "The change in Peacock paid subscribers is calculated using rounded paid subscriber amounts. Minor differences in totals and percentage calculations may exist due to rounding.",
+          "locator": "page9-p005",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=9"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page9-p006",
+          "text": "Conference Call and Other Information Comcast Corporation will host a conference call with the financial community today, October 22, 2026 , at 8:30 a.m.",
+          "locator": "page9-p006",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=9"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page9-p007",
+          "text": "Eastern Time (ET). The conference call and related materials will be broadcast live and posted on our Investor Relations website at www.cmcsa.com. A replay of the call will be available today, October 22, 2026, starting at 11:30 a.m. ET on the Investor Relations website.",
+          "locator": "page9-p007",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=9"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page9-p008",
+          "text": "From time to time, we post information that may be of interest to investors on our website at www.cmcsa.com and on our corporate website, www.comcastcorporation.com. To automatically receive Comcast financial news by email, please visit www.cmcsa.com and subscribe to email alerts.",
+          "locator": "page9-p008",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=9"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page9-p009",
+          "text": "### Investor Contacts: Press Contacts: Marci Ryvicker Marci_Ryvicker@Comcast.com Jennifer Khoury Jennifer_Khoury@Comcast.com (215) 531-3296 Jane Kearns Jane_Kearns@Comcast.com John Demming John_Demming@Comcast.com (215) 429-4744 ### Caution Concerning Forward-Looking Statements This press release includes statements that may constitute forward-looking statements. In evaluating these statements, readers should consider various factors, including the risks and uncertainties we describe in the “Risk Factors” sections of our most recent Annual Report on Form 10-K, our most recent Quarterly Report on Form 10-Q and other reports filed with the Securities and Exchange Commission (SEC). Factors that could cause our actual results to differ materially from these forward-looking statements include changes in and/or risks associated with: the competitive environment; consumer behavior; the advertising market; consumer acceptance of our content; programming costs; key distribution and/or licensing agreements; use and protection of our intellectual property; our reliance on third-party hardware, software and operational support; keeping pace with technological developments; cyber attacks, security breaches or technology disruptions; weak economic conditions; acquisitions and strategic initiatives; operating businesses internationally; natural disasters, severe weather-related and other uncontrollable events; loss of key personnel; labor disputes; significant tax liability if the separatio",
+          "locator": "page9-p009",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=9"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page9-p010",
+          "text": "### Non-GAAP Financial Measures In this discussion, we sometimes refer to financial measures that are not presented according to generally accepted accounting principles in the U.S. (GAAP). Certain of these measures are considered “non-GAAP financial measures” under the SEC regulations; those rules require the supplemental explanations and reconciliations that are in Comcast’s Form 8-K (Quarterly Earnings Release) furnished to the SEC.",
+          "locator": "page9-p010",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=9"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page10-p001",
+          "text": "### About Comcast Corporation Comcast Corporation (Nasdaq: CMCSA) is a global media and technology company. From the connectivity and platforms we provide, to the content and experiences we create, our businesses reach hundreds of millions of customers, viewers, and guests worldwide. We deliver world-class broadband, wireless, and video through Xfinity, Comcast Business, and Sky; produce, distribute, and stream leading entertainment, sports, and news through brands including NBC, Telemundo, Universal, Peacock, and Sky; and bring incredible theme parks and attractions to life through Universal Destinations & Experiences. Visit www.comcastcorporation.com for more information.",
+          "locator": "page10-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=10"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page11-p001",
+          "text": "TABLE 1 Condensed Consolidated Statements of Income (Unaudited) Three Months Ended Nine Months Ended (in millions, except per share data) September 30, September 30, 2026 2025 2026 2025 Revenue $29,298 $31,198 $90,695 $91,397 Costs and expenses Programming and production 7,515 8,655 26,789 24,646 Marketing and promotion 2,119 2,196 6,540 6,435 Other operating and administrative 10,645 10,795 31,498 31,109 Depreciation 2,385 2,353 7,108 6,934 Amortization 1,314 1,666 4,144 5,089 23,978 25,665 76,079 74,213 Operating income 5,320 5,534 14,616 17,184 Interest expense (962) (1,128) (3,108) (3,283) Investment and other income (loss), net Equity in net income (losses) of investees, net 129 (90) 23 (312) Realized and unrealized gains (losses) on equity securities, net (46) (60) (65) 52 Other income (loss), net 6 212 325 9,966 88 61 283 9,705 Income before income taxes 4,446 4,468 11,791 23,607 Income tax (expense) benefit (1,084) (1,218) (2,983) (6,017) Net income 3,362 3,249 8,807 17,590 Less: Net income (loss) attributable to noncontrolling interests (87) (83) (341) (241) Net income attributable to Comcast Corporation $3,448 $3,332 $9,148 $17,830 Diluted earnings per common share attributable to Comcast Corporation shareholders $0.97 $0.90 $2.55 $4.78 Diluted weighted-average number of common shares 3,562 3,689 3,583 3,733 11",
+          "locator": "page11-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=11"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page12-p001",
+          "text": "TABLE 2 Consolidated Statements of Cash Flows (Unaudited) Nine Months Ended (in millions) September 30, 2026 2025 OPERATING ACTIVITIES Net income $8,807 $17,590 Adjustments to reconcile net income to net cash provided by operating activities: Depreciation and amortization 11,252 12,023 Share-based compensation 1,134 1,014 Noncash interest expense (income), net 314 359 Net (gain) loss on investment activity and other (7) (9,282) Deferred income taxes 1,523 3,250 Changes in operating assets and liabilities, net of effects of acquisitions and divestitures: Current and noncurrent receivables, net (1,000) 716 Film and television costs, net 251 (168) Accounts payable and accrued expenses related to trade creditors 890 (135) Other operating assets and liabilities (278) (566) Net cash provided by operating activities 22,886 24,802 INVESTING ACTIVITIES Capital expenditures (8,311) (8,001) Cash paid for intangible assets (1,859) (1,934) Construction of Universal Beijing Resort — (3) Acquisitions, net of cash acquired — (1,279) Proceeds from sales of businesses and investments 128 644 Purchases of investments (668) (1,226) Other 461 80 Net cash (used in) investing activities (10,249) (11,720) FINANCING ACTIVITIES Proceeds from borrowings 1,990 2,494 Repurchases and repayments of debt (10,405) (4,366) Repurchases of common stock under repurchase program and employee plans (2,517) (5,618) Dividends paid (3,606) (3,685) Cash transferred to Versant, net (750) — Other (236) 51 Net cash (used",
+          "locator": "page12-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=12"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page13-p001",
+          "text": "TABLE 3 Condensed Consolidated Balance Sheets (Unaudited) (in millions) September 30, December 31, 2026 2025 ASSETS Current Assets Cash and cash equivalents $7,596 $9,481 Receivables, net 13,542 13,869 Other current assets 4,085 6,217 Total current assets 25,223 29,567 Film and television costs 11,095 12,214 Investments 7,860 7,952 Property and equipment, net 66,957 65,680 Goodwill 53,239 61,502 Franchise rights 59,365 59,365 Other intangible assets, net 19,073 22,474 Other noncurrent assets, net 14,956 13,877 $257,769 $272,631 LIABILITIES AND EQUITY Current Liabilities Accounts payable and accrued expenses related to trade creditors $11,932 $11,058 Deferred revenue 3,958 4,097 Accrued expenses and other current liabilities 11,269 12,410 Current portion of debt 3,560 5,958 Total current liabilities 30,719 33,524 Noncurrent portion of debt 83,806 92,979 Deferred income taxes 29,022 27,788 Other noncurrent liabilities 21,554 20,965 Redeemable noncontrolling interests 171 224 Equity Comcast Corporation shareholders' equity 92,529 96,903 Noncontrolling interests (33) 249 Total equity 92,497 97,151 $257,769 $272,631 13",
+          "locator": "page13-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=13"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page14-p001",
+          "text": "TABLE 4 Reconciliation from Net Income Attributable to Comcast Corporation to Adjusted EBITDA (Unaudited) Three Months Ended September 30, Nine Months Ended September 30, (in millions) 2026 2025 2026 2025 Net income attributable to Comcast Corporation $3,448 $3,332 $9,148 $17,830 Net income (loss) attributable to noncontrolling interests (87) (83) (341) (241) Income tax expense (benefit) 1,084 1,218 2,983 6,017 Interest expense 962 1,128 3,108 3,283 Investment and other (income) loss, net (88) (61) (283) (9,705) Depreciation 2,385 2,353 7,108 6,934 Amortization 1,314 1,666 4,144 5,089 Transaction costs(1) 22 26 73 82 Transaction-related costs(2) 4 90 4 166 Other adjustments (3) 61 — (7) 29 Adjusted EBITDA $9,106 $9,669 $25,938 $29,484 Reconciliation from Net Cash Provided by Operating Activities to Free Cash Flow (Unaudited) Three Months Ended September 30, Nine Months Ended September 30, (in millions) 2026 2025 2026 2025 Net cash provided by operating activities $7,902 $8,693 $22,886 $24,802 Capital expenditures (3,058) (3,071) (8,311) (8,001) Cash paid for capitalized software and other intangible assets (633) (677) (1,859) (1,934) Free Cash Flow $4,211 $4,945 $12,716 $14,866 (1) Transaction costs are incremental costs directly related to effectuating the Versant Separation and the proposed NBCUniversal Spin-off and primarily include advisory, legal and audit fees, as well as legal entity separation costs. The three and nine months ended September 30, 2026 include $22 milli",
+          "locator": "page14-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=14"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page14-p002",
+          "text": "(2) Transaction-related costs are incremental costs incurred related to the Versant Separation and the proposed NBCUniversal Spin-off, including costs that reflect strategic decisions about how the related stand-alone businesses will be structured or operated, which may be different than if they remained part of Comcast. Transaction-related costs primarily include certain separation-related employee compensation, severance and retention bonuses; IT separation and implementation costs; and other one-time costs. The three and nine months ended September 30, 2026 include $4 million of transaction-related costs related to the proposed NBCUniversal Spin-off. The three and nine months ended September 30, 2025 include $90 million and $166 million, respectively, of transaction-related costs related to the Versant Separation.",
+          "locator": "page14-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=14"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page14-p003",
+          "text": "(3) Amounts represent the impact of certain other events, gains, losses or other charges that are excluded from Adjusted EBITDA. The three and nine months ended September 30, 2026 include certain share-based compensation expenses and costs related to our investment portfolio. The nine months ended September 30, 2026 also include a gain related to a legal settlement. The three and nine months ended September 30, 2025 include costs related to our investment portfolio.",
+          "locator": "page14-p003",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=14"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page15-p001",
+          "text": "TABLE 5 Reconciliations of Adjusted Net Income and Adjusted EPS (Unaudited) Three Months Ended September 30, Nine Months Ended September 30, 2026 2025 2026 2025 (in millions, except per share data) $ EPS $ EPS $ EPS $ EPS Net income attributable to Comcast Corporation and diluted earnings per share attributable to Comcast Corporation shareholders $3,448 $0.97 $3,332 $0.90 $9,148 $2.55 $17,830 $4.78 Change 3.5% 7.2% (48.7%) (46.5%) Amortization of acquisition-related intangible assets(1) 402 0.11 633 0.17 1,211 0.34 1,861 0.50 Investments(2) (95) (0.03) 43 0.01 (88) (0.02) 79 0.02 Items affecting period-over-period comparability: Long-lived asset impairments(3) — — — — 130 0.04 155 0.04 Transaction costs(4) 19 0.01 23 0.01 64 0.02 72 0.02 Transaction-related costs(5) 4 — 79 0.02 4 — 146 0.04 Sale of Sky operations in Germany(6) — — — — (68) (0.02) — — Gain related to investment(7) — — 15 — — — (7,057) (1.89) Tax benefit from internal corporate reorganization(8) — — — — — — (177) (0.05) Other adjustments(9) 46 0.01 — — (2) — — — Adjusted Net income and Adjusted EPS $3,824 $1.07 $4,125 $1.12 $10,398 $2.90 $12,909 $3.46 Change (7.3%) (4.0%) (19.5%) (16.1%) (1) Acquisition-related intangible assets are recognized as a result of the application of Accounting Standards Codification Topic 805, Business Combinations (such as customer relationships), and their amortization is significantly affected by the size and timing of our acquisitions. Amortization of intangible assets not result",
+          "locator": "page15-p001",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=15"
+        },
+        {
+          "id": "mi-2d99a2d6ea32f46b09-page15-p002",
+          "text": "Three Months Ended September 30, Nine Months Ended September 30, 2026 2025 2026 2025 Amortization of acquisition-related intangible assets before income taxes $524 $824 $1,576 $2,424 Amortization of acquisition-related intangible assets, net of tax $402 $633 $1,211 $1,861 (2) Adjustments for investments include realized and unrealized (gains) losses on equity securities, net (as stated in Table 1), as well as the equity in net (income) losses of investees, net, for certain equity method investments, including Atairos and Hulu and costs related to our investment portfolio.",
+          "locator": "page15-p002",
+          "url": "https://www.cmcsa.com/static-files/14d5a2cc-cfdb-41f5-8b41-85fb055bc695#page=15"
+        }
+      ],
+      "content_hash": "6733654fcd294be922e44db4fc12695d717dfcfc245760e4a6996ac0905a829a",
+      "published_at_source": "explicit_pdf_dateline",
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-000cd0f9b36402b89f",
@@ -1917,9 +2481,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/10/19/skb-fall-new-programs-2026/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-525e4bb84089078f44",
@@ -2927,9 +3491,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/09/10/btv-plus-max-2026-kbo-postseason-ticket-event/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-255f40182398aa5f25",
@@ -2998,9 +3562,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/08/20/b-tv-womens-film-festival/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "image_fetched_from": "https://blog.bworld.co.kr/category/%EB%B3%B4%EB%8F%84%EC%9E%90%EB%A3%8C/feed/",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-80a30a5f266d73b1a5",
@@ -3753,7 +4317,7 @@
         }
       ],
       "content_hash": "c2b345f02d73b7330cc03ae0d0a4a354a1091ce21eb936974e40a8821caffcf3",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "아마존 2분기 실적: 프라임 비디오 신작·NBA 시청 성과",
         "summary": "아마존은 회사 전체의 분기 실적과 함께 프라임 비디오의 미디어 성과를 발표했다. 신작 Off Campus의 초기 시청 반응과 NBA 중계 시청 성과를 소개했다.",
@@ -3931,9 +4495,9 @@
       "image_source_url": "https://blog.bworld.co.kr/2026/07/01/btv-plus-max-all-in-one-ott-subscription/",
       "image_attribution": "SK브로드밴드 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "source_updated_at": "2026-07-01",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-e0f0c296689441b0ae",
@@ -4037,9 +4601,9 @@
       "image_source_url": "https://news.lguplus.com/22099",
       "image_attribution": "LG유플러스 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "source_updated_at": "2026-06-19",
-      "last_checked_at": "2026-11-18T05:00:13+00:00"
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-660f6ebda3c280ab1b",
@@ -4586,7 +5150,7 @@
         }
       ],
       "content_hash": "10f11121079894d5e410635c297e2bd2fe9c2be36687347a7420dfee8c012654",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "아마존 1분기 실적: 넷플릭스 광고 타기팅·NBA 중계",
         "summary": "아마존은 회사 전체의 분기 실적을 발표하며 넷플릭스 광고 구매에 Amazon Audiences를 추가했다고 설명했다. 프라임 비디오의 NBA 플레이인 토너먼트 중계 시청 성과도 함께 소개했다.",
@@ -4999,7 +5563,7 @@
         }
       ],
       "content_hash": "4825da0b4b4b5cddabe6f859cf349400c3e17c6e26260ba335c2060c0cfb356f",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "published_at_source": "official_feed",
       "localization": {
         "title": "Amazon 2025년 주주 서한",
@@ -5102,7 +5666,7 @@
       ],
       "content_hash": "05ac069470d7041d12fa2cd31a7bf06eb3632ffdfb0be9b462915040cb192920",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "versions": [
         {
           "content_hash": "504d2b339cc29a608621f06a549fb39d53e851375fe0edcbe39bce7a1d79c630",
@@ -5189,7 +5753,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Declines-to-Raise-Offer-for-Warner-Bros-/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "Netflix, Warner Bros. 인수 제안 증액 거부",
         "summary": "Netflix가 Warner Bros.에 대한 제안 금액을 인상하지 않기로 결정했다. Warner Bros. Discovery 이사회가 Paramount Skydance의 최신 제안을 기존 Netflix 합병 계약상 ‘Superior Proposal’로 판단했다는 통지를 받은 데 따른 발표다.",
@@ -5429,7 +5993,7 @@
       ],
       "content_hash": "4a2b8c2217143371b92bc9097abe1eb31059fed756ba2f1ae36438389bc84fc3",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "versions": [
         {
           "content_hash": "8e3908e1efc308b6d1611c3112c14fe94bf0baaad0daad49fac8440701a5157d",
@@ -5654,7 +6218,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/WBD-Files-Definitive-Proxy-Statement-and-Schedules-Special-Meeting-for-March-20-2026-to-Approve-the-WBD-Netflix-Transaction/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "WBD, Netflix 거래 최종 위임장 제출 및 2026년 3월 20일 특별 주주총회 예정",
         "summary": "Warner Bros. Discovery가 Netflix와의 거래 승인을 위한 최종 위임장 설명서를 제출하고 2026년 3월 20일 특별 주주총회를 예정했다. Netflix와 WBD는 미국 DOJ, 주 법무장관, 유럽연합 집행위원회, 영국 CMA 등 경쟁 당국과 규제 절차를 진행 중이라고 밝혔다.",
@@ -6253,7 +6817,7 @@
       ],
       "content_hash": "317445884687100e21d6e4df531c49a79ce80af82bbd250ddf35e1c36f7091f9",
       "published_at_source": "official_feed",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "versions": [
         {
           "content_hash": "5f3f1574ff6ed065c706ddfa634a9ac58e20dfd11ddd04306765dc007e72d50e",
@@ -6424,7 +6988,7 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-and-Warner-Bros--Discovery-Amend-Agreement-to-All-Cash-Transaction/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "Netflix와 Warner Bros. Discovery, 거래를 전액 현금 방식으로 변경",
         "summary": "Netflix와 Warner Bros. Discovery가 Netflix의 Warner Bros. 인수에 관한 최종 계약을 전액 현금 거래로 수정했다. 변경된 계약은 거래 구조를 단순화하고 WBD 주주에게 가치의 확실성을 높이며 주주 투표 절차를 앞당긴다.",
@@ -6547,8 +7111,8 @@
       "image_source_url": "https://ir.netflix.net/investor-news-and-events/financial-releases/press-release-details/2026/Netflix-Supports-Warner-Bros--Discovery-Boards-Commitment-to-Merger-Agreement/default.aspx",
       "image_attribution": "넷플릭스 공식 자료",
       "image_kind": "company_logo",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "Netflix, Warner Bros. Discovery 이사회의 합병 계약 지지 표명",
         "summary": "Netflix가 Warner Bros. Discovery 이사회의 Netflix 계약 승인 권고를 지지한다고 밝혔다. 양사는 거래와 관련해 SEC 제출 서류와 WBD 주주 대상 위임장·투자설명서 절차를 진행할 예정이다.",
@@ -8224,12 +8788,12 @@
       ],
       "content_hash": "baa38c6950155ed542f0ab2a1c12a07707f1c370fa5bb38ae89fba1ea8c1d38c",
       "source_updated_at": "2026-10-14",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "image_alt": "",
       "image_source_url": "https://www.aboutamazon.com/news/entertainment/stream-nba-prime-video",
       "image_attribution": "아마존 공식 자료",
       "image_kind": "article_image",
-      "image_recorded_at": "2026-11-18T05:00:13+00:00",
+      "image_recorded_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "Prime Video에서 2026-27 NBA 시즌 시청 방법",
         "summary": "Prime Video는 정규 시즌 67경기를 중계하며 Emirates NBA Cup Championship도 포함한다. AI 기반 Prime 360 하이라이트, Yahoo! Sports와 연동한 맞춤형 판타지 농구 기능이 도입되고, NBA와 AWS는 실시간 통계 제공을 위한 파트너십을 발표했다.",
@@ -9056,7 +9620,7 @@
       ],
       "content_hash": "4b8f634f3a8f84ff59b6e503774fbc2c3237ebd7ad5e0d3dd710bfb98476c22e",
       "published_at_source": "pdf_publication_unconfirmed",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "디즈니 주주서한, 스트리밍 참여도와 Experiences 방문객 증가 강조",
         "summary": "디즈니는 회계연도 2026년 4분기에 전 세계 Experiences 방문객이 4% 늘고 스트리밍 플랫폼과 ESPN 네트워크 참여도가 증가했다고 밝혔다. 회사는 어려운 거시경제 환경에서도 이러한 흐름이 매출 성장과 사업 목표를 뒷받침한다고 설명했다.",
@@ -9290,7 +9854,7 @@
       ],
       "content_hash": "862037af3c5b663c00c917c2f9663eb92af4fe4cc3a19df52306bc28ee8d7064",
       "published_at_source": "pdf_publication_unconfirmed",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "디즈니 회계연도 2026년 4분기 재무조정표",
         "summary": "이 문서는 GAAP 기준 재무지표와 대응하는 비GAAP 재무지표의 조정 내용을 제시한다. 조정 대상에는 조정 EPS, 총 부문 영업이익, 잉여현금흐름, Entertainment SVOD 영업이익 및 영업이익률 등이 포함된다.",
@@ -9470,7 +10034,7 @@
       ],
       "content_hash": "986ff62a20903e8a961b8fef318249bc8fd0fc111aad679240649467d79b7f46",
       "published_at_source": "pdf_publication_unconfirmed",
-      "last_checked_at": "2026-11-18T05:00:13+00:00",
+      "last_checked_at": "2026-11-19T04:55:28+00:00",
       "localization": {
         "title": "디즈니 회계연도 2026년 4분기 재편 부문 재무정보",
         "summary": "디즈니가 미국 증권거래위원회에 제출한 Form 8-K 문서로, 재편된 부문별 재무정보와 사업별 수익·비용 항목을 설명한다. Entertainment 수익에는 극장 배급, 상품 라이선싱, 음악·공연·출판물 등 기타 수익이 포함된다.",
@@ -9479,6 +10043,381 @@
         "model": "gpt-5.6-luna",
         "language": "ko"
       }
+    },
+    {
+      "id": "mi-c6bf95fb259f3184de",
+      "source_id": "comcast_ir",
+      "company": "Comcast",
+      "topic": "earnings_strategy",
+      "title": "Earnings",
+      "url": "https://www.cmcsa.com/financials/earnings",
+      "published_at": "",
+      "collected_at": "2026-11-19T04:55:28+00:00",
+      "country": "global",
+      "period": "",
+      "source_name": "Comcast Investor Relations",
+      "source_type": "earnings",
+      "excerpt": "Pro Forma Trending Schedule as Reported on January 29, 2026 367.8 KB\nPro Forma Trending Schedule as Revised on March 16, 2026 330.8 KB\nTrending Schedule as Reported on January 26, 2023 289.4 KB\nTrending Schedule as Revised on March 13, 2023 312.3 KB\nTrending Schedule as Revised on March 8, 2021 401.4 KB\nTrending Schedule as Reported on January 28, 2021 383.9 KB\nTrending Schedules as Revised on February 4, 2019 286.8 ",
+      "body_text": "Pro Forma Trending Schedule as Reported on January 29, 2026 367.8 KB\nPro Forma Trending Schedule as Revised on March 16, 2026 330.8 KB\nTrending Schedule as Reported on January 26, 2023 289.4 KB\nTrending Schedule as Revised on March 13, 2023 312.3 KB\nTrending Schedule as Revised on March 8, 2021 401.4 KB\nTrending Schedule as Reported on January 28, 2021 383.9 KB\nTrending Schedules as Revised on February 4, 2019 286.8 KB\nTrending Schedules as Revised on March 19, 2018 140.1 KB\nTrending Schedules as Reported on January 24, 2018 147.1 KB",
+      "image_url": "",
+      "evidence": [
+        {
+          "id": "mi-c6bf95fb259f3184de-p038",
+          "text": "Pro Forma Trending Schedule as Reported on January 29, 2026 367.8 KB",
+          "locator": "p038",
+          "url": "https://www.cmcsa.com/financials/earnings"
+        },
+        {
+          "id": "mi-c6bf95fb259f3184de-p039",
+          "text": "Pro Forma Trending Schedule as Revised on March 16, 2026 330.8 KB",
+          "locator": "p039",
+          "url": "https://www.cmcsa.com/financials/earnings"
+        },
+        {
+          "id": "mi-c6bf95fb259f3184de-p081",
+          "text": "Trending Schedule as Reported on January 26, 2023 289.4 KB",
+          "locator": "p081",
+          "url": "https://www.cmcsa.com/financials/earnings"
+        },
+        {
+          "id": "mi-c6bf95fb259f3184de-p082",
+          "text": "Trending Schedule as Revised on March 13, 2023 312.3 KB",
+          "locator": "p082",
+          "url": "https://www.cmcsa.com/financials/earnings"
+        },
+        {
+          "id": "mi-c6bf95fb259f3184de-p113",
+          "text": "Trending Schedule as Revised on March 8, 2021 401.4 KB",
+          "locator": "p113",
+          "url": "https://www.cmcsa.com/financials/earnings"
+        },
+        {
+          "id": "mi-c6bf95fb259f3184de-p114",
+          "text": "Trending Schedule as Reported on January 28, 2021 383.9 KB",
+          "locator": "p114",
+          "url": "https://www.cmcsa.com/financials/earnings"
+        },
+        {
+          "id": "mi-c6bf95fb259f3184de-p144",
+          "text": "Trending Schedules as Revised on February 4, 2019 286.8 KB",
+          "locator": "p144",
+          "url": "https://www.cmcsa.com/financials/earnings"
+        },
+        {
+          "id": "mi-c6bf95fb259f3184de-p156",
+          "text": "Trending Schedules as Revised on March 19, 2018 140.1 KB",
+          "locator": "p156",
+          "url": "https://www.cmcsa.com/financials/earnings"
+        },
+        {
+          "id": "mi-c6bf95fb259f3184de-p157",
+          "text": "Trending Schedules as Reported on January 24, 2018 147.1 KB",
+          "locator": "p157",
+          "url": "https://www.cmcsa.com/financials/earnings"
+        }
+      ],
+      "content_hash": "9a52408d5b6a95b1c3f63a2346b002a7bdd7fda9710e0a5835733032d91a7ed8",
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
+    },
+    {
+      "id": "mi-113f1c69bb063e8348",
+      "source_id": "comcast_ir",
+      "company": "Comcast",
+      "topic": "earnings_strategy",
+      "title": "Shareholder Services",
+      "url": "https://www.cmcsa.com/shareholder-services",
+      "published_at": "",
+      "collected_at": "2026-11-19T04:55:28+00:00",
+      "country": "global",
+      "period": "",
+      "source_name": "Comcast Investor Relations",
+      "source_type": "earnings",
+      "excerpt": "If you hold physical stock certificates, or if your stock certificates have been electronically registered with our transfer agent, you are a direct shareholder. You can manage your investment and do much more by visiting My Shareholder Account .\nIf you hold your stock through a broker, you are an indirect shareholder. Your broker can help you buy or sell shares of Comcast stock or answer questions about your investm",
+      "body_text": "If you hold physical stock certificates, or if your stock certificates have been electronically registered with our transfer agent, you are a direct shareholder. You can manage your investment and do much more by visiting My Shareholder Account .\nIf you hold your stock through a broker, you are an indirect shareholder. Your broker can help you buy or sell shares of Comcast stock or answer questions about your investment. You can sign up for eDelivery of materials through your broker or here .\nIf you are a direct shareholder, you can register for online access to My Shareholder Account , which will allow you to:\nreinvest or directly deposit your dividends\nbuy or sell shares of Comcast stock when you sign up for the Dividend Reinvestment Plan\ndownload transfer of ownership, tax and other forms\nAlready have an account? Log In Now\nDirect shareholders can contact our transfer agent, EQ Shareowner Services, to have questions answered or to make account updates. If you're an indirect shareholder, please contact your broker with questions about your investment.\nContact our transfer agent by phone: EQ Shareowner Services Toll-free: 888-883-8903 Outside the US: 651-554-3873\nSend written correspondence to our transfer agent: EQ Shareowner Services P.O. Box 64874 St. Paul, MN 55164-0874\nContact Investor Relations: Comcast Corporation One Comcast Center Philadelphia, PA 19103\nOr by calling toll-free: 866-281-2100",
+      "image_url": "",
+      "evidence": [
+        {
+          "id": "mi-113f1c69bb063e8348-p001",
+          "text": "If you hold physical stock certificates, or if your stock certificates have been electronically registered with our transfer agent, you are a direct shareholder. You can manage your investment and do much more by visiting My Shareholder Account .",
+          "locator": "p001",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p002",
+          "text": "If you hold your stock through a broker, you are an indirect shareholder. Your broker can help you buy or sell shares of Comcast stock or answer questions about your investment. You can sign up for eDelivery of materials through your broker or here .",
+          "locator": "p002",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p003",
+          "text": "If you are a direct shareholder, you can register for online access to My Shareholder Account , which will allow you to:",
+          "locator": "p003",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p006",
+          "text": "reinvest or directly deposit your dividends",
+          "locator": "p006",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p007",
+          "text": "buy or sell shares of Comcast stock when you sign up for the Dividend Reinvestment Plan",
+          "locator": "p007",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p008",
+          "text": "download transfer of ownership, tax and other forms",
+          "locator": "p008",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p010",
+          "text": "Already have an account? Log In Now",
+          "locator": "p010",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p011",
+          "text": "Direct shareholders can contact our transfer agent, EQ Shareowner Services, to have questions answered or to make account updates. If you're an indirect shareholder, please contact your broker with questions about your investment.",
+          "locator": "p011",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p012",
+          "text": "Contact our transfer agent by phone: EQ Shareowner Services Toll-free: 888-883-8903 Outside the US: 651-554-3873",
+          "locator": "p012",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p013",
+          "text": "Send written correspondence to our transfer agent: EQ Shareowner Services P.O. Box 64874 St. Paul, MN 55164-0874",
+          "locator": "p013",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p014",
+          "text": "Contact Investor Relations: Comcast Corporation One Comcast Center Philadelphia, PA 19103",
+          "locator": "p014",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        },
+        {
+          "id": "mi-113f1c69bb063e8348-p015",
+          "text": "Or by calling toll-free: 866-281-2100",
+          "locator": "p015",
+          "url": "https://www.cmcsa.com/shareholder-services"
+        }
+      ],
+      "content_hash": "5a98b4fd14a67286cf732d0bd12dd5b68a9227ffb08c5bc3c8017d2dde9847aa",
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
+    },
+    {
+      "id": "mi-14206264034b8b6771",
+      "source_id": "comcast_ir",
+      "company": "Comcast",
+      "topic": "earnings_strategy",
+      "title": "Cost Basis Guide",
+      "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide",
+      "published_at": "",
+      "collected_at": "2026-11-19T04:55:28+00:00",
+      "country": "global",
+      "period": "",
+      "source_name": "Comcast Investor Relations",
+      "source_type": "earnings",
+      "excerpt": "Disclaimer The following summary does not constitute tax advice. It does not purport to be complete or to describe the tax consequences that may apply to particular categories of shareholders. You should consult your own tax advisor regarding the calculation of your cost basis and the tax consequences of any distribution.\nWhy Is Your Cost Basis Important? It is necessary to determine the cost basis of your Comcast sh",
+      "body_text": "Disclaimer The following summary does not constitute tax advice. It does not purport to be complete or to describe the tax consequences that may apply to particular categories of shareholders. You should consult your own tax advisor regarding the calculation of your cost basis and the tax consequences of any distribution.\nWhy Is Your Cost Basis Important? It is necessary to determine the cost basis of your Comcast shares for tax-reporting purposes when you sell or otherwise dispose of the shares. The cost basis is how much you paid for your shares after you take into account stock splits, acquisitions and other events. The difference between your cost basis and the price you receive when you sell the shares is your taxable gain or loss.\nWhat You Need to Know to Calculate Your Cost Basis To determine your cost basis, you need to know the original price paid for the shares, the date you acquired them and how you acquired them. You will need your personal records, bank or brokerage statements, inheritance or gift records or dividend reinvestment statements to help determine your cost basis. Each shareholder is responsible for determining the cost basis for his or her own Comcast shares. If you have questions, we encourage you to contact your tax advisor. No Comcast employee is authorized to give personal tax advice.\nHow Do Dividends Affect My Cost Basis? Dividends do not affect your cost basis. Each calendar year, we are required to file with the U.S. Internal Revenue Service a list of all shareholders who received dividends. As a shareholder of record, a statement (Form 1099-DIV) will be mailed to you in October, included with your fourth-quarter dividend check or Dividend and Cash Investment Plan statement, indicating for tax purposes the total dividends paid to you during the year. If you hold shares through a bank or brokerage account, a Form 1099-DIV will be mailed to you by your bank or broker no later than January 31 of each year.\nA stock split does not change the aggregate value of the shares you own. The split increases the number of shares outstanding, but also proportionately lowers the value of each share, so that the total value of all shares combined initially remains the same. The end result is that you own more shares, at a lower price per share, equaling the same total value.\nUnder U.S. federal income tax law, receipt of additional shares in a stock split will not constitute a taxable transaction. However, as described below, the \"cost basis\" in the pre-split shares must be allocated proportionally between the pre-split shares and the additional shares distributed with respect to them (including any fractional share, if applicable, even though no fractional shares will actually be distributed). This apportionment is required for the purpose of determining gain or loss on subsequent disposition of any of the pre-split or additional shares, as well as determining gain or loss on receipt of cash in lieu of a fractional share.\nThe additional shares (including any fractional share, if applicable) will be deemed to have the same holding period as the applicable pre-split shares. Cash received in lieu of a fractional share, if applicable, will be treated for U.S. federal income tax purposes as paid in exchange for that fractional share. Accordingly, gain or loss will be realized for U.S. federal income tax purposes measured by the difference between the cash received for a fractional share and the cost basis in that fractional share.\nStock Split Cost Basis Allocation The starting point for determining cost basis depends on how shares were acquired, for example, whether the shares were acquired via purchase, inheritance, company merger, etc. Because each case is different and market prices change daily, there is no single answer for all shareholders. Each shareholder is responsible for determining the beginning cost basis for his or her own Comcast stock. Please consult your tax advisor.\nAs described above, upon the occurrence of a stock split, the cost basis from the pre-split shares must be allocated proportionally between the pre-split shares and the additional shares distributed with respect to them (including any fractional share, if applicable, even though no fractional shares will actually be distributed). If pre-split shares were acquired on more than one occasion, this allocation must be performed separately for each block of pre-split shares. Two hypothetical examples are provided below.\nHypothetical Example 1: 3-for-2 Stock Split In this example, 101 shares of Comcast Common shares (CMCSA) were purchased at $30 per share, resulting in a cost basis of $3,030. A 3-for-2 stock split would result in a distribution of 50.5 shares of CMCSA. However, because no fractional shares will be distributed, only an additional 50 shares will be received, for a total of 151 shares, plus cash in lieu of the fractional share.\nThe original $3,030 cost basis must be allocated between the original number of CMCSA shares and the CMCSA shares distributed as a result of the stock split (including the fractional share). 66.6667% of the $3,030 cost basis will be allocated to the original CMCSA shares and the remaining 33.3333% will be allocated to the CMCSA shares distributed as a result of the stock split (including the fractional share).\nIn order to determine the tax consequences of receiving the cash in lieu of the fractional share, the new per share cost basis must be prorated to that fractional share. In this case, a fractional share would have been allocated half of the new per share cost basis, or $10 (i.e., 0.5 x $20 = $10). If the price of a single share of CMCSA on the record date was $45, $15 in cash would be received as cash in lieu of that fractional share (i.e., .333333 x $45 = $15). Because the cost basis in that fractional share was $10, $5 of capital gain will be realized (assuming the CMCSA shares are held as capital assets), the excess of the cash received for the fractional share over that fractional share's cost basis. Because the post-split shares (including any fractional shares) are deemed to have the same holding period as the applicable pre-split shares, the $5 of capital gain from the fractional share would be long-term capital gain if the applicable pre-split shares had been held by the shareholder for more than a year on the record date.\nHypothetical Example 2: 2-for-1 Stock Split In this example, 100 shares of Comcast Common Stock (CMCSA) were purchased at $60 per share, resulting in a cost basis of $6,000. A 2-for-1 stock split would result in a distribution of an additional 100 shares of CMCSA to the holder, for a total of 200 shares.\nThe original $6,000 cost basis must be allocated between the original 100 CMCSA shares and the 100 CMCSA shares distributed as a result of the stock split. 50% of the $6,000 cost basis will be allocated to the original CMCSA shares and the remaining 50% will be allocated to the CMCSA shares distributed as a result of the stock split.\nOn November 18, 2002, Comcast Corporation and AT&T Corp. combined Comcast and AT&T's broadband business. The acquisition occurred in several steps. First, AT&T Corp. contributed its broadband business to a newly formed holding company, AT&T Broadband Corp. Next, AT&T Broadband Corp. was spun off from AT&T Corp. Finally, old Comcast and AT&T Broadband Corp. combined to form the new Comcast Corporation.\nIf you have sold or sell any of your shares of new Comcast common stock, you need to determine your cost basis in order to compute the tax gain or loss on the shares. Your cost basis is compared to the sale price of the stock to determine the gain or loss. This cost basis may also be important for gift or estate tax purposes.\nAT&T Acquisition: How to calculate your cost basis As a result of the acquisition, AT&T Corp. shareholders of record as of the close of business on November 15, 2002 received 0.3235 shares of new Comcast Class A common stock for each share of AT&T Corp. common stock owned of record at such time. Note that the new Comcast Class A common stock was issued to you as additional shares and not in substitution for the AT&T Corp. common stock you owned. You will continue to own these shares of AT&T Corp. common stock until you sell or otherwise transfer them. If the total number of shares of new Comcast Class A common stock you were entitled to receive included a fractional share, you are entitled to receive a cash payment instead of that fractional share. Fractional shares of new Comcast common stock were aggregated and sold, with the net proceeds paid as appropriate to those entitled to a fractional share.\nYour AT&T Corp. common stock cost basis prior to the acquisition should be allocated at 37.4% to your AT&T Corp. common stock and 62.6% to your new Comcast common stock, including any fractional shares you were entitled to receive. You are responsible for knowing your beginning cost basis from your own records. The example below is designed to help you compute your new cost basis in AT&T Corp. common stock and new Comcast common stock.\nHypothetical Example: AT&T Acquisition Cost Basis Calculation For example, assume that immediately before the acquisition, you owned 102 shares of AT&T Corp. common stock and had a total cost basis in those shares of $100.00. The new Comcast exchange ratio for AT&T Corp. shareowners was effectively 0.3235 shares of new Comcast Class A common stock for each AT&T Corp. share owned of record on November 15, 2002. Thus, you would receive 32 shares of new Comcast Class A common stock and would be entitled to receive an additional 0.997 of a share but would be paid cash in lieu of that fractional share. Using the tax allocation percentages described above, 37.4% of the $100.00 would be allocated to your 102 AT&T Corp. shares and 62.6% of the $100.00 would be allocated to your 32.997 new Comcast shares. This means that the per share basis in each share of new Comcast Class A common stock would be $1.90. The cost basis of a fractional share is a proportional part of the cost basis of a whole share. In this example, the cost basis in the 0.997 of a share would be $1.89.\n* The tax basis of fractional shares would be a proportional part of the basis of a whole share.\nHolders of Comcast The cost basis of your new Comcast stock is the equivalent of the cost basis for your pre-acquisition Comcast Class A common stock or Comcast Class A Special common stock, as the case may be. As such, you must determine when and at what price you acquired your old Comcast stock to determine the basis for your new Comcast shares. Please visit our Historical Stock Price Lookup page.\nU.S. federal income tax laws provide that the allocation of the aggregate tax basis must be based on the respective fair market values of the VSNT shares received in the spin-off and the CMCSA shares in respect of which such VSNT shares were received. However, there is no further guidance on the determination of fair market value, and you are urged to consult with your tax advisor regarding your tax basis allocations.\nThat said, while other valuation methods may exist, one method to determine fair market value is to use the closing price quoted on the Nasdaq stock exchange on the first business day after the separation of Versant, or January 5, 2026, for both CMCSA (which was $28.13 per share) and VSNT (which was $40.57 per share). Using these prices, together with the distribution ratio of 1/25th of a share of VSNT for each share of CMCSA, 94.55% of the tax basis in a share of CMCSA owned prior to the spin-off should be allocated to CMCSA and 5.45% should be allocated to a share of VSNT (including any fractional shares for which cash was received). Note that if you acquired blocks of CMCSA at different times or at different prices, this allocation would need to be performed separately for each such block of CMCSA in consultation with your own tax advisors.\nHere’s an example allocation for a holder of a single block of 120 shares of CMCSA with a tax basis of $10 per share, or an aggregated tax basis of $1,200. Because the distribution ratio was 1/25th of a share of VSNT for a share of CMCSA, that holder received 4 shares of Versant Class A common stock in the spin-off, as well as cash in lieu of the 0.8 fractional share (120/25=4.8).\nAs summarized in the table below, 94.55% of the aggregate tax basis of $1,200 ($1,134.60) would be allocated to the 120 shares of CMCSA, resulting in a tax basis of approximately $9.46 per share of CMCSA. The remaining 5.45% of the aggregate tax basis ($65.40) would be allocated to the 4.8 shares of VSNT, resulting in a tax basis of approximately $13.63 for each of the 4 shares of VSNT and approximately $10.90 for the 0.8 fractional share in which cash was received.\nThe related Form 8937 is available here: Form 8937 (Rev. December 2017) .\nDirect shareholders can contact our transfer agent, EQ Shareowner Services, to have questions answered or to make account updates. If you're an indirect shareholder, please contact your broker with questions about your investment.\nContact our transfer agent by phone: EQ Shareowner Services Toll-free: 888-883-8903 Outside the US: 651-554-3873\nSend written correspondence to our transfer agent: EQ Shareowner Services P.O. Box 64874 St. Paul, MN 55164-0874\nContact Investor Relations: Comcast Corporation One Comcast Center Philadelphia, PA 19103\nOr by calling toll-free: 866-281-2100",
+      "image_url": "",
+      "evidence": [
+        {
+          "id": "mi-14206264034b8b6771-p001",
+          "text": "Disclaimer The following summary does not constitute tax advice. It does not purport to be complete or to describe the tax consequences that may apply to particular categories of shareholders. You should consult your own tax advisor regarding the calculation of your cost basis and the tax consequences of any distribution.",
+          "locator": "p001",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p002",
+          "text": "Why Is Your Cost Basis Important? It is necessary to determine the cost basis of your Comcast shares for tax-reporting purposes when you sell or otherwise dispose of the shares. The cost basis is how much you paid for your shares after you take into account stock splits, acquisitions and other events. The difference between your cost basis and the price you receive when you sell the shares is your taxable gain or loss.",
+          "locator": "p002",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p003",
+          "text": "What You Need to Know to Calculate Your Cost Basis To determine your cost basis, you need to know the original price paid for the shares, the date you acquired them and how you acquired them. You will need your personal records, bank or brokerage statements, inheritance or gift records or dividend reinvestment statements to help determine your cost basis. Each shareholder is responsible for determining the cost basis for his or her own Comcast shares. If you have questions, we encourage you to contact your tax advisor. No Comcast employee is authorized to give personal tax advice.",
+          "locator": "p003",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p004",
+          "text": "How Do Dividends Affect My Cost Basis? Dividends do not affect your cost basis. Each calendar year, we are required to file with the U.S. Internal Revenue Service a list of all shareholders who received dividends. As a shareholder of record, a statement (Form 1099-DIV) will be mailed to you in October, included with your fourth-quarter dividend check or Dividend and Cash Investment Plan statement, indicating for tax purposes the total dividends paid to you during the year. If you hold shares through a bank or brokerage account, a Form 1099-DIV will be mailed to you by your bank or broker no later than January 31 of each year.",
+          "locator": "p004",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p005",
+          "text": "A stock split does not change the aggregate value of the shares you own. The split increases the number of shares outstanding, but also proportionately lowers the value of each share, so that the total value of all shares combined initially remains the same. The end result is that you own more shares, at a lower price per share, equaling the same total value.",
+          "locator": "p005",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p006",
+          "text": "Under U.S. federal income tax law, receipt of additional shares in a stock split will not constitute a taxable transaction. However, as described below, the \"cost basis\" in the pre-split shares must be allocated proportionally between the pre-split shares and the additional shares distributed with respect to them (including any fractional share, if applicable, even though no fractional shares will actually be distributed). This apportionment is required for the purpose of determining gain or loss on subsequent disposition of any of the pre-split or additional shares, as well as determining gain or loss on receipt of cash in lieu of a fractional share.",
+          "locator": "p006",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p007",
+          "text": "The additional shares (including any fractional share, if applicable) will be deemed to have the same holding period as the applicable pre-split shares. Cash received in lieu of a fractional share, if applicable, will be treated for U.S. federal income tax purposes as paid in exchange for that fractional share. Accordingly, gain or loss will be realized for U.S. federal income tax purposes measured by the difference between the cash received for a fractional share and the cost basis in that fractional share.",
+          "locator": "p007",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p008",
+          "text": "Stock Split Cost Basis Allocation The starting point for determining cost basis depends on how shares were acquired, for example, whether the shares were acquired via purchase, inheritance, company merger, etc. Because each case is different and market prices change daily, there is no single answer for all shareholders. Each shareholder is responsible for determining the beginning cost basis for his or her own Comcast stock. Please consult your tax advisor.",
+          "locator": "p008",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p009",
+          "text": "As described above, upon the occurrence of a stock split, the cost basis from the pre-split shares must be allocated proportionally between the pre-split shares and the additional shares distributed with respect to them (including any fractional share, if applicable, even though no fractional shares will actually be distributed). If pre-split shares were acquired on more than one occasion, this allocation must be performed separately for each block of pre-split shares. Two hypothetical examples are provided below.",
+          "locator": "p009",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p010",
+          "text": "Hypothetical Example 1: 3-for-2 Stock Split In this example, 101 shares of Comcast Common shares (CMCSA) were purchased at $30 per share, resulting in a cost basis of $3,030. A 3-for-2 stock split would result in a distribution of 50.5 shares of CMCSA. However, because no fractional shares will be distributed, only an additional 50 shares will be received, for a total of 151 shares, plus cash in lieu of the fractional share.",
+          "locator": "p010",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p011",
+          "text": "The original $3,030 cost basis must be allocated between the original number of CMCSA shares and the CMCSA shares distributed as a result of the stock split (including the fractional share). 66.6667% of the $3,030 cost basis will be allocated to the original CMCSA shares and the remaining 33.3333% will be allocated to the CMCSA shares distributed as a result of the stock split (including the fractional share).",
+          "locator": "p011",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p025",
+          "text": "In order to determine the tax consequences of receiving the cash in lieu of the fractional share, the new per share cost basis must be prorated to that fractional share. In this case, a fractional share would have been allocated half of the new per share cost basis, or $10 (i.e., 0.5 x $20 = $10). If the price of a single share of CMCSA on the record date was $45, $15 in cash would be received as cash in lieu of that fractional share (i.e., .333333 x $45 = $15). Because the cost basis in that fractional share was $10, $5 of capital gain will be realized (assuming the CMCSA shares are held as capital assets), the excess of the cash received for the fractional share over that fractional share's cost basis. Because the post-split shares (including any fractional shares) are deemed to have the same holding period as the applicable pre-split shares, the $5 of capital gain from the fractional share would be long-term capital gain if the applicable pre-split shares had been held by the shareholder for more than a year on the record date.",
+          "locator": "p025",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p026",
+          "text": "Hypothetical Example 2: 2-for-1 Stock Split In this example, 100 shares of Comcast Common Stock (CMCSA) were purchased at $60 per share, resulting in a cost basis of $6,000. A 2-for-1 stock split would result in a distribution of an additional 100 shares of CMCSA to the holder, for a total of 200 shares.",
+          "locator": "p026",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p027",
+          "text": "The original $6,000 cost basis must be allocated between the original 100 CMCSA shares and the 100 CMCSA shares distributed as a result of the stock split. 50% of the $6,000 cost basis will be allocated to the original CMCSA shares and the remaining 50% will be allocated to the CMCSA shares distributed as a result of the stock split.",
+          "locator": "p027",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p034",
+          "text": "On November 18, 2002, Comcast Corporation and AT&T Corp. combined Comcast and AT&T's broadband business. The acquisition occurred in several steps. First, AT&T Corp. contributed its broadband business to a newly formed holding company, AT&T Broadband Corp. Next, AT&T Broadband Corp. was spun off from AT&T Corp. Finally, old Comcast and AT&T Broadband Corp. combined to form the new Comcast Corporation.",
+          "locator": "p034",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p035",
+          "text": "If you have sold or sell any of your shares of new Comcast common stock, you need to determine your cost basis in order to compute the tax gain or loss on the shares. Your cost basis is compared to the sale price of the stock to determine the gain or loss. This cost basis may also be important for gift or estate tax purposes.",
+          "locator": "p035",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p036",
+          "text": "AT&T Acquisition: How to calculate your cost basis As a result of the acquisition, AT&T Corp. shareholders of record as of the close of business on November 15, 2002 received 0.3235 shares of new Comcast Class A common stock for each share of AT&T Corp. common stock owned of record at such time. Note that the new Comcast Class A common stock was issued to you as additional shares and not in substitution for the AT&T Corp. common stock you owned. You will continue to own these shares of AT&T Corp. common stock until you sell or otherwise transfer them. If the total number of shares of new Comcast Class A common stock you were entitled to receive included a fractional share, you are entitled to receive a cash payment instead of that fractional share. Fractional shares of new Comcast common stock were aggregated and sold, with the net proceeds paid as appropriate to those entitled to a fractional share.",
+          "locator": "p036",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p037",
+          "text": "Your AT&T Corp. common stock cost basis prior to the acquisition should be allocated at 37.4% to your AT&T Corp. common stock and 62.6% to your new Comcast common stock, including any fractional shares you were entitled to receive. You are responsible for knowing your beginning cost basis from your own records. The example below is designed to help you compute your new cost basis in AT&T Corp. common stock and new Comcast common stock.",
+          "locator": "p037",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p038",
+          "text": "Hypothetical Example: AT&T Acquisition Cost Basis Calculation For example, assume that immediately before the acquisition, you owned 102 shares of AT&T Corp. common stock and had a total cost basis in those shares of $100.00. The new Comcast exchange ratio for AT&T Corp. shareowners was effectively 0.3235 shares of new Comcast Class A common stock for each AT&T Corp. share owned of record on November 15, 2002. Thus, you would receive 32 shares of new Comcast Class A common stock and would be entitled to receive an additional 0.997 of a share but would be paid cash in lieu of that fractional share. Using the tax allocation percentages described above, 37.4% of the $100.00 would be allocated to your 102 AT&T Corp. shares and 62.6% of the $100.00 would be allocated to your 32.997 new Comcast shares. This means that the per share basis in each share of new Comcast Class A common stock would be $1.90. The cost basis of a fractional share is a proportional part of the cost basis of a whole share. In this example, the cost basis in the 0.997 of a share would be $1.89.",
+          "locator": "p038",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p048",
+          "text": "* The tax basis of fractional shares would be a proportional part of the basis of a whole share.",
+          "locator": "p048",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p054",
+          "text": "Holders of Comcast The cost basis of your new Comcast stock is the equivalent of the cost basis for your pre-acquisition Comcast Class A common stock or Comcast Class A Special common stock, as the case may be. As such, you must determine when and at what price you acquired your old Comcast stock to determine the basis for your new Comcast shares. Please visit our Historical Stock Price Lookup page.",
+          "locator": "p054",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p055",
+          "text": "U.S. federal income tax laws provide that the allocation of the aggregate tax basis must be based on the respective fair market values of the VSNT shares received in the spin-off and the CMCSA shares in respect of which such VSNT shares were received. However, there is no further guidance on the determination of fair market value, and you are urged to consult with your tax advisor regarding your tax basis allocations.",
+          "locator": "p055",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p056",
+          "text": "That said, while other valuation methods may exist, one method to determine fair market value is to use the closing price quoted on the Nasdaq stock exchange on the first business day after the separation of Versant, or January 5, 2026, for both CMCSA (which was $28.13 per share) and VSNT (which was $40.57 per share). Using these prices, together with the distribution ratio of 1/25th of a share of VSNT for each share of CMCSA, 94.55% of the tax basis in a share of CMCSA owned prior to the spin-off should be allocated to CMCSA and 5.45% should be allocated to a share of VSNT (including any fractional shares for which cash was received). Note that if you acquired blocks of CMCSA at different times or at different prices, this allocation would need to be performed separately for each such block of CMCSA in consultation with your own tax advisors.",
+          "locator": "p056",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p057",
+          "text": "Here’s an example allocation for a holder of a single block of 120 shares of CMCSA with a tax basis of $10 per share, or an aggregated tax basis of $1,200. Because the distribution ratio was 1/25th of a share of VSNT for a share of CMCSA, that holder received 4 shares of Versant Class A common stock in the spin-off, as well as cash in lieu of the 0.8 fractional share (120/25=4.8).",
+          "locator": "p057",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p058",
+          "text": "As summarized in the table below, 94.55% of the aggregate tax basis of $1,200 ($1,134.60) would be allocated to the 120 shares of CMCSA, resulting in a tax basis of approximately $9.46 per share of CMCSA. The remaining 5.45% of the aggregate tax basis ($65.40) would be allocated to the 4.8 shares of VSNT, resulting in a tax basis of approximately $13.63 for each of the 4 shares of VSNT and approximately $10.90 for the 0.8 fractional share in which cash was received.",
+          "locator": "p058",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p073",
+          "text": "The related Form 8937 is available here: Form 8937 (Rev. December 2017) .",
+          "locator": "p073",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p074",
+          "text": "Direct shareholders can contact our transfer agent, EQ Shareowner Services, to have questions answered or to make account updates. If you're an indirect shareholder, please contact your broker with questions about your investment.",
+          "locator": "p074",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p075",
+          "text": "Contact our transfer agent by phone: EQ Shareowner Services Toll-free: 888-883-8903 Outside the US: 651-554-3873",
+          "locator": "p075",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p076",
+          "text": "Send written correspondence to our transfer agent: EQ Shareowner Services P.O. Box 64874 St. Paul, MN 55164-0874",
+          "locator": "p076",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p077",
+          "text": "Contact Investor Relations: Comcast Corporation One Comcast Center Philadelphia, PA 19103",
+          "locator": "p077",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        },
+        {
+          "id": "mi-14206264034b8b6771-p078",
+          "text": "Or by calling toll-free: 866-281-2100",
+          "locator": "p078",
+          "url": "https://www.cmcsa.com/shareholder-services/cost-basis-guide"
+        }
+      ],
+      "content_hash": "34766dc57927b3f9d977969a93d435ec981543a29b01c0e8ece13fa887b39e43",
+      "last_checked_at": "2026-11-19T04:55:28+00:00"
     },
     {
       "id": "mi-80909bc46e109903db",
