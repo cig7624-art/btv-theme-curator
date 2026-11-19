@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-11-19T04:00:28+00:00",
+  "collected_at": "2026-11-19T14:15:13+00:00",
   "sources": {
     "kobis": {
       "last_success_at": "2026-11-19T04:00:48+00:00",
@@ -61,23 +61,20 @@
     },
     "news": {
       "state": "partial",
-      "count": 96,
-      "collected_at": "2026-11-19T04:00:46+00:00",
+      "count": 92,
+      "collected_at": "2026-11-19T14:15:23+00:00",
       "reference_date": "2026-11-19",
       "reference_period": "2026-11-13/2026-11-19",
-      "error": "원문 URL 미해석 96건: RSS의 발행일·매체·기사 제목 기준",
-      "rejected_count": 505,
+      "error": "RSS 수집 실패 ((영화 OR 드라마) (수상 OR 영화제)): 429 Client Error: Too Many Requests for url: https://news.google.com/rss/search?q=%28%EC%98%81%ED%99%94%20OR%20%EB%93%9C%EB%9D%BC%EB%A7%88%29%20%28%EC%88%98%EC%83%81%20OR%20%EC%98%81%ED%99%94%EC%A0%9C%29%20when%3A7d&hl=ko&gl=KR&ceid=KR:ko; 원문 URL 미해석 92건: RSS의 발행일·매체·기사 제목 기준",
+      "rejected_count": 478,
       "missing_publication_date_count": 0,
-      "unresolved_original_count": 96,
-      "retained_count": 1145
+      "unresolved_original_count": 92,
+      "retained_count": 1162
     }
   },
-  "collection_scope": "full",
+  "collection_scope": "news_only",
   "updated_sources": [
-    "news",
-    "kobis",
-    "netflix",
-    "youtube"
+    "news"
   ],
   "overall_state": "partial"
 }
