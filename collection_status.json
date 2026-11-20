@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-11-20T13:55:44+00:00",
+  "collected_at": "2026-11-20T23:01:17+00:00",
   "sources": {
     "kobis": {
       "last_success_at": "2026-11-20T03:54:00+00:00",
@@ -61,15 +61,15 @@
     },
     "news": {
       "state": "partial",
-      "count": 96,
-      "collected_at": "2026-11-20T13:55:55+00:00",
-      "reference_date": "2026-11-20",
-      "reference_period": "2026-11-14/2026-11-20",
-      "error": "원문 URL 미해석 96건: RSS의 발행일·매체·기사 제목 기준",
-      "rejected_count": 472,
+      "count": 75,
+      "collected_at": "2026-11-20T23:01:27+00:00",
+      "reference_date": "2026-11-21",
+      "reference_period": "2026-11-15/2026-11-21",
+      "error": "RSS 수집 실패 ((드라마 OR 예능 OR 영화) (캐스팅 OR 출연확정)): 429 Client Error: Too Many Requests for url: https://news.google.com/rss/search?q=%28%EB%93%9C%EB%9D%BC%EB%A7%88%20OR%20%EC%98%88%EB%8A%A5%20OR%20%EC%98%81%ED%99%94%29%20%28%EC%BA%90%EC%8A%A4%ED%8C%85%20OR%20%EC%B6%9C%EC%97%B0%ED%99%95%EC%A0%95%29%20when%3A7d&hl=ko&gl=KR&ceid=KR:ko; RSS 수집 실패 ((영화 OR 드라마) (수상 OR 영화제)): 429 Client Error: Too Many Requests for url: https://news.google.com/rss/search?q=%28%EC%98%81%ED%99%94%20OR%20%EB%93%9C%EB%9D%BC%EB%A7%88%29%20%28%EC%88%98%EC%83%81%20OR%20%EC%98%81%ED%99%94%EC%A0%9C%29%20when%3A7d&hl=ko&gl=KR&ceid=KR:ko; RSS 수집 실패 (티빙 (오리지널 OR 신작 OR 공개)): 429 Client Error: Too Many Requests for url: https://news.google.com/rss/search?q=%ED%8B%B0%EB%B9%99%20%28%EC%98%A4%EB%A6%AC%EC%A7%80%EB%84%90%20OR%20%EC%8B%A0%EC%9E%91%20OR%20%EA%B3%B5%EA%B0%9C%29%20when%3A7d&hl=ko&gl=KR&ceid=KR:ko; 원문 URL 미해석 75건: RSS의 발행일·매체·기사 제목 기준",
+      "rejected_count": 393,
       "missing_publication_date_count": 0,
-      "unresolved_original_count": 96,
-      "retained_count": 1215
+      "unresolved_original_count": 75,
+      "retained_count": 1222
     }
   },
   "collection_scope": "news_only",
