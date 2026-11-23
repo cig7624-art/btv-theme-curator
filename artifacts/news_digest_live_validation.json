@@ -1,10 +1,10 @@
 {
   "status": "passed",
   "expected_version": "1.6.4",
-  "expected_revision": "d1e18f811c899084d64693329bd9f0471637c7e79a1a342cb2266fde185d6ae6",
+  "expected_revision": "553aceac1288fe3d34b4fb71efad899f38235a9a3a83777baa977fbffe125325",
   "expected_count": 4,
   "collection_state": "partial",
-  "started_at": "2026-11-23T03:34:53.672600+00:00",
+  "started_at": "2026-11-23T15:48:55.508092+00:00",
   "tests": {
     "desktop_version": true,
     "mobile_version": true
@@ -26,5 +26,5 @@
   },
   "observed_version": "1.6.4",
   "frame_state": "matched_release",
-  "finished_at": "2026-11-23T03:35:22.679789+00:00"
+  "finished_at": "2026-11-23T15:49:13.068828+00:00"
 }
