@@ -322,7 +322,15 @@
       "image_kind": "article_image",
       "image_recorded_at": "2026-11-28T05:24:40+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-11-28T05:24:40+00:00"
+      "last_checked_at": "2026-11-28T05:24:40+00:00",
+      "localization": {
+        "title": "ESPN·Disney·NFL·IMAX, 사상 최초로 슈퍼볼을 IMAX 극장에서 상영",
+        "summary": "ESPN, The Walt Disney Company, NFL, IMAX가 슈퍼볼을 처음으로 IMAX 극장에서 선보이는 파트너십을 체결했다. 일일 이벤트에서는 ESPN의 Super Bowl LXI 중계와 하프타임 쇼, 경기 전후 프로그램이 상영된다.",
+        "source_hash": "e09afa9b263b2b197b2dad5c64df1054d190f7c8a25acc41ca13b033c09e6823",
+        "generated_at": "2026-11-28T05:25:39+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-874b289134dd0ad2b1",
@@ -592,7 +600,15 @@
       "image_kind": "article_image",
       "image_recorded_at": "2026-11-28T05:24:40+00:00",
       "image_fetched_from": "https://thewaltdisneycompany.com/feed/",
-      "last_checked_at": "2026-11-28T05:24:40+00:00"
+      "last_checked_at": "2026-11-28T05:24:40+00:00",
+      "localization": {
+        "title": "Zach King, The Walt Disney Company와 오리지널 콘텐츠 파트너십 체결",
+        "summary": "Zach King은 Disney가 독점 배포하는 10편의 오리지널 Illusion Shorts를 제작한다. 협업에는 Disney+용 콘텐츠, 소셜 플랫폼의 비하인드 영상, Cardboard Wars의 Disney+ 공개가 포함된다.",
+        "source_hash": "eb9e6bb92294382bdeeaa7138e17b19f09eb0394eb9ff330b194c7231b0395a9",
+        "generated_at": "2026-11-28T05:25:39+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-91a4f0aef1fb61c661",
@@ -10493,7 +10509,15 @@
         }
       ],
       "content_hash": "9a52408d5b6a95b1c3f63a2346b002a7bdd7fda9710e0a5835733032d91a7ed8",
-      "last_checked_at": "2026-11-26T05:51:02+00:00"
+      "last_checked_at": "2026-11-26T05:51:02+00:00",
+      "localization": {
+        "title": "Comcast 실적 관련 프로 포마·트렌딩 일정 자료",
+        "summary": "Comcast가 2026년 1월 29일 보고된 프로 포마 트렌딩 일정과 2026년 3월 16일 수정된 프로 포마 트렌딩 일정 등 실적 관련 자료를 제공한다. 자료에는 과거 연도의 트렌딩 일정도 포함된다.",
+        "source_hash": "9a52408d5b6a95b1c3f63a2346b002a7bdd7fda9710e0a5835733032d91a7ed8",
+        "generated_at": "2026-11-28T05:25:39+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-113f1c69bb063e8348",
@@ -10586,7 +10610,15 @@
         }
       ],
       "content_hash": "5a98b4fd14a67286cf732d0bd12dd5b68a9227ffb08c5bc3c8017d2dde9847aa",
-      "last_checked_at": "2026-11-26T05:51:02+00:00"
+      "last_checked_at": "2026-11-26T05:51:02+00:00",
+      "localization": {
+        "title": "Comcast 주주 서비스 안내",
+        "summary": "실물 주권을 보유하거나 명의개서 대리인에게 전자 등록된 주주는 직접 주주로서 My Shareholder Account를 이용할 수 있다. 브로커를 통해 주식을 보유한 주주는 간접 주주이며, 주식 거래와 투자 관련 문의는 브로커를 통해 처리한다.",
+        "source_hash": "5a98b4fd14a67286cf732d0bd12dd5b68a9227ffb08c5bc3c8017d2dde9847aa",
+        "generated_at": "2026-11-28T05:25:39+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-14206264034b8b6771",
@@ -10793,7 +10825,15 @@
         }
       ],
       "content_hash": "34766dc57927b3f9d977969a93d435ec981543a29b01c0e8ece13fa887b39e43",
-      "last_checked_at": "2026-11-26T05:51:02+00:00"
+      "last_checked_at": "2026-11-26T05:51:02+00:00",
+      "localization": {
+        "title": "Comcast 주식 원가 기준 안내",
+        "summary": "이 자료는 Comcast 주식의 원가 기준을 세금 신고 목적으로 산정하는 방법을 설명하며, 세무 자문을 제공하지 않는다는 점을 명시한다. 주주는 매입 가격·취득일·취득 방식과 주식 분할, 인수 등 관련 사건을 고려해 자신의 원가 기준을 결정해야 한다.",
+        "source_hash": "34766dc57927b3f9d977969a93d435ec981543a29b01c0e8ece13fa887b39e43",
+        "generated_at": "2026-11-28T05:25:39+00:00",
+        "model": "gpt-5.6-luna",
+        "language": "ko"
+      }
     },
     {
       "id": "mi-80909bc46e109903db",
